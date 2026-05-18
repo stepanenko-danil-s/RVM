@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RVM Raport">
+<meta name="theme-color" content="#1C1C1E">
+<title>RVM Raport</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--ink:#1C1C1E;--b:#007AFF;--g:#34C759;--r:#FF3B30;--bg:#F2F2F7;--card:#fff;--sep:rgba(60,60,67,.15);--sep2:rgba(60,60,67,.08);--t1:#000;--t2:rgba(60,60,67,.6);--t3:rgba(60,60,67,.4);--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
+html,body{min-height:100%;background:var(--bg)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Segoe UI,sans-serif;color:var(--t1);max-width:430px;margin:0 auto}
+@media(min-width:900px){
+  body{max-width:100%;margin:0}
+  .nav{max-width:100%;padding:14px 32px}
+  .page{display:grid;grid-template-columns:420px 1fr;gap:24px;padding:24px 32px calc(var(--sb)+80px);max-width:1200px;margin:0 auto}
+  .left-col{grid-column:1}
+  .right-col{grid-column:2}
+  .card{margin-bottom:14px}
+  .sticky{max-width:100%;padding:10px 32px calc(var(--sb)+10px)}
+  .ilist{max-height:35vh}
+  .step-lbl{font-size:13px}
+}
+button,input,textarea,select{font-family:inherit;-webkit-appearance:none}
+
+/* NAV */
+.nav{background:rgba(28,28,30,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:calc(var(--st)+14px) 16px 12px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:80;flex-shrink:0}
+.nav-title{font-size:17px;font-weight:700;color:#fff;letter-spacing:-.3px}
+.nav-sub{font-size:11px;color:rgba(255,255,255,.4);margin-top:1px}
+.toggle{display:flex;border-radius:20px;overflow:hidden;border:1.5px solid rgba(255,255,255,.2);cursor:pointer;user-select:none;-webkit-user-select:none}
+.tgl-opt{padding:6px 12px;font-size:11px;font-weight:700;color:rgba(255,255,255,.35);white-space:nowrap}
+.tgl-g.on{background:#34C759;color:#fff}
+.tgl-ng.on{background:#007AFF;color:#fff}
+.type-btns{display:flex;gap:6px}
+.tbtn{padding:6px 13px;border-radius:20px;border:none;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.tbtn-g{background:rgba(52,199,89,.15);color:#34C759}
+.tbtn-g.on{background:#34C759;color:#fff}
+.tbtn-s{background:rgba(0,0,0,.2);color:rgba(255,255,255,.6)}
+.tbtn-s.on{background:var(--b);color:#fff}
+
+/* PAGE */
+.page{padding:14px 13px calc(var(--sb)+60px)}
+
+/* CARD */
+.card{background:var(--card);border-radius:14px;margin-bottom:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+
+/* STEP */
+.step-hdr{padding:13px 15px;display:flex;align-items:center;gap:11px;cursor:pointer;user-select:none}
+.step-hdr .step-lbl,.step-hdr .step-n{color:#fff !important}
+.step-hdr .step-n{background:rgba(255,255,255,.2) !important;border:1.5px solid rgba(255,255,255,.3) !important}
+.step-hdr .step-val{color:rgba(255,255,255,.8) !important}
+.step-hdr .step-val.has{color:#fff !important}
+.step-hdr .step-arr{color:rgba(255,255,255,.6) !important}
+.step-n{width:28px;height:28px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.step-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);margin-bottom:1px}
+.step-val{font-size:13px;color:var(--t3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.step-val.has{color:var(--t1);font-weight:600}
+.step-arr{font-size:12px;color:var(--t3);flex-shrink:0}
+.step-body{border-top:none;background:#FAFAFA}
+
+/* SEARCH */
+.sbox{margin:8px 12px;background:rgba(118,118,128,.1);border-radius:10px;display:flex;align-items:center;gap:6px;padding:7px 10px}
+.sbox input{flex:1;background:none;border:none;outline:none;font-size:15px;color:var(--t1)}
+.sbox input::placeholder{color:var(--t3)}
+
+/* LIST */
+.ilist{max-height:44vh;overflow-y:auto;padding:4px 8px 6px;-webkit-overflow-scrolling:touch}
+.ilist::-webkit-scrollbar{display:none}
+.li{display:flex;align-items:center;gap:10px;padding:10px 7px;border-radius:10px;cursor:pointer;border:1px solid transparent;min-height:44px;user-select:none;-webkit-user-select:none}
+.li:active{background:rgba(0,0,0,.03)}
+.li.dim{opacity:.35;background:#F5F5F5;pointer-events:none}
+.li.on{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.12)}
+.ck{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(60,60,67,.22);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;color:#fff;transition:all .15s}
+.li.on .ck{background:var(--ink);border-color:var(--ink)}
+.li-pl{font-size:14px;line-height:1.35;color:var(--t1)}
+.li.on .li-pl{font-weight:700}
+.li-ru{font-size:11px;color:var(--t3);margin-top:1px}
+.li-del{background:none;border:none;color:var(--t3);font-size:16px;cursor:pointer;padding:2px 4px;flex-shrink:0;opacity:0}
+.li:hover .li-del,.li:active .li-del{opacity:1}
+.add-own{background:none;border:none;color:var(--b);font-size:13px;cursor:pointer;padding:6px 12px 8px;display:block}
+
+/* SUB TABS */
+.sub-tabs{display:flex;gap:7px;padding:10px 12px 8px}
+.stab{flex:1;padding:9px 6px;border-radius:11px;border:none;background:rgba(118,118,128,.1);color:var(--t2);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s}
+.stab.on{background:rgba(0,0,0,.08);color:var(--ink);font-weight:700}
+
+/* ADD BTN */
+.add-wrap{padding:12px}
+.add-prev{font-size:12px;color:var(--t2);margin-bottom:7px;min-height:16px;line-height:1.4}
+.add-btn{width:100%;padding:13px;border:none;border-radius:11px;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s}
+.add-btn.go{background:var(--b);color:#fff}
+.add-btn.go:active{opacity:.8}
+.add-btn.wait{background:rgba(118,118,128,.1);color:var(--t2)}
+.add-hint{font-size:12px;color:var(--t3);text-align:center;margin-top:6px;min-height:14px}
+
+/* ENTRIES */
+.ent{display:flex;align-items:flex-start;gap:9px;padding:11px 13px 0}
+.ent-ico{font-size:17px;flex-shrink:0;margin-top:1px}
+.ent-body{flex:1;min-width:0}
+.ent-el{font-size:14px;font-weight:700;line-height:1.3}
+.ent-def{font-size:13px;margin-top:2px}
+.ent-sol{font-size:12px;color:var(--t2);margin-top:2px}
+.ent-rm{background:none;border:none;cursor:pointer;color:var(--t3);font-size:22px;padding:0 3px;line-height:1;flex-shrink:0}
+.ent-tag{display:inline-block;margin:7px 13px 11px;padding:2px 9px;border-radius:8px;font-size:11px;font-weight:600}
+.ent-tag.g{background:rgba(52,199,89,.1);color:var(--g)}
+.ent-tag.s{background:rgba(0,122,255,.08);color:var(--b)}
+.ent-tag.p{background:rgba(255,149,0,.1);color:#FF9500}
+
+/* PARTS */
+.pc-grid{padding:9px 11px;display:flex;flex-wrap:wrap;gap:5px}
+.pc{display:inline-flex;align-items:center;gap:3px;padding:6px 11px;border-radius:20px;font-size:13px;cursor:pointer;border:.5px solid rgba(60,60,67,.15);background:var(--bg);color:var(--t1);transition:all .15s}
+.pc.on{background:rgba(0,122,255,.08);border-color:rgba(0,122,255,.3);color:var(--b);font-weight:500}
+.pc-nr{font-size:10px;color:rgba(60,60,67,.4);font-family:monospace}
+.pc.on .pc-nr{color:rgba(0,122,255,.5)}
+.spart{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:.5px solid var(--sep2)}
+.spart:last-child{border-bottom:none}
+.spart-gs{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0}
+.spart-gs.g{background:rgba(52,199,89,.12);color:var(--g)}
+.spart-gs.s{background:rgba(0,122,255,.1);color:var(--b)}
+.spart-name{font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.spart-code{font-size:11px;color:var(--t3);font-family:monospace;margin-top:1px}
+.qty-row{display:flex;align-items:center;background:rgba(118,118,128,.1);border-radius:9px;overflow:hidden}
+.qbtn{width:32px;height:28px;background:none;border:none;cursor:pointer;font-size:18px;color:var(--b);display:flex;align-items:center;justify-content:center}
+.qn{font-size:14px;font-weight:700;min-width:22px;text-align:center}
+.spart-rm{background:none;border:none;cursor:pointer;color:var(--t3);font-size:22px;padding:0 3px;flex-shrink:0}
+
+/* REPORT */
+.sty-row{padding:8px 11px;display:flex;gap:4px;flex-wrap:wrap}
+.sty{padding:5px 11px;border-radius:14px;border:.5px solid var(--sep);background:var(--bg);color:var(--t2);font-size:12px;font-weight:500;cursor:pointer}
+.sty.on{background:rgba(0,0,0,.07);border-color:rgba(0,0,0,.15);color:var(--t1);font-weight:600}
+.rep-empty{padding:20px 15px;text-align:center;font-size:14px;color:var(--t3);line-height:1.7}
+.rep-sec-hdr{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.rep-dot{width:7px;height:7px;border-radius:50%}
+.rep-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.rep-row{padding:8px 0;border-bottom:.5px solid var(--sep2)}
+.rep-row:last-child{border-bottom:none}
+.rep-el{font-size:14px;font-weight:600}
+.rep-def{font-size:13px;margin-top:2px}
+.rep-sol{font-size:12px;color:var(--t2);margin-top:2px}
+.rep-pbox{margin-top:9px;background:rgba(118,118,128,.06);border-radius:9px;padding:8px 11px}
+.rep-plbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--t2);margin-bottom:5px}
+.rep-pr{display:flex;align-items:center;font-size:13px;padding:3px 0;border-bottom:.5px solid var(--sep2)}
+.rep-pr:last-child{border-bottom:none}
+.rep-pcode{font-family:monospace;font-size:11px;color:var(--t3);min-width:68px}
+.rep-pname{flex:1;padding:0 7px}
+.rep-pqty{font-weight:700}
+.rep-kompakt{font-family:monospace;font-size:12px;line-height:1.9;background:rgba(118,118,128,.06);border-radius:9px;padding:10px 12px;white-space:pre-wrap}
+
+/* TMPLS */
+.tmpl-row{padding:9px 11px;display:flex;flex-wrap:wrap;gap:5px}
+.tmpl{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:14px;background:rgba(0,0,0,.06);color:var(--ink);font-size:13px;font-weight:500;cursor:pointer;border:none}
+.tmpl:active{opacity:.7}
+.tmpl-x{background:none;border:none;cursor:pointer;color:rgba(0,0,0,.35);font-size:14px;padding:0}
+.tmpl-new{display:inline-flex;align-items:center;padding:5px 12px;border-radius:14px;border:.5px dashed rgba(0,0,0,.25);background:none;color:var(--t2);font-size:13px;cursor:pointer}
+
+/* STICKY BOTTOM */
+.sticky{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;padding:8px 13px calc(var(--sb)+8px);background:rgba(242,242,247,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:.5px solid var(--sep);z-index:70}
+.firmao-btn{width:100%;padding:14px;background:linear-gradient(135deg,#1a7a3a,var(--g));color:#fff;border:none;border-radius:13px;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;letter-spacing:-.3px;box-shadow:0 3px 14px rgba(52,199,89,.3)}
+.firmao-btn:active{opacity:.85}
+.bot-row{display:flex;gap:7px;margin-top:7px}
+.bot-btn{flex:1;padding:9px;background:rgba(118,118,128,.1);border:none;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;color:var(--t2)}
+.bot-btn.ai{background:rgba(0,0,0,.06);color:var(--ink)}
+.bot-btn.qr{background:rgba(0,0,0,.06);color:var(--ink)}
+.bot-btn.rst{background:rgba(255,59,48,.08);color:var(--r)}
+
+/* BOTTOM SHEET */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.sh{background:var(--card);border-radius:16px 16px 0 0;padding:16px 16px calc(var(--sb)+16px);width:100%;max-width:430px}
+.sh-bar{width:36px;height:4px;background:rgba(60,60,67,.18);border-radius:2px;margin:0 auto 16px}
+.sh-title{font-size:17px;font-weight:700;text-align:center;margin-bottom:14px;letter-spacing:-.3px}
+.sh-inp{width:100%;background:rgba(118,118,128,.1);border:none;border-radius:11px;padding:12px 14px;font-size:15px;outline:none;color:var(--t1);margin-bottom:9px}
+.sh-inp::placeholder{color:var(--t3)}
+.sh-btn{width:100%;padding:14px;border-radius:12px;border:none;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:7px}
+.sh-btn.dark{background:var(--ink);color:#fff}
+.sh-btn.dark:active{opacity:.8}
+.sh-btn.light{background:rgba(118,118,128,.1);color:var(--t2)}
+
+/* AI CHAT SHEET */
+.ai-sh{background:var(--card);border-radius:16px 16px 0 0;width:100%;max-width:430px;display:flex;flex-direction:column;height:86vh}
+.ai-hdr{padding:12px 14px 10px;border-bottom:.5px solid var(--sep2);display:flex;align-items:center;gap:9px;flex-shrink:0}
+.ai-avatar{width:34px;height:34px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.ai-msgs{flex:1;overflow-y:auto;padding:12px 13px;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:9px}
+.ai-msgs::-webkit-scrollbar{display:none}
+.bubble-ai{display:flex;gap:7px;align-items:flex-end}
+.bubble-ai-txt{background:#F2F2F7;border-radius:16px 16px 16px 3px;padding:9px 13px;max-width:82%;font-size:14px;line-height:1.5;color:#000;word-wrap:break-word}
+.bubble-user{display:flex;justify-content:flex-end}
+.bubble-user-txt{background:#1C1C1E;border-radius:16px 16px 3px 16px;padding:9px 13px;max-width:82%;font-size:14px;line-height:1.5;color:#fff;word-wrap:break-word}
+.ai-quick{padding:7px 12px;display:flex;gap:5px;overflow-x:auto;-webkit-overflow-scrolling:touch;border-top:.5px solid var(--sep2);flex-shrink:0}
+.ai-quick::-webkit-scrollbar{display:none}
+.ai-qbtn{flex-shrink:0;padding:6px 12px;border-radius:16px;background:#F2F2F7;border:none;font-size:11px;font-weight:500;cursor:pointer;color:var(--ink);white-space:nowrap}
+.ai-qbtn:active{opacity:.7}
+.ai-inp-row{padding:7px 11px calc(var(--sb)+8px);border-top:.5px solid var(--sep2);display:flex;align-items:flex-end;gap:7px;flex-shrink:0;background:var(--card)}
+.ai-inp-row textarea{flex:1;background:#F2F2F7;border:none;border-radius:18px;padding:8px 13px;font-size:14px;outline:none;resize:none;color:var(--t1);line-height:1.4;max-height:80px;overflow-y:auto}
+.ai-inp-row textarea::placeholder{color:var(--t3)}
+.ai-send{width:34px;height:34px;border-radius:50%;background:var(--ink);border:none;color:#fff;font-size:16px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.ai-send:active{opacity:.8}
+
+/* QR */
+.qr-info{background:rgba(0,0,0,.04);border-radius:11px;padding:11px 13px;font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:12px}
+
+/* TOAST */
+.toast{position:fixed;top:calc(var(--st)+62px);left:50%;transform:translateX(-50%);background:rgba(28,28,30,.92);color:#fff;padding:9px 18px;border-radius:22px;font-size:14px;font-weight:500;z-index:200;opacity:0;transition:opacity .22s;pointer-events:none;white-space:nowrap;box-shadow:0 3px 18px rgba(0,0,0,.22)}
+.toast.show{opacity:1}
+
+/* NOTES */
+.notes-wrap{padding:9px 12px;border-bottom:.5px solid var(--sep2)}
+.notes-wrap textarea{width:100%;background:rgba(118,118,128,.07);border:none;border-radius:9px;padding:9px 11px;font-size:14px;outline:none;resize:none;color:var(--t1);min-height:65px;line-height:1.5}
+.notes-wrap textarea::placeholder{color:var(--t3)}
+
+/* DIVIDER */
+.divider{height:.5px;background:var(--sep2);margin:14px 0}
+
+/* SYNC ROW */
+.sync-row{display:flex;gap:7px;padding:8px 12px}
+.sync-btn{flex:1;padding:9px;background:rgba(118,118,128,.09);border:none;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;color:var(--t2)}
+</style>
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231C1C1E' rx='22'/><text y='.9em' font-size='70' x='50%' text-anchor='middle'>🛠</text></svg>">
+</head>
+<body>
+
+<div class="nav">
+  <div>
+    <div class="nav-title">🛠 RVM Raport</div>
+    <div class="nav-sub">Konstruktor raportu serwisowego</div>
+  </div>
+  <div class="toggle" onclick="toggleMode()">
+    <div class="tgl-opt tgl-g" id="tglG">🛡 Gwar.</div>
+    <div class="tgl-opt tgl-ng" id="tglNG">🔧 Nie gwar.</div>
+  </div>
+</div>
+
+<div class="page">
+<div class="left-col">
+
+  <!-- KROK 1 -->
+  <div class="card" id="step1">
+    <div class="step-hdr" onclick="toggleStep(0)" style="background:#3A3F7A">
+      <div class="step-n">1</div>
+      <div style="flex:1;min-width:0">
+        <div class="step-lbl">🔩 Element maszyny</div>
+        <div class="step-val" id="sv1">Dotknij aby wybrać element...</div>
+      </div>
+      <div class="step-arr" id="sa1">▾</div>
+    </div>
+    <div class="step-body" id="sb1">
+      <div class="sbox"><span style="color:var(--t3);font-size:14px">⌕</span><input id="se1" placeholder="Szukaj elementu..." oninput="renderList('el')"></div>
+      <div class="ilist" id="lst-el"></div>
+      <button class="add-own" onclick="openCust('el')">+ Dodaj własny</button>
+    </div>
+  </div>
+
+  <!-- KROK 2 -->
+  <div class="card" id="step2">
+    <div class="step-hdr" onclick="toggleStep(1)" style="background:#8B3A3A">
+      <div class="step-n">2</div>
+      <div style="flex:1;min-width:0">
+        <div class="step-lbl">❗ Nieisność lub 🔧 Przegląd</div>
+        <div class="step-val" id="sv2">Dotknij aby wybrać...</div>
+      </div>
+      <div class="step-arr" id="sa2">▸</div>
+    </div>
+    <div class="step-body" id="sb2" style="display:none">
+      <div class="sub-tabs">
+        <button class="stab on" id="stb-def" onclick="switchSub('def')">❗ Nieisność</button>
+        <button class="stab" id="stb-kon" onclick="switchSub('kon')">🔧 Przegląd</button>
+      </div>
+      <div class="sbox"><span style="color:var(--t3);font-size:14px">⌕</span><input id="se2" placeholder="Szukaj..." oninput="renderList(curDef)"></div>
+      <div class="ilist" id="lst-def"></div>
+      <button class="add-own" id="ao2" onclick="openCust('def')">+ Dodaj własny</button>
+    </div>
+  </div>
+
+  <!-- KROK 3 -->
+  <div class="card" id="step3">
+    <div class="step-hdr" onclick="toggleStep(2)" style="background:#2E6B4F">
+      <div class="step-n">3</div>
+      <div style="flex:1;min-width:0">
+        <div class="step-lbl">✅ Co zrobiono? <span style="font-weight:400;opacity:.55">(opcjonalne)</span></div>
+        <div class="step-val" id="sv3">Dotknij aby wybrać działanie...</div>
+      </div>
+      <div class="step-arr" id="sa3">▸</div>
+    </div>
+    <div class="step-body" id="sb3" style="display:none">
+      <div class="sbox"><span style="color:var(--t3);font-size:14px">⌕</span><input id="se3" placeholder="Szukaj działania..." oninput="renderList('sol')"></div>
+      <div class="ilist" id="lst-sol"></div>
+      <button class="add-own" onclick="openCust('sol')">+ Dodaj własne</button>
+    </div>
+  </div>
+
+
+  <!-- PARTS -->
+  <div class="card">
+    <div class="step-hdr" onclick="toggleParts()" style="background:#7A5C2E">
+      <div class="step-n">🔩</div>
+      <div style="flex:1;min-width:0">
+        <div class="step-lbl">Části zamienne</div>
+        <div class="step-val" id="partsSub">Dotknij aby rozwinąć</div>
+      </div>
+      <div class="step-arr" id="partsArr">▸</div>
+    </div>
+    <div style="padding:10px 12px;border-top:.5px solid var(--sep2)">
+      <button id="addBtn" onclick="addEntry()" style="width:100%;padding:13px;background:rgba(118,118,128,.12);color:var(--t2);border:none;border-radius:11px;font-size:15px;font-weight:700;cursor:pointer">Wybierz element i nieisność</button>
+    </div>
+    <div class="step-body" id="partsBody" style="display:none">
+    <div style="padding:8px 12px;border-bottom:.5px solid var(--sep2)">
+      <input id="pcSrch" placeholder="🔍 Filtruj części..." oninput="renderParts()" style="width:100%;background:rgba(118,118,128,.1);border:none;border-radius:9px;padding:8px 11px;font-size:14px;outline:none;color:var(--t1)">
+    </div>
+    <div class="pc-grid" id="partsGrid"></div>
+    
+    <div style="padding:10px 12px;background:#FAFAFA;border-top:.5px solid var(--sep2)">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--t3);margin-bottom:7px">+ Dodaj własną część do katalogu</div>
+      <div style="display:flex;gap:6px;margin-bottom:7px"><input id="custPartName" placeholder="Nazwa..." style="flex:2;background:#fff;border:.5px solid #E5E5EA;border-radius:9px;padding:9px 11px;font-size:14px;outline:none"><input id="custPartNr" placeholder="Nr katalog." style="flex:1;background:#fff;border:.5px solid #E5E5EA;border-radius:9px;padding:9px 11px;font-size:14px;outline:none"></div>
+      <button id="addCustBtn" style="width:100%;padding:9px;background:#007AFF;border:none;color:#fff;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:6px">+ Dodaj do listy</button>
+      <label style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:9px;background:rgba(52,199,89,.08);border:.5px solid rgba(52,199,89,.3);color:#34C759;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer">📊 Importuj z Excel<input type="file" id="xlsxImport" accept=".xlsx,.xls,.csv" style="display:none" onchange="importFromExcel(this)"></label>
+    </div>
+    <div style="padding:7px 12px;border-top:.5px solid var(--sep2);display:flex;gap:7px">
+      <input id="pcust" placeholder="Inna część (wpisz)..." style="flex:1;background:rgba(118,118,128,.09);border:none;border-radius:9px;padding:8px 11px;font-size:13px;outline:none;color:var(--t1)">
+      <button onclick="addCustPart()" style="background:var(--ink);border:none;color:#fff;border-radius:9px;padding:8px 13px;font-size:13px;font-weight:600;cursor:pointer">+</button>
+    </div>
+    <div style="padding:9px 13px" id="selParts"><span style="font-size:13px;color:var(--t3)">Nie wybrano żadnej części</span></div>
+    </div><!-- /partsBody -->
+  </div>
+
+</div><!-- /left-col -->
+<div class="right-col">
+  <!-- RAPORT KOŃCOWY -->
+  <div style="margin:8px 0 12px">
+    <div style="display:flex;align-items:center;gap:8px;padding:0 2px;margin-bottom:10px"><div style="flex:1;height:1.5px;background:linear-gradient(to right,transparent,#1C1C1E)"></div><div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:#1C1C1E;padding:5px 14px;background:#fff;border-radius:20px;border:1.5px solid #1C1C1E">📋 Raport końcowy</div><div style="flex:1;height:1.5px;background:linear-gradient(to left,transparent,#1C1C1E)"></div></div>
+    <div style="border:2px solid #1C1C1E;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.08)">
+      <div style="padding:10px 13px;border-bottom:1px solid #E5E5EA;display:flex;gap:8px;flex-wrap:wrap;background:#FAFAFA"><div id="sumStyleRow" style="display:flex;gap:5px;flex:1;flex-wrap:wrap"></div></div>
+      <div style="padding:9px 13px;border-bottom:1px solid #E5E5EA;display:flex;gap:7px"><button onclick="openTmplPicker()" style="flex:1;padding:9px;background:rgba(0,122,255,.07);color:#007AFF;border:1px solid rgba(0,122,255,.2);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer">📂 Z szablonu</button><button onclick="openShTmpl()" style="flex:1;padding:9px;background:#F9F9F9;color:#1C1C1E;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer">💾 Zapisz</button></div>
+      <div style="padding:8px 13px;border-bottom:1px solid #E5E5EA"><textarea id="notes" placeholder="Uwagi dodatkowe..." style="width:100%;background:rgba(118,118,128,.06);border:.5px solid #E5E5EA;border-radius:9px;padding:9px 11px;font-size:14px;outline:none;resize:none;min-height:50px;line-height:1.5" oninput="renderSummary()"></textarea></div>
+      <div style="padding:8px 13px;border-bottom:1px solid #E5E5EA;display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:#FAFAFA"><button onmousedown="event.preventDefault();fmtDoc('bold')" style="width:34px;height:34px;border-radius:8px;border:1px solid #E5E5EA;background:#fff;font-weight:900;font-size:15px;cursor:pointer">B</button><button onmousedown="event.preventDefault();fmtDoc('italic')" style="width:34px;height:34px;border-radius:8px;border:1px solid #E5E5EA;background:#fff;font-size:15px;font-style:italic;font-weight:600;cursor:pointer">I</button><button onmousedown="event.preventDefault();fmtDoc('underline')" style="width:34px;height:34px;border-radius:8px;border:1px solid #E5E5EA;background:#fff;font-size:14px;text-decoration:underline;font-weight:600;cursor:pointer">U</button><div style="width:1px;height:24px;background:#E5E5EA"></div><button onmousedown="event.preventDefault();fmtDoc('hiliteColor','#FFF176')" style="width:28px;height:28px;border-radius:7px;background:#FFF176;border:1px solid #ccc;cursor:pointer"></button><button onmousedown="event.preventDefault();fmtDoc('hiliteColor','#C8F0C8')" style="width:28px;height:28px;border-radius:7px;background:#C8F0C8;border:1px solid #ccc;cursor:pointer"></button><button onmousedown="event.preventDefault();fmtDoc('hiliteColor','#FFD0D0')" style="width:28px;height:28px;border-radius:7px;background:#FFD0D0;border:1px solid #ccc;cursor:pointer"></button><button onmousedown="event.preventDefault();fmtDoc('removeFormat')" style="width:28px;height:28px;border-radius:7px;background:#fff;border:1px solid #E5E5EA;cursor:pointer;font-size:12px;color:#8E8E93">✕</button>
+        <div style="width:1px;height:24px;background:#E5E5EA"></div>
+        <div style="position:relative;display:inline-block" id="colorPickerWrap">
+          <button id="colorBtn" onmousedown="event.preventDefault();toggleColorPicker()" style="width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#f00,#0f0,#00f);border:1px solid #ccc;cursor:pointer" title="Kolor tekstu"></button>
+          <div id="colorPicker" style="display:none;position:absolute;bottom:36px;left:0;background:#fff;border:1px solid #E5E5EA;border-radius:10px;padding:7px;display:none;flex-wrap:wrap;gap:5px;width:130px;box-shadow:0 4px 16px rgba(0,0,0,.15);z-index:50">
+            <button onmousedown="event.preventDefault();setColor('#000000')" style="width:22px;height:22px;border-radius:4px;background:#000000;border:none;cursor:pointer" title="Czarny"></button>
+            <button onmousedown="event.preventDefault();setColor('#1C1C1E')" style="width:22px;height:22px;border-radius:4px;background:#1C1C1E;border:none;cursor:pointer" title="Antracyt"></button>
+            <button onmousedown="event.preventDefault();setColor('#3C3C43')" style="width:22px;height:22px;border-radius:4px;background:#3C3C43;border:none;cursor:pointer" title="Ciemnoszary"></button>
+            <button onmousedown="event.preventDefault();setColor('#8E8E93')" style="width:22px;height:22px;border-radius:4px;background:#8E8E93;border:none;cursor:pointer" title="Szary"></button>
+            <button onmousedown="event.preventDefault();setColor('#1A3A6B')" style="width:22px;height:22px;border-radius:4px;background:#1A3A6B;border:none;cursor:pointer" title="Granat"></button>
+            <button onmousedown="event.preventDefault();setColor('#1E4D2B')" style="width:22px;height:22px;border-radius:4px;background:#1E4D2B;border:none;cursor:pointer" title="Ciemnozielony"></button>
+            <button onmousedown="event.preventDefault();setColor('#6B1A1A')" style="width:22px;height:22px;border-radius:4px;background:#6B1A1A;border:none;cursor:pointer" title="Bordowy"></button>
+            <button onmousedown="event.preventDefault();setColor('#5C4200')" style="width:22px;height:22px;border-radius:4px;background:#5C4200;border:none;cursor:pointer" title="Brązowy"></button>
+          </div>
+        </div><button onmousedown="event.preventDefault();renderSummary()" style="margin-left:auto;padding:5px 10px;border-radius:8px;background:#F0F0F0;border:none;font-size:12px;font-weight:600;cursor:pointer">↺</button></div>
+      <div id="summaryPreview" contenteditable="true" style="padding:14px 16px;min-height:90px;outline:none;font-size:14px;line-height:1.75;color:#000;word-wrap:break-word;-webkit-user-select:text;border-bottom:1px solid #E5E5EA"><div style="text-align:center;color:#C7C7CC;font-size:14px;padding:20px 0">Dodaj pozycje — raport pojawi się tutaj</div></div>
+      <div id="firmaoHint" style="display:none;margin:0 13px 10px;padding:11px 13px;background:rgba(52,199,89,.08);border-radius:10px;border:.5px solid rgba(52,199,89,.3);gap:10px;align-items:flex-start"><div style="font-size:18px">📋</div><div style="font-size:13px;color:#1C1C1E;line-height:1.6"><b>Raport skopiowany!</b><br>1. Otwórz aplikację Firmao<br>2. Utwórz notatkę / zadanie<br>3. Wklej (przytrzymaj → Wklej)</div></div>
+<div style="padding:11px 13px;display:flex;gap:8px;background:#FAFAFA"><button id="copyBtn" style="flex:1;padding:12px;background:#1C1C1E;color:#fff;border:none;border-radius:11px;font-size:14px;font-weight:700;cursor:pointer;transition:background .3s,color .3s">📋 Kopiuj</button><button onclick="openAI()" style="padding:12px 14px;background:#1C1C1E;color:#fff;border:none;border-radius:11px;font-size:18px;cursor:pointer">🤖</button><button id="firmaoBtn" onclick="copyAndFirmao()" style="flex:1;padding:12px;background:linear-gradient(135deg,#1a7a3a,#34C759);color:#fff;border:none;border-radius:11px;font-size:14px;font-weight:700;cursor:pointer;transition:all .3s">📱 FIRMAO</button></div>
+    </div>
+  </div>
+
+  <div style="display:none"><!-- hidden old report -->
+    <div style="padding:12px 14px;border-bottom:.5px solid var(--sep2);display:flex;align-items:center;gap:9px">
+      <div style="font-size:20px">📄</div>
+      <div>
+        <div style="font-size:14px;font-weight:700">Raport</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:1px">Podgląd i szablony</div>
+      </div>
+    </div>
+    <div class="tmpl-row" id="tmplRow"></div>
+    <div class="sty-row" id="styRow"></div>
+    <div class="notes-wrap"><textarea id="notes" placeholder="Uwagi dodatkowe..." oninput="renderPreview()"></textarea></div>
+    <div style="padding:13px" id="repPreview"><div class="rep-empty">Dodaj pozycje →<br>raport pojawi się tutaj</div></div>
+    <div class="sync-row">
+      <button class="sync-btn" onclick="exportData()">⬇ Eksport</button>
+      <button class="sync-btn" onclick="importData()">⬆ Import</button>
+    </div>
+  </div>
+
+</div><!-- /right-col -->
+  <div style="text-align:center;font-size:10px;color:var(--t3);padding:6px 0 4px">RVM Systems © 2026 · zbudowane z Claude AI</div>
+</div>
+
+<!-- STICKY BOTTOM -->
+<div class="sticky" style="padding:6px 13px calc(var(--sb)+6px)">
+  <div class="bot-row" style="margin-top:0">
+    <button class="bot-btn" onclick="openShTmpl()">💾 Szablon</button>
+    <button class="bot-btn qr" onclick="openQR()">📡 QR Sync</button>
+    <button class="bot-btn" id="installBtn" style="background:rgba(0,122,255,.1);color:#007AFF">📲 Instaluj</button>
+    <button class="bot-btn rst" onclick="doReset()">↺ Reset</button>
+  </div>
+</div>
+
+<!-- SHEET: CUSTOM -->
+<div class="ov" id="shCust" style="display:none">
+  <div class="sh">
+    <div class="sh-bar"></div>
+    <div class="sh-title" id="shCustTitle">Dodaj własny</div>
+    <input class="sh-inp" id="cPl" placeholder="Nazwa po polsku...">
+    <input class="sh-inp" id="cRu" placeholder="Название по-русски... (opcjonalne)">
+    <button class="sh-btn dark" onclick="saveCust()">✓ Zapisz</button>
+    <button class="sh-btn light" onclick="closeOv('shCust')">Anuluj</button>
+  </div>
+</div>
+
+<!-- SHEET: TEMPLATE -->
+<div class="ov" id="shTmpl" style="display:none">
+  <div class="sh">
+    <div class="sh-bar"></div>
+    <div class="sh-title">💾 Zapisz szablon</div>
+    <input class="sh-inp" id="tName" placeholder="Nazwa szablonu...">
+    <button class="sh-btn dark" onclick="saveTmpl()">✓ Zapisz</button>
+    <button class="sh-btn light" onclick="closeOv('shTmpl')">Anuluj</button>
+  </div>
+</div>
+
+<!-- SHEET: AI CHAT -->
+<div class="ov" id="shAI" style="display:none">
+  <div class="sh" style="padding-bottom:calc(var(--sb)+20px)">
+    <div class="sh-bar"></div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+      <div style="width:36px;height:36px;border-radius:50%;background:#1C1C1E;display:flex;align-items:center;justify-content:center;font-size:18px">🤖</div>
+      <div><div style="font-size:16px;font-weight:700">AI Asystent</div><div style="font-size:11px;color:var(--t3)">Otwiera Claude z kontekstem raportu</div></div>
+      <button id="aiCloseBtn" style="margin-left:auto;background:rgba(0,0,0,.08);border:none;width:28px;height:28px;border-radius:50%;font-size:15px;cursor:pointer">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px" id="aiActionList">
+      <button class="ai-action" data-t="summary"  style="padding:13px 16px;background:#F2F2F7;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;text-align:left">📝 Podsumuj raport profesjonalnie</button>
+      <button class="ai-action" data-t="translate_en" style="padding:13px 16px;background:#F2F2F7;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;text-align:left">🇬🇧 Przetłumacz na angielski</button>
+      <button class="ai-action" data-t="translate_ru" style="padding:13px 16px;background:#F2F2F7;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;text-align:left">🇷🇺 Przetłumacz na rosyjski</button>
+      <button class="ai-action" data-t="firmao"   style="padding:13px 16px;background:#F2F2F7;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;text-align:left">📋 Formatuj do systemu FIRMAO</button>
+      <button class="ai-action" data-t="suggest"  style="padding:13px 16px;background:#F2F2F7;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;text-align:left">💡 Zaproponuj dodatkowe działania</button>
+      <button class="ai-action" data-t="short"    style="padding:13px 16px;background:#F2F2F7;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;text-align:left">✂️ Skróć i uprość</button>
+      <button class="ai-action" data-t="client"   style="padding:13px 16px;background:#F2F2F7;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;text-align:left">👤 Napisz wersję dla klienta</button>
+      <div style="display:flex;gap:7px;margin-top:4px">
+        <input id="aiCustomInp" placeholder="Własne pytanie..." style="flex:1;background:#F2F2F7;border:none;border-radius:12px;padding:13px 14px;font-size:14px;outline:none;color:#000">
+        <button id="aiCustomSend" style="padding:13px 16px;background:#007AFF;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;color:#fff">↑</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SHEET: CUSTOM STYLE -->
+<div class="ov" id="shCustomStyle" style="display:none">
+  <div class="sh" style="max-height:85vh;overflow-y:auto">
+    <div class="sh-bar"></div>
+    <div class="sh-title">✏️ Własny styl raportu</div>
+    <div style="margin-bottom:10px">
+      <div style="font-size:12px;color:var(--t3);margin-bottom:5px">Nazwa stylu</div>
+      <input id="csName" placeholder="np. Mój styl firmowy..." class="sh-inp" style="margin-bottom:0">
+    </div>
+    <div style="margin-bottom:10px">
+      <div style="font-size:12px;color:var(--t3);margin-bottom:5px">Rozmiar tytułu elementu</div>
+      <select id="csElSize" style="width:100%;padding:10px;border-radius:9px;border:.5px solid #E5E5EA;font-size:14px;background:#F9F9F9">
+        <option value="12">Mały (12px)</option>
+        <option value="14" selected>Normalny (14px)</option>
+        <option value="16">Duży (16px)</option>
+        <option value="18">Bardzo duży (18px)</option>
+      </select>
+    </div>
+    <div style="margin-bottom:10px">
+      <div style="font-size:12px;color:var(--t3);margin-bottom:5px">Tytuł elementu</div>
+      <select id="csElWeight" style="width:100%;padding:10px;border-radius:9px;border:.5px solid #E5E5EA;font-size:14px;background:#F9F9F9">
+        <option value="400">Normalny</option>
+        <option value="600">Półgruby</option>
+        <option value="700" selected>Gruby (Bold)</option>
+        <option value="900">Bardzo gruby</option>
+      </select>
+    </div>
+    <div style="margin-bottom:10px">
+      <div style="font-size:12px;color:var(--t3);margin-bottom:5px">Rozmiar opisu usterki</div>
+      <select id="csDefSize" style="width:100%;padding:10px;border-radius:9px;border:.5px solid #E5E5EA;font-size:14px;background:#F9F9F9">
+        <option value="11">Mały (11px)</option>
+        <option value="13" selected>Normalny (13px)</option>
+        <option value="15">Duży (15px)</option>
+      </select>
+    </div>
+    <div style="margin-bottom:10px">
+      <div style="font-size:12px;color:var(--t3);margin-bottom:5px">Separator między pozycjami</div>
+      <select id="csSep" style="width:100%;padding:10px;border-radius:9px;border:.5px solid #E5E5EA;font-size:14px;background:#F9F9F9">
+        <option value="none">Brak</option>
+        <option value="line" selected>Linia</option>
+        <option value="space">Odstęp</option>
+        <option value="box">Tło szare</option>
+      </select>
+    </div>
+    <div style="margin-bottom:10px">
+      <div style="font-size:12px;color:var(--t3);margin-bottom:5px">Numeracja pozycji</div>
+      <select id="csNum" style="width:100%;padding:10px;border-radius:9px;border:.5px solid #E5E5EA;font-size:14px;background:#F9F9F9">
+        <option value="none">Bez numeracji</option>
+        <option value="num" selected>1. 2. 3.</option>
+        <option value="pad">01. 02. 03.</option>
+      </select>
+    </div>
+    <button id="saveCustomStyle" class="sh-btn dark" style="margin-top:6px">💾 Zapisz styl</button>
+    <button onclick="closeOv('shCustomStyle')" class="sh-btn light">Anuluj</button>
+  </div>
+</div>
+
+<!-- SHEET: QR -->
+<div class="ov" id="shQR" style="display:none">
+  <div class="sh" style="max-height:88vh;overflow-y:auto">
+    <div class="sh-bar"></div>
+    <div class="sh-title">📱 QR Synchronizacja</div>
+    <div class="qr-info">
+      <b>Na PC:</b> kliknij "Pokaż QR" → kod QR pojawi się na ekranie<br>
+      <b>Na iPhone:</b> kliknij "Skanuj" → skieruj kamerę → gotowe ✅<br>
+      Synchronizuje szablony i własne pozycje.
+    </div>
+    <button onclick="genQR()" class="sh-btn dark">📊 Pokaż QR (generuj na PC)</button>
+    <div id="qrBox" style="display:none;text-align:center;margin:12px 0">
+      <div id="qrWrap" style="display:inline-block;padding:12px;background:#fff;border-radius:11px;box-shadow:0 2px 14px rgba(0,0,0,.1)"></div>
+      <div style="font-size:12px;color:var(--t3);margin-top:8px">Skieruj kamerę iPhone na ten kod</div>
+      <div id="qrWarn" style="font-size:12px;color:var(--r);margin-top:5px;display:none"></div>
+    </div>
+    <button onclick="startScan()" class="sh-btn dark" style="background:#1C1C1E;margin-top:6px">📷 Skanuj QR (na iPhone)</button>
+    <div id="scanBox" style="display:none;margin:10px 0">
+      <div style="position:relative;border-radius:11px;overflow:hidden;background:#000;aspect-ratio:1">
+        <video id="qrVid" style="width:100%;height:100%;object-fit:cover" playsinline></video>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none">
+          <div style="width:170px;height:170px;border:2.5px solid rgba(255,255,255,.8);border-radius:14px;box-shadow:0 0 0 2000px rgba(0,0,0,.35)"></div>
+        </div>
+        <div id="scanLbl" style="position:absolute;bottom:10px;left:0;right:0;text-align:center;font-size:13px;color:#fff;font-weight:500">Szukam kodu QR...</div>
+      </div>
+      <button onclick="stopScan()" style="width:100%;margin-top:9px;padding:10px;background:rgba(255,59,48,.1);color:var(--r);border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer">✕ Zatrzymaj</button>
+    </div>
+    <div id="qrResult" style="display:none;background:rgba(52,199,89,.1);border-radius:10px;padding:10px 13px;font-size:13px;color:var(--g);font-weight:600;margin:7px 0;text-align:center"></div>
+    <button class="sh-btn light" onclick="closeOv('shQR')" style="margin-top:5px">Zamknij</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* DATA */
+var D = {
+el:[{pl:"Otwór wejściowy (wlot)",ru:"Входное отверстие"},{pl:"Podajnik / Mechanizm podajnika",ru:"Механизм подачи"},{pl:"Czujnik rozruchu (fotokomórka)",ru:"Датчик запуска"},{pl:"Kamera",ru:"Камера"},{pl:"Lustro",ru:"Зеркало"},{pl:"Moduł reflektora / Odbłyśnik",ru:"Модуль отражателя"},{pl:"Czytnik kodów EAN",ru:"Считыватель EAN"},{pl:"Skaner plomb",ru:"Сканер пломб"},{pl:"Drukarka paragonów Epson",ru:"Принтер Epson"},{pl:"Papier w drukarce",ru:"Бумага в принтере"},{pl:"Karta drukarki / Interfejs Epson",ru:"Плата принтера"},{pl:"Czytnik kart lojalnościowych",ru:"Считыватель карт"},{pl:"Wyświetlacz / Ekran dotykowy",ru:"Дисплей"},{pl:"Komputer PC",ru:"Компьютер PC"},{pl:"Twardy dysk HDD",ru:"Жёсткий диск"},{pl:"Płyta MIB / Multi Control Board",ru:"Плата MIB"},{pl:"Płyta sortera I/O",ru:"Плата сортировщика"},{pl:"Falownik",ru:"Частотный преобразователь"},{pl:"Zasilacz",ru:"Блок питания"},{pl:"Bezpiecznik",ru:"Предохранитель"},{pl:"Przycisk zatrzymania awaryjnego",ru:"Кнопка аварийного останова"},{pl:"Wyłącznik bezpieczeństwa drzwi",ru:"Выключатель безопасности"},{pl:"Kabel USB",ru:"Кабель USB"},{pl:"Kabel LAN",ru:"Кабель LAN"},{pl:"Połączenie sieciowe",ru:"Сетевое подключение"},{pl:"Drzwi przednie / zawias",ru:"Дверца / петля"},{pl:"ProLine (zaplecze)",ru:"ProLine"},{pl:"Przenośnik sortujący ProLine",ru:"Конвейер ProLine"},{pl:"Sorter (sortownik)",ru:"Сортировщик"},{pl:"Panel statusu ProLine",ru:"Панель статуса ProLine"},{pl:"Przycisk RESET ProLine",ru:"Кнопка RESET ProLine"},{pl:"Drzwi / pokrywy szafy ProLine",ru:"Дверцы шкафа ProLine"},{pl:"Pojemnik na plastik (PET)",ru:"Корзина PET"},{pl:"Pojemnik na aluminium (puszki)",ru:"Корзина алюминий"},{pl:"Czujnik pełnego pojemnika",ru:"Датчик переполнения"},{pl:"Kompaktory (oba)",ru:"Компакторы (оба)"},{pl:"Kompaktor lewy",ru:"Компактор левый"},{pl:"Kompaktor prawy",ru:"Компактор правый"},{pl:"Silnik kompaktora lewego",ru:"Двигатель левого компактора"},{pl:"Silnik kompaktora prawego",ru:"Двигатель правого компактора"},{pl:"Nóż kompaktora lewego",ru:"Нож левого компактора"},{pl:"Nóż kompaktora prawego",ru:"Нож правого компактора"},{pl:"Pas przenośnika",ru:"Лента транспортёра"},{pl:"Pas podajnika",ru:"Лента подачи"},{pl:"Pas tylny Proline",ru:"Задняя лента Proline"},{pl:"Pasek klinowy",ru:"Клиновой ремень"},{pl:"Łańcuch napędowy długi PET",ru:"Длинная цепь PET"},{pl:"Łańcuch napędowy krótki PET",ru:"Короткая цепь PET"},{pl:"Silnik przenośnika",ru:"Двигатель транспортёра"},{pl:"Silnik podajnika",ru:"Двигатель подачи"},{pl:"Silnik przesłony HL2",ru:"Двигатель шибера HL2"},{pl:"Śruby mocujące",ru:"Крепёжные болты"},{pl:"Kosz / pojemnik 800x600",ru:"Корзина 800x600"},{pl:"Kurtyna wlotu",ru:"Шторка входа"},{pl:"Zamek trójkątny",ru:"Треугольный замок"},{pl:"Diody LED",ru:"Светодиодная подсветка"},{pl:"Akumulator kwasowo-ołowiowy",ru:"Аккумулятор"}],
+def:[{pl:"Nie działa",ru:"Не работает"},{pl:"Słabo działa / niestabilna praca",ru:"Нестабильная работа"},{pl:"Nie uruchamia się",ru:"Не запускается"},{pl:"Przestoje / zatrzymania",ru:"Остановки"},{pl:"Zerwany / rozerwany",ru:"Оборван"},{pl:"Pęknięty / uszkodzony",ru:"Треснул"},{pl:"Oberwany",ru:"Оторван"},{pl:"Zsunął się z miejsca",ru:"Сдвинулся"},{pl:"Odkręcony",ru:"Откручен"},{pl:"Poluzowany",ru:"Ослаблен"},{pl:"Śruby poluzowane",ru:"Болты ослабли"},{pl:"Brak śrub",ru:"Нет болтов"},{pl:"W złej pozycji / poza pozycją",ru:"Неправильное положение"},{pl:"Nie trafia w lusterko",ru:"Не попадает в зеркало"},{pl:"Zablokowany",ru:"Заблокирован"},{pl:"Ciało obce w kompaktorze",ru:"Инородное тело"},{pl:"Ciało obce w podajniku",ru:"Инородное тело в подавателе"},{pl:"Czujnik przenośnika zablokowany",ru:"Датчик заблокирован"},{pl:"Sortownik poza pozycją",ru:"Сортировщик не в позиции"},{pl:"Uszkodzony mechanicznie",ru:"Механическое повреждение"},{pl:"Nadmierny hałas / wibracje",ru:"Шум / вибрации"},{pl:"Brak połączenia sieciowego",ru:"Нет сети"},{pl:"Problem z komunikacją",ru:"Проблема связи"},{pl:"Częste restarty",ru:"Частые перезагрузки"},{pl:"Błąd oprogramowania / firmware",ru:"Ошибка ПО"},{pl:"Defekt producenta (gwarancja)",ru:"Производственный дефект"},{pl:"Kamera zaślepiona",ru:"Камера ослеплена"},{pl:"Brak zasilania",ru:"Нет питания"},{pl:"Bezpiecznik przepalony",ru:"Сгорел предохранитель"},{pl:"Przegrzany",ru:"Перегрев"},{pl:"Pojemnik PET pełny",ru:"Корзина PET полная"},{pl:"Pojemnik aluminium pełny",ru:"Корзина алюминий полная"},{pl:"RVM niesprawny (out of order)",ru:"Автомат неисправен"},{pl:"Brak papieru w drukarce",ru:"Нет бумаги"},{pl:"Zalany",ru:"Залит жидкостью"},{pl:"Zanieczyszczony / zabrudzony",ru:"Загрязнён"},{pl:"Uszkodzony przez personel sklepu",ru:"Повреждён персоналом"},{pl:"Wandalizm",ru:"Вандализм"}],
+sol:[{pl:"Wymieniono na nowy",ru:"Заменён"},{pl:"Wystawiono na miejsce / ustawiono pozycję",ru:"Установлен на место"},{pl:"Wyregulowano",ru:"Отрегулирован"},{pl:"Ustawiono w lusterko",ru:"Выставлен по зеркалу"},{pl:"Przykręcono",ru:"Закреплён"},{pl:"Dokręcono",ru:"Затянут"},{pl:"Nakręcono na Loctite i przykręcono",ru:"На Loctite"},{pl:"Naprawiono",ru:"Отремонтирован"},{pl:"Zlutowano",ru:"Пропаян"},{pl:"Usunięto ciało obce",ru:"Удалено инородное тело"},{pl:"Odblokowano",ru:"Разблокирован"},{pl:"Wymieniono papier w drukarce",ru:"Заменена бумага"},{pl:"Wymieniono bezpiecznik",ru:"Заменён предохранитель"},{pl:"Wymieniono baterię / akumulator",ru:"Заменена батарея"},{pl:"Zresetowano (przycisk RESET)",ru:"Сброс RESET"},{pl:"Zresetowano zdalnie",ru:"Удалённый сброс"},{pl:"Uruchomiono ponownie aplikację RVM",ru:"Перезапущено приложение"},{pl:"Uruchomiono ponownie komputer RVM",ru:"Перезапущен компьютер"},{pl:"Wyłączono i włączono bezpiecznik ProLine",ru:"Перезапущен предохранитель"},{pl:"Naciśnięto RESET na wszystkich ProLine",ru:"RESET на всех ProLine"},{pl:"Otwarto i zamknięto drzwi ProLine",ru:"Открыты/закрыты дверцы"},{pl:"Wyczyszczono",ru:"Очищен"},{pl:"Wyczyszczono czujnik rozruchu",ru:"Очищен датчик"},{pl:"Wyczyszczono czujnik przenośnika",ru:"Очищен датчик конвейера"},{pl:"Wyczyszczono kamerę / obiektyw",ru:"Очищена камера"},{pl:"Przesmarowano",ru:"Смазан"},{pl:"Skonfigurowano",ru:"Настроен"},{pl:"Zaktualizowano (firmware)",ru:"Обновлена прошивка"},{pl:"Konfiguracja DNS",ru:"Настройка DNS"},{pl:"Konfiguracja Wizard",ru:"Настройка Wizard"},{pl:"Sprawdzono — wynik OK",ru:"Проверено — OK"},{pl:"Skierowano do wymiany gwarancyjnej",ru:"На гарантийную замену"},{pl:"Skontaktowano się z pomocą techniczną RVM",ru:"Связались с тех. поддержкой"}],
+kon:[{pl:"Sprawdzenie ogólne maszyny RVM",ru:"Общая проверка"},{pl:"Sprawdzenie czujnika rozruchu",ru:"Проверка датчика"},{pl:"Sprawdzenie czujników przepełnienia",ru:"Проверка переполнения"},{pl:"Sprawdzenie czujnika przenośnika ProLine",ru:"Проверка конвейера"},{pl:"Sprawdzenie sortownika ProLine",ru:"Проверка сортировщика"},{pl:"Sprawdzenie kompaktorów",ru:"Проверка компакторов"},{pl:"Sprawdzenie kamery i lustra",ru:"Проверка камеры"},{pl:"Sprawdzenie drukarki i papieru",ru:"Проверка принтера"},{pl:"Sprawdzenie połączenia sieciowego",ru:"Проверка сети"},{pl:"Sprawdzenie wyłączników bezpieczeństwa",ru:"Проверка выключателей"},{pl:"Sprawdzenie pasów i łańcuchów",ru:"Проверка ремней"},{pl:"Test systemu w menu serwisowym",ru:"Тест в меню"},{pl:"Uruchomienie codziennego programu czyszczenia",ru:"Ежедневная очистка"},{pl:"Uruchomienie cotygodniowego programu czyszczenia",ru:"Еженедельная очистка"},{pl:"Oczyszczenie otworu wejściowego",ru:"Очистка входа"},{pl:"Oczyszczenie czujnika rozruchu",ru:"Очистка датчика"},{pl:"Oczyszczenie czujnika przenośnika",ru:"Очистка конвейера"},{pl:"Oczyszczenie kamery / obiektywu",ru:"Очистка камеры"},{pl:"Oczyszczenie skanera EAN / plomb",ru:"Очистка сканера"},{pl:"Oczyszczenie wnętrza szafy ProLine",ru:"Очистка ProLine"},{pl:"Smarowanie mechanizmu",ru:"Смазка"},{pl:"Opróżnianie pojemnika PET",ru:"Опустошение PET"},{pl:"Opróżnianie pojemnika aluminium",ru:"Опустошение алюминий"},{pl:"Wymiana papieru w drukarce",ru:"Замена бумаги"},{pl:"Resetowanie czujnika przepełnienia",ru:"Сброс датчика"},{pl:"Konfiguracja Wizard",ru:"Настройка Wizard"},{pl:"Aktualizacja oprogramowania",ru:"Обновление ПО"},{pl:"Kalibracja kamery",ru:"Калибровка"},{pl:"Naprawa po relokacji maszyny",ru:"Наладка после переноса"}]
+};
+var WH=[{nr:196,n:"Fotokomórka rozruchowa 4-pinowa",k:"1076486"},{nr:68,n:"Pas podajnika",k:"10017568"},{nr:220,n:"Pas przenośnika Proline 928 SP",k:"10014234"},{nr:515,n:"Pas tylny Proline 528",k:"10016947"},{nr:657,n:"Pasek klinowy eXtend 100/200",k:"10029936"},{nr:60,n:"Pasek klinowy 8mm Moduł",k:"700351"},{nr:490,n:"Łańcuch długi PET",k:"850-34-PET"},{nr:489,n:"Łańcuch krótki PET",k:"625-25-PET"},{nr:205,n:"Silnik 24V 40rpm 5Nm",k:"1075738"},{nr:57,n:"Silnik pasa Bosch",k:"10010946"},{nr:600,n:"Silnik przenośnika Dunkermotoren",k:"10027202"},{nr:66,n:"Silnik przesłony HL2",k:"10011181"},{nr:514,n:"Sorter MIX Lewy",k:"10026513"},{nr:239,n:"Sorter MIX eXtend",k:"10024703"},{nr:247,n:"Sorter MIX Prawy",k:"10014853"},{nr:42,n:"Kamera ARC EMC zestaw",k:"10017938"},{nr:48,n:"Drukarka Epson",k:"700236"},{nr:47,n:"Interfejs Epson",k:"700237"},{nr:191,n:"PCBA Płyta wykrywacza metalu",k:"10014821S"},{nr:629,n:"Płyta kontrolna PCBA",k:"10026751S"},{nr:67,n:"Płyta sortera I/O 2",k:"10011255"},{nr:531,n:"Zasilacz 24V 13.4A 320W",k:"10026911"},{nr:53,n:"Wyłącznik bezpieczeństwa",k:"380345"},{nr:63,n:"Magnetyczny wyłącznik Proline",k:"10012515"},{nr:71,n:"Odbłyśnik / Reflektor E39-R42",k:"10011291"},{nr:633,n:"Wlot kurtyna",k:"10030988"},{nr:566,n:"Pojemnik kosz 800x600",k:"800600B"},{nr:204,n:"Zamek trójkątny",k:"1073494"},{nr:698,n:"Kabel USB A-B 1,8m",k:"CB-USB-A-B-180"},{nr:33,n:"Czytnik kart lojalnościowych",k:"10019143"},{nr:605,n:"Czytnik kart lojalnościowych Mk2",k:"10030391"},{nr:464,n:"Żarówka 24-30V 6-10W",k:"3393399"}];
+
+/* UTILS */
+function ls(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
+function ss(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+var _tt;
+function showToast(m){var e=document.getElementById("toast");if(!e)return;e.textContent=m;e.className="toast show";clearTimeout(_tt);_tt=setTimeout(function(){e.className="toast";},2000);}
+function closeOv(id){document.getElementById(id).style.display="none";}
+
+/* STATE */
+var custom=ls("rv_c",{el:[],def:[],sol:[],kon:[]});
+var customParts=ls("rv_cp",[]);
+var curMode=ls("rv_mode","G");
+var tmpls=ls("rv_t",[]);
+var entries=ls("rv_e",[]);
+var parts=ls("rv_p",{});
+var hasG=ls("rv_g",false),hasS=ls("rv_s",true);
+var curStyle=ls("rv_st","Serwisowy");
+var curDef="def";
+var SEL={el:[],def:[],sol:[],kon:[]};
+var stepsOpen=[true,false,false];
+var custTarget="el";
+var eid=entries.length?Math.max.apply(null,entries.map(function(e){return e.id;}))+1:0;
+
+function save(){ss("rv_e",entries);ss("rv_p",parts);ss("rv_mode",curMode);ss("rv_st",curStyle);}
+
+/* TYPE */
+function toggleMode(){curMode=curMode==="G"?"NG":"G";applyType();}
+function applyType(){
+  var g=curMode==="G";
+  var ge=document.getElementById("tglG"),nge=document.getElementById("tglNG");
+  if(ge)ge.className="tgl-opt tgl-g"+(g?" on":"");
+  if(nge)nge.className="tgl-opt tgl-ng"+(!g?" on":"");
+  hasG=g;hasS=!g;ss("rv_mode",curMode);
+}
+
+/* STEPS */
+function toggleStep(i){
+  stepsOpen[i]=!stepsOpen[i];
+  document.getElementById("sb"+(i+1)).style.display=stepsOpen[i]?"block":"none";
+  document.getElementById("sa"+(i+1)).textContent=stepsOpen[i]?"▾":"▸";
+}
+function openStep(i){
+  stepsOpen[i]=true;
+  document.getElementById("sb"+(i+1)).style.display="block";
+  document.getElementById("sa"+(i+1)).textContent="▾";
+}
+
+/* LIST */
+function renderList(col){
+  var isK=col==="kon";
+  var lstId=isK?"lst-def":"lst-"+col;
+  var srchId=isK?"se2":(col==="def"?"se2":col==="sol"?"se3":"se1");
+  var q=(document.getElementById(srchId).value||"").toLowerCase();
+  var all=D[col].concat(custom[col]||[]);
+  var items=q?all.filter(function(i){return i.pl.toLowerCase().indexOf(q)>=0||(i.ru&&i.ru.toLowerCase().indexOf(q)>=0);}):all;
+  var sel=SEL[col],cust=custom[col]||[];
+  var h="";
+  items.forEach(function(it){
+    var on=sel.indexOf(it.pl)>=0;
+    var isC=cust.some(function(c){return c.pl===it.pl;});
+    var sp=it.pl.replace(/&/g,"&amp;").replace(/"/g,"&quot;");
+    var dimmed=!on&&sel.length>0&&col!=="sol";
+    h+='<div class="li'+(on?' on':'')+(dimmed?' dim':'')+'" data-col="'+col+'" data-pl="'+sp+'" onclick="togItem(this)">';
+    h+='<div class="ck">'+(on?"✓":"")+"</div>";
+    h+='<div style="flex:1;pointer-events:none"><div class="li-pl">'+esc(it.pl)+"</div>";
+    if(it.ru)h+='<div class="li-ru">'+esc(it.ru)+"</div>";
+    h+="</div>";
+    if(isC)h+='<button class="li-del" onclick="event.stopPropagation();delCust(this)">✕</button>';
+    h+="</div>";
+  });
+  if(!items.length)h='<div style="padding:12px 8px;font-size:13px;color:var(--t3)">Brak wyników</div>';
+  document.getElementById(lstId).innerHTML=h;
+  updateAddUI();
+}
+
+function togItem(el){
+  var col=el.getAttribute("data-col"),pl=el.getAttribute("data-pl");
+  if(!col||!pl)return;
+  var a=SEL[col],i=a.indexOf(pl);
+  if(i>=0)a.splice(i,1);else a.push(pl);
+  if(col==="el"&&SEL.el.length>0&&!stepsOpen[1])setTimeout(function(){openStep(1);},180);
+  if((col==="def"||col==="kon")&&(SEL.def.length>0||SEL.kon.length>0)&&!stepsOpen[2])setTimeout(function(){openStep(2);},180);
+  renderList(col);
+}
+
+function delCust(btn){
+  var li=btn.parentElement;
+  var col=li.getAttribute("data-col"),pl=li.getAttribute("data-pl");
+  if(custom[col])custom[col]=custom[col].filter(function(i){return i.pl!==pl;});
+  ss("rv_c",custom);renderList(col==="kon"?curDef:col);
+}
+
+function switchSub(col){
+  curDef=col;
+  document.getElementById("stb-def").className="stab"+(col==="def"?" on":"");
+  document.getElementById("stb-kon").className="stab"+(col==="kon"?" on":"");
+  document.getElementById("se2").value="";
+  document.getElementById("ao2").textContent=col==="def"?"+ Dodaj własny":"+ Dodaj własny przegląd";
+  renderList(col);
+}
+
+function updateAddUI(){
+  var ok=SEL.el.length>0&&(SEL.def.length>0||SEL.kon.length>0);
+  var btn=document.getElementById("addBtn");
+  if(btn){btn.style.background=ok?"#007AFF":"rgba(118,118,128,.12)";btn.style.color=ok?"#fff":"var(--t2)";btn.textContent=ok?"\u2795 Dodaj \u2014 "+SEL.el[0]:"Wybierz element i nieisno\u015b\u0107";}
+
+  var v1=SEL.el.length?SEL.el.join(", "):"Dotknij aby wybrać element...";
+  var v2=(SEL.def.length?SEL.def.join(", "):SEL.kon.length?SEL.kon.join(", "):"Dotknij aby wybrać...");
+  var v3=SEL.sol.length?SEL.sol.join(", "):"Dotknij aby wybrać działanie...";
+  document.getElementById("sv1").textContent=v1;document.getElementById("sv1").className="step-val"+(SEL.el.length?" has":"");
+  document.getElementById("sv2").textContent=v2;document.getElementById("sv2").className="step-val"+(SEL.def.length||SEL.kon.length?" has":"");
+  document.getElementById("sv3").textContent=v3;document.getElementById("sv3").className="step-val"+(SEL.sol.length?" has":"");
+}
+
+/* ENTRIES */
+function addEntry(){
+  if(!SEL.el.length){showToast("Wybierz element (Krok 1)");return;}
+  if(!SEL.def.length&&!SEL.kon.length){showToast("Wybierz nieisność (Krok 2)");return;}
+  var isK=!SEL.def.length&&SEL.kon.length>0;
+  entries.push({id:eid++,el:SEL.el.join(", "),def:SEL.def.length?SEL.def.join(", "):SEL.kon.join(", "),sol:SEL.sol.join(", "),isG:curMode==="G"&&!isK,isK:isK});
+  SEL={el:SEL.el,def:[],sol:[],kon:[]};
+  document.getElementById("se1").value="";document.getElementById("se2").value="";document.getElementById("se3").value="";
+  stepsOpen=[true,false,false];
+  document.getElementById("sb2").style.display="none";document.getElementById("sa2").textContent="▸";
+  document.getElementById("sb3").style.display="none";document.getElementById("sa3").textContent="▸";
+  renderList("el");renderList("def");renderList("sol");
+  renderSummary();save();showToast("✅ Dodano!");
+}
+
+function delEntry(id){entries=entries.filter(function(e){return e.id!==id;});renderEntries();renderPreview();save();}
+
+function renderEntries_OLD(){
+  if(!entries.length){w.style.display="none";return;}
+  w.style.display="block";
+  document.getElementById("entCnt").textContent=entries.length;
+  var h="";
+  entries.forEach(function(en){
+    var cls=en.isK?"p":en.isG?"g":"s";
+    var ico=en.isK?"🔍":en.isG?"🛡":"🔧";
+    var dc=en.isK?"#FF9500":en.isG?"var(--g)":"var(--b)";
+    h+='<div class="card" style="margin-bottom:8px">';
+    h+='<div class="ent"><div class="ent-ico">'+ico+'</div><div class="ent-body">';
+    h+='<div class="ent-el">'+esc(en.el)+'</div>';
+    h+='<div class="ent-def" style="color:'+dc+'">'+esc(en.def)+'</div>';
+    if(en.sol)h+='<div class="ent-sol">→ '+esc(en.sol)+'</div>';
+    h+='</div><button class="ent-rm" onclick="delEntry('+en.id+')">×</button></div>';
+    h+='<span class="ent-tag '+cls+'">'+(en.isK?"Przegląd":en.isG?"Gwarancyjny":"Serwisowy")+'</span></div>';
+  });
+  document.getElementById("entList").innerHTML=h;
+}
+
+/* PARTS */
+function renderParts(){
+  var q=document.getElementById("pcSrch").value.toLowerCase();
+  var allParts=WH.concat(customParts.map(function(p){return {nr:p.nr,n:p.n,k:p.k||"",isCustom:true};}));
+  var list=q?allParts.filter(function(p){return p.n.toLowerCase().indexOf(q)>=0||String(p.nr).indexOf(q)>=0;}):allParts;
+  var h="";
+  list.forEach(function(p){
+    var k=String(p.nr),on=!!parts[k];
+    h+='<span class="pc'+(on?" on":"")+'" data-k="'+k+'" onclick="togPart(this)">';
+    h+='<span class="pc-nr">#'+p.nr+" </span>"+esc(p.n)+(on?" ×"+parts[k].qty:"");
+    h+="</span>";
+  });
+  document.getElementById("partsGrid").innerHTML=h||'<span style="font-size:13px;color:var(--t3);padding:4px">Brak wyników</span>';
+}
+
+function togPart(el){
+  var k=el.getAttribute("data-k");
+  var p=WH.find(function(w){return String(w.nr)===k;})||customParts.find(function(w){return String(w.nr)===k;});
+  if(!p)return;
+  if(parts[k])delete parts[k];else parts[k]={qty:1,n:p.n,k:p.k,nr:p.nr,type:"s"};
+  renderParts();renderSelParts();renderPreview();save();
+}
+
+function addCustPart(){
+  var v=document.getElementById("pcust").value.trim();if(!v)return;
+  parts["c_"+v]={qty:1,n:v,k:"",nr:0,type:"s"};
+  document.getElementById("pcust").value="";
+  renderParts();renderSelParts();renderPreview();save();
+}
+
+function togType(k){if(parts[k])parts[k].type=parts[k].type==="g"?"s":"g";renderSelParts();renderPreview();save();}
+function setQty(k,q){if(q<1)delete parts[k];else if(parts[k])parts[k].qty=q;renderParts();renderSelParts();renderPreview();save();}
+
+function renderSelParts(){
+  var keys=Object.keys(parts);
+  var sub=document.getElementById("partsSub");
+  sub.textContent=keys.length?keys.length+" wybranych — kliknij [G]/[S] aby przypisać":"Kliknij część aby dodać";
+  if(!keys.length){document.getElementById("selParts").innerHTML='<span style="font-size:13px;color:var(--t3)">Nie wybrano żadnej części</span>';return;}
+  var h="";
+  keys.forEach(function(k){
+    var p=parts[k],isG=p.type==="g";
+    var ek=k.replace(/'/g,"\\'");
+    h+='<div class="spart"><div class="spart-gs '+(isG?"g":"s")+'" onclick="togType(\''+ek+'\')">'+( isG?"G":"S")+'</div>';
+    h+='<div style="flex:1;min-width:0"><div class="spart-name">'+esc(p.n)+'</div>';
+    h+=(p.nr||p.k?'<div class="spart-code">'+(p.nr?"#"+p.nr:"")+' '+p.k+'</div>':'');
+    h+='</div><div class="qty-row">';
+    h+='<button class="qbtn" onclick="setQty(\''+ek+'\','+(p.qty-1)+')">−</button>';
+    h+='<span class="qn">'+p.qty+'</span>';
+    h+='<button class="qbtn" onclick="setQty(\''+ek+'\','+(p.qty+1)+')">+</button>';
+    h+='</div><button class="spart-rm" onclick="setQty(\''+ek+'\',0)">×</button></div>';
+  });
+  document.getElementById("selParts").innerHTML=h;
+}
+
+/* TEMPLATES */
+function renderTmpls(){
+  var h="";
+  tmpls.forEach(function(t,i){
+    h+='<button class="tmpl" onclick="loadTmpl('+i+')">'+esc(t.name);
+    h+='<button class="tmpl-x" onclick="event.stopPropagation();delTmpl('+i+')">×</button></button>';
+  });
+  h+='<button class="tmpl-new" onclick="openShTmpl()">+ Nowy</button>';
+  document.getElementById("tmplRow").innerHTML=h;
+}
+function openShTmpl(){document.getElementById("tName").value="";document.getElementById("shTmpl").style.display="flex";setTimeout(function(){document.getElementById("tName").focus();},80);}
+function saveTmpl(){
+  var n=document.getElementById("tName").value.trim();if(!n)return;
+  tmpls.push({name:n,hasG:hasG,hasS:hasS,entries:JSON.parse(JSON.stringify(entries)),parts:JSON.parse(JSON.stringify(parts)),notes:document.getElementById("notes").value});
+  ss("rv_t",tmpls);closeOv("shTmpl");renderTmpls();showToast("✅ Szablon zapisany!");
+}
+function loadTmpl(i){
+  var t=tmpls[i];if(!t)return;
+  hasG=t.hasG;hasS=t.hasS;
+  entries=JSON.parse(JSON.stringify(t.entries));parts=JSON.parse(JSON.stringify(t.parts));
+  document.getElementById("notes").value=t.notes||"";
+  if(entries.length)eid=Math.max.apply(null,entries.map(function(e){return e.id;}))+1;
+  applyType();renderEntries();renderParts();renderSelParts();renderPreview();save();showToast("✅ Załadowano: "+t.name);
+}
+function delTmpl(i){tmpls.splice(i,1);ss("rv_t",tmpls);renderTmpls();}
+
+/* CUSTOM ITEMS */
+function openCust(col){
+  custTarget=col;
+  var labels={el:"element",def:"nieisność",sol:"działanie",kon:"czynność przeglądu"};
+  document.getElementById("shCustTitle").textContent="Dodaj własny: "+labels[col];
+  document.getElementById("cPl").value="";document.getElementById("cRu").value="";
+  document.getElementById("shCust").style.display="flex";
+  setTimeout(function(){document.getElementById("cPl").focus();},80);
+}
+function saveCust(){
+  var pl=document.getElementById("cPl").value.trim();if(!pl)return;
+  var ru=document.getElementById("cRu").value.trim();
+  if(!custom[custTarget])custom[custTarget]=[];
+  if(!custom[custTarget].some(function(i){return i.pl===pl;}))custom[custTarget].push({pl:pl,ru:ru});
+  ss("rv_c",custom);closeOv("shCust");
+  renderList(custTarget==="kon"?curDef:custTarget);showToast("✅ Zapisano!");
+}
+
+/* STYLE */
+function renderStylePicker(){
+  var sr=document.getElementById("styRow");if(!sr)return;
+  sr.innerHTML=["Serwisowy","Punkty","Kompakt","Tabela"].map(function(s){
+    return '<button class="sty'+(curStyle===s?" on":"")+'" onclick="curStyle=\''+s+'\';renderStylePicker();renderPreview();save()">'+s+"</button>";
+  }).join("");
+}
+
+/* PREVIEW */
+function renderPreview(){
+  var el=document.getElementById("repPreview");if(!el)return;
+  var ap=Object.values(parts),notes=document.getElementById("notes").value;
+  var gP=ap.filter(function(p){return p.type==="g";}),sP=ap.filter(function(p){return p.type!=="g";});
+  var gE=entries.filter(function(e){return e.isG;}),sE=entries.filter(function(e){return !e.isG;});
+  if(!entries.length&&!ap.length){el.innerHTML='<div class="rep-empty">Dodaj pozycje →<br>raport pojawi się tutaj</div>';return;}
+  var tC=function(e){return e.isK?"#FF9500":e.isG?"var(--g)":"var(--b)";};
+  var tL=function(e){return e.isK?"[P]":e.isG?"[G]":"[S]";};
+  function pBox(pp){
+    if(!pp.length)return "";
+    var h='<div class="rep-pbox"><div class="rep-plbl">Części zamienne</div>';
+    pp.forEach(function(p){h+='<div class="rep-pr"><span class="rep-pcode">'+(p.k||"#"+p.nr||"—")+'</span><span class="rep-pname">'+esc(p.n)+'</span><span class="rep-pqty">'+p.qty+' szt.</span></div>';});
+    return h+"</div>";
+  }
+  function secHdr(c,l){return '<div class="rep-sec-hdr"><div class="rep-dot" style="background:'+c+'"></div><div class="rep-lbl" style="color:'+c+'">'+l+'</div></div>';}
+  function secBody(ents,pp){
+    var h="";
+    if(curStyle==="Tabela"){
+      h+='<table style="width:100%;border-collapse:collapse"><tr>';
+      ["Element","Nieisność","Co zrobiono"].forEach(function(t){h+='<th style="background:var(--ink);color:#fff;padding:5px 7px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase">'+t+'</th>';});
+      h+="</tr>";
+      ents.forEach(function(en){h+='<tr><td style="padding:6px 7px;border-bottom:.5px solid var(--sep2);font-weight:600;font-size:13px">'+esc(en.el)+'</td><td style="padding:6px 7px;border-bottom:.5px solid var(--sep2);color:'+tC(en)+';font-size:13px">'+esc(en.def)+'</td><td style="padding:6px 7px;border-bottom:.5px solid var(--sep2);color:var(--g);font-size:13px">'+(en.sol?esc(en.sol):"—")+'</td></tr>';});
+      h+="</table>";
+    }else if(curStyle==="Punkty"){
+      ents.forEach(function(en){h+='<div class="rep-row"><div class="rep-el">'+esc(en.el)+'</div><div class="rep-def" style="color:'+tC(en)+'">'+esc(en.def)+'</div>'+(en.sol?'<div class="rep-sol">→ '+esc(en.sol)+'</div>':'')+'</div>';});
+    }else if(curStyle==="Kompakt"){
+      var lines=[];ents.forEach(function(en,i){var l=(i+1)+". "+tL(en)+" "+esc(en.el)+" — "+esc(en.def);if(en.sol)l+=" → "+esc(en.sol);lines.push(l);});
+      if(pp.length){lines.push("");pp.forEach(function(p){lines.push("  • "+p.qty+"× "+esc(p.n)+(p.k?" ["+p.k+"]":""));});}
+      h+='<div class="rep-kompakt">'+lines.join("\n")+'</div>';
+      return h;
+    }else{
+      ents.forEach(function(en){h+='<div class="rep-row"><div class="rep-el">'+esc(en.el)+'</div><div class="rep-def" style="color:'+tC(en)+'">'+esc(en.def)+'</div>'+(en.sol?'<div class="rep-sol">→ '+esc(en.sol)+'</div>':'')+'</div>';});
+    }
+    h+=pBox(pp);return h;
+  }
+  var h="";
+  if(gE.length||gP.length)h+='<div style="margin-bottom:14px">'+secHdr("var(--g)","🛡 Gwarancyjny")+secBody(gE,gP)+"</div>";
+  if((gE.length+gP.length>0)&&(sE.length+sP.length>0))h+='<div class="divider"></div>';
+  if(sE.length||sP.length)h+='<div style="margin-bottom:14px">'+secHdr("var(--b)","🔧 Serwisowy / Przegląd")+secBody(sE,sP)+"</div>";
+  if(notes)h+='<div style="font-size:13px;color:var(--t2);margin-top:10px;padding-top:9px;border-top:.5px solid var(--sep2)">'+esc(notes)+'</div>';
+  el.innerHTML=h;
+}
+
+/* COPY + FIRMAO */
+function copyAndOpen(){
+  var ap=Object.values(parts);
+  var gP=ap.filter(function(p){return p.type==="g";}),sP=ap.filter(function(p){return p.type!=="g";});
+  var gE=entries.filter(function(e){return e.isG;}),sE=entries.filter(function(e){return !e.isG;});
+  if(!entries.length&&!ap.length){showToast("Dodaj pozycje do raportu!");return;}
+  var NL="\n",t="";
+  if(gE.length||gP.length){
+    t+="=== GWARANCYJNY ==="+NL;
+    gE.forEach(function(en,i){t+=(i+1)+". "+en.el+" — "+en.def+(en.sol?" → "+en.sol:"")+NL;});
+    if(gP.length){t+=NL+"Części:"+NL;gP.forEach(function(p){t+="  • "+p.qty+"× "+p.n+(p.k?" ["+p.k+"]":"")+NL;});}
+    t+=NL;
+  }
+  if(sE.length||sP.length){
+    t+="=== SERWISOWY / PRZEGLĄD ==="+NL;
+    sE.forEach(function(en,i){t+=(i+1)+". "+en.el+" — "+en.def+(en.sol?" → "+en.sol:"")+NL;});
+    if(sP.length){t+=NL+"Części:"+NL;sP.forEach(function(p){t+="  • "+p.qty+"× "+p.n+(p.k?" ["+p.k+"]":"")+NL;});}
+  }
+  var notes=document.getElementById("notes").value;
+  if(notes)t+=NL+"Uwagi: "+notes;
+  navigator.clipboard.writeText(t.trim()).then(function(){
+    showToast("✅ Skopiowano! Otwieram FIRMAO...");
+    setTimeout(function(){window.open("https://system.firmao.pl","_blank");},700);
+  }).catch(function(){
+    var ta=document.createElement("textarea");ta.value=t.trim();document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);
+    showToast("✅ Skopiowano! Otwieram FIRMAO...");
+    setTimeout(function(){window.open("https://system.firmao.pl","_blank");},700);
+  });
+}
+
+/* RESET */
+function doReset(){
+  entries=[];parts={};eid=0;curMode="G";
+  SEL={el:[],def:[],sol:[],kon:[]};
+  stepsOpen=[true,false,false];
+  ["notes","pcSrch","se1","se2","se3"].forEach(function(id){var el=document.getElementById(id);if(el)el.value="";});
+  ["sb2","sb3"].forEach(function(id){var el=document.getElementById(id);if(el)el.style.display="none";});
+  ["sa2","sa3"].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent="▸";});
+  var pb=document.getElementById("partsBody");if(pb)pb.style.display="none";
+  var pa=document.getElementById("partsArr");if(pa)pa.textContent="▸";
+  var ps=document.getElementById("partsSub");if(ps)ps.textContent="Dotknij aby rozwinąć";
+  applyType();
+  renderList("el");renderList("def");renderList("sol");
+  renderParts();renderSummary();renderSumStylePicker();updateAddUI();
+  save();
+  showToast("✅ Wyczyszczono!");
+  window.scrollTo(0,0);
+}
+
+/* EXPORT / IMPORT */
+function exportData(){
+  var data={custom:custom,tmpls:tmpls,entries:entries,parts:parts,hasG:hasG,hasS:hasS,curStyle:curStyle};
+  var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="RVM_dane_"+new Date().toISOString().slice(0,10)+".json";a.click();
+  showToast("⬇ Pobrano!");
+}
+function importData(){
+  var inp=document.createElement("input");inp.type="file";inp.accept=".json";
+  inp.onchange=function(ev){
+    var file=ev.target.files[0];if(!file)return;
+    var rd=new FileReader();
+    rd.onload=function(e){
+      try{
+        var d=JSON.parse(e.target.result);
+        if(d.custom){custom=d.custom;ss("rv_c",custom);}
+        if(d.tmpls){tmpls=d.tmpls;ss("rv_t",tmpls);}
+        if(d.entries){entries=d.entries;if(entries.length)eid=Math.max.apply(null,entries.map(function(e){return e.id;}))+1;}
+        if(d.parts)parts=d.parts;
+        if(d.hasG!==undefined)hasG=d.hasG;
+        if(d.hasS!==undefined)hasS=d.hasS;
+        if(d.curStyle)curStyle=d.curStyle;
+        save();applyType();renderList("el");renderList("def");renderList("sol");
+        renderEntries();renderParts();renderSelParts();renderStylePicker();renderTmpls();renderPreview();updateAddUI();
+        showToast("✅ Wczytano!");
+      }catch(err){showToast("❌ Błąd pliku");}
+    };rd.readAsText(file);
+  };inp.click();
+}
+
+/* AI */
+function openAI(){
+  document.getElementById("shAI").style.display="flex";
+  // Attach listeners once
+  if(!document.getElementById("aiActionList")._ready){
+    document.getElementById("aiActionList")._ready=true;
+    document.getElementById("aiCloseBtn").addEventListener("click",function(){closeOv("shAI");});
+    document.querySelectorAll(".ai-action").forEach(function(btn){
+      btn.addEventListener("click",function(){aiQ(this.getAttribute("data-t"));});
+    });
+    document.getElementById("aiCustomSend").addEventListener("click",function(){aiQ("custom");});
+  }
+}
+function openAI_OLD(){
+  var msgs=document.getElementById("aiMsgs");
+  if(!msgs.children.length){
+    var d=document.createElement("div");
+    d.className="bubble-ai";
+    d.innerHTML='<div style="width:28px;height:28px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">🤖</div><div class="bubble-ai-txt">Cześć! Znam kontekst Twojego raportu RVM.<br>Wybierz szybką akcję lub wpisz pytanie — otworzy się Claude z Twoim kontekstem ✅</div>';
+    msgs.appendChild(d);
+  }
+  document.getElementById("shAI").style.display="flex";
+  document.getElementById("aiInp").value="";
+}
+
+function getCtx(){
+  var c="";
+  if(entries.length){c+="Raport RVM:\n";entries.forEach(function(e,i){c+=(i+1)+". "+e.el+" — "+e.def+(e.sol?" → "+e.sol:"")+"\n";});}
+  var ap=Object.values(parts);
+  if(ap.length){c+="Części: ";ap.forEach(function(p){c+=p.qty+"× "+p.n+"; ";});c+="\n";}
+  return c;
+}
+
+function addUserBubble(text){
+  var msgs=document.getElementById("aiMsgs");
+  var d=document.createElement("div");d.className="bubble-user";
+  d.innerHTML='<div class="bubble-user-txt">'+esc(text)+'</div>';
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
+}
+function addAIBubble(text){
+  var msgs=document.getElementById("aiMsgs");
+  var d=document.createElement("div");d.className="bubble-ai";
+  d.innerHTML='<div style="width:28px;height:28px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">🤖</div><div class="bubble-ai-txt">'+text+'</div>';
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
+}
+
+function aiQ(t){
+  var rep=document.getElementById("summaryPreview");
+  var ctx=rep?rep.innerText.trim():"";
+  if(!ctx&&(entries.length||Object.keys(parts).length>0)){
+    var ap=Object.values(parts);
+    if(entries.length){ctx+="Raport RVM:\n";entries.forEach(function(e,i){ctx+=(i+1)+". "+e.el+" — "+e.def+(e.sol?" → "+e.sol:"")+"\n";});}
+    if(ap.length){ctx+="Części: ";ap.forEach(function(p){ctx+=p.qty+"× "+p.n+"; ";});ctx+="\n";}
+  }
+  var prompts={
+    summary:"Napisz profesjonalne 3-4 zdaniowe podsumowanie tego raportu serwisowego RVM po polsku:\n\n",
+    translate_en:"Translate this RVM service report to English:\n\n",
+    translate_ru:"Переведи этот сервисный отчёт RVM на русский язык:\n\n",
+    firmao:"Sformatuj poniższy raport jako zwięzły wpis do systemu FIRMAO po polsku:\n\n",
+    suggest:"Na podstawie poniższego raportu RVM zaproponuj dodatkowe działania serwisowe lub prewencyjne:\n\n",
+    short:"Skróć i uprość poniższy raport serwisowy zachowując najważniejsze informacje:\n\n",
+    client:"Przepisz poniższy raport w wersji dla klienta (bez technicznego żargonu, po polsku):\n\n",
+    custom:""
+  };
+  closeOv("shAI");
+  if(t==="custom"){
+    var inp=document.getElementById("aiCustomInp");
+    var q=inp?inp.value.trim():"";
+    if(!q){showToast("Wpisz pytanie");return;}
+    window.open("https://claude.ai/new?q="+encodeURIComponent(q+(ctx?"\n\nKontekst raportu:\n"+ctx:"").slice(0,1500)),"_blank");
+    closeOv("shAI");
+    return;
+  }
+  var full=prompts[t]+(ctx||"(brak pozycji w raporcie)");
+  window.open("https://claude.ai/new?q="+encodeURIComponent(full.slice(0,1500)),"_blank");
+}
+function sendAI(){
+  var inp=document.getElementById("aiInp");
+  var q=inp.value.trim();if(!q)return;
+  inp.value="";inp.style.height="auto";
+  addUserBubble(q);
+  var ctx=getCtx();
+  var full=ctx?"Kontekst:\n"+ctx+"\nPytanie: "+q:q;
+  addAIBubble("Otwieram Claude AI z pytaniem... 🔗");
+  setTimeout(function(){window.open("https://claude.ai/new?q="+encodeURIComponent(full.slice(0,1500)),"_blank");},300);
+}
+
+/* QR */
+var qrStream=null,qrFrame=null;
+
+function openQR(){
+  document.getElementById("qrBox").style.display="none";
+  document.getElementById("scanBox").style.display="none";
+  document.getElementById("qrResult").style.display="none";
+  document.getElementById("shQR").style.display="flex";
+}
+
+function genQR(){
+  var data=JSON.stringify({v:2,custom:custom,tmpls:tmpls});
+  var bytes=new Blob([data]).size;
+  if(bytes>3000){document.getElementById("qrWarn").style.display="block";document.getElementById("qrWarn").textContent="⚠️ Dużo danych ("+Math.round(bytes/1024*10)/10+" KB) — skanowanie może być trudne";}
+  else document.getElementById("qrWarn").style.display="none";
+  var wrap=document.getElementById("qrWrap");wrap.innerHTML="";
+  document.getElementById("qrBox").style.display="block";
+  if(typeof QRCode==="undefined"){
+    var s=document.createElement("script");
+    s.src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
+    s.onload=function(){new QRCode(wrap,{text:data,width:240,height:240,correctLevel:QRCode.CorrectLevel.L});};
+    s.onerror=function(){wrap.innerHTML='<div style="padding:20px;font-size:13px;color:var(--r)">Brak internetu — potrzebne połączenie przy pierwszym użyciu</div>';};
+    document.head.appendChild(s);
+  }else{new QRCode(wrap,{text:data,width:240,height:240,correctLevel:QRCode.CorrectLevel.L});}
+}
+
+function startScan(){
+  document.getElementById("scanBox").style.display="block";
+  if(typeof jsQR==="undefined"){
+    var s=document.createElement("script");
+    s.src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.js";
+    s.onload=function(){startCamera();};
+    s.onerror=function(){document.getElementById("scanLbl").textContent="Brak internetu";};
+    document.head.appendChild(s);
+  }else startCamera();
+}
+
+function startCamera(){
+  if(!navigator.mediaDevices){document.getElementById("scanLbl").textContent="Kamera niedostępna";return;}
+  navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(function(stream){
+    qrStream=stream;var v=document.getElementById("qrVid");v.srcObject=stream;v.play();
+    v.onloadedmetadata=function(){scanLoop();};
+  }).catch(function(e){document.getElementById("scanLbl").textContent="Brak dostępu do kamery";});
+}
+
+function scanLoop(){
+  var v=document.getElementById("qrVid");
+  if(!v||v.readyState<2){qrFrame=requestAnimationFrame(scanLoop);return;}
+  var c=document.createElement("canvas");c.width=v.videoWidth;c.height=v.videoHeight;
+  var ctx=c.getContext("2d");ctx.drawImage(v,0,0);
+  try{
+    var img=ctx.getImageData(0,0,c.width,c.height);
+    var code=jsQR(img.data,img.width,img.height,{inversionAttempts:"dontInvert"});
+    if(code&&code.data){onQRFound(code.data);return;}
+  }catch(e){}
+  qrFrame=requestAnimationFrame(scanLoop);
+}
+
+function stopScan(){
+  if(qrFrame)cancelAnimationFrame(qrFrame);
+  if(qrStream)qrStream.getTracks().forEach(function(t){t.stop();});
+  qrStream=null;qrFrame=null;
+  document.getElementById("scanBox").style.display="none";
+}
+
+function onQRFound(data){
+  stopScan();
+  try{
+    var d=JSON.parse(data);var imported=0;
+    if(d.custom){custom=d.custom;ss("rv_c",custom);}
+    if(d.tmpls&&d.tmpls.length){
+      d.tmpls.forEach(function(t){if(!tmpls.some(function(e){return e.name===t.name;})){tmpls.push(t);imported++;}});
+      ss("rv_t",tmpls);
+    }
+    renderTmpls();
+    var res=document.getElementById("qrResult");
+    res.style.display="block";res.textContent="✅ Zaimportowano "+imported+" szablonów"+(imported===0?" (wszystkie już istnieją)":"!");
+    showToast("✅ QR OK! +"+imported+" szablonów");
+  }catch(e){
+    var res=document.getElementById("qrResult");
+    res.style.display="block";res.style.background="rgba(255,59,48,.1)";res.style.color="var(--r)";
+    res.textContent="❌ Nieprawidłowy kod QR";
+  }
+}
+
+/* INIT */
+entries=[];parts={};eid=0;
+;
+;
+applyType();
+renderList("el");renderList("def");renderList("sol");
+renderParts();
+renderStylePicker();
+renderSumStylePicker();renderSummary();updateAddUI();
+/* TOGGLE */
+function toggleMode(){curMode=curMode==="G"?"NG":"G";applyType();}
+
+/* TOGGLE PARTS */
+var partsOpen=false;
+function toggleParts(){
+  partsOpen=!partsOpen;
+  var b=document.getElementById("partsBody");
+  var a=document.getElementById("partsArr");
+  var s=document.getElementById("partsSub");
+  if(b)b.style.display=partsOpen?"block":"none";
+  if(a)a.textContent=partsOpen?"▾":"▸";
+  if(partsOpen){renderParts();if(s)s.textContent="Wybierz części";}
+  else{var cnt=Object.keys(parts).length;if(s)s.textContent=cnt?cnt+" wybranych":"Dotknij aby rozwinąć";}
+}
+
+/* PARTS - createElement with inline qty */
+function renderParts(){
+  var q=document.getElementById("pcSrch").value.toLowerCase();
+  var allParts=WH.concat(customParts.map(function(p){return {nr:p.nr,n:p.n,k:p.k||""};}));
+  var list=q?allParts.filter(function(p){return p.n.toLowerCase().indexOf(q)>=0||String(p.nr).indexOf(q)>=0;}):allParts;
+  var grid=document.getElementById("partsGrid");
+  if(!grid)return;
+  grid.innerHTML="";
+  list.forEach(function(wp){
+    var k=String(wp.nr),on=!!parts[k],qty=on?parts[k].qty:0;
+    if(on){
+      var row=document.createElement("div");
+      row.style.cssText="display:flex;align-items:center;padding:9px 13px;border-bottom:.5px solid rgba(60,60,67,.08);gap:10px;background:#F0F8FF";
+      var info=document.createElement("div");info.style.cssText="flex:1;min-width:0";
+      var nm=document.createElement("div");nm.style.cssText="font-size:14px;font-weight:600;color:#000;overflow:hidden;text-overflow:ellipsis;white-space:nowrap";nm.textContent=wp.n;
+      var cd=document.createElement("div");cd.style.cssText="font-size:11px;color:#8E8E93;font-family:monospace;margin-top:1px";cd.textContent="#"+wp.nr+" "+wp.k;
+      info.appendChild(nm);info.appendChild(cd);
+      var badge=document.createElement("button");
+      badge.style.cssText="padding:3px 8px;border-radius:6px;border:none;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;background:"+(parts[k].type==="g"?"rgba(52,199,89,.15)":"rgba(0,122,255,.1)")+";color:"+(parts[k].type==="g"?"#34C759":"#007AFF");
+      badge.textContent=parts[k].type==="g"?"G":"NG";badge.setAttribute("data-k",k);
+      badge.addEventListener("click",function(e){e.stopPropagation();var kk=this.getAttribute("data-k");if(parts[kk])parts[kk].type=parts[kk].type==="g"?"ng":"g";renderParts();renderSummary();save();});
+      var qrow=document.createElement("div");qrow.style.cssText="display:flex;align-items:center;background:rgba(118,118,128,.1);border-radius:9px;overflow:hidden;flex-shrink:0";
+      var bm=document.createElement("button");bm.style.cssText="width:32px;height:30px;background:none;border:none;cursor:pointer;font-size:18px;color:#007AFF;font-weight:600";bm.textContent="\u2212";bm.setAttribute("data-k",k);
+      bm.addEventListener("click",function(e){e.stopPropagation();var kk=this.getAttribute("data-k");if(parts[kk]){parts[kk].qty--;if(parts[kk].qty<1)delete parts[kk];}renderParts();renderSummary();save();});
+      var qn=document.createElement("span");qn.style.cssText="font-size:14px;font-weight:700;min-width:24px;text-align:center";qn.textContent=qty;
+      var bp=document.createElement("button");bp.style.cssText="width:32px;height:30px;background:none;border:none;cursor:pointer;font-size:18px;color:#007AFF;font-weight:600";bp.textContent="+";bp.setAttribute("data-k",k);
+      bp.addEventListener("click",function(e){e.stopPropagation();var kk=this.getAttribute("data-k");if(parts[kk])parts[kk].qty++;renderParts();renderSummary();save();});
+      qrow.appendChild(bm);qrow.appendChild(qn);qrow.appendChild(bp);
+      var rm=document.createElement("button");rm.style.cssText="background:none;border:none;cursor:pointer;color:#C7C7CC;font-size:22px;padding:0 2px;flex-shrink:0";rm.textContent="\xd7";rm.setAttribute("data-k",k);
+      rm.addEventListener("click",function(e){e.stopPropagation();delete parts[this.getAttribute("data-k")];renderParts();renderSummary();save();});
+      row.appendChild(info);row.appendChild(badge);row.appendChild(qrow);row.appendChild(rm);
+      grid.appendChild(row);
+    }else{
+      var isCustom=customParts.some(function(cp){return String(cp.nr)===k;});
+      var wrapper=document.createElement("div");
+      wrapper.style.cssText="display:inline-flex;align-items:center;gap:2px;margin:2px";
+      var sp=document.createElement("span");sp.className="pc";sp.setAttribute("data-k",k);
+      var nr2=document.createElement("span");nr2.className="pc-nr";nr2.textContent="#"+wp.nr+" ";
+      sp.appendChild(nr2);sp.appendChild(document.createTextNode(wp.n));
+      sp.addEventListener("click",function(){
+        var kk=this.getAttribute("data-k"),found=null;
+        var src=WH.concat(customParts);for(var i=0;i<src.length;i++){if(String(src[i].nr)===kk){found=src[i];break;}}
+        if(!found)return;
+        parts[kk]={qty:1,n:found.n,k:found.k,nr:found.nr,type:curMode==="G"?"g":"ng"};
+        renderParts();renderSummary();save();
+      });
+      wrapper.appendChild(sp);
+      if(isCustom){
+        var delBtn=document.createElement("button");
+        delBtn.style.cssText="background:rgba(255,59,48,.12);border:none;color:#FF3B30;border-radius:6px;width:20px;height:20px;font-size:11px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center";
+        delBtn.textContent="✕";delBtn.setAttribute("data-k",k);
+        delBtn.addEventListener("click",function(ev){
+          ev.stopPropagation();
+          var kk=this.getAttribute("data-k");
+          customParts=customParts.filter(function(cp){return String(cp.nr)!==kk;});
+          delete parts[kk];
+          ss("rv_cp",customParts);
+          renderParts();renderSummary();save();
+          showToast("Usunięto z katalogu");
+        });
+        wrapper.appendChild(delBtn);
+      }
+      grid.appendChild(wrapper);
+    }
+  });
+  var sub=document.getElementById("partsSub"),cnt=Object.keys(parts).length;
+  if(sub&&!partsOpen)sub.textContent=cnt?cnt+" wybranych":"Dotknij aby rozwinąć";
+}
+
+/* RENDER ENTRIES - no-op (shown in summary) */
+function renderEntries(){}
+
+/* SUMMARY STYLE PICKER */
+var sumStyle="Kompakt";
+function renderSumStylePicker(){
+    var customStyles=ls("rv_cs",[]);
+  var S=[
+    {k:"Kompakt",l:"Kompakt"},
+    {k:"Lista",l:"Lista"},
+    {k:"Protokol",l:"Protokół"},
+    {k:"Techniczny",l:"Techniczny"},
+    {k:"Minimal",l:"Minimalny"},
+    {k:"Bold",l:"Pogrubiony"},
+    {k:"Numerowany",l:"Numerowany"},
+    {k:"Ramka",l:"Z ramką"}
+  ].concat(customStyles.map(function(cs){return {k:"custom_"+cs.name,l:cs.name,custom:true};}));
+  var el=document.getElementById("sumStyleRow");
+  if(!el)return;el.innerHTML="";
+  for(var i=0;i<S.length;i++){
+    var wrap=document.createElement("span");wrap.style.cssText="display:inline-flex;align-items:center;gap:1px";
+    var b=document.createElement("button");
+    b.className="sty"+(sumStyle===S[i].k?" on":"");
+    b.textContent=S[i].l;
+    b.setAttribute("data-s",S[i].k);
+    b.addEventListener("click",function(){sumStyle=this.getAttribute("data-s");renderSumStylePicker();renderSummary();});
+    wrap.appendChild(b);
+    if(S[i].custom){
+      var d=document.createElement("button");
+      d.style.cssText="background:rgba(255,59,48,.1);border:none;color:#FF3B30;border-radius:6px;width:18px;height:18px;font-size:10px;cursor:pointer";
+      d.textContent="✕";d.setAttribute("data-n",S[i].l);
+      d.addEventListener("click",function(e){e.stopPropagation();
+        var n=this.getAttribute("data-n");
+        var cs=ls("rv_cs",[]).filter(function(x){return x.name!==n;});
+        ss("rv_cs",cs);if(sumStyle==="custom_"+n)sumStyle="Kompakt";
+        renderSumStylePicker();renderSummary();
+      });
+      wrap.appendChild(d);
+    }
+    el.appendChild(wrap);
+  }
+  // Add "Własny styl" button
+  var ab=document.createElement("button");
+  ab.className="sty";ab.textContent="＋ Własny";
+  ab.style.cssText="background:rgba(0,0,0,.06);border-style:dashed";
+  ab.addEventListener("click",openCustomStyleEditor);
+  el.appendChild(ab);
+}
+
+/* SUMMARY RENDER */
+function renderSummary(){
+  var el=document.getElementById("summaryPreview");if(!el)return;
+  var btn=document.getElementById("addBtn2");
+  var ap=Object.values(parts);
+  var gP=ap.filter(function(p){return p.type==="g";}),ngP=ap.filter(function(p){return p.type!=="g";});
+  var gE=entries.filter(function(e){return e.isG;}),ngE=entries.filter(function(e){return !e.isG;});
+  if(btn){var ok=SEL.el.length>0&&(SEL.def.length>0||SEL.kon.length>0);btn.style.background=ok?"#007AFF":"rgba(118,118,128,.12)";btn.style.color=ok?"#fff":"var(--t2)";btn.textContent=ok?"\u2795 Dodaj do raportu \u2014 "+SEL.el[0]:"Wybierz element i nieisno\u015b\u0107";}
+  if(!entries.length&&!ap.length){el.innerHTML='<div style="text-align:center;color:var(--t3);font-size:14px;padding:16px 0">Dodaj pozycje \u2014 raport pojawi si\u0119 tutaj</div>';return;}
+  var h="";
+  var secs=[{ents:gE,pp:gP,c:"#34C759",l:"Gwarancyjny"},{ents:ngE,pp:ngP,c:"#007AFF",l:"Nie gwarancyjny"}];
+  secs.forEach(function(sec){
+    if(!sec.ents.length&&!sec.pp.length)return;
+    if(h)h+='<div style="height:.5px;background:#E5E5EA;margin:10px 0 12px"></div>';
+    h+='<div style="display:flex;align-items:center;gap:7px;margin-bottom:10px"><div style="width:3px;height:16px;background:#1C1C1E;border-radius:2px"></div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#1C1C1E">'+sec.l+'</div></div>';
+    if(sumStyle==="Lista"){
+      sec.ents.forEach(function(en,i){h+='<div style="display:flex;gap:9px;padding:9px 0;border-bottom:.5px solid #E5E5EA"><div style="min-width:22px;height:22px;border-radius:5px;background:'+sec.c+';color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0">'+(i+1)+'</div><div><div style="font-size:14px;font-weight:600">'+en.el+'</div><div style="font-size:13px;color:'+sec.c+';margin-top:2px">'+en.def+'</div>'+(en.sol?'<div style="font-size:12px;color:#636366;margin-top:1px">\u2192 '+en.sol+'</div>':'')+'</div></div>';});
+    }else if(sumStyle==="Kompakt"){
+      sec.ents.forEach(function(en,i){h+='<div style="display:flex;gap:9px;margin-bottom:7px"><div style="min-width:22px;height:22px;border-radius:5px;background:'+sec.c+';color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0">'+(i+1)+'</div><div><div style="font-size:14px;font-weight:700;text-decoration:underline;text-underline-offset:3px;text-decoration-color:#1C1C1E">'+en.el+'</div><div style="font-size:13px;color:#3C3C43;margin-top:2px">'+en.def+(en.sol?' \u2192 <span style="color:#34C759">'+en.sol+'</span>':'')+'</div></div></div>';});
+    }else if(sumStyle==="Protokol"){
+      sec.ents.forEach(function(en,i){h+='<div style="margin-bottom:8px;padding:8px 10px;background:#F9F9F9;border-radius:7px"><div style="font-size:10px;color:#8E8E93;font-weight:700;letter-spacing:.06em">'+String(i+1).padStart(2,"0")+'</div><div style="font-size:14px;font-weight:700;color:#000;margin-top:2px">'+en.el+'</div><div style="font-size:13px;color:#1C1C1E;margin-top:3px">'+en.def+'</div>'+(en.sol?'<div style="font-size:12px;color:#3C3C43;margin-top:2px;font-style:italic">\u2192 '+en.sol+'</div>':'')+'</div>';});
+    }else if(sumStyle==="Minimal"){
+      sec.ents.forEach(function(en,i){h+='<div style="padding:5px 0;border-bottom:.5px solid #000;font-size:13px;color:#000">'+en.el+' — '+en.def+(en.sol?' → '+en.sol:'')+' </div>';});
+    }else if(sumStyle==="Bold"){
+      sec.ents.forEach(function(en,i){h+='<div style="margin-bottom:8px"><div style="font-size:15px;font-weight:900;color:#000;letter-spacing:-.3px">'+en.el+'</div><div style="font-size:13px;font-weight:600;color:#333;margin-top:2px">'+en.def+(en.sol?' → '+en.sol:'')+' </div></div>';});
+    }else if(sumStyle==="Numerowany"){
+      sec.ents.forEach(function(en,i){h+='<div style="display:flex;gap:8px;margin-bottom:7px;padding-bottom:7px;border-bottom:.5px solid #E5E5EA"><span style="font-weight:700;color:#000;min-width:22px">'+String(i+1).padStart(2,"0")+'.</span><span style="font-size:13px;color:#000"><b>'+en.el+'</b> — '+en.def+(en.sol?' → '+en.sol:'')+' </span></div>';});
+    }else if(sumStyle==="Ramka"){
+      sec.ents.forEach(function(en,i){h+='<div style="margin-bottom:6px;font-size:13px;color:#000"><b>'+en.el+'</b> — '+en.def+(en.sol?' → '+en.sol:'')+' </div>';});
+    }else{
+      sec.ents.forEach(function(en){h+='<div style="margin-bottom:8px;padding:8px 11px;border-radius:7px;background:#F9F9F9;border-left:3px solid '+sec.c+'"><div style="display:flex;gap:7px;margin-bottom:2px"><span style="font-size:10px;font-weight:700;text-transform:uppercase;color:#8E8E93;min-width:60px">ELEMENT</span><span style="font-size:13px;font-weight:700">'+en.el+'</span></div><div style="display:flex;gap:7px;margin-bottom:2px"><span style="font-size:10px;font-weight:700;text-transform:uppercase;color:#8E8E93;min-width:60px">USTERKA</span><span style="font-size:13px;color:'+sec.c+'">'+en.def+'</span></div>'+(en.sol?'<div style="display:flex;gap:7px"><span style="font-size:10px;font-weight:700;text-transform:uppercase;color:#8E8E93;min-width:60px">NAPRAWA</span><span style="font-size:13px;color:#34C759">'+en.sol+'</span></div>':'')+'</div>';});
+    }
+    if(sec.pp.length){h+='<div style="margin-top:8px;padding:8px 10px;background:#F5F5F5;border-radius:7px;border-left:3px solid #1C1C1E"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#8E8E93;margin-bottom:4px">Cz\u0119\u015bci</div>';sec.pp.forEach(function(p){h+='<div style="font-size:12px;color:#3C3C43;font-family:monospace;padding:1px 0">'+(p.k||"#"+p.nr)+' \u2022 '+p.qty+'\xd7 '+p.n+'</div>';});h+='</div>';}
+  });
+  el.innerHTML=h;
+}
+
+/* BUILD TEXT */
+function buildReportText(){
+  var ap=Object.values(parts);
+  var gP=ap.filter(function(p){return p.type==="g";}),ngP=ap.filter(function(p){return p.type!=="g";});
+  var gE=entries.filter(function(e){return e.isG;}),ngE=entries.filter(function(e){return !e.isG;});
+  if(!entries.length&&!ap.length)return"";
+  var NL="\n",t="";
+  if(gE.length||gP.length){t+="=== GWARANCYJNY ==="+NL;gE.forEach(function(en,i){t+=(i+1)+". "+en.el+" - "+en.def+(en.sol?" -> "+en.sol:"")+NL;});if(gP.length){t+=NL+"Czesci:"+NL;gP.forEach(function(p){t+="  "+p.qty+"x "+p.n+(p.k?" ["+p.k+"]":"")+NL;});}t+=NL;}
+  if(ngE.length||ngP.length){t+="=== NIE GWARANCYJNY ==="+NL;ngE.forEach(function(en,i){t+=(i+1)+". "+en.el+" - "+en.def+(en.sol?" -> "+en.sol:"")+NL;});if(ngP.length){t+=NL+"Czesci:"+NL;ngP.forEach(function(p){t+="  "+p.qty+"x "+p.n+(p.k?" ["+p.k+"]":"")+NL;});}t+=NL;}
+  return t.trim();
+}
+
+function copySummary(){
+  var t=buildReportText();
+  if(!t){showToast("Brak pozycji w raporcie");return;}
+  var btn=document.getElementById("copyBtn");
+  function feedback(){
+    if(btn){btn.textContent="✅ Skopiowano!";btn.style.background="#34C759";}
+    showToast("✅ Skopiowano!");
+    setTimeout(function(){if(btn){btn.textContent="📋 Kopiuj";btn.style.background="#1C1C1E";}},2000);
+  }
+  navigator.clipboard.writeText(t).then(feedback).catch(function(){
+    try{var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);}catch(e){}
+    feedback();
+  });
+}
+function copyAndFirmao(){}
+
+
+
+function renderEntries(){}
+function fmtDoc(cmd,val){var ed=document.getElementById("summaryPreview");if(ed)ed.focus();try{document.execCommand(cmd,false,val||null);}catch(e){}}
+function clearReport(){entries=[];parts={};var n=document.getElementById("notes");if(n)n.value="";renderParts();renderSummary();save();showToast("Wyczyszczono");}
+function openTmplPicker(){if(!tmpls.length){showToast("Brak szablonów");return;}var list=document.getElementById("tmplPickerList");if(!list)return;list.innerHTML="";tmpls.forEach(function(t,i){var btn=document.createElement("div");btn.style.cssText="padding:13px 4px;border-bottom:.5px solid var(--sep2);cursor:pointer;display:flex;justify-content:space-between;align-items:center";var nm=document.createElement("div");nm.style.cssText="font-size:15px;font-weight:600";nm.textContent=t.name;var ins=document.createElement("div");ins.style.cssText="font-size:13px;color:#007AFF;font-weight:600";ins.textContent="Wstaw";btn.appendChild(nm);btn.appendChild(ins);btn.setAttribute("data-i",String(i));btn.addEventListener("click",function(){loadTmpl(parseInt(this.getAttribute("data-i")));closeOv("shTmplPicker");});list.appendChild(btn);});document.getElementById("shTmplPicker").style.display="flex";}
+function addCustWarehousePart(){var name=document.getElementById("custPartName").value.trim();var nr=document.getElementById("custPartNr").value.trim()||("C"+(Date.now()%10000));if(!name){showToast("Wpisz nazw\u0119");return;}customParts.push({nr:nr,n:name,k:nr});ss("rv_cp",customParts);document.getElementById("custPartName").value="";document.getElementById("custPartNr").value="";renderParts();showToast("\u2705 "+name);}
+function importFromExcel(input){var file=input.files[0];if(!file)return;showToast("Wczytywanie...");var reader=new FileReader();reader.onload=function(e){try{var data=new Uint8Array(e.target.result);if(typeof XLSX==="undefined"){var sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";sc.onload=function(){parseExcel(data);};sc.onerror=function(){parseCSV(new TextDecoder().decode(data));};document.head.appendChild(sc);}else{parseExcel(data);}}catch(err){showToast("B\u0142\u0105d");}};reader.readAsArrayBuffer(file);input.value="";}
+function parseExcel(data){try{var wb=XLSX.read(data,{type:"array"});var ws=wb.Sheets[wb.SheetNames[0]];var rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:""});var added=0,start=rows.length&&String(rows[0][0]||"").toLowerCase()==="nazwa"?1:0;for(var i=start;i<rows.length;i++){var name=String(rows[i][0]||"").trim();if(!name)continue;var nr=String(rows[i][1]||"").trim()||("I"+i);if(!customParts.some(function(p){return p.n===name;})){customParts.push({nr:nr,n:name,k:nr});added++;}}ss("rv_cp",customParts);renderParts();showToast("\u2705 "+added+" cz\u0119\u015bci!");}catch(err){showToast("B\u0142\u0105d Excel");}}
+function parseCSV(text){var lines=text.split("\n"),added=0,start=lines.length&&lines[0].toLowerCase().indexOf("nazwa")>=0?1:0;for(var i=start;i<lines.length;i++){var c=lines[i].split(/[,;\t]/);var name=(c[0]||"").trim().replace(/^"|"$/g,"");if(!name)continue;customParts.push({nr:(c[1]||"").trim().replace(/^"|"$/g,"")||("I"+i),n:name,k:""});added++;}ss("rv_cp",customParts);renderParts();showToast("\u2705 "+added+"!");}
+function loadTmpl(i){var t=tmpls[i];if(!t)return;curMode=t.hasG?"G":"NG";entries=JSON.parse(JSON.stringify(t.entries||[]));parts=JSON.parse(JSON.stringify(t.parts||{}));var n=document.getElementById("notes");if(n)n.value=t.notes||"";if(entries.length)eid=Math.max.apply(null,entries.map(function(e){return e.id;}))+1;applyType();renderParts();renderSummary();save();showToast("\u2705 Za\u0142adowano: "+t.name);}
+function copySummary(){var ed=document.getElementById("summaryPreview");var t=ed?ed.innerText.trim():buildReportText();if(!t){showToast("Brak pozycji");return;}navigator.clipboard.writeText(t).then(function(){showToast("\u2705 Skopiowano!");}).catch(function(){try{var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);showToast("\u2705 Skopiowano!");}catch(e){showToast("B\u0142\u0105d");}});}
+function copyAndFirmao(){
+  var t=buildReportText();
+  if(!t){showToast("Brak pozycji");return;}
+  var btn=document.getElementById("firmaoBtn");
+  function ok(){
+    if(btn){btn.textContent="✅ Skopiowano!";btn.style.background="#34C759";}
+    setTimeout(function(){if(btn){btn.textContent="📱 FIRMAO";btn.style.background="linear-gradient(135deg,#1a7a3a,#34C759)";}},3000);
+    document.getElementById("firmaoHint").style.display="flex";
+    setTimeout(function(){document.getElementById("firmaoHint").style.display="none";},6000);
+  }
+  navigator.clipboard.writeText(t).then(ok).catch(function(){
+    try{var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);}catch(e){}
+    ok();
+  });
+}
+
+
+function toggleParts(){
+  var body=document.getElementById("partsBody");
+  var arr=document.getElementById("partsArr");
+  var sub=document.getElementById("partsSub");
+  var open=body.style.display!=="none";
+  body.style.display=open?"none":"block";
+  arr.textContent=open?"▸":"▾";
+  if(!open){
+    renderParts();
+    var cnt=Object.keys(parts).length;
+    if(sub)sub.textContent=cnt?cnt+" wybranych — dotknij aby edytować":"Dotknij aby wybrać części";
+  } else {
+    var cnt=Object.keys(parts).length;
+    if(sub)sub.textContent=cnt?cnt+" wybranych":"Dotknij aby rozwinąć";
+  }
+}
+
+function toggleColorPicker(){
+  var cp=document.getElementById("colorPicker");
+  if(cp)cp.style.display=cp.style.display==="flex"?"none":"flex";
+}
+function setColor(c){
+  var ed=document.getElementById("summaryPreview");
+  if(ed)ed.focus();
+  try{document.execCommand("foreColor",false,c);}catch(e){}
+  var cp=document.getElementById("colorPicker");
+  if(cp)cp.style.display="none";
+}
+document.addEventListener("click",function(e){
+  var wrap=document.getElementById("colorPickerWrap");
+  if(wrap&&!wrap.contains(e.target)){
+    var cp=document.getElementById("colorPicker");
+    if(cp)cp.style.display="none";
+  }
+});
+
+function openCustomStyleEditor(){
+  document.getElementById("shCustomStyle").style.display="flex";
+  document.getElementById("csName").value="";
+}
+
+;
+
+function renderCustomStyle(sec,cfg){
+  var h="";
+  sec.ents.forEach(function(en,i){
+    var num="";
+    if(cfg.num==="num")num='<span style="font-weight:700;color:#000;margin-right:6px">'+(i+1)+'.</span>';
+    if(cfg.num==="pad")num='<span style="font-weight:700;color:#000;margin-right:6px">'+String(i+1).padStart(2,"0")+'.</span>';
+    var bg=cfg.sep==="box"?'background:#F9F9F9;border-radius:7px;padding:7px 9px;':'';
+    var mb=cfg.sep==="line"?'border-bottom:.5px solid #E5E5EA;padding-bottom:7px;':'';
+    var sp=cfg.sep==="space"?'margin-bottom:12px;':'margin-bottom:7px;';
+    h+='<div style="'+sp+mb+'">'+num+'<span style="font-size:'+cfg.elSize+'px;font-weight:'+cfg.elWeight+';color:#000">'+en.el+'</span>';
+    h+='<span style="font-size:'+cfg.defSize+'px;color:#1C1C1E"> — '+en.def+'</span>';
+    if(en.sol)h+='<span style="font-size:'+(parseInt(cfg.defSize)-1)+'px;color:#3C3C43;font-style:italic"> → '+en.sol+'</span>';
+    h+='</div>';
+  });
+  return h;
+}
+
+// Init listeners
+(function(){
+
+  var cb=document.getElementById("copyBtn");
+  if(cb)cb.addEventListener("click",function(){
+    var t=buildReportText();
+    if(!t){showToast("Brak pozycji");return;}
+    var btn=this;
+    function ok(){btn.textContent="✅ Skopiowano!";btn.style.background="#34C759";showToast("✅ Skopiowano!");setTimeout(function(){btn.textContent="📋 Kopiuj";btn.style.background="#1C1C1E";},2000);}
+    navigator.clipboard.writeText(t).then(ok).catch(function(){try{var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);}catch(e){}ok();});
+  });
+
+
+  var b=document.getElementById("addCustBtn");
+  if(b)b.addEventListener("click",addCustWarehousePart);
+
+
+  var sb=document.getElementById("saveCustomStyle");
+  if(sb)sb.addEventListener("click",function(){
+    var name=document.getElementById("csName").value.trim();
+    if(!name){showToast("Podaj nazwę stylu");return;}
+    var cs=ls("rv_cs",[]);
+    var newStyle={
+      name:name,
+      elSize:document.getElementById("csElSize").value,
+      elWeight:document.getElementById("csElWeight").value,
+      defSize:document.getElementById("csDefSize").value,
+      sep:document.getElementById("csSep").value,
+      num:document.getElementById("csNum").value
+    };
+    cs=cs.filter(function(x){return x.name!==name;});
+    cs.push(newStyle);ss("rv_cs",cs);
+    sumStyle="custom_"+name;
+    closeOv("shCustomStyle");
+    renderSumStylePicker();renderSummary();
+    showToast("✅ Styl zapisany: "+name);
+  });
+
+})();
+
+function openUpdate(){document.getElementById("shUpdate").style.display="flex";}
+
+(function(){
+  var ib=document.getElementById("installBtn");
+  if(ib)ib.addEventListener("click",openUpdate);
+
+  var sb=document.getElementById("updSendBtn");
+  if(sb)sb.addEventListener("click",async function(){
+    var gistId=document.getElementById("updGistId").value.trim();
+    var token=document.getElementById("updToken").value.trim();
+    var status=document.getElementById("updStatus");
+    if(!gistId||!token){status.textContent="⚠️ Wypełnij oba pola";status.style.color="#FF3B30";return;}
+    status.textContent="⏳ Wysyłam...";status.style.color="#8E8E93";
+    try{
+      var html=document.documentElement.outerHTML;
+      var res=await fetch("https://api.github.com/gists/"+gistId,{
+        method:"PATCH",
+        headers:{"Authorization":"token "+token,"Content-Type":"application/json"},
+        body:JSON.stringify({files:{"index.html":{content:html}}})
+      });
+      var data=await res.json();
+      if(res.ok){
+        status.textContent="✅ Wysłano pomyślnie!";status.style.color="#34C759";
+        var link="https://htmlpreview.github.io/?https://gist.githubusercontent.com/"+data.owner.login+"/"+gistId+"/raw/index.html";
+        document.getElementById("updLink").style.display="block";
+        document.getElementById("updLinkText").textContent=link;
+        var cl=document.getElementById("updCopyLink");
+        cl.addEventListener("click",function(){
+          navigator.clipboard.writeText(link).then(function(){showToast("✅ Link skopiowany!");}).catch(function(){});
+        });
+      }else{
+        status.textContent="❌ Błąd: "+(data.message||res.status);status.style.color="#FF3B30";
+      }
+    }catch(e){status.textContent="❌ "+e.message;status.style.color="#FF3B30";}
+  });
+})();
+
+</script>
+
+
+
+<div id="toast" class="toast"></div>
+
+<div class="ov" id="shTmplPicker" style="display:none">
+  <div class="sh" style="max-height:80vh;overflow-y:auto">
+    <div class="sh-bar"></div>
+    <div class="sh-title">📂 Wybierz szablon</div>
+    <div id="tmplPickerList" style="margin-bottom:8px"></div>
+    <button class="sh-btn light" onclick="closeOv('shTmplPicker')">Anuluj</button>
+  </div>
+</div>
+
+
+<!-- SHEET: UPDATER -->
+<div class="ov" id="shUpdate" style="display:none">
+  <div class="sh" style="max-height:90vh;overflow-y:auto">
+    <div class="sh-bar"></div>
+    <div style="text-align:center;font-size:32px;margin-bottom:8px">📲</div>
+    <div class="sh-title">Zainstaluj jako aplikację</div>
+    <div style="background:rgba(0,122,255,.07);border-radius:12px;padding:13px;margin-bottom:14px;font-size:13px;line-height:1.7;color:#1C1C1E">
+      <b>Jak to działa:</b><br>
+      1. Wpisz ID gista i token GitHub<br>
+      2. Kliknij "Wyślij do Gista"<br>
+      3. Otwórz link w Safari<br>
+      4. Safari → <b>"Dodaj do ekranu domowego"</b> ✅<br>
+      5. Aplikacja działa jak natywna, offline!
+    </div>
+    <div style="font-size:12px;color:var(--t3);margin-bottom:4px">ID Gista</div>
+    <input id="updGistId" class="sh-inp" placeholder="np. 95f1e6e9f3890dcf208b0e925bab6122" value="95f1e6e9f3890dcf208b0e925bab6122">
+    <div style="font-size:12px;color:var(--t3);margin-bottom:4px">Token GitHub <span style="color:var(--t3)">(Settings → Developer → Personal access tokens)</span></div>
+    <input id="updToken" class="sh-inp" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+    <button id="updSendBtn" class="sh-btn dark" style="margin-top:4px">📤 Wyślij do Gista</button>
+    <div id="updStatus" style="margin:8px 0;font-size:13px;text-align:center;min-height:20px"></div>
+    <div id="updLink" style="display:none;margin:8px 0">
+      <div style="font-size:12px;color:var(--t3);margin-bottom:6px">Otwórz ten link w Safari:</div>
+      <div id="updLinkText" style="background:#F2F2F7;border-radius:9px;padding:10px;font-size:11px;word-break:break-all;font-family:monospace;color:#007AFF"></div>
+      <button id="updCopyLink" class="sh-btn dark" style="margin-top:8px;background:#007AFF">📋 Kopiuj link</button>
+    </div>
+    <button onclick="closeOv('shUpdate')" class="sh-btn light">Zamknij</button>
+  </div>
+</div>
+
+</body>
+</html>
