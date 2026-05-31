@@ -325,6 +325,13 @@ body.dark .mag-card,.dark .photo-add{background:#1E1E26}
   </div>
 </div>
 
+<!-- SHOP BAR -->
+<div style="background:#fff;border-bottom:0.5px solid #EDEBE9;padding:6px 12px;display:flex;align-items:center;gap:6px">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#A19F9D" stroke-width="1.5" stroke-linecap="round"><path d="M7 1C4.24 1 2 3.24 2 6c0 3.75 5 8 5 8s5-4.25 5-8c0-2.76-2.24-5-5-5z"/><circle cx="7" cy="6" r="1.5"/></svg>
+  <button id="shopBtn" onclick="shopOpen()" style="flex:1;text-align:left;background:none;border:none;font-size:12px;color:#A19F9D;cursor:pointer;font-family:inherit;padding:0;-webkit-tap-highlight-color:transparent">Wybierz sklep...</button>
+  <button id="shopGpsBtn" onclick="shopGPS()" style="background:none;border:none;font-size:11px;color:#0078D4;cursor:pointer;font-family:inherit;padding:2px 4px;font-weight:600">&#128205; GPS</button>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <div class="page">
@@ -3823,6 +3830,365 @@ magRender = function() {
   }
   _origMagRender();
 };
+
+</script>
+
+<div class="ov" id="shShop" style="display:none" onclick="if(event.target===this)closeOv('shShop')">
+  <div class="sh" style="max-height:92vh;overflow-y:auto">
+    <div class="sh-bar"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="font-size:17px;font-weight:800;color:#323130">Wybierz sklep</div>
+      <button onclick="closeOv('shShop')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">×</button>
+    </div>
+    <div style="display:flex;gap:6px;margin-bottom:10px">
+      <div style="flex:1;display:flex;align-items:center;gap:8px;background:#F5F5F7;border-radius:10px;padding:8px 12px">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#C8C6C4" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="4"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
+        <input id="shopInp" placeholder="Numer, miasto lub nazwa..." oninput="shopAutoProc(this)" style="border:none;background:none;font-size:14px;font-family:inherit;outline:none;color:#323130;flex:1">
+      </div>
+      <button onclick="shopGPS()" style="padding:0 12px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">📍 GPS</button>
+    </div>
+    <div style="font-size:11px;color:#A19F9D;margin-bottom:8px">Lub dodaj własny sklep:</div>
+    <div style="display:flex;gap:6px;margin-bottom:12px">
+      <input id="shopCustomInp" placeholder="Np. Bing Rzeszów, al. Piłsudskiego" style="flex:1;padding:9px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;font-family:inherit;outline:none;color:#323130">
+      <button onclick="shopPickCustom()" style="padding:0 12px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">OK</button>
+    </div>
+    <div id="shopResults" style="background:#fff;border-radius:10px;overflow:hidden;border:0.5px solid #EDEBE9;max-height:300px;overflow-y:auto"></div>
+    <button onclick="shopClear();closeOv('shShop')" style="width:100%;margin-top:10px;padding:10px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;color:#A19F9D;cursor:pointer;font-family:inherit">Wyczyść wybór</button>
+  </div>
+</div>
+
+<script>
+var SHOPS_DB = [
+  // Biedronka
+  {id:6886,chain:"Biedronka",city:"Adamów",addr:"SGO Polesie 4",zip:"21-412"},
+  {id:4425,chain:"Biedronka",city:"Annopol",addr:"ul. Radomska 28A",zip:"23-235"},
+  {id:3082,chain:"Biedronka",city:"Bełżyce",addr:"ul. Fabryczna 6",zip:"24-200"},
+  {id:1760,chain:"Biedronka",city:"Biała Podlaska",addr:"ul. Przechodnia 8",zip:"21-500"},
+  {id:1778,chain:"Biedronka",city:"Biała Podlaska",addr:"ul. Sidorska 2K",zip:"21-500"},
+  {id:2328,chain:"Biedronka",city:"Biała Podlaska",addr:"ul. Kąpielowa 3",zip:"21-500"},
+  {id:2379,chain:"Biedronka",city:"Biała Podlaska",addr:"ul. Anny Jagiellonki 1",zip:"21-500"},
+  {id:3524,chain:"Biedronka",city:"Biała Podlaska",addr:"ul. Orzechowa 2A",zip:"21-500"},
+  {id:3525,chain:"Biedronka",city:"Biała Podlaska",addr:"ul. Warszawska 34-38",zip:"21-500"},
+  {id:5649,chain:"Biedronka",city:"Biała Podlaska",addr:"ul. Sidorska 100",zip:"21-500"},
+  {id:5663,chain:"Biedronka",city:"Biała Podlaska",addr:"ul. Brzeska 27",zip:"21-500"},
+  {id:2525,chain:"Biedronka",city:"Biłgoraj",addr:"ul. Kościuszki 156",zip:"23-400"},
+  {id:3638,chain:"Biedronka",city:"Biłgoraj",addr:"ul. Włosiankarska 2",zip:"23-400"},
+  {id:1288,chain:"Biedronka",city:"Dębica",addr:"ul. Jana Pawła II 56",zip:"39-200"},
+  {id:3118,chain:"Biedronka",city:"Dębica",addr:"ul. Tuwima 4",zip:"39-200"},
+  {id:3644,chain:"Biedronka",city:"Dębica",addr:"ul. Nagawczyna 245F",zip:"39-200"},
+  {id:4711,chain:"Biedronka",city:"Dębica",addr:"ul. Kraszewskiego 59",zip:"39-200"},
+  {id:5885,chain:"Biedronka",city:"Dębica",addr:"ul. Poddęby 15",zip:"39-200"},
+  {id:6287,chain:"Biedronka",city:"Dębica",addr:"ul. Kościuszki",zip:"39-200"},
+  {id:1813,chain:"Biedronka",city:"Dęblin",addr:"ul. Rynek 4",zip:"08-530"},
+  {id:2856,chain:"Biedronka",city:"Dęblin",addr:"ul. Gen. J. Kowalskiego 9",zip:"08-530"},
+  {id:1363,chain:"Biedronka",city:"Chełm",addr:"ul. Wojsławicka 6",zip:"22-100"},
+  {id:2536,chain:"Biedronka",city:"Chełm",addr:"ul. Lwowska 79",zip:"22-100"},
+  {id:2718,chain:"Biedronka",city:"Chełm",addr:"ul. Kolejowa 85",zip:"22-100"},
+  {id:3193,chain:"Biedronka",city:"Chełm",addr:"ul. Lubelska 173",zip:"22-100"},
+  {id:3641,chain:"Biedronka",city:"Chełm",addr:"ul. Armii Krajowej 13",zip:"22-100"},
+  {id:3642,chain:"Biedronka",city:"Chełm",addr:"ul. Rejowiecka 120",zip:"22-100"},
+  {id:4632,chain:"Biedronka",city:"Chełm",addr:"ul. Siedlecka 4",zip:"22-100"},
+  {id:7345,chain:"Biedronka",city:"Chełm",addr:"ul. Rejowiecka 179B",zip:"22-100"},
+  {id:2979,chain:"Biedronka",city:"Hrubieszów",addr:"ul. Kolejowa 43",zip:"22-500"},
+  {id:6529,chain:"Biedronka",city:"Hrubieszów",addr:"ul. Piłsudskiego 57",zip:"22-500"},
+  {id:1359,chain:"Biedronka",city:"Janów Lubelski",addr:"ul. Zamoyskiego 26",zip:"23-300"},
+  {id:4050,chain:"Biedronka",city:"Janów Lubelski",addr:"ul. Sienkiewicza 46",zip:"23-300"},
+  {id:6078,chain:"Biedronka",city:"Janów Lubelski",addr:"ul. Lubelska 2",zip:"23-300"},
+  {id:1472,chain:"Biedronka",city:"Jarosław",addr:"ul. Krakowska 32",zip:"37-500"},
+  {id:3023,chain:"Biedronka",city:"Jarosław",addr:"ul. Zamkowa 3D",zip:"37-500"},
+  {id:4430,chain:"Biedronka",city:"Jarosław",addr:"ul. Pełkińska 63",zip:"37-500"},
+  {id:6101,chain:"Biedronka",city:"Jarosław",addr:"ul. Pruchnicka",zip:"37-500"},
+  {id:3075,chain:"Biedronka",city:"Jasło",addr:"ul. Kazimierza Wielkiego 23",zip:"38-200"},
+  {id:3076,chain:"Biedronka",city:"Jasło",addr:"ul. Rafineryjna 4E",zip:"38-200"},
+  {id:3080,chain:"Biedronka",city:"Jasło",addr:"ul. Szkolna 21",zip:"38-200"},
+  {id:5299,chain:"Biedronka",city:"Jasło",addr:"ul. Mickiewicza 108",zip:"38-200"},
+  {id:5368,chain:"Biedronka",city:"Jasło",addr:"ul. 3 Maja 32",zip:"38-200"},
+  {id:7398,chain:"Biedronka",city:"Jasło",addr:"ul. Przemysłowa",zip:"38-200"},
+  {id:3318,chain:"Biedronka",city:"Kolbuszowa",addr:"ul. Obrońców pokoju 1",zip:"36-100"},
+  {id:4010,chain:"Biedronka",city:"Kolbuszowa",addr:"ul. Ks. Ruczki 1A",zip:"36-100"},
+  {id:6589,chain:"Biedronka",city:"Kolbuszowa",addr:"ul. Tarnobrzeska 25",zip:"36-100"},
+  {id:2315,chain:"Biedronka",city:"Krasnystaw",addr:"ul. PCK 7",zip:"22-300"},
+  {id:2691,chain:"Biedronka",city:"Krasnystaw",addr:"ul. Nieczaja 2",zip:"22-300"},
+  {id:4416,chain:"Biedronka",city:"Krasnystaw",addr:"ul. Zakręcie 2F",zip:"22-300"},
+  {id:1238,chain:"Biedronka",city:"Kraśnik",addr:"al. Tysiąclecia 9",zip:"23-200"},
+  {id:2580,chain:"Biedronka",city:"Kraśnik",addr:"ul. Niepodległości 16",zip:"23-200"},
+  {id:3648,chain:"Biedronka",city:"Kraśnik",addr:"ul. Urzędowska 472",zip:"23-200"},
+  {id:4111,chain:"Biedronka",city:"Kraśnik",addr:"ul. Chopina 10",zip:"23-200"},
+  {id:1799,chain:"Biedronka",city:"Krosno",addr:"ul. Bohaterów Westerplatte 20B",zip:"38-400"},
+  {id:2042,chain:"Biedronka",city:"Krosno",addr:"ul. Podkarpacka 3B",zip:"38-400"},
+  {id:3107,chain:"Biedronka",city:"Krosno",addr:"ul. Grodzka 12-16",zip:"38-400"},
+  {id:4268,chain:"Biedronka",city:"Krosno",addr:"ul. Naftowa 6",zip:"38-400"},
+  {id:6590,chain:"Biedronka",city:"Krosno",addr:"ul. Bieszczadzka",zip:"38-400"},
+  {id:1729,chain:"Biedronka",city:"Leżajsk",addr:"ul. Mickiewicza 80",zip:"37-300"},
+  {id:3061,chain:"Biedronka",city:"Leżajsk",addr:"ul. Sanowa 40A",zip:"37-300"},
+  {id:1599,chain:"Biedronka",city:"Lubaczów",addr:"ul. Mickiewicza 103",zip:"37-600"},
+  {id:4918,chain:"Biedronka",city:"Lubaczów",addr:"ul. Płk. Dąbka 2D",zip:"37-600"},
+  {id:1551,chain:"Biedronka",city:"Lubartów",addr:"al. Tysiąclecia 2",zip:"21-100"},
+  {id:2309,chain:"Biedronka",city:"Lubartów",addr:"ul. Lubelska 98-100",zip:"21-100"},
+  {id:3365,chain:"Biedronka",city:"Lubartów",addr:"ul. Gen. Kleberga 2",zip:"21-100"},
+  {id:1836,chain:"Biedronka",city:"Lublin",addr:"ul. Hetmańska 2",zip:"20-234"},
+  {id:2314,chain:"Biedronka",city:"Lublin",addr:"ul. Jana Sawy 1A",zip:"20-632"},
+  {id:2967,chain:"Biedronka",city:"Lublin",addr:"ul. Ruciana 4",zip:"20-537"},
+  {id:3714,chain:"Biedronka",city:"Lublin",addr:"ul. Diamentowa 19I-H",zip:"20-471"},
+  {id:3819,chain:"Biedronka",city:"Lublin",addr:"ul. Woronieckiego 12",zip:"20-492"},
+  {id:4417,chain:"Biedronka",city:"Lublin",addr:"ul. Jana Pawła II 23",zip:"20-001"},
+  {id:4879,chain:"Biedronka",city:"Lublin",addr:"ul. Bursztynowa 39",zip:"20-576"},
+  {id:4908,chain:"Biedronka",city:"Lublin",addr:"ul. Zemborzycka 78-80",zip:"20-450"},
+  {id:1164,chain:"Biedronka",city:"Lublin",addr:"ul. Górska 11",zip:"20-863"},
+  {id:1364,chain:"Biedronka",city:"Lublin",addr:"ul. Nałęczowska 24",zip:"20-701"},
+  {id:1667,chain:"Biedronka",city:"Lublin",addr:"ul. Sapiehy 2",zip:"20-095"},
+  {id:2540,chain:"Biedronka",city:"Lublin",addr:"ul. Lwowska 12F",zip:"20-128"},
+  {id:3651,chain:"Biedronka",city:"Lublin",addr:"ul. Magnoliowa 1",zip:"20-143"},
+  {id:3775,chain:"Biedronka",city:"Lublin",addr:"ul. Sławinkowska 49B",zip:"20-810"},
+  {id:4619,chain:"Biedronka",city:"Lublin",addr:"ul. Abramowicka 10A",zip:"20-442"},
+  {id:4942,chain:"Biedronka",city:"Lublin",addr:"ul. Główna 1-3",zip:"20-829"},
+  {id:6126,chain:"Biedronka",city:"Lublin",addr:"Unii Lubelskiej 2",zip:"20-108"},
+  {id:1827,chain:"Biedronka",city:"Lublin",addr:"ul. Zamojska 26",zip:"20-105"},
+  {id:2016,chain:"Biedronka",city:"Lublin",addr:"ul. Wolska 8a",zip:"20-410"},
+  {id:3024,chain:"Biedronka",city:"Lublin",addr:"ul. Pogodna 48",zip:"20-337"},
+  {id:3414,chain:"Biedronka",city:"Lublin",addr:"ul. Choiny 1",zip:"20-816"},
+  {id:4342,chain:"Biedronka",city:"Lublin",addr:"ul. Hutnicza 1A",zip:"20-218"},
+  {id:4878,chain:"Biedronka",city:"Lublin",addr:"ul. Mełgiewska 4A",zip:"20-234"},
+  {id:4927,chain:"Biedronka",city:"Lublin",addr:"ul. Krzemionki 3",zip:"20-309"},
+  {id:5292,chain:"Biedronka",city:"Lublin",addr:"ul. Lotnicza 5",zip:"20-322"},
+  {id:6099,chain:"Biedronka",city:"Lublin",addr:"ul. Prusa",zip:"20-064"},
+  {id:2085,chain:"Biedronka",city:"Łańcut",addr:"ul. Podzwierzyniec 39",zip:"37-100"},
+  {id:2378,chain:"Biedronka",city:"Łańcut",addr:"ul. Mickiewicza 10",zip:"37-100"},
+  {id:2777,chain:"Biedronka",city:"Łańcut",addr:"ul. Piłsudskiego 64",zip:"37-100"},
+  {id:2013,chain:"Biedronka",city:"Łęczna",addr:"ul. Szkolna 8",zip:"21-010"},
+  {id:6033,chain:"Biedronka",city:"Łęczna",addr:"ul. Wacława Jawoszka 2a",zip:"21-010"},
+  {id:1678,chain:"Biedronka",city:"Łuków",addr:"ul. Międzyrzecka 72B",zip:"21-400"},
+  {id:3425,chain:"Biedronka",city:"Łuków",addr:"ul. Sienkiewicza 1",zip:"21-400"},
+  {id:7156,chain:"Biedronka",city:"Łuków",addr:"Al. Ryszarda Kaczorowskiego 4",zip:"21-400"},
+  {id:1243,chain:"Biedronka",city:"Mielec",addr:"ul. Drzewieckiego 1",zip:"39-300"},
+  {id:1284,chain:"Biedronka",city:"Mielec",addr:"ul. Warneńczyka 11",zip:"39-300"},
+  {id:2572,chain:"Biedronka",city:"Mielec",addr:"ul. Sandomierska 6",zip:"39-300"},
+  {id:3005,chain:"Biedronka",city:"Mielec",addr:"ul. Piaskowa 2",zip:"39-300"},
+  {id:3798,chain:"Biedronka",city:"Mielec",addr:"al. Niepodległości 13",zip:"39-300"},
+  {id:5884,chain:"Biedronka",city:"Mielec",addr:"ul. Jagiellończyka 29",zip:"39-300"},
+  {id:7135,chain:"Biedronka",city:"Mielec",addr:"ul. Rzochowska 57",zip:"39-300"},
+  {id:1426,chain:"Biedronka",city:"Międzyrzec Podlaski",addr:"ul. Brzeska 31",zip:"21-560"},
+  {id:2882,chain:"Biedronka",city:"Międzyrzec Podlaski",addr:"ul. Partyzantów 6B",zip:"21-560"},
+  {id:5209,chain:"Biedronka",city:"Międzyrzec Podlaski",addr:"ul. Warszawska 36",zip:"21-560"},
+  {id:1767,chain:"Biedronka",city:"Nisko",addr:"ul. Kwiatkowskiego 1D",zip:"37-400"},
+  {id:3654,chain:"Biedronka",city:"Nisko",addr:"ul. Sandomierska 13",zip:"37-400"},
+  {id:1509,chain:"Biedronka",city:"Nowa Dęba",addr:"ul. Jasna 3",zip:"39-460"},
+  {id:1839,chain:"Biedronka",city:"Opole Lubelskie",addr:"ul. Lubelska 32",zip:"24-300"},
+  {id:4941,chain:"Biedronka",city:"Opole Lubelskie",addr:"ul. Fabryczna 38C",zip:"24-300"},
+  {id:1757,chain:"Biedronka",city:"Parczew",addr:"ul. Wojska Polskiego 2",zip:"21-200"},
+  {id:3048,chain:"Biedronka",city:"Parczew",addr:"ul. Jana Pawła II 92",zip:"21-200"},
+  {id:2454,chain:"Biedronka",city:"Pilzno",addr:"ul. Bujnowskiego 3",zip:"39-220"},
+  {id:2246,chain:"Biedronka",city:"Poniatowa",addr:"ul. 1 Maja 7C",zip:"24-320"},
+  {id:2094,chain:"Biedronka",city:"Przemyśl",addr:"ul. Mickiewicza 28",zip:"37-700"},
+  {id:2946,chain:"Biedronka",city:"Przemyśl",addr:"ul. Focha 2A",zip:"37-700"},
+  {id:3006,chain:"Biedronka",city:"Przemyśl",addr:"ul. 3 Maja 19",zip:"37-700"},
+  {id:4348,chain:"Biedronka",city:"Przemyśl",addr:"ul. Łukasińskiego 9",zip:"37-700"},
+  {id:1209,chain:"Biedronka",city:"Przeworsk",addr:"ul. Ignacego Krasickiego 4",zip:"37-200"},
+  {id:2701,chain:"Biedronka",city:"Przeworsk",addr:"ul. Łańcucka 7",zip:"37-200"},
+  {id:1793,chain:"Biedronka",city:"Puławy",addr:"ul. Piłsudskiego 15",zip:"24-100"},
+  {id:2497,chain:"Biedronka",city:"Puławy",addr:"ul. Piaskowa 47",zip:"24-100"},
+  {id:4038,chain:"Biedronka",city:"Puławy",addr:"ul. Gen. Filedorfa Nila 12",zip:"24-100"},
+  {id:4909,chain:"Biedronka",city:"Puławy",addr:"ul. Włostowicka 154",zip:"24-100"},
+  {id:2984,chain:"Biedronka",city:"Radzyń Podlaski",addr:"ul. Warszawska 66",zip:"21-300"},
+  {id:2057,chain:"Biedronka",city:"Ropczyce",addr:"ul. Konarskiego 1-7",zip:"39-100"},
+  {id:3953,chain:"Biedronka",city:"Ropczyce",addr:"ul. Witosa 1C",zip:"39-100"},
+  {id:6528,chain:"Biedronka",city:"Ropczyce",addr:"ul. Grunwaldzka 41",zip:"39-100"},
+  {id:2804,chain:"Biedronka",city:"Rudnik nad Sanem",addr:"ul. Sanowa 11",zip:"37-420"},
+  {id:1698,chain:"Biedronka",city:"Ryki",addr:"ul. Stary Rynek 1/5",zip:"08-500"},
+  {id:4631,chain:"Biedronka",city:"Ryki",addr:"ul. Żytnia 10",zip:"08-500"},
+  {id:1067,chain:"Biedronka",city:"Rzeszów",addr:"ul. Zygmuntowska 8",zip:"35-030"},
+  {id:1421,chain:"Biedronka",city:"Rzeszów",addr:"ul. Rejtana 51",zip:"35-320"},
+  {id:2089,chain:"Biedronka",city:"Rzeszów",addr:"ul. Hetmańska 56",zip:"35-078"},
+  {id:2501,chain:"Biedronka",city:"Rzeszów",addr:"ul. Piłsudskiego 34",zip:"35-002"},
+  {id:3091,chain:"Biedronka",city:"Rzeszów",addr:"ul. Kwiatkowskiego 2A",zip:"35-311"},
+  {id:4349,chain:"Biedronka",city:"Rzeszów",addr:"ul. Witolda 8",zip:"35-302"},
+  {id:4600,chain:"Biedronka",city:"Rzeszów",addr:"ul. Podkarpacka 8A",zip:"35-082"},
+  {id:4957,chain:"Biedronka",city:"Rzeszów",addr:"ul. Strażacka 27E",zip:"35-312"},
+  {id:5369,chain:"Biedronka",city:"Rzeszów",addr:"ul. Lubelska 65",zip:"35-233"},
+  {id:5528,chain:"Biedronka",city:"Rzeszów",addr:"ul. Słowackiego",zip:"35-065"},
+  {id:1404,chain:"Biedronka",city:"Rzeszów",addr:"ul. Ofiar Katynia 15",zip:"35-959"},
+  {id:1517,chain:"Biedronka",city:"Rzeszów",addr:"ul. Siemieńskiego 14",zip:"35-234"},
+  {id:1931,chain:"Biedronka",city:"Rzeszów",addr:"ul. Okulickiego 6",zip:"35-600"},
+  {id:3081,chain:"Biedronka",city:"Rzeszów",addr:"ul. Przemysłowa 3",zip:"35-105"},
+  {id:3198,chain:"Biedronka",city:"Rzeszów",addr:"ul. Obrońców Poczty Gdańskiej 30",zip:"35-509"},
+  {id:3325,chain:"Biedronka",city:"Rzeszów",addr:"ul. Warszawska 29",zip:"35-205"},
+  {id:3880,chain:"Biedronka",city:"Rzeszów",addr:"ul. Leska 2",zip:"35-017"},
+  {id:6050,chain:"Biedronka",city:"Rzeszów",addr:"ul. Pułkownika Iranka-Osmeckiego 25",zip:"35-506"},
+  {id:6102,chain:"Biedronka",city:"Rzeszów",addr:"ul. Stołajowskiego 6",zip:"35-120"},
+  {id:6201,chain:"Biedronka",city:"Rzeszów",addr:"ul. Budziwojska 465",zip:"35-317"},
+  {id:5499,chain:"Biedronka",city:"Rzeszów",addr:"ul. Reymonta 3",zip:"35-210"},
+  {id:1880,chain:"Biedronka",city:"Sanok",addr:"ul. Krakowska 194",zip:"38-500"},
+  {id:2017,chain:"Biedronka",city:"Sanok",addr:"ul. Lipińskiego 17",zip:"38-500"},
+  {id:2791,chain:"Biedronka",city:"Sanok",addr:"ul. Przemyska 24",zip:"38-500"},
+  {id:3663,chain:"Biedronka",city:"Sanok",addr:"ul. Krakowska 2",zip:"38-500"},
+  {id:2656,chain:"Biedronka",city:"Sędziszów Małopolski",addr:"ul. Wesoła 12A",zip:"39-120"},
+  {id:4964,chain:"Biedronka",city:"Sędziszów Małopolski",addr:"ul. Jana Pawła II 54a",zip:"39-120"},
+  {id:1478,chain:"Biedronka",city:"Stalowa Wola",addr:"ul. Jana Pawła II 3",zip:"37-450"},
+  {id:1885,chain:"Biedronka",city:"Stalowa Wola",addr:"ul. Rozwadowska 37A",zip:"37-450"},
+  {id:2131,chain:"Biedronka",city:"Stalowa Wola",addr:"ul. Gen. Okulickiego 140",zip:"37-467"},
+  {id:4145,chain:"Biedronka",city:"Stalowa Wola",addr:"ul. Okulickiego 2",zip:"37-450"},
+  {id:6106,chain:"Biedronka",city:"Stalowa Wola",addr:"ul. Staszica 3D",zip:"37-450"},
+  {id:1324,chain:"Biedronka",city:"Świdnik",addr:"ul. Kosynierów 2",zip:"21-040"},
+  {id:2563,chain:"Biedronka",city:"Świdnik",addr:"ul. Wyszyńskiego 22",zip:"21-040"},
+  {id:3667,chain:"Biedronka",city:"Świdnik",addr:"ul. Skarżyńskiego 1",zip:"21-040"},
+  {id:7178,chain:"Biedronka",city:"Świdnik",addr:"ul. Piasecka",zip:"21-040"},
+  {id:1311,chain:"Biedronka",city:"Tarnobrzeg",addr:"pl. Bartosza Głowackiego 46",zip:"39-400"},
+  {id:2519,chain:"Biedronka",city:"Tarnobrzeg",addr:"ul. Kopernika 15",zip:"39-405"},
+  {id:3668,chain:"Biedronka",city:"Tarnobrzeg",addr:"ul. Kwiatkowskiego 1",zip:"39-400"},
+  {id:3864,chain:"Biedronka",city:"Tarnobrzeg",addr:"ul. Jachowicza 12",zip:"39-400"},
+  {id:5670,chain:"Biedronka",city:"Tarnobrzeg",addr:"ul. Warszawska 2",zip:"39-400"},
+  {id:6113,chain:"Biedronka",city:"Tarnobrzeg",addr:"ul. Mickiewicza 40",zip:"39-400"},
+  {id:6200,chain:"Biedronka",city:"Tarnobrzeg",addr:"ul. Zwierzyniecka 15A",zip:"39-400"},
+  {id:6468,chain:"Biedronka",city:"Tarnobrzeg",addr:"ul. Sikorskiego 2B",zip:"39-400"},
+  {id:2306,chain:"Biedronka",city:"Terespol",addr:"ul. Wojska Polskiego 81/83",zip:"21-550"},
+  {id:1595,chain:"Biedronka",city:"Tomaszów Lubelski",addr:"ul. Jana Pawła II 21",zip:"22-600"},
+  {id:2810,chain:"Biedronka",city:"Tomaszów Lubelski",addr:"ul. Lwowska 126A",zip:"22-600"},
+  {id:4444,chain:"Biedronka",city:"Tomaszów Lubelski",addr:"ul. Łaszczowiecka 1B",zip:"22-600"},
+  {id:2894,chain:"Biedronka",city:"Ustrzyki Dolne",addr:"ul. 29 Listopada 38A",zip:"38-700"},
+  {id:4661,chain:"Biedronka",city:"Ustrzyki Dolne",addr:"ul. PCK 19",zip:"38-700"},
+  {id:1168,chain:"Biedronka",city:"Włodawa",addr:"ul. Korolowska 2",zip:"22-200"},
+  {id:4560,chain:"Biedronka",city:"Włodawa",addr:"ul. Lubelska 50",zip:"22-200"},
+  {id:1101,chain:"Zamość",city:"Zamość",addr:"ul. Zamoyskiego 6",zip:"22-400"},
+  {id:2316,chain:"Biedronka",city:"Zamość",addr:"ul. Wierzbowa 3",zip:"22-400"},
+  {id:3673,chain:"Biedronka",city:"Zamość",addr:"ul. Lwowska 35",zip:"22-400"},
+  {id:3674,chain:"Biedronka",city:"Zamość",addr:"ul. Wyszyńskiego 26",zip:"22-400"},
+  {id:6330,chain:"Biedronka",city:"Zamość",addr:"ul. Legionów",zip:"22-400"},
+  {id:3672,chain:"Biedronka",city:"Zamość",addr:"ul. Lubelska 40",zip:"22-400"},
+  {id:3829,chain:"Biedronka",city:"Zamość",addr:"ul. Lipska 40A",zip:"22-400"},
+  {id:4077,chain:"Biedronka",city:"Zamość",addr:"ul. Dzieci Zamojszczyzny 2",zip:"22-400"},
+  {id:5184,chain:"Biedronka",city:"Zamość",addr:"ul. Sadowa 8",zip:"22-400"},
+  {id:3857,chain:"Biedronka",city:"Żołynia",addr:"ul. Mickiewicza 1B",zip:"37-110"},
+  {id:6180,chain:"Biedronka",city:"Żurawica",addr:"ul. 3 Maja 4",zip:"37-710"},
+];
+
+// ============================================================
+// WYBÓR SKLEPU - поиск + GPS
+// ============================================================
+var _currentShop = null;
+
+function shopOpen() {
+  var inp = document.getElementById('shopInp');
+  if (inp) inp.value = '';
+  var res = document.getElementById('shopResults');
+  if (res) res.innerHTML = '';
+  openSh('shShop');
+  setTimeout(function(){if(inp)inp.focus();},400);
+}
+
+function shopSearch(q) {
+  var res = document.getElementById('shopResults');
+  if (!res) return;
+  q = (q||'').trim().toLowerCase();
+  if (!q) { res.innerHTML = ''; return; }
+
+  var found = SHOPS_DB.filter(function(s) {
+    return String(s.id).indexOf(q) >= 0
+      || s.city.toLowerCase().indexOf(q) >= 0
+      || s.addr.toLowerCase().indexOf(q) >= 0
+      || s.chain.toLowerCase().indexOf(q) >= 0;
+  }).slice(0, 20);
+
+  if (!found.length) {
+    res.innerHTML = '<div style="padding:14px;text-align:center;font-size:13px;color:#A19F9D">Nie znaleziono</div>';
+    return;
+  }
+
+  res.innerHTML = found.map(function(s) {
+    var label = s.chain + (s.id ? ' ' + s.id : '') + ' — ' + s.city;
+    var sub = s.addr;
+    return '<div onclick="shopPick('+JSON.stringify(s)+')" style="padding:11px 14px;border-bottom:0.5px solid #F5F5F7;cursor:pointer;-webkit-tap-highlight-color:transparent">'
+      + '<div style="font-size:13px;font-weight:600;color:#323130">' + esc(label) + '</div>'
+      + '<div style="font-size:11px;color:#A19F9D;margin-top:2px">' + esc(sub) + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+function shopPick(s) {
+  _currentShop = s;
+  var label = s.chain + (s.id ? ' ' + s.id : '') + ' — ' + s.city + ', ' + s.addr;
+  var btn = document.getElementById('shopBtn');
+  if (btn) {
+    btn.textContent = label;
+    btn.style.color = '#0078D4';
+    btn.style.fontWeight = '700';
+  }
+  closeOv('shShop');
+  showToast('Sklep: ' + s.chain + ' ' + s.id);
+}
+
+function shopGPS() {
+  if (!navigator.geolocation) { showToast('GPS niedostępny'); return; }
+  var btn = document.getElementById('shopGpsBtn');
+  if (btn) btn.textContent = 'Szukam...';
+  
+  navigator.geolocation.getCurrentPosition(function(pos) {
+    if (btn) btn.textContent = '📍 GPS';
+    var lat = pos.coords.latitude;
+    var lon = pos.coords.longitude;
+    
+    // Открываем Apple Maps с поиском магазинов рядом
+    var mapsUrl = 'maps://?q=supermarket&ll=' + lat + ',' + lon + '&z=14';
+    window.location.href = mapsUrl;
+    
+    // Также фильтруем по GPS городу через reverse geocoding
+    shopGPSReverse(lat, lon);
+    
+  }, function(err) {
+    if (btn) btn.textContent = '📍 GPS';
+    showToast('Błąd GPS: ' + err.message);
+  }, {timeout: 8000, enableHighAccuracy: true});
+}
+
+function shopGPSReverse(lat, lon) {
+  // Используем бесплатный reverse geocoding через nominatim в браузере (не сервер)
+  fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat='+lat+'&lon='+lon+'&zoom=12&accept-language=pl', {
+    headers: {'User-Agent': 'RVM-Raport/1.0'}
+  })
+  .then(function(r){return r.json();})
+  .then(function(data) {
+    var city = data.address && (data.address.city || data.address.town || data.address.village || data.address.municipality);
+    if (city) {
+      var inp = document.getElementById('shopInp');
+      if (inp) {
+        inp.value = city;
+        shopSearch(city);
+      }
+      showToast('Miasto: ' + city);
+    }
+  })
+  .catch(function(){});
+}
+
+function shopAutoProc(el) {
+  clearTimeout(window._shopTimer);
+  window._shopTimer = setTimeout(function(){shopSearch(el.value);}, 300);
+}
+
+function shopClear() {
+  _currentShop = null;
+  var btn = document.getElementById('shopBtn');
+  if (btn) {
+    btn.textContent = 'Wybierz sklep...';
+    btn.style.color = '#A19F9D';
+    btn.style.fontWeight = '400';
+  }
+}
+
+// Добавляем номер магазина в рапорт
+var _origRenderSummary = null;
+function shopInjectToReport() {
+  if (!_currentShop) return '';
+  return _currentShop.chain + ' ' + _currentShop.id + ' (' + _currentShop.city + ', ' + _currentShop.addr + ')';
+}
+
+
+function shopPickCustom() {
+  var inp = document.getElementById('shopCustomInp');
+  var val = inp ? inp.value.trim() : '';
+  if (!val) return;
+  shopPick({id: '', chain: val, city: '', addr: ''});
+  if (inp) inp.value = '';
+}
 
 </script>
 </body>
