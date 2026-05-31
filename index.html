@@ -4305,7 +4305,7 @@ function shopGetLabel() {
 <div class="ov" id="shMagTable" style="display:none" onclick="if(event.target===this)closeOv('shMagTable')">
   <div class="sh" style="max-height:96vh;overflow-y:auto;padding:16px 0 32px">
     <div class="sh-bar"></div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;margin-bottom:12px">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;margin-bottom:12px;position:sticky;top:0;background:#fff;z-index:10;padding-top:4px">
       <div style="font-size:17px;font-weight:800;color:#323130">Stan magazynu</div>
       <div style="display:flex;gap:6px">
         <button onclick="magExportCSV()" style="padding:6px 12px;background:#34C759;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">CSV</button>
@@ -4328,7 +4328,7 @@ function shopGetLabel() {
 <div class="ov" id="shMagHistory" style="display:none" onclick="if(event.target===this)closeOv('shMagHistory')">
   <div class="sh" style="max-height:96vh;overflow-y:auto;padding:16px 0 32px">
     <div class="sh-bar"></div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;margin-bottom:12px">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;margin-bottom:12px;position:sticky;top:0;background:#fff;z-index:10;padding-top:4px">
       <div style="font-size:17px;font-weight:800;color:#323130">Historia pobrań</div>
       <div style="display:flex;gap:6px">
         <button onclick="magHistoryExportCSV()" style="padding:6px 12px;background:#34C759;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">CSV</button>
