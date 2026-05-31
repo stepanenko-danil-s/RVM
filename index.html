@@ -4450,6 +4450,7 @@ function magExportCSV() {
 }
 
 function magExportEmail() {
+  alert('magExportEmail wywolano');
   var recipients = emailGetRecipients();
   var to = recipients.filter(function(e){return e;}).join(';');
   if (!_magData) _magData = magLoad();
