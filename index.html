@@ -2600,7 +2600,7 @@ function restoreData(input){
     <input type="file" id="parCamInp" accept="image/*" capture="environment" style="display:none" onchange="parPhotoHandle(this)">
     <button onclick="openPAFlow()" style="width:100%;padding:13px;background:linear-gradient(135deg,#0078D4,#005A9E);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><rect x="2" y="2" width="14" height="14" rx="3"/><path d="M6 9l2 2 4-4"/></svg>
-      Skanuj w Power Automate (AI Builder)
+      ▶ Uruchom Paragon w Power Automate
     </button>
     <div style="text-align:center;font-size:11px;color:#A19F9D;margin-bottom:10px">lub wypelnij recznie powyzej</div>
     <div style="margin-bottom:10px"><span style="font-size:11px;font-weight:600;color:#A19F9D;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;display:block">Co kupiono</span><input id="par_co" placeholder="Np. Sruby M6, olej..." style="width:100%;background:#F5F5F7;border:none;border-radius:10px;padding:11px 13px;font-size:14px;font-family:inherit;outline:none;color:#323130"></div>
@@ -2835,23 +2835,7 @@ function repPhotosRender(){var wrap=document.getElementById('repPhotos');var lis
 // Paragon
 var _parPhoto=null;
 function openPAFlow() {
-  // Пробуем разные URL schemes для Power Automate
-  var schemes = ['msflow://', 'microsoft-flow://', 'ms-flow://'];
-  var tried = 0;
-  function tryNext() {
-    if (tried >= schemes.length) {
-      // Ничего не сработало - открываем App Store
-      window.open('https://apps.apple.com/app/power-automate/id1094928825', '_blank');
-      return;
-    }
-    var scheme = schemes[tried++];
-    var start = Date.now();
-    setTimeout(function() {
-      if (Date.now() - start < 2000) tryNext();
-    }, 1000);
-    window.location.href = scheme;
-  }
-  tryNext();
+  window.location.href = 'msflow://';
 }
 function toggleParSheet(){var sh=document.getElementById('shParagon');if(!sh)return;sh.style.display='flex';setTimeout(function(){sh.classList.add('open');},10);var d=document.getElementById('par_data');if(d&&!d.value)d.value=new Date().toISOString().slice(0,10);}
 function closeParSheet(){var sh=document.getElementById('shParagon');if(!sh)return;sh.classList.remove('open');setTimeout(function(){sh.style.display='none';},300);}
