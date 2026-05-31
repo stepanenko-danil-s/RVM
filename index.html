@@ -4451,299 +4451,122 @@ function magExportCSV() {
 
 function magExportEmail() {
   var recipients = emailGetRecipients();
+  var to = recipients.filter(function(e){return e;}).join(';');
   if (!_magData) _magData = magLoad();
   var all = magGetAll ? magGetAll() : MAG_PARTS;
   var date = new Date().toLocaleDateString('pl-PL');
+  var dateTime = new Date().toLocaleString('pl-PL');
 
   var empty = [], warn = [], ok = [];
   all.forEach(function(p) {
     var d = magGet(p.id);
     var st = magSt(p.id);
-    var line = p.n + ' [' + p.k + ']: ' + d.qty + ' szt. (min: ' + d.min + ')';
-    if (st==='empty') empty.push(line);
-    else if (st==='warn') warn.push(line);
-    else ok.push(line);
+    var entry = {n:p.n, k:p.k, qty:d.qty, min:d.min};
+    if (st==='empty') empty.push(entry);
+    else if (st==='warn') warn.push(entry);
+    else ok.push(entry);
   });
 
-  var lines = [
-    'Stan magazynu RVM — ' + date,
-    '',
-    'Podsumowanie:',
-    '• Brak: ' + empty.length + ' pozycji',
-    '• Mało: ' + warn.length + ' pozycji',
-    '• OK: ' + ok.length + ' pozycji',
-    ''
-  ];
-  if (empty.length) { lines.push('=== BRAK (zamów jak najszybciej) ==='); empty.forEach(function(l){lines.push('  ' + l);}); lines.push(''); }
-  if (warn.length) { lines.push('=== MAŁO (uzupełnij wkrótce) ==='); warn.forEach(function(l){lines.push('  ' + l);}); lines.push(''); }
-  lines.push('=== PEŁNY STAN ===');
-  ok.forEach(function(l){lines.push('  ' + l);});
+  var SEP  = '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+  var SEP2 = '────────────────────────────────────────';
+  var lines = [];
+
+  lines.push('RVM RAPORT — STAN MAGAZYNU');
+  lines.push(SEP);
+  lines.push('Data:     ' + dateTime);
+  lines.push('Pozycji:  ' + all.length + ' łącznie');
   lines.push('');
-  lines.push('--- Wygenerowano przez RVM Raport ---');
+  lines.push('PODSUMOWANIE:');
+  lines.push('  🔴 Brak:  ' + empty.length + ' pozycji');
+  lines.push('  🟡 Mało:  ' + warn.length + ' pozycji');
+  lines.push('  🟢 OK:    ' + ok.length + ' pozycji');
 
-  var subj = 'Stan magazynu RVM — ' + date + ' (Brak: ' + empty.length + ', Mało: ' + warn.length + ')';
-  var to = recipients.join(';');
-  window.location.href = 'mailto:' + encodeURIComponent(to) + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(lines.join(String.fromCharCode(10)));
-}
-</script>
-<script>
-// ============================================================
-// HARMONOGRAM - расписание уведомлений
-// ============================================================
-var _schedDay = null, _schedTime = null, _schedTimer = null;
-
-function schedLoad() {
-  try {
-    var s = JSON.parse(localStorage.getItem('rv_sched') || 'null');
-    if (s) { _schedDay = s.day; _schedTime = s.time; }
-  } catch(e) {}
-}
-
-function schedSave() {
-  var day = document.getElementById('schedDay');
-  var time = document.getElementById('schedTime');
-  if (!day || !time) return;
-  _schedDay = parseInt(day.value);
-  _schedTime = time.value;
-  localStorage.setItem('rv_sched', JSON.stringify({day: _schedDay, time: _schedTime}));
-  schedStart();
-  var days = ['Niedziela','Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota'];
-  var status = document.getElementById('schedStatus');
-  if (status) status.textContent = '✓ Zaplanowano: ' + days[_schedDay] + ' o ' + _schedTime;
-  showToast('Harmonogram zapisany');
-}
-
-function schedStart() {
-  if (_schedTimer) clearInterval(_schedTimer);
-  _schedTimer = setInterval(schedCheck, 60000); // каждую минуту
-  schedCheck(); // сразу проверяем
-}
-
-function schedCheck() {
-  if (_schedDay === null || !_schedTime) return;
-  var now = new Date();
-  var dayOk = now.getDay() === _schedDay;
-  var timeNow = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
-  if (dayOk && timeNow === _schedTime) {
-    schedNotify();
-  }
-}
-
-function schedNotify() {
-  // Пробуем показать уведомление
-  if ('Notification' in window) {
-    if (Notification.permission === 'granted') {
-      new Notification('RVM Raport', {
-        body: 'Czas na raport magazynu! Naciśnij aby wysłać.',
-        icon: '/RVM/icon.png'
-      });
-    } else if (Notification.permission !== 'denied') {
-      Notification.requestPermission().then(function(p) {
-        if (p === 'granted') schedNotify();
-      });
-    }
-  }
-  // Также показываем toast в приложении
-  showToast('⏰ Czas na raport magazynu!');
-  // Открываем email с отчётом
-  setTimeout(function() {
-    if (confirm('Wysłać raport magazynu?')) {
-      magExportEmail();
-    }
-  }, 1000);
-}
-
-function schedRequestPermission() {
-  if ('Notification' in window && Notification.permission === 'default') {
-    Notification.requestPermission();
-  }
-}
-
-// Инициализация при загрузке
-schedLoad();
-if (_schedDay !== null) {
-  schedStart();
-  // Обновляем UI настроек если открыты
-  var days = ['Niedziela','Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota'];
-  setTimeout(function() {
-    var day = document.getElementById('schedDay');
-    var time = document.getElementById('schedTime');
-    var status = document.getElementById('schedStatus');
-    if (day) day.value = _schedDay;
-    if (time) time.value = _schedTime;
-    if (status) status.textContent = '✓ Aktywny: ' + days[_schedDay] + ' o ' + _schedTime;
-    // Запрашиваем разрешение на уведомления
-    schedRequestPermission();
-  }, 500);
-}
-</script>
-<script>
-// ============================================================
-// HISTORIA MAGAZYNU
-// ============================================================
-var _magHistory = [];
-
-function magHistoryLoad() {
-  try { _magHistory = JSON.parse(localStorage.getItem('rv_mag_hist') || '[]'); } catch(e) { _magHistory = []; }
-}
-
-function magHistorySave() {
-  // Храним последние 500 записей
-  if (_magHistory.length > 500) _magHistory = _magHistory.slice(-500);
-  try { localStorage.setItem('rv_mag_hist', JSON.stringify(_magHistory)); } catch(e) {}
-}
-
-function magHistoryAdd(part, qty) {
-  if (!part) return;
-  if (!_magHistory.length) magHistoryLoad();
-  var now = new Date();
-  var shop = (typeof _currentShop !== 'undefined' && _currentShop)
-    ? (_currentShop.chain + (_currentShop.id ? ' ' + _currentShop.id : '') + (_currentShop.city ? ', ' + _currentShop.city : ''))
-    : '—';
-  _magHistory.push({
-    ts: now.toISOString(),
-    date: now.toLocaleDateString('pl-PL'),
-    time: now.toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'}),
-    shop: shop,
-    partId: part.id,
-    partName: part.n,
-    partCode: part.k,
-    qty: qty || 1
-  });
-  magHistorySave();
-}
-
-function magShowHistory() {
-  if (!_magHistory.length) magHistoryLoad();
-  openSh('shMagHistory');
-  magRenderHistory('all');
-}
-
-var _histFilter = 'all';
-
-function magRenderHistory(filter) {
-  _histFilter = filter || 'all';
-  var body = document.getElementById('magHistBody');
-  if (!body) return;
-
-  var items = _magHistory.slice().reverse(); // новые сверху
-
-  // Фильтр по магазину
-  if (filter !== 'all') {
-    items = items.filter(function(h){ return h.shop.toLowerCase().indexOf(filter.toLowerCase()) >= 0; });
+  if (empty.length) {
+    lines.push('');
+    lines.push(SEP);
+    lines.push('BRAK — ZAMÓW JAK NAJSZYBCIEJ (' + empty.length + ')');
+    lines.push(SEP2);
+    empty.forEach(function(p) {
+      lines.push('  • ' + p.n);
+      lines.push('    Kod: ' + p.k + '  |  Stan: 0  |  Min: ' + p.min);
+    });
   }
 
-  if (!items.length) {
-    body.innerHTML = '<div style="text-align:center;padding:24px;font-size:13px;color:#A19F9D">Brak historii</div>';
-    return;
+  if (warn.length) {
+    lines.push('');
+    lines.push(SEP);
+    lines.push('MAŁO — UZUPEŁNIJ WKRÓTCE (' + warn.length + ')');
+    lines.push(SEP2);
+    warn.forEach(function(p) {
+      lines.push('  • ' + p.n);
+      lines.push('    Kod: ' + p.k + '  |  Stan: ' + p.qty + '  |  Min: ' + p.min);
+    });
   }
 
-  var h = '';
-  var lastDate = '';
-  items.forEach(function(rec) {
-    if (rec.date !== lastDate) {
-      h += '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;padding:10px 0 4px">' + rec.date + '</div>';
-      lastDate = rec.date;
-    }
-    h += '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid #F5F5F7">';
-    h += '<div style="width:36px;height:36px;border-radius:8px;background:#F5F5F7;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;font-weight:800;color:#0078D4">−'+rec.qty+'</div>';
-    h += '<div style="flex:1;min-width:0">';
-    h += '<div style="font-size:13px;font-weight:600;color:#323130;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(rec.partName) + '</div>';
-    h += '<div style="font-size:10px;color:#A19F9D;font-family:monospace">' + esc(rec.partCode) + '</div>';
-    h += '<div style="font-size:11px;color:#605E5C;margin-top:1px">📍 ' + esc(rec.shop) + '</div>';
-    h += '</div>';
-    h += '<div style="font-size:11px;color:#A19F9D;flex-shrink:0">' + rec.time + '</div>';
-    h += '</div>';
+  lines.push('');
+  lines.push(SEP);
+  lines.push('PEŁNY STAN (' + ok.length + ')');
+  lines.push(SEP2);
+  ok.forEach(function(p) {
+    var bar = '';
+    for(var i=0;i<Math.min(p.qty,10);i++) bar += '█';
+    for(var i=p.qty;i<10;i++) bar += '░';
+    lines.push('  ' + p.n.substring(0,28).padEnd(28,' ') + ' ' + String(p.qty).padStart(3,' ') + ' szt.  ' + bar);
   });
 
-  body.innerHTML = h;
+  lines.push('');
+  lines.push(SEP);
+  lines.push('Wygenerowano: ' + dateTime);
+  lines.push('RVM Raport v16 — Daniel Stepanenko');
+
+  var subj = '[RVM] Stan magazynu — ' + date
+    + (empty.length ? ' 🔴 Brak:' + empty.length : '')
+    + (warn.length ? ' 🟡 Mało:' + warn.length : '');
+
+  window.location.href = 'mailto:' + encodeURIComponent(to)
+    + '?subject=' + encodeURIComponent(subj)
+    + '&body=' + encodeURIComponent(lines.join(String.fromCharCode(10)));
 }
 
-function magHistoryExportCSV() {
-  if (!_magHistory.length) magHistoryLoad();
-  var rows = ['Data,Godzina,Sklep,Nazwa części,Kod,Ilość'];
-  _magHistory.forEach(function(r) {
-    rows.push([r.date, r.time, r.shop, r.partName, r.partCode, r.qty].map(function(v){
-      return '"' + String(v||'').replace(/"/g,'""') + '"';
-    }).join(','));
-  });
-  var csv = '\uFEFF' + rows.join('\n');
-  var blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = 'historia_' + new Date().toISOString().slice(0,10) + '.csv';
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast('CSV pobrane');
-}
 
-function magHistoryClear() {
-  if (!confirm('Wyczyścić całą historię?')) return;
-  _magHistory = [];
-  magHistorySave();
-  magRenderHistory('all');
-  showToast('Historia wyczyszczona');
-}
-
-// Инициализируем
-magHistoryLoad();
-</script>
-<script>
-// ============================================================
-// EMAIL USTAWIENIA
-// ============================================================
-var _emailRecipients = [];
-
-function emailLoad() {
-  try {
-    _emailRecipients = JSON.parse(localStorage.getItem('rv_email_rec') || '[]');
-    var ta = document.getElementById('emailRecipients');
-    if (ta && _emailRecipients.length) ta.value = _emailRecipients.join('\n');
-    var status = document.getElementById('emailStatus');
-    if (status && _emailRecipients.length) status.textContent = '✓ ' + _emailRecipients.length + ' adresów zapisanych';
-  } catch(e) {}
-}
-
-function emailSettingsSave() {
-  var ta = document.getElementById('emailRecipients');
-  if (!ta) return;
-  var raw = ta.value.trim();
-  _emailRecipients = raw.split('\n').map(function(s){return s.trim();}).filter(function(s){return s.indexOf('@')>0;});
-  localStorage.setItem('rv_email_rec', JSON.stringify(_emailRecipients));
-  var status = document.getElementById('emailStatus');
-  if (status) status.textContent = '✓ Zapisano ' + _emailRecipients.length + ' adresów';
-  showToast('Adresy zapisane: ' + _emailRecipients.length);
-}
-
-function emailGetRecipients() {
-  if (!_emailRecipients.length) emailLoad();
-  return _emailRecipients.length ? _emailRecipients : [''];
-}
-
-// Отправка рапорта сервиса по email
 function sendReportEmail() {
   var recipients = emailGetRecipients();
-  var to = recipients.join(';');
+  var to = recipients.filter(function(e){return e;}).join(';');
   var date = new Date().toLocaleDateString('pl-PL');
-  var shop = (typeof _currentShop !== 'undefined' && _currentShop)
-    ? (_currentShop.chain + (_currentShop.id ? ' ' + _currentShop.id : '') + (_currentShop.city ? ', ' + _currentShop.city : ''))
+  var dateTime = new Date().toLocaleString('pl-PL');
+
+  var shop = (typeof _currentShop !== 'undefined' && _currentShop && _currentShop.chain)
+    ? (_currentShop.chain + (_currentShop.id ? ' ' + _currentShop.id : '') + (_currentShop.city ? ', ' + _currentShop.city : '') + (_currentShop.addr ? ', ' + _currentShop.addr : ''))
     : '';
 
-  // Берём текст из repEdit
   var repEdit = document.getElementById('repEdit');
-  var repText = repEdit ? (repEdit.innerText || repEdit.textContent || '') : '';
+  var repText = repEdit ? (repEdit.innerText || repEdit.textContent || '').trim() : '';
 
-  var lines = ['Raport serwisowy RVM — ' + date];
-  if (shop) lines.push('Sklep: ' + shop);
-  lines.push('');
-  lines.push(repText);
-  lines.push('');
-  lines.push('--- Wygenerowano przez RVM Raport ---');
+  var SEP  = '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+  var SEP2 = '────────────────────────────────────────';
+  var lines = [];
 
-  var subj = 'Raport serwisowy RVM' + (shop ? ' — ' + shop : '') + ' — ' + date;
-  window.location.href = 'mailto:' + encodeURIComponent(to) + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(lines.join(String.fromCharCode(10)));
+  lines.push('RVM RAPORT SERWISOWY');
+  lines.push(SEP);
+  lines.push('Data:     ' + dateTime);
+  if (shop) lines.push('Sklep:    ' + shop);
+  lines.push('');
+  lines.push('OPIS SERWISU:');
+  lines.push(SEP2);
+  lines.push(repText || '(brak opisu)');
+  lines.push('');
+  lines.push(SEP);
+  lines.push('Technik:  Daniel Stepanenko');
+  lines.push('Firma:    RVM Systems Sp. z o.o.');
+  lines.push('Wygenerowano: RVM Raport v16');
+
+  var subj = '[RVM] Raport serwisowy' + (shop ? ' — ' + shop : '') + ' — ' + date;
+
+  window.location.href = 'mailto:' + encodeURIComponent(to)
+    + '?subject=' + encodeURIComponent(subj)
+    + '&body=' + encodeURIComponent(lines.join(String.fromCharCode(10)));
 }
+
 
 // Инициализируем при загрузке
 emailLoad();
