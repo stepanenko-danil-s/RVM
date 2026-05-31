@@ -2835,7 +2835,23 @@ function repPhotosRender(){var wrap=document.getElementById('repPhotos');var lis
 // Paragon
 var _parPhoto=null;
 function openPAFlow() {
-  window.location.href = 'ms-powerautomate://';
+  // Пробуем разные URL schemes для Power Automate
+  var schemes = ['msflow://', 'microsoft-flow://', 'ms-flow://'];
+  var tried = 0;
+  function tryNext() {
+    if (tried >= schemes.length) {
+      // Ничего не сработало - открываем App Store
+      window.open('https://apps.apple.com/app/power-automate/id1094928825', '_blank');
+      return;
+    }
+    var scheme = schemes[tried++];
+    var start = Date.now();
+    setTimeout(function() {
+      if (Date.now() - start < 2000) tryNext();
+    }, 1000);
+    window.location.href = scheme;
+  }
+  tryNext();
 }
 function toggleParSheet(){var sh=document.getElementById('shParagon');if(!sh)return;sh.style.display='flex';setTimeout(function(){sh.classList.add('open');},10);var d=document.getElementById('par_data');if(d&&!d.value)d.value=new Date().toISOString().slice(0,10);}
 function closeParSheet(){var sh=document.getElementById('shParagon');if(!sh)return;sh.classList.remove('open');setTimeout(function(){sh.style.display='none';},300);}
