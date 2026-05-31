@@ -4614,3 +4614,100 @@ function schedSaveFromTable() {
   magRenderTable();
 }
 </script>
+// ============================================================
+// HISTORIA MAGAZYNU
+// ============================================================
+var _magHistory = [];
+
+function magHistoryLoad() {
+  try { _magHistory = JSON.parse(localStorage.getItem('rv_mag_hist') || '[]'); } catch(e) { _magHistory = []; }
+}
+
+function magHistorySave() {
+  if (_magHistory.length > 500) _magHistory = _magHistory.slice(-500);
+  try { localStorage.setItem('rv_mag_hist', JSON.stringify(_magHistory)); } catch(e) {}
+}
+
+function magHistoryAdd(part, qty) {
+  if (!part) return;
+  if (!_magHistory.length) magHistoryLoad();
+  var now = new Date();
+  var shop = (typeof _currentShop !== 'undefined' && _currentShop && _currentShop.chain)
+    ? (_currentShop.chain + (_currentShop.id ? ' ' + _currentShop.id : '') + (_currentShop.city ? ', ' + _currentShop.city : ''))
+    : '—';
+  _magHistory.push({
+    ts: now.toISOString(),
+    date: now.toLocaleDateString('pl-PL'),
+    time: now.toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'}),
+    shop: shop,
+    partId: part.id,
+    partName: part.n,
+    partCode: part.k,
+    qty: qty || 1
+  });
+  magHistorySave();
+}
+
+function magShowHistory() {
+  if (!_magHistory.length) magHistoryLoad();
+  openSh('shMagHistory');
+  magRenderHistory('');
+}
+
+function magRenderHistory(filter) {
+  var body = document.getElementById('magHistBody');
+  if (!body) return;
+  var items = _magHistory.slice().reverse();
+  if (filter) {
+    items = items.filter(function(h){ return h.shop.toLowerCase().indexOf(filter.toLowerCase()) >= 0 || h.partName.toLowerCase().indexOf(filter.toLowerCase()) >= 0; });
+  }
+  if (!items.length) {
+    body.innerHTML = '<div style="text-align:center;padding:24px;font-size:13px;color:#A19F9D">Brak historii</div>';
+    return;
+  }
+  var h = '', lastDate = '';
+  items.forEach(function(rec) {
+    if (rec.date !== lastDate) {
+      h += '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;padding:10px 0 4px">' + rec.date + '</div>';
+      lastDate = rec.date;
+    }
+    h += '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid #F5F5F7">';
+    h += '<div style="width:36px;height:36px;border-radius:8px;background:#FFF0F0;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;font-weight:800;color:#FF3B30">−'+rec.qty+'</div>';
+    h += '<div style="flex:1;min-width:0">';
+    h += '<div style="font-size:13px;font-weight:600;color:#323130;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(rec.partName) + '</div>';
+    h += '<div style="font-size:10px;color:#A19F9D;font-family:monospace">' + esc(rec.partCode) + '</div>';
+    h += '<div style="font-size:11px;color:#605E5C;margin-top:1px">📍 ' + esc(rec.shop) + '</div>';
+    h += '</div>';
+    h += '<div style="font-size:11px;color:#A19F9D;flex-shrink:0">' + rec.time + '</div>';
+    h += '</div>';
+  });
+  body.innerHTML = h;
+}
+
+function magHistoryExportCSV() {
+  if (!_magHistory.length) magHistoryLoad();
+  var rows = ['Data,Godzina,Sklep,Nazwa części,Kod,Ilość'];
+  _magHistory.forEach(function(r) {
+    rows.push([r.date, r.time, r.shop, r.partName, r.partCode, r.qty].map(function(v){
+      return '"' + String(v||'').replace(/"/g,'""') + '"';
+    }).join(','));
+  });
+  var csv = '﻿' + rows.join('
+');
+  var blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'historia_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click(); URL.revokeObjectURL(url);
+  showToast('CSV pobrane');
+}
+
+function magHistoryClear() {
+  if (!confirm('Wyczyścić całą historię?')) return;
+  _magHistory = []; magHistorySave();
+  magRenderHistory(''); showToast('Historia wyczyszczona');
+}
+
+magHistoryLoad();
+
+
