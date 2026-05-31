@@ -2867,7 +2867,14 @@ function parOCR(base64img) {
   })
   .then(function(r){return r.json();})
   .then(function(data){
+    // Проверяем ошибку API
+    if (data.error) {
+      console.error('API error:', data.error);
+      showToast('Blad API: ' + (data.error.message||'sprawdz klucz'));
+      return;
+    }
     var txt=(data.content||[]).map(function(c){return c.text||'';}).join('');
+    console.log('OCR response:', txt);
     var clean=txt.replace(/```json|```/g,'').trim();
     try {
       var p=JSON.parse(clean);
@@ -2884,7 +2891,10 @@ function parOCR(base64img) {
       showToast('Wypelnij pola recznie');
     }
   })
-  .catch(function(){showToast('Blad OCR — wypelnij recznie');});
+  .catch(function(err){
+    console.error('OCR error:', err);
+    showToast('Blad polaczenia — wypelnij recznie');
+  });
 }
 function parSend(){var co=(document.getElementById('par_co')||{}).value||'';var kw=(document.getElementById('par_kwota')||{}).value||'';var nr=(document.getElementById('par_nr')||{}).value||'';var dt=(document.getElementById('par_data')||{}).value||'';if(!co&&!kw&&!nr){showToast('Wypelnij pola');return;}var subj='Faktura/Paragon '+(nr||dt||new Date().toLocaleDateString('pl-PL'));var lines=['Faktura/Paragon',''];if(co)lines.push('Co kupiono: '+co);if(kw)lines.push('Kwota: '+kw+' zl');if(nr)lines.push('Nr faktury: '+nr);if(dt)lines.push('Data: '+new Date(dt).toLocaleDateString('pl-PL'));lines.push('','Wyslano z RVM Raport');window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(lines.join(String.fromCharCode(10)));setTimeout(function(){['par_co','par_kwota','par_nr','par_data'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});_parPhoto=null;var w=document.getElementById('parPhotoWrap');if(w)w.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:6px;color:#A19F9D"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#A19F9D" stroke-width="1.4" stroke-linecap="round"><rect x="2" y="5" width="24" height="18" rx="3"/><circle cx="14" cy="14" r="5"/><path d="M8.5 5l2-3h7l2 3"/></svg><span style="font-size:13px;font-weight:600">Zrob zdjecie paragonu</span></div>';showToast('Wyslano');},500);}
 
