@@ -2580,6 +2580,27 @@ function restoreData(input){
 }</script>
 
   <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
+    <div style="font-size:13px;font-weight:700;color:#323130;margin-bottom:12px">Harmonogram raportów</div>
+    <div style="font-size:11px;color:#A19F9D;margin-bottom:10px">Powiadomienie w wybranym dniu i godzinie</div>
+    <div style="margin-bottom:8px">
+      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;display:block;margin-bottom:4px">Dzień tygodnia</span>
+      <select id="schedDay" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:8px">
+        <option value="1">Poniedziałek</option>
+        <option value="2">Wtorek</option>
+        <option value="3">Środa</option>
+        <option value="4">Czwartek</option>
+        <option value="5">Piątek</option>
+        <option value="6">Sobota</option>
+        <option value="0">Niedziela</option>
+      </select>
+      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;display:block;margin-bottom:4px">Godzina</span>
+      <input type="time" id="schedTime" value="08:00" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:10px">
+      <button onclick="schedSave()" style="width:100%;padding:12px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Zapisz harmonogram</button>
+    </div>
+    <div id="schedStatus" style="font-size:12px;color:#A19F9D;margin-top:8px;text-align:center"></div>
+  </div>
+
+  <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
     <div style="font-size:13px;font-weight:700;color:#323130;margin-bottom:10px">Biblioteka słów</div>
     <div style="margin-bottom:8px">
       <select id="libCol" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:8px">
@@ -4426,5 +4447,96 @@ function magExportEmail() {
 
   var subj = 'Stan magazynu RVM — ' + date;
   window.location.href = 'mailto:?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(lines.join('\n'));
+}
+</script>
+<script>
+// ============================================================
+// HARMONOGRAM - расписание уведомлений
+// ============================================================
+var _schedDay = null, _schedTime = null, _schedTimer = null;
+
+function schedLoad() {
+  try {
+    var s = JSON.parse(localStorage.getItem('rv_sched') || 'null');
+    if (s) { _schedDay = s.day; _schedTime = s.time; }
+  } catch(e) {}
+}
+
+function schedSave() {
+  var day = document.getElementById('schedDay');
+  var time = document.getElementById('schedTime');
+  if (!day || !time) return;
+  _schedDay = parseInt(day.value);
+  _schedTime = time.value;
+  localStorage.setItem('rv_sched', JSON.stringify({day: _schedDay, time: _schedTime}));
+  schedStart();
+  var days = ['Niedziela','Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota'];
+  var status = document.getElementById('schedStatus');
+  if (status) status.textContent = '✓ Zaplanowano: ' + days[_schedDay] + ' o ' + _schedTime;
+  showToast('Harmonogram zapisany');
+}
+
+function schedStart() {
+  if (_schedTimer) clearInterval(_schedTimer);
+  _schedTimer = setInterval(schedCheck, 60000); // каждую минуту
+  schedCheck(); // сразу проверяем
+}
+
+function schedCheck() {
+  if (_schedDay === null || !_schedTime) return;
+  var now = new Date();
+  var dayOk = now.getDay() === _schedDay;
+  var timeNow = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  if (dayOk && timeNow === _schedTime) {
+    schedNotify();
+  }
+}
+
+function schedNotify() {
+  // Пробуем показать уведомление
+  if ('Notification' in window) {
+    if (Notification.permission === 'granted') {
+      new Notification('RVM Raport', {
+        body: 'Czas na raport magazynu! Naciśnij aby wysłać.',
+        icon: '/RVM/icon.png'
+      });
+    } else if (Notification.permission !== 'denied') {
+      Notification.requestPermission().then(function(p) {
+        if (p === 'granted') schedNotify();
+      });
+    }
+  }
+  // Также показываем toast в приложении
+  showToast('⏰ Czas na raport magazynu!');
+  // Открываем email с отчётом
+  setTimeout(function() {
+    if (confirm('Wysłać raport magazynu?')) {
+      magExportEmail();
+    }
+  }, 1000);
+}
+
+function schedRequestPermission() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+// Инициализация при загрузке
+schedLoad();
+if (_schedDay !== null) {
+  schedStart();
+  // Обновляем UI настроек если открыты
+  var days = ['Niedziela','Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota'];
+  setTimeout(function() {
+    var day = document.getElementById('schedDay');
+    var time = document.getElementById('schedTime');
+    var status = document.getElementById('schedStatus');
+    if (day) day.value = _schedDay;
+    if (time) time.value = _schedTime;
+    if (status) status.textContent = '✓ Aktywny: ' + days[_schedDay] + ' o ' + _schedTime;
+    // Запрашиваем разрешение на уведомления
+    schedRequestPermission();
+  }, 500);
 }
 </script>
