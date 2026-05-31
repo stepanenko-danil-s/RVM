@@ -291,6 +291,20 @@ body.dark .chat-bubble-u{background:rgba(0,120,212,.12)}
 body.dark .chat-bubble-u-text{color:#E8E8F0}
 body.dark .mag-card,.dark .photo-add{background:#1E1E26}
 </style>
+
+<style id="mmrCss">
+.mmr-row{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.mmr-badge{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:6px 8px;width:62px;text-align:center;color:#fff;flex-shrink:0;border-radius:7px}
+.mmr-badge.el{background:#107C10}
+.mmr-badge.def{background:#D83B01}
+.mmr-badge.sol{background:#0078D4}
+.mmr-badge.part{background:#986F0B}
+.mmr-val{flex:1;padding:8px 11px;background:#F5F5F7;border-radius:8px;font-size:13px;font-weight:500;color:#323130;cursor:pointer;border:1.5px solid transparent;transition:all .15s;min-width:0}
+.mmr-val:active{background:#EAF4FB;border-color:#0078D4;color:#0078D4}
+.mmr-edit,.mmr-skip{width:30px;height:30px;border-radius:8px;border:0.5px solid #EDEBE9;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#605E5C;-webkit-tap-highlight-color:transparent}
+.mmr-skip{background:#FFF0F0;border-color:rgba(255,59,48,.2);color:#FF3B30}
+</style>
+
 </head>
 <body>
 <div style="height:2px;background:linear-gradient(90deg,#003E42,#007A7A,#34DDD0,#007A7A,#003E42);position:sticky;top:0;z-index:81"></div>
@@ -2620,6 +2634,13 @@ function accOpen(id) {
     var mi = document.getElementById('manualInner');
     var fw = document.getElementById('flowWrap');
     if (mi && fw && !mi.contains(fw)) {
+      // Добавляем кнопку микрофона над модулями
+      if (!document.getElementById('mainMicBtn')) {
+        var micDiv = document.createElement('div');
+        micDiv.style.cssText = 'padding:8px 10px 4px';
+        micDiv.innerHTML = '<button id="mainMicBtn" onclick="mainMicOpen()" style="width:100%;padding:11px 16px;background:linear-gradient(135deg,#0078D4,#005A9E);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;-webkit-tap-highlight-color:transparent"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/><line x1="6" y1="17" x2="12" y2="17"/></svg>Dyktuj opis serwisu</button>';
+        mi.appendChild(micDiv);
+      }
       fw.style.display = '';
       mi.appendChild(fw);
     }
@@ -3130,6 +3151,228 @@ function setModeNG() {
 }
 
 
+
+</script>
+
+<div class="ov" id="shMainMic" style="display:none" onclick="if(event.target===this)closeOv('shMainMic')">
+  <div class="sh" style="max-height:92vh;overflow-y:auto">
+    <div class="sh-bar"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="font-size:17px;font-weight:800;color:#0078D4">Dyktuj opis</div>
+      <button onclick="closeOv('shMainMic')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">×</button>
+    </div>
+    <div style="font-size:11px;color:#A19F9D;margin-bottom:10px">Opisz element, usterkę i co zrobiono — jednym zdaniem</div>
+    <textarea id="mainMicInp" placeholder="Np: czujnik startu nie dziala wymieniono nowy&#10;Np: пассик порвался замінили новий" style="width:100%;min-height:80px;background:#F5F5F7;border:1.5px solid rgba(0,120,212,.2);border-radius:10px;padding:11px 13px;font-size:14px;font-family:inherit;outline:none;resize:none;color:#323130;line-height:1.6;margin-bottom:8px" oninput="mainMicAutoProc(this)"></textarea>
+    <div style="font-size:11px;color:#A19F9D;margin-bottom:12px">Użyj mikrofonu iPhone na klawiaturze</div>
+    <div id="mainMicPrev" style="display:none;margin-bottom:10px"></div>
+    <button onclick="mainMicSearch()" style="width:100%;padding:10px;background:#F5F5F7;border:1px solid #EDEBE9;border-radius:10px;font-size:13px;font-weight:600;color:#0078D4;cursor:pointer;margin-bottom:8px;font-family:inherit">Szukaj w bibliotece</button>
+    <button onclick="mainMicAdd()" style="width:100%;padding:13px;background:#0078D4;border:none;border-radius:12px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;margin-bottom:8px;font-family:inherit">Dodaj do raportu</button>
+    <button onclick="closeOv('shMainMic')" class="sh-btn lt">Anuluj</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// ГЛАВНЫЙ МИКРОФОН - офлайн алгоритм
+// ============================================================
+function mainMicOpen() {
+  var inp = document.getElementById('mainMicInp');
+  if (inp) inp.value = '';
+  var prev = document.getElementById('mainMicPrev');
+  if (prev) { prev.style.display='none'; prev.innerHTML=''; }
+  openSh('shMainMic');
+  setTimeout(function(){var i=document.getElementById('mainMicInp');if(i)i.focus();},400);
+}
+
+var _mainMicTimer = null;
+
+function mainMicAutoProc(el) {
+  clearTimeout(_mainMicTimer);
+  if (el.value.length > 4) _mainMicTimer = setTimeout(mainMicSearch, 800);
+}
+
+function mainMicNorm(s) {
+  return (s||'').toLowerCase()
+    .replace(/ą/g,'a').replace(/ę/g,'e').replace(/ó/g,'o')
+    .replace(/ś/g,'s').replace(/ź/g,'z').replace(/ż/g,'z')
+    .replace(/ć/g,'c').replace(/ń/g,'n').replace(/ł/g,'l')
+    .replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+}
+
+function mainMicScore(text, item) {
+  var norm = mainMicNorm(text);
+  var pl = mainMicNorm(item.pl);
+  var ru = mainMicNorm(item.ru||'');
+  var sc = 0;
+  if (norm.indexOf(pl) >= 0) sc += 12;
+  if (ru && norm.indexOf(ru) >= 0) sc += 12;
+  var words = norm.split(' ').filter(function(w){return w.length>2;});
+  pl.split(' ').filter(function(w){return w.length>2;}).forEach(function(w){
+    if (norm.indexOf(w) >= 0) sc += 4;
+    words.forEach(function(ww){if(ww.indexOf(w)>=0||w.indexOf(ww)>=0)sc+=2;});
+  });
+  if (ru) ru.split(' ').filter(function(w){return w.length>2;}).forEach(function(w){
+    if (norm.indexOf(w) >= 0) sc += 4;
+    words.forEach(function(ww){if(ww.indexOf(w)>=0||w.indexOf(ww)>=0)sc+=2;});
+  });
+  return sc;
+}
+
+function mainMicSearch() {
+  var text = (document.getElementById('mainMicInp')||{}).value||'';
+  text = text.trim(); if (!text) return;
+
+  var prev = document.getElementById('mainMicPrev'); if (!prev) return;
+  var norm = mainMicNorm(text);
+
+  // Ищем лучшее совпадение для каждой категории
+  var bestEl = null, bestDef = null, bestSol = null, bestKon = null;
+  var scoreEl = 0, scoreDef = 0, scoreSol = 0, scoreKon = 0;
+
+  // Element
+  var allEl = (D.el||[]).concat(custom.el||[]);
+  allEl.forEach(function(item) {
+    var sc = mainMicScore(text, item);
+    if (sc > scoreEl) { scoreEl = sc; bestEl = item; }
+  });
+
+  // Usterka
+  var allDef = (D.def||[]).concat(custom.def||[]);
+  allDef.forEach(function(item) {
+    var sc = mainMicScore(text, item);
+    if (sc > scoreDef) { scoreDef = sc; bestDef = item; }
+  });
+
+  // Co zrobiono
+  var allSol = (D.sol||[]).concat(custom.sol||[]);
+  allSol.forEach(function(item) {
+    var sc = mainMicScore(text, item);
+    if (sc > scoreSol) { scoreSol = sc; bestSol = item; }
+  });
+
+  // Serwis
+  var allKon = (D.kon||[]).concat(custom.kon||[]);
+  allKon.forEach(function(item) {
+    var sc = mainMicScore(text, item);
+    if (sc > scoreKon) { scoreKon = sc; bestKon = item; }
+  });
+
+  // Также ищем части
+  var bestPart = null, scorePart = 0;
+  WH.concat(custParts).forEach(function(p, i) {
+    var pn = mainMicNorm(p.n + ' ' + p.k);
+    var sc = 0;
+    norm.split(' ').filter(function(w){return w.length>2;}).forEach(function(w){
+      if (pn.indexOf(w) >= 0) sc += 3;
+    });
+    if (sc > scorePart) { scorePart = sc; bestPart = {p:p, idx:i}; }
+  });
+
+  // Показываем результаты
+  var h = '';
+  var hasAny = false;
+
+  if (bestEl && scoreEl > 3) {
+    hasAny = true;
+    h += '<div class="mmr-row"><div class="mmr-badge el">Element</div>';
+    h += '<div class="mmr-val" id="mmr_el" onclick="mmrPick(\'el\',this)">'+esc(bestEl.pl)+'</div>';
+    h += '<button onclick="mmrEdit(\'el\')" class="mmr-edit"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 2l2 2-7 7H3v-2l7-7z"/></svg></button>';
+    h += '<button onclick="mmrSkip(\'el\')" class="mmr-skip"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/></svg></button>';
+    h += '</div>';
+  }
+  if (bestDef && scoreDef > 3) {
+    hasAny = true;
+    h += '<div class="mmr-row"><div class="mmr-badge def">Usterka</div>';
+    h += '<div class="mmr-val" id="mmr_def" onclick="mmrPick(\'def\',this)">'+esc(bestDef.pl)+'</div>';
+    h += '<button onclick="mmrEdit(\'def\')" class="mmr-edit"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 2l2 2-7 7H3v-2l7-7z"/></svg></button>';
+    h += '<button onclick="mmrSkip(\'def\')" class="mmr-skip"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/></svg></button>';
+    h += '</div>';
+  }
+  if (bestSol && scoreSol > 3) {
+    hasAny = true;
+    h += '<div class="mmr-row"><div class="mmr-badge sol">Wykonano</div>';
+    h += '<div class="mmr-val" id="mmr_sol" onclick="mmrPick(\'sol\',this)">'+esc(bestSol.pl)+'</div>';
+    h += '<button onclick="mmrEdit(\'sol\')" class="mmr-edit"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 2l2 2-7 7H3v-2l7-7z"/></svg></button>';
+    h += '<button onclick="mmrSkip(\'sol\')" class="mmr-skip"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/></svg></button>';
+    h += '</div>';
+  }
+  if (bestPart && scorePart >= 3) {
+    hasAny = true;
+    h += '<div class="mmr-row"><div class="mmr-badge part">Część</div>';
+    h += '<div class="mmr-val" id="mmr_part" onclick="mmrPick(\'part\',this)" data-idx="'+bestPart.idx+'">'+esc(bestPart.p.n)+'</div>';
+    h += '<button onclick="mmrSkip(\'part\')" class="mmr-skip"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/></svg></button>';
+    h += '</div>';
+  }
+
+  if (!hasAny) {
+    h = '<div style="padding:10px;text-align:center;font-size:13px;color:#A19F9D">Nie rozpoznano — spróbuj opisać inaczej</div>';
+  }
+
+  prev.innerHTML = h;
+  prev.style.display = 'block';
+
+  // Сохраняем найденное
+  window._mmrData = {
+    el: (bestEl && scoreEl > 3) ? bestEl : null,
+    def: (bestDef && scoreDef > 3) ? bestDef : null,
+    sol: (bestSol && scoreSol > 3) ? bestSol : null,
+    kon: (bestKon && scoreKon > 3) ? bestKon : null,
+    part: (bestPart && scorePart >= 3) ? bestPart : null
+  };
+}
+
+function mmrPick(col, el) {
+  el.style.background = '#107C10';
+  el.style.color = '#fff';
+  el.style.borderColor = '#107C10';
+}
+
+function mmrSkip(col) {
+  var row = document.getElementById('mmr_'+col);
+  if (row) row.closest('.mmr-row').style.opacity = '0.3';
+  if (window._mmrData) window._mmrData[col] = null;
+}
+
+function mmrEdit(col) {
+  var val = document.getElementById('mmr_'+col);
+  if (!val) return;
+  var oldText = val.textContent;
+  var inp = document.createElement('input');
+  inp.value = oldText;
+  inp.style.cssText = 'flex:1;padding:6px 10px;background:#fff;border:1.5px solid #0078D4;border-radius:8px;font-size:13px;font-family:inherit;outline:none;color:#323130;min-width:0';
+  inp.addEventListener('blur', function() {
+    var newVal = inp.value.trim() || oldText;
+    if (window._mmrData && window._mmrData[col]) window._mmrData[col].pl = newVal;
+    val.textContent = newVal;
+    val.parentNode.replaceChild(val, inp);
+  });
+  inp.addEventListener('keydown', function(e){if(e.key==='Enter')this.blur();});
+  val.parentNode.replaceChild(inp, val);
+  setTimeout(function(){inp.focus();inp.select();},50);
+}
+
+function mainMicAdd() {
+  var d = window._mmrData || {};
+  var added = false;
+
+  if (d.el) { var v=d.el.pl; if(SEL.el.indexOf(v)<0)SEL.el.push(v); _updV('el'); renderList('el'); added=true; }
+  if (d.def) { var v=d.def.pl; if(SEL.def.indexOf(v)<0)SEL.def.push(v); _updV('def'); renderList('def'); added=true; }
+  if (d.sol) { var v=d.sol.pl; if(SEL.sol.indexOf(v)<0)SEL.sol.push(v); _updV('sol'); renderList('sol'); added=true; }
+  if (d.kon) { var v=d.kon.pl; if(SEL.kon.indexOf(v)<0)SEL.kon.push(v); _updV('kon'); renderList('kon'); added=true; }
+  if (d.part) {
+    var idx=d.part.idx;
+    var sp=curMode==='G'?selPartsG:selPartsS;
+    var pq=curMode==='G'?partQtyG:partQtyS;
+    sp['p'+idx]=true; pq['p'+idx]=(pq['p'+idx]||0)+1;
+    ss('rv_sp'+curMode,sp); ss('rv_pq'+curMode,pq);
+    renderParts(); added=true;
+  }
+
+  if (!added) { showToast('Nic nie zaznaczono'); return; }
+  renderSummary();
+  closeOv('shMainMic');
+  showToast('Dodano do raportu');
+}
 
 </script>
 </body>
