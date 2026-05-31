@@ -2626,7 +2626,7 @@ function restoreData(input){
       <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A19F9D;margin-bottom:2px">Stan</div><div style="font-size:11px;font-weight:600" id="msh_status"></div></div>
       <div style="display:flex;align-items:center;gap:12px">
         <button onclick="mshAdj(-1)" style="width:36px;height:36px;border-radius:10px;border:1px solid #EDEBE9;background:#fff;font-size:22px;font-weight:300;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#323130;line-height:1;font-family:inherit">-</button>
-        <span style="font-size:26px;font-weight:800;min-width:32px;text-align:center;color:#323130" id="msh_qty">0</span>
+        <span onclick="mshQtyEdit()" style="font-size:26px;font-weight:800;min-width:44px;text-align:center;color:#0078D4;cursor:pointer;border-bottom:2px solid #0078D4;padding-bottom:2px" id="msh_qty">0</span>
         <button onclick="mshAdj(1)" style="width:36px;height:36px;border-radius:10px;border:1px solid #EDEBE9;background:#fff;font-size:22px;font-weight:300;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#323130;line-height:1;font-family:inherit">+</button>
       </div>
     </div>
@@ -2954,6 +2954,26 @@ function magRender(){if(!_magData)_magData=magLoad();var grid=document.getElemen
 function magMinus(id){if(!_magData)_magData=magLoad();var d=magGet(id);if(d.qty<=0){showToast('Stan = 0');return;}d.qty--;magSave();magRender();var p=MAG_PARTS.find(function(x){return x.id===id;});showToast('-1 · '+(p?p.n.split(' ').slice(0,3).join(' '):''));}
 function magOpenCamById(btn){_magOpenId=parseInt(btn.getAttribute('data-mid'));var inp=document.getElementById('magCamInp');if(inp)inp.click();}
 function magOpenSheet(id){if(!_magData)_magData=magLoad();_magOpenId=id;var p=MAG_PARTS.find(function(x){return x.id===id;});var d=magGet(id);var st=magSt(id);if(!p)return;var nm=document.getElementById('msh_name');if(nm)nm.textContent=p.n;var cd=document.getElementById('msh_code');if(cd)cd.textContent=p.k;var qt=document.getElementById('msh_qty');if(qt)qt.textContent=d.qty;var mn=document.getElementById('msh_min');if(mn)mn.textContent=d.min;var stEl=document.getElementById('msh_status');if(stEl){stEl.textContent=st==='empty'?'Brak':st==='warn'?'Niski stan':'OK';stEl.style.color=st==='empty'?'#FF3B30':st==='warn'?'#FF9500':'#34C759';}var ph=document.getElementById('msh_photo');if(ph){if(d.photo){ph.innerHTML='<img src="'+d.photo+'" style="width:100%;height:100%;object-fit:cover">';}else{ph.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:6px;color:#C8C6C4"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#C8C6C4" stroke-width="1.4" stroke-linecap="round"><rect x="3" y="7" width="30" height="22" rx="4"/><circle cx="18" cy="18" r="6"/><path d="M10 7l2.5-4h11l2.5 4"/></svg><span style="font-size:12px">Brak zdjecia</span></div>';}}openSh('shMagPart');}
+function mshQtyEdit() {
+  if (_magOpenId === null) return;
+  var item = magGet(_magOpenId);
+  var val = prompt('Wpisz ilość na stanie:', item.qty);
+  if (val === null) return;
+  var num = parseInt(val);
+  if (isNaN(num) || num < 0) { showToast('Nieprawidłowa liczba'); return; }
+  item.qty = num;
+  magSave();
+  var el = document.getElementById('msh_qty');
+  if (el) el.textContent = num;
+  var st = magSt(_magOpenId);
+  var stEl = document.getElementById('msh_status');
+  if (stEl) {
+    stEl.textContent = st==='empty'?'Brak':st==='warn'?'Niski stan':'OK';
+    stEl.style.color = st==='empty'?'#FF3B30':st==='warn'?'#FF9500':'#34C759';
+  }
+  magRender();
+  showToast('Stan: ' + num);
+}
 function mshAdj(d){if(_magOpenId===null)return;var item=magGet(_magOpenId);item.qty=Math.max(0,item.qty+d);magSave();var el=document.getElementById('msh_qty');if(el)el.textContent=item.qty;var st=magSt(_magOpenId);var stEl=document.getElementById('msh_status');if(stEl){stEl.textContent=st==='empty'?'Brak':st==='warn'?'Niski stan':'OK';stEl.style.color=st==='empty'?'#FF3B30':st==='warn'?'#FF9500':'#34C759';}magRender();}
 function mshAdjMin(d){if(_magOpenId===null)return;var item=magGet(_magOpenId);item.min=Math.max(0,(item.min||1)+d);magSave();var el=document.getElementById('msh_min');if(el)el.textContent=item.min;magRender();}
 function mshUse(){if(_magOpenId===null)return;var p=MAG_PARTS.find(function(x){return x.id===_magOpenId;});var d=magGet(_magOpenId);if(!p)return;if(d.qty>0){d.qty--;magSave();}var idx=WH.findIndex(function(c){return c.k===p.k;});if(idx<0){var ci=custParts.findIndex(function(c){return c.k===p.k;});if(ci<0){custParts.push({n:p.n,k:p.k,qty:1});ss('rv_cp',custParts);}idx=WH.length+custParts.findIndex(function(c){return c.k===p.k;});}if(idx>=0){var sp=curMode==='G'?selPartsG:selPartsS;var pq=curMode==='G'?partQtyG:partQtyS;sp['p'+idx]=true;pq['p'+idx]=(pq['p'+idx]||0)+1;ss('rv_sp'+curMode,sp);ss('rv_pq'+curMode,pq);}closeOv('shMagPart');renderParts();renderSummary();showToast('Dodano do raportu · stan: '+d.qty);}
