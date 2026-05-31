@@ -3847,11 +3847,7 @@ function magPrintQR() {
 
   // Строим HTML страницу для печати
   var css = '*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;background:#fff}.page{width:210mm;padding:8mm;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:36mm;gap:2mm}.sticker{border:1px solid #ccc;display:flex;overflow:hidden;border-radius:3px}.stripe{width:5mm;background:#007A7A;flex-shrink:0}.info{flex:1;padding:3mm 2mm;display:flex;flex-direction:column;justify-content:center;gap:2mm}.nm{font-size:9pt;font-weight:700;color:#111;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.cd{font-size:8pt;color:#555;font-family:monospace}.qrbox{width:34mm;height:36mm;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:2mm}.qrbox canvas,.qrbox img{width:30mm!important;height:30mm!important}';
-  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script><style>'+css+'</style></head><body>'
-    + '<div style="position:fixed;top:10px;right:10px;z-index:999;display:flex;gap:8px" class="noprint">'
-    + '<button onclick="window.close()" style="padding:8px 16px;background:#FF3B30;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">&#10005; Zamknij</button>'
-    + '</div>'
-    + '<div class="page">';
+  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script><style>'+css+'</style></head><body><div class="page">';
 
   allParts.forEach(function(p) {
     html += '<div class="sticker">'
@@ -4307,24 +4303,24 @@ function shopGetLabel() {
 </script>
 
 <div class="ov" id="shMagTable" style="display:none" onclick="if(event.target===this)closeOv('shMagTable')">
-  <div class="sh" style="max-height:96vh;display:flex;flex-direction:column;padding:0">
-    <div class="sh-bar" style="flex-shrink:0"></div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;flex-shrink:0;border-bottom:0.5px solid #EDEBE9">
+  <div class="sh" style="max-height:96vh;overflow-y:auto;padding:16px 0 32px">
+    <div class="sh-bar"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;margin-bottom:12px">
       <div style="font-size:17px;font-weight:800;color:#323130">Stan magazynu</div>
-      <button onclick="closeOv('shMagTable')" style="background:#F5F5F7;border:none;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;color:#605E5C;flex-shrink:0">×</button>
+      <div style="display:flex;gap:6px">
+        <button onclick="magExportCSV()" style="padding:6px 12px;background:#34C759;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">CSV</button>
+        <button onclick="magExportEmail()" style="padding:6px 12px;background:#0078D4;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Email</button>
+        <button onclick="schedOpenInTable()" style="padding:6px 12px;background:#986F0B;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">⏰</button>
+        <button onclick="closeOv('shMagTable')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">×</button>
+      </div>
     </div>
     <!-- Фильтр статуса -->
-    <div style="display:flex;gap:6px;padding:8px 16px 10px;flex-shrink:0">
-      <button onclick="magExportCSV()" style="flex:1;padding:9px;background:#34C759;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">CSV</button>
-      <button onclick="magExportEmail()" style="flex:1;padding:9px;background:#0078D4;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Email</button>
-      <button onclick="schedOpenInTable()" style="flex:1;padding:9px;background:#986F0B;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">⏰ Plan</button>
-    </div>
-    <div style="display:flex;gap:6px;padding:0 16px 8px;flex-shrink:0;border-bottom:0.5px solid #F5F5F7">
+    <div style="display:flex;gap:6px;padding:0 16px;margin-bottom:10px">
       <button onclick="magTableFilter('all')" id="mtf_all" style="flex:1;padding:7px;background:#1C1C1E;color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Wszystkie</button>
       <button onclick="magTableFilter('warn')" id="mtf_warn" style="flex:1;padding:7px;background:#F5F5F7;color:#FF9500;border:1.5px solid #FF9500;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Mało</button>
       <button onclick="magTableFilter('empty')" id="mtf_empty" style="flex:1;padding:7px;background:#F5F5F7;color:#FF3B30;border:1.5px solid #FF3B30;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Brak</button>
     </div>
-    <div id="magTableBody" style="padding:0 16px;overflow-y:auto;flex:1"></div>
+    <div id="magTableBody" style="padding:0 16px"></div>
   </div>
 </div>
 
@@ -4332,7 +4328,7 @@ function shopGetLabel() {
 <div class="ov" id="shMagHistory" style="display:none" onclick="if(event.target===this)closeOv('shMagHistory')">
   <div class="sh" style="max-height:96vh;overflow-y:auto;padding:16px 0 32px">
     <div class="sh-bar"></div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;margin-bottom:12px;position:sticky;top:0;background:#fff;z-index:10;padding-top:4px">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;margin-bottom:12px">
       <div style="font-size:17px;font-weight:800;color:#323130">Historia pobrań</div>
       <div style="display:flex;gap:6px">
         <button onclick="magHistoryExportCSV()" style="padding:6px 12px;background:#34C759;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">CSV</button>
@@ -4613,102 +4609,17 @@ function schedSaveFromTable() {
   // Перерисовываем таблицу без панели
   magRenderTable();
 }
-</script>
-// ============================================================
+
 // HISTORIA MAGAZYNU
-// ============================================================
 var _magHistory = [];
-
-function magHistoryLoad() {
-  try { _magHistory = JSON.parse(localStorage.getItem('rv_mag_hist') || '[]'); } catch(e) { _magHistory = []; }
-}
-
-function magHistorySave() {
-  if (_magHistory.length > 500) _magHistory = _magHistory.slice(-500);
-  try { localStorage.setItem('rv_mag_hist', JSON.stringify(_magHistory)); } catch(e) {}
-}
-
-function magHistoryAdd(part, qty) {
-  if (!part) return;
-  if (!_magHistory.length) magHistoryLoad();
-  var now = new Date();
-  var shop = (typeof _currentShop !== 'undefined' && _currentShop && _currentShop.chain)
-    ? (_currentShop.chain + (_currentShop.id ? ' ' + _currentShop.id : '') + (_currentShop.city ? ', ' + _currentShop.city : ''))
-    : '—';
-  _magHistory.push({
-    ts: now.toISOString(),
-    date: now.toLocaleDateString('pl-PL'),
-    time: now.toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'}),
-    shop: shop,
-    partId: part.id,
-    partName: part.n,
-    partCode: part.k,
-    qty: qty || 1
-  });
-  magHistorySave();
-}
-
-function magShowHistory() {
-  if (!_magHistory.length) magHistoryLoad();
-  openSh('shMagHistory');
-  magRenderHistory('');
-}
-
-function magRenderHistory(filter) {
-  var body = document.getElementById('magHistBody');
-  if (!body) return;
-  var items = _magHistory.slice().reverse();
-  if (filter) {
-    items = items.filter(function(h){ return h.shop.toLowerCase().indexOf(filter.toLowerCase()) >= 0 || h.partName.toLowerCase().indexOf(filter.toLowerCase()) >= 0; });
-  }
-  if (!items.length) {
-    body.innerHTML = '<div style="text-align:center;padding:24px;font-size:13px;color:#A19F9D">Brak historii</div>';
-    return;
-  }
-  var h = '', lastDate = '';
-  items.forEach(function(rec) {
-    if (rec.date !== lastDate) {
-      h += '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;padding:10px 0 4px">' + rec.date + '</div>';
-      lastDate = rec.date;
-    }
-    h += '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid #F5F5F7">';
-    h += '<div style="width:36px;height:36px;border-radius:8px;background:#FFF0F0;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;font-weight:800;color:#FF3B30">−'+rec.qty+'</div>';
-    h += '<div style="flex:1;min-width:0">';
-    h += '<div style="font-size:13px;font-weight:600;color:#323130;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(rec.partName) + '</div>';
-    h += '<div style="font-size:10px;color:#A19F9D;font-family:monospace">' + esc(rec.partCode) + '</div>';
-    h += '<div style="font-size:11px;color:#605E5C;margin-top:1px">📍 ' + esc(rec.shop) + '</div>';
-    h += '</div>';
-    h += '<div style="font-size:11px;color:#A19F9D;flex-shrink:0">' + rec.time + '</div>';
-    h += '</div>';
-  });
-  body.innerHTML = h;
-}
-
-function magHistoryExportCSV() {
-  if (!_magHistory.length) magHistoryLoad();
-  var rows = ['Data,Godzina,Sklep,Nazwa części,Kod,Ilość'];
-  _magHistory.forEach(function(r) {
-    rows.push([r.date, r.time, r.shop, r.partName, r.partCode, r.qty].map(function(v){
-      return '"' + String(v||'').replace(/"/g,'""') + '"';
-    }).join(','));
-  });
-  var csv = '﻿' + rows.join('
-');
-  var blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url; a.download = 'historia_' + new Date().toISOString().slice(0,10) + '.csv';
-  a.click(); URL.revokeObjectURL(url);
-  showToast('CSV pobrane');
-}
-
-function magHistoryClear() {
-  if (!confirm('Wyczyścić całą historię?')) return;
-  _magHistory = []; magHistorySave();
-  magRenderHistory(''); showToast('Historia wyczyszczona');
-}
-
+function magHistoryLoad(){try{_magHistory=JSON.parse(localStorage.getItem('rv_mag_hist')||'[]');}catch(e){_magHistory=[];}}
+function magHistorySave(){if(_magHistory.length>500)_magHistory=_magHistory.slice(-500);try{localStorage.setItem('rv_mag_hist',JSON.stringify(_magHistory));}catch(e){}}
+function magHistoryAdd(part,qty){if(!part)return;if(!_magHistory.length)magHistoryLoad();var now=new Date();var shop=(typeof _currentShop!=='undefined'&&_currentShop&&_currentShop.chain)?(_currentShop.chain+(_currentShop.id?' '+_currentShop.id:'')+(_currentShop.city?', '+_currentShop.city:'')):'—';_magHistory.push({ts:now.toISOString(),date:now.toLocaleDateString('pl-PL'),time:now.toLocaleTimeString('pl-PL',{hour:'2-digit',minute:'2-digit'}),shop:shop,partId:part.id,partName:part.n,partCode:part.k,qty:qty||1});magHistorySave();}
+function magShowHistory(){if(!_magHistory.length)magHistoryLoad();openSh('shMagHistory');magRenderHistory('');}
+function magRenderHistory(filter){var body=document.getElementById('magHistBody');if(!body)return;var items=_magHistory.slice().reverse();if(filter)items=items.filter(function(h){return h.shop.toLowerCase().indexOf(filter.toLowerCase())>=0||h.partName.toLowerCase().indexOf(filter.toLowerCase())>=0;});if(!items.length){body.innerHTML='<div style="text-align:center;padding:24px;font-size:13px;color:#A19F9D">Brak historii</div>';return;}var h='',lastDate='';items.forEach(function(rec){if(rec.date!==lastDate){h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;padding:10px 0 4px">'+rec.date+'</div>';lastDate=rec.date;}h+='<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid #F5F5F7"><div style="width:36px;height:36px;border-radius:8px;background:#FFF0F0;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;font-weight:800;color:#FF3B30">−'+rec.qty+'</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;color:#323130;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(rec.partName)+'</div><div style="font-size:10px;color:#A19F9D;font-family:monospace">'+esc(rec.partCode)+'</div><div style="font-size:11px;color:#605E5C;margin-top:1px">📍 '+esc(rec.shop)+'</div></div><div style="font-size:11px;color:#A19F9D;flex-shrink:0">'+rec.time+'</div></div>';});body.innerHTML=h;}
+function magHistoryExportCSV(){if(!_magHistory.length)magHistoryLoad();var rows=['Data,Godzina,Sklep,Nazwa czesci,Kod,Ilosc'];_magHistory.forEach(function(r){rows.push([r.date,r.time,r.shop,r.partName,r.partCode,r.qty].map(function(v){return'"'+String(v||'').replace(/"/g,'""')+'"';}).join(','));});var csv='﻿'+rows.join('
+');var blob=new Blob([csv],{type:'text/csv;charset=utf-8'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='historia_'+new Date().toISOString().slice(0,10)+'.csv';a.click();URL.revokeObjectURL(url);showToast('CSV pobrane');}
+function magHistoryClear(){if(!confirm('Wyczyścić całą historię?'))return;_magHistory=[];magHistorySave();magRenderHistory('');showToast('Historia wyczyszczona');}
 magHistoryLoad();
+
 </script>
-</body>
-</html>
