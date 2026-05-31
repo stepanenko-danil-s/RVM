@@ -2835,7 +2835,7 @@ function repPhotosRender(){var wrap=document.getElementById('repPhotos');var lis
 // Paragon
 var _parPhoto=null;
 function openPAFlow() {
-  window.location.href = 'msflow://';
+  window.open('https://make.powerautomate.com/environments/Default-e389f581-ff8f-4f41-96a3-2ffaaee9fba8/flows/5c9e4e2c-811e-4551-8ef1-c8cf34c8656a/run', '_blank');
 }
 function toggleParSheet(){var sh=document.getElementById('shParagon');if(!sh)return;sh.style.display='flex';setTimeout(function(){sh.classList.add('open');},10);var d=document.getElementById('par_data');if(d&&!d.value)d.value=new Date().toISOString().slice(0,10);}
 function closeParSheet(){var sh=document.getElementById('shParagon');if(!sh)return;sh.classList.remove('open');setTimeout(function(){sh.style.display='none';},300);}
