@@ -3840,13 +3840,14 @@ magRender = function() {
       <div style="font-size:17px;font-weight:800;color:#323130">Wybierz sklep</div>
       <button onclick="closeOv('shShop')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">×</button>
     </div>
-    <div style="display:flex;gap:6px;margin-bottom:10px">
+    <div style="display:flex;gap:6px;margin-bottom:6px">
       <div style="flex:1;display:flex;align-items:center;gap:8px;background:#F5F5F7;border-radius:10px;padding:8px 12px">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#C8C6C4" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="4"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
         <input id="shopInp" placeholder="Numer, miasto lub nazwa..." oninput="shopAutoProc(this)" style="border:none;background:none;font-size:14px;font-family:inherit;outline:none;color:#323130;flex:1">
       </div>
-      <button onclick="shopGPS()" style="padding:0 12px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">📍 GPS</button>
+      <button id="shopGpsBtnSheet" onclick="shopGPS()" style="padding:0 12px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">📍 GPS</button>
     </div>
+    <div id="shopStatus" style="font-size:11px;color:#A19F9D;margin-bottom:8px;min-height:16px;text-align:center"></div>
     <div style="font-size:11px;color:#A19F9D;margin-bottom:8px">Lub dodaj własny sklep:</div>
     <div style="display:flex;gap:6px;margin-bottom:12px">
       <input id="shopCustomInp" placeholder="Np. Bing Rzeszów, al. Piłsudskiego" style="flex:1;padding:9px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;font-family:inherit;outline:none;color:#323130">
@@ -4062,106 +4063,173 @@ var SHOPS_DB = [
 ];
 
 // ============================================================
-// WYBÓR SKLEPU - поиск + GPS
+// WYBÓR SKLEPU - GPS + Overpass API
 // ============================================================
 var _currentShop = null;
+var _lastStores = [];
+var _myLat = null, _myLon = null;
+var _shopTimer = null;
+
+var SHOP_BRANDS = ["Biedronka","Lidl","Kaufland","Aldi","Polomarket","Auchan","Carrefour","Zabka","Dino","Netto","Intermarche","Spar","Stokrotka"];
 
 function shopOpen() {
   var inp = document.getElementById('shopInp');
   if (inp) inp.value = '';
   var res = document.getElementById('shopResults');
-  if (res) res.innerHTML = '';
+  if (res) res.innerHTML = '<div style="padding:14px;text-align:center;font-size:13px;color:#A19F9D">Wpisz nazwę lub użyj GPS</div>';
   openSh('shShop');
   setTimeout(function(){if(inp)inp.focus();},400);
 }
 
-function shopSearch(q) {
-  var res = document.getElementById('shopResults');
-  if (!res) return;
-  q = (q||'').trim().toLowerCase();
-  if (!q) { res.innerHTML = ''; return; }
-
-  var found = SHOPS_DB.filter(function(s) {
-    return String(s.id).indexOf(q) >= 0
-      || s.city.toLowerCase().indexOf(q) >= 0
-      || s.addr.toLowerCase().indexOf(q) >= 0
-      || s.chain.toLowerCase().indexOf(q) >= 0;
-  }).slice(0, 20);
-
-  if (!found.length) {
-    res.innerHTML = '<div style="padding:14px;text-align:center;font-size:13px;color:#A19F9D">Nie znaleziono</div>';
-    return;
-  }
-
-  res.innerHTML = found.map(function(s) {
-    var label = s.chain + (s.id ? ' ' + s.id : '') + ' — ' + s.city;
-    var sub = s.addr;
-    return '<div onclick="shopPick('+JSON.stringify(s)+')" style="padding:11px 14px;border-bottom:0.5px solid #F5F5F7;cursor:pointer;-webkit-tap-highlight-color:transparent">'
-      + '<div style="font-size:13px;font-weight:600;color:#323130">' + esc(label) + '</div>'
-      + '<div style="font-size:11px;color:#A19F9D;margin-top:2px">' + esc(sub) + '</div>'
-      + '</div>';
-  }).join('');
+function shopHaversine(lat1,lon1,lat2,lon2){
+  var R=6371000,r=Math.PI/180;
+  var dL=(lat2-lat1)*r, dO=(lon2-lon1)*r;
+  var a=Math.sin(dL/2)*Math.sin(dL/2)+Math.cos(lat1*r)*Math.cos(lat2*r)*Math.sin(dO/2)*Math.sin(dO/2);
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
 
-function shopPick(s) {
-  _currentShop = s;
-  var label = s.chain + (s.id ? ' ' + s.id : '') + ' — ' + s.city + ', ' + s.addr;
-  var btn = document.getElementById('shopBtn');
-  if (btn) {
-    btn.textContent = label;
-    btn.style.color = '#0078D4';
-    btn.style.fontWeight = '700';
-  }
-  closeOv('shShop');
-  showToast('Sklep: ' + s.chain + ' ' + s.id);
+function shopFmtDist(m){
+  return m<1000 ? Math.round(m)+' m' : (m/1000).toFixed(1)+' km';
 }
 
 function shopGPS() {
   if (!navigator.geolocation) { showToast('GPS niedostępny'); return; }
   var btn = document.getElementById('shopGpsBtn');
-  if (btn) btn.textContent = 'Szukam...';
-  
+  var gpsBtn = document.getElementById('shopGpsBtnSheet');
+  if (btn) btn.textContent = '...';
+  if (gpsBtn) gpsBtn.textContent = 'Szukam...';
+
+  var status = document.getElementById('shopStatus');
+  if (status) status.textContent = 'Określam lokalizację...';
+
   navigator.geolocation.getCurrentPosition(function(pos) {
-    if (btn) btn.textContent = '📍 GPS';
-    var lat = pos.coords.latitude;
-    var lon = pos.coords.longitude;
-    
-    // Открываем Apple Maps с поиском магазинов рядом
-    var mapsUrl = 'maps://?q=supermarket&ll=' + lat + ',' + lon + '&z=14';
-    window.location.href = mapsUrl;
-    
-    // Также фильтруем по GPS городу через reverse geocoding
-    shopGPSReverse(lat, lon);
-    
+    _myLat = pos.coords.latitude;
+    _myLon = pos.coords.longitude;
+    if (btn) btn.textContent = '📍';
+    if (gpsBtn) gpsBtn.textContent = '📍 GPS';
+    if (status) status.textContent = 'Szukam sklepów w pobliżu...';
+    shopFetchNearby(_myLat, _myLon, 800);
   }, function(err) {
-    if (btn) btn.textContent = '📍 GPS';
-    showToast('Błąd GPS: ' + err.message);
-  }, {timeout: 8000, enableHighAccuracy: true});
+    if (btn) btn.textContent = '📍';
+    if (gpsBtn) gpsBtn.textContent = '📍 GPS';
+    if (status) status.textContent = 'Błąd GPS: ' + err.message;
+    showToast('GPS: ' + err.message);
+  }, {enableHighAccuracy: true, timeout: 12000});
 }
 
-function shopGPSReverse(lat, lon) {
-  // Используем бесплатный reverse geocoding через nominatim в браузере (не сервер)
-  fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat='+lat+'&lon='+lon+'&zoom=12&accept-language=pl', {
-    headers: {'User-Agent': 'RVM-Raport/1.0'}
+function shopFetchNearby(lat, lon, radius) {
+  var status = document.getElementById('shopStatus');
+  var brands = SHOP_BRANDS.map(function(b) {
+    return 'node["brand"~"'+b+'",i](around:'+radius+','+lat+','+lon+');way["brand"~"'+b+'",i](around:'+radius+','+lat+','+lon+');';
+  }).join('');
+  var query = '[out:json][timeout:20];('+brands+');out center;';
+
+  fetch('https://overpass-api.de/api/interpreter', {
+    method: 'POST',
+    body: new URLSearchParams({data: query})
   })
-  .then(function(r){return r.json();})
-  .then(function(data) {
-    var city = data.address && (data.address.city || data.address.town || data.address.village || data.address.municipality);
-    if (city) {
-      var inp = document.getElementById('shopInp');
-      if (inp) {
-        inp.value = city;
-        shopSearch(city);
-      }
-      showToast('Miasto: ' + city);
+  .then(function(r){ return r.json(); })
+  .then(function(d) {
+    var els = d.elements || [];
+    if (!els.length && radius < 2000) {
+      if (status) status.textContent = 'Szerzej...';
+      shopFetchNearby(lat, lon, 2000);
+      return;
     }
+    _lastStores = els.map(function(el) {
+      var t = el.tags || {};
+      var elat = el.type==='node' ? el.lat : (el.center && el.center.lat);
+      var elon = el.type==='node' ? el.lon : (el.center && el.center.lon);
+      return {
+        brand: t.brand || t.name || '?',
+        name: t.name || t.brand || 'Sklep',
+        city: t['addr:city'] || '',
+        street: [t['addr:street']||'', t['addr:housenumber']||''].filter(Boolean).join(' '),
+        storeId: t.ref || t.branch || t.store_id || t.official_ref || '',
+        lat: elat, lon: elon
+      };
+    }).filter(function(s){ return s.lat && s.lon; })
+    .map(function(s){ s.dist = shopHaversine(lat,lon,s.lat,s.lon); return s; })
+    .sort(function(a,b){ return a.dist-b.dist; });
+
+    if (status) status.textContent = _lastStores.length ? 'Znaleziono '+_lastStores.length+' sklepów' : 'Nie znaleziono w pobliżu';
+    shopRenderResults(_lastStores.slice(0,15));
   })
-  .catch(function(){});
+  .catch(function(e) {
+    if (status) status.textContent = 'Błąd: '+e.message;
+  });
+}
+
+function shopRenderResults(stores) {
+  var res = document.getElementById('shopResults');
+  if (!res) return;
+  if (!stores.length) {
+    res.innerHTML = '<div style="padding:14px;text-align:center;font-size:13px;color:#A19F9D">Brak wyników</div>';
+    return;
+  }
+  res.innerHTML = stores.map(function(s) {
+    var label = s.brand + (s.storeId ? ' ' + s.storeId : '');
+    var sub = [s.street, s.city].filter(Boolean).join(', ') || 'Brak adresu';
+    var dist = s.dist ? ' · ' + shopFmtDist(s.dist) : '';
+    var dataStr = JSON.stringify({id:s.storeId||'', chain:s.brand, city:s.city, addr:s.street, lat:s.lat, lon:s.lon}).replace(/"/g,'&quot;');
+    return '<div onclick="shopPickData(this)" data-shop="'+dataStr+'" style="padding:11px 14px;border-bottom:0.5px solid #F5F5F7;cursor:pointer;-webkit-tap-highlight-color:transparent;active:background:#F5F5F7">'
+      + '<div style="display:flex;align-items:center;justify-content:space-between">'
+      + '<div style="font-size:13px;font-weight:600;color:#323130">'+esc(label)+'</div>'
+      + '<div style="font-size:11px;color:#A19F9D">'+dist+'</div>'
+      + '</div>'
+      + '<div style="font-size:11px;color:#A19F9D;margin-top:2px">'+esc(sub)+'</div>'
+      + '</div>';
+  }).join('');
+}
+
+function shopPickData(el) {
+  try {
+    var s = JSON.parse(el.getAttribute('data-shop').replace(/&quot;/g,'"'));
+    shopPick(s);
+  } catch(e) {}
+}
+
+function shopSearch(q) {
+  clearTimeout(_shopTimer);
+  _shopTimer = setTimeout(function() {
+    var filtered = SHOPS_DB.filter(function(s) {
+      var qq = (q||'').toLowerCase();
+      return String(s.id).indexOf(qq)>=0 || s.city.toLowerCase().indexOf(qq)>=0
+        || s.addr.toLowerCase().indexOf(qq)>=0 || s.chain.toLowerCase().indexOf(qq)>=0;
+    }).slice(0,20).map(function(s){
+      return {brand:s.chain, name:s.chain+' '+s.id, city:s.city, street:s.addr, storeId:String(s.id), dist:null};
+    });
+    shopRenderResults(filtered);
+  }, 300);
 }
 
 function shopAutoProc(el) {
-  clearTimeout(window._shopTimer);
-  window._shopTimer = setTimeout(function(){shopSearch(el.value);}, 300);
+  if (el.value.length > 1) shopSearch(el.value);
+  else {
+    var res = document.getElementById('shopResults');
+    if (res) res.innerHTML = '<div style="padding:14px;text-align:center;font-size:13px;color:#A19F9D">Wpisz nazwę lub użyj GPS</div>';
+  }
+}
+
+function shopPick(s) {
+  _currentShop = s;
+  var label = s.chain + (s.id ? ' ' + s.id : '') + (s.city ? ' — ' + s.city : '') + (s.addr ? ', ' + s.addr : '');
+  var btn = document.getElementById('shopBtn');
+  if (btn) {
+    btn.textContent = label;
+    btn.style.color = '#0078D4';
+    btn.style.fontWeight = '600';
+  }
+  closeOv('shShop');
+  showToast(s.chain + (s.id ? ' ' + s.id : ''));
+}
+
+function shopPickCustom() {
+  var inp = document.getElementById('shopCustomInp');
+  var val = inp ? inp.value.trim() : '';
+  if (!val) return;
+  shopPick({id: '', chain: val, city: '', addr: ''});
+  if (inp) inp.value = '';
 }
 
 function shopClear() {
@@ -4174,20 +4242,10 @@ function shopClear() {
   }
 }
 
-// Добавляем номер магазина в рапорт
-var _origRenderSummary = null;
-function shopInjectToReport() {
+function shopGetLabel() {
   if (!_currentShop) return '';
-  return _currentShop.chain + ' ' + _currentShop.id + ' (' + _currentShop.city + ', ' + _currentShop.addr + ')';
-}
-
-
-function shopPickCustom() {
-  var inp = document.getElementById('shopCustomInp');
-  var val = inp ? inp.value.trim() : '';
-  if (!val) return;
-  shopPick({id: '', chain: val, city: '', addr: ''});
-  if (inp) inp.value = '';
+  var s = _currentShop;
+  return s.chain + (s.id ? ' ' + s.id : '') + (s.city ? ', ' + s.city : '') + (s.addr ? ', ' + s.addr : '');
 }
 
 </script>
