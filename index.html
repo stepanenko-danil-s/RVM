@@ -4450,9 +4450,9 @@ function magExportCSV() {
 }
 
 function magExportEmail() {
-  alert('magExportEmail wywolano');
   var recipients = emailGetRecipients();
   var to = recipients.filter(function(e){return e;}).join(';');
+  alert('to: [' + to + '] recip: ' + JSON.stringify(recipients));
   if (!_magData) _magData = magLoad();
   var all = magGetAll ? magGetAll() : MAG_PARTS;
   var date = new Date().toLocaleDateString('pl-PL');
