@@ -4816,3 +4816,26 @@ function sendReportEmail() {
 // Инициализируем при загрузке
 emailLoad();
 </script>
+<script>
+// Привязываем кнопку Plan
+function schedBindBtn() {
+  var btn = document.getElementById('schedPlanBtn');
+  if (!btn) return;
+  btn.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    schedOpenInTable();
+  });
+  btn.addEventListener('click', function(e) {
+    schedOpenInTable();
+  });
+}
+var _origMST = typeof magShowTable === 'function' ? magShowTable : null;
+if (_origMST) {
+  magShowTable = function() {
+    _origMST();
+    setTimeout(schedBindBtn, 200);
+  };
+}
+</script>
+</body>
+</html>
