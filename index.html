@@ -2598,6 +2598,11 @@ function restoreData(input){
       <div style="display:flex;flex-direction:column;align-items:center;gap:6px;color:#A19F9D"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#A19F9D" stroke-width="1.4" stroke-linecap="round"><rect x="2" y="5" width="24" height="18" rx="3"/><circle cx="14" cy="14" r="5"/><path d="M8.5 5l2-3h7l2 3"/></svg><span style="font-size:13px;font-weight:600">Zrob zdjecie paragonu</span></div>
     </div>
     <input type="file" id="parCamInp" accept="image/*" capture="environment" style="display:none" onchange="parPhotoHandle(this)">
+    <button onclick="openPAFlow()" style="width:100%;padding:13px;background:linear-gradient(135deg,#0078D4,#005A9E);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><rect x="2" y="2" width="14" height="14" rx="3"/><path d="M6 9l2 2 4-4"/></svg>
+      Skanuj w Power Automate (AI Builder)
+    </button>
+    <div style="text-align:center;font-size:11px;color:#A19F9D;margin-bottom:10px">lub wypelnij recznie powyzej</div>
     <div style="margin-bottom:10px"><span style="font-size:11px;font-weight:600;color:#A19F9D;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;display:block">Co kupiono</span><input id="par_co" placeholder="Np. Sruby M6, olej..." style="width:100%;background:#F5F5F7;border:none;border-radius:10px;padding:11px 13px;font-size:14px;font-family:inherit;outline:none;color:#323130"></div>
     <div style="margin-bottom:10px"><span style="font-size:11px;font-weight:600;color:#A19F9D;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;display:block">Kwota</span><input id="par_kwota" placeholder="0.00 zl" type="number" step="0.01" style="width:100%;background:#F5F5F7;border:none;border-radius:10px;padding:11px 13px;font-size:14px;font-family:inherit;outline:none;color:#323130"></div>
     <div style="margin-bottom:10px"><span style="font-size:11px;font-weight:600;color:#A19F9D;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;display:block">Nr faktury</span><input id="par_nr" placeholder="FV/2026/..." style="width:100%;background:#F5F5F7;border:none;border-radius:10px;padding:11px 13px;font-size:14px;font-family:inherit;outline:none;color:#323130"></div>
@@ -2829,6 +2834,9 @@ function repPhotosRender(){var wrap=document.getElementById('repPhotos');var lis
 
 // Paragon
 var _parPhoto=null;
+function openPAFlow() {
+  window.open('https://make.powerautomate.com/environments/Default-e389f581-ff8f-4f41-96a3-2ffaaee9fba8/flows/5c9e4e2c-811e-4551-8ef1-c8cf34c8656a?v3=true', '_blank');
+}
 function toggleParSheet(){var sh=document.getElementById('shParagon');if(!sh)return;sh.style.display='flex';setTimeout(function(){sh.classList.add('open');},10);var d=document.getElementById('par_data');if(d&&!d.value)d.value=new Date().toISOString().slice(0,10);}
 function closeParSheet(){var sh=document.getElementById('shParagon');if(!sh)return;sh.classList.remove('open');setTimeout(function(){sh.style.display='none';},300);}
 function parPhoto(){var i=document.getElementById('parCamInp');if(i)i.click();}
