@@ -4370,23 +4370,21 @@ function shopGetLabel() {
 
 // schedOpenInTable + schedSaveFromTable
 function schedOpenInTable() {
-var body = document.getElementById('magTableBody');
-  if (!body) return;
-  var days = ['Niedziela','Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota'];
-  var currentDay = (typeof _schedDay !== 'undefined' && _schedDay !== null) ? _schedDay : 1;
-  var currentTime = (typeof _schedTime !== 'undefined' && _schedTime) ? _schedTime : '08:00';
-  var h = '<div style="background:#FFF8EC;border:1.5px solid #986F0B;border-radius:12px;padding:14px;margin-bottom:12px">'
-    + '<div style="font-size:13px;font-weight:700;color:#986F0B;margin-bottom:10px">Harmonogram raportów</div>'
+  var body = document.getElementById('magTableBody');
+  if (!body) { showToast('Otwórz tabelę aby ustawić plan'); return; }
+  var days = ['Niedziela','Poniedziałek','Wtorek','Sroda','Czwartek','Piatek','Sobota'];
+  var cd = (typeof _schedDay!=='undefined'&&_schedDay!==null)?_schedDay:1;
+  var ct = (typeof _schedTime!=='undefined'&&_schedTime)?_schedTime:'08:00';
+  var sel = days.map(function(d,i){return '<option value="'+i+'"'+(i===cd?' selected':'')+'>'+d+'</option>';}).join('');
+  var panel = document.createElement('div');
+  panel.style.cssText = 'background:#FFF8EC;border:1.5px solid #986F0B;border-radius:12px;padding:14px;margin-bottom:12px';
+  panel.innerHTML = '<div style="font-size:13px;font-weight:700;color:#986F0B;margin-bottom:10px">&#9200; Harmonogram raportów</div>'
     + '<div style="display:flex;gap:8px;margin-bottom:8px">'
-    + '<select id="schedDayT" style="flex:1;padding:9px 10px;background:#fff;border:1px solid #EDEBE9;border-radius:9px;font-size:13px;font-family:inherit;outline:none;color:#323130">'
-    + days.map(function(d,i){ return '<option value="'+i+'"'+(i===currentDay?' selected':'')+'>'+d+'</option>'; }).join('')
-    + '</select>'
-    + '<input type="time" id="schedTimeT" value="'+currentTime+'" style="width:90px;padding:9px 10px;background:#fff;border:1px solid #EDEBE9;border-radius:9px;font-size:13px;font-family:inherit;outline:none;color:#323130">'
+    + '<select id="schedDayT" style="flex:1;padding:9px;background:#fff;border:1px solid #EDEBE9;border-radius:9px;font-size:13px;font-family:inherit;outline:none">'+sel+'</select>'
+    + '<input type="time" id="schedTimeT" value="'+ct+'" style="width:90px;padding:9px;background:#fff;border:1px solid #EDEBE9;border-radius:9px;font-size:13px;font-family:inherit;outline:none">'
     + '</div>'
-    + '<button onclick="schedSaveFromTable()" style="width:100%;padding:10px;background:#986F0B;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Zapisz harmonogram</button>'
-    + '</div>';
-  body.innerHTML = h + body.innerHTML;
-  } catch(e) { alert('Error: ' + e.message); }
+    + '<button onclick="schedSaveFromTable()" style="width:100%;padding:10px;background:#986F0B;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Zapisz harmonogram</button>';
+  body.insertBefore(panel, body.firstChild);
 }
 
 function schedSaveFromTable() {
