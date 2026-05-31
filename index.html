@@ -2909,7 +2909,7 @@ function mshPhoto(input){var file=input.files[0];if(!file||_magOpenId===null)ret
       <div id="micShTitle" style="font-size:16px;font-weight:800;color:#0078D4">Dyktuj</div>
       <button onclick="closeOv('shModMic')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">×</button>
     </div>
-    <div id="micShMode" style="font-size:11px;color:#A19F9D;margin-bottom:8px"></div>
+
     <textarea id="micShInp" placeholder="Mów lub pisz..." style="width:100%;min-height:70px;background:#F5F5F7;border:1.5px solid rgba(0,120,212,.2);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;outline:none;resize:none;color:#323130;line-height:1.5;margin-bottom:8px" oninput="micShAutoProc(this)"></textarea>
     <div style="font-size:11px;color:#A19F9D;margin-bottom:10px">Użyj mikrofonu iPhone na klawiaturze</div>
     <div id="micShPrev" style="display:none;margin-bottom:10px"></div>
@@ -2947,24 +2947,26 @@ function micShAutoProc(el) {
 function micShSearch() {
   var text = (document.getElementById('micShInp')||{}).value||'';
   text = text.trim(); if (!text) return;
-  if (_vsAI) { micShSearchAI(text); } else { micShSearchOff(text); }
+  micShSearchAI(text);
 }
 
 function micShSearchAI(text) {
   var prev = document.getElementById('micShPrev'); if (!prev) return;
-  prev.innerHTML = '<div style="padding:10px;text-align:center;font-size:13px;color:#A19F9D">Analizuję...</div>';
+  prev.innerHTML = '<div style="padding:10px;text-align:center;font-size:13px;color:#A19F9D">Strukturyzuję...</div>';
   prev.style.display = 'block';
 
-  var colMap = {
-    el: 'element urzadzenia RVM (automat skupu butelek)',
-    def: 'usterka lub problem techniczny',
-    sol: 'co zostalo zrobione (akcja serwisanta)',
-    kon: 'typ serwisu (gwarancja, przeglad, naprawa itp)'
-  };
-  var sample = (D[_micCol]||[]).slice(0,10).map(function(x){return x.pl;}).join(', ');
-  var prompt = 'Jestes asystentem RVM. Dopasuj: '+colMap[_micCol]+'. Przyklady: '+sample+'. JSON: [{"pl":"nazwa"}]. Opis: '+text;
+  var colNames = {el:'element urzadzenia', def:'usterka/problem', sol:'co zrobiono', kon:'typ serwisu'};
+  var prompt = 'Jestes asystentem serwisanta RVM. Przeanalizuj opis i zwroc ustrukturyzowany tekst dla kategorii: '
+    + colNames[_micCol] + '.\n'
+    + 'Podaj 1-3 opcje jako JSON array: [{"pl":"gotowy tekst do raportu"}]\n'
+    + 'Tekst ma byc krotki, profesjonalny, po polsku.\n'
+    + 'Opis serwisanta: ' + text;
 
-  fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:prompt}]})})
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({model: 'claude-sonnet-4-20250514', max_tokens: 200, messages: [{role: 'user', content: prompt}]})
+  })
   .then(function(r){return r.json();})
   .then(function(data){
     var txt=(data.content||[]).map(function(c){return c.text||'';}).join('');
@@ -2972,10 +2974,10 @@ function micShSearchAI(text) {
     try {
       var parsed=JSON.parse(clean);
       if(!Array.isArray(parsed))parsed=[parsed];
-      micShShowResults(parsed);
-    } catch(e){ micShSearchOff(text); }
+      micShShowResults(parsed.map(function(p){return {pl:p.pl||p};}));
+    } catch(e){ micShShowResults([{pl:text}]); }
   })
-  .catch(function(){micShSearchOff(text);});
+  .catch(function(){ micShShowResults([{pl:text}]); });
 }
 
 function micShSearchOff(text) {
