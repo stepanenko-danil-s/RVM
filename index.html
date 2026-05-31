@@ -3847,7 +3847,12 @@ function magPrintQR() {
 
   // Строим HTML страницу для печати
   var css = '*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;background:#fff}.page{width:210mm;padding:8mm;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:36mm;gap:2mm}.sticker{border:1px solid #ccc;display:flex;overflow:hidden;border-radius:3px}.stripe{width:5mm;background:#007A7A;flex-shrink:0}.info{flex:1;padding:3mm 2mm;display:flex;flex-direction:column;justify-content:center;gap:2mm}.nm{font-size:9pt;font-weight:700;color:#111;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.cd{font-size:8pt;color:#555;font-family:monospace}.qrbox{width:34mm;height:36mm;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:2mm}.qrbox canvas,.qrbox img{width:30mm!important;height:30mm!important}';
-  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script><style>'+css+'</style></head><body><div class="page">';
+  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script><style>'+css+'</style></head><body>'
+    + '<div style="position:fixed;top:10px;right:10px;z-index:999;display:flex;gap:8px" class="noprint">'
+    + '<button onclick="window.print()" style="padding:8px 16px;background:#0078D4;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">Drukuj</button>'
+    + '<button onclick="window.close()" style="padding:8px 16px;background:#FF3B30;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">&#10005; Zamknij</button>'
+    + '</div>'
+    + '<div class="page">';
 
   allParts.forEach(function(p) {
     html += '<div class="sticker">'
