@@ -492,6 +492,10 @@ body.dark .mag-card,.dark .photo-add{background:#1E1E26}
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="1" width="12" height="12" rx="1"/><line x1="1" y1="5" x2="13" y2="5"/><line x1="1" y1="9" x2="13" y2="9"/><line x1="5" y1="1" x2="5" y2="13"/></svg>
         Tabela
       </button>
+      <button onclick="magShowHistory()" style="flex:1;padding:9px 6px;background:#986F0B;color:#fff;border:none;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;-webkit-tap-highlight-color:transparent">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><polyline points="7,4 7,7 9,9"/></svg>
+        Historia
+      </button>
     </div>
     <div style="padding:0 8px 4px"><div style="display:flex;align-items:center;gap:8px;background:#F5F5F7;border-radius:10px;padding:8px 12px"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#C8C6C4" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="4"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg><input id="magQ" placeholder="Szukaj..." oninput="magSearch(this.value)" autocomplete="off" style="flex:1;border:none;background:none;font-size:13px;font-family:inherit;outline:none;color:#323130"></div></div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:0 8px 6px"><div style="background:#F5F5F7;border-radius:8px;padding:8px;text-align:center"><div style="font-size:18px;font-weight:800;color:#323130" id="mst1">43</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;margin-top:2px">Pozycji</div></div><div style="background:#F5F5F7;border-radius:8px;padding:8px;text-align:center"><div style="font-size:18px;font-weight:800;color:#FF9500" id="mst2">0</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;margin-top:2px">Malo</div></div><div style="background:#F5F5F7;border-radius:8px;padding:8px;text-align:center"><div style="font-size:18px;font-weight:800;color:#FF3B30" id="mst3">0</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;margin-top:2px">Brak</div></div></div>
@@ -2976,7 +2980,17 @@ function magGet(id){if(!_magData[id])_magData[id]={qty:0,min:1,photo:null};retur
 function magSt(id){var d=magGet(id);if(d.qty<=0)return'empty';if(d.qty<=d.min)return'warn';return'ok';}
 function magSearch(q){_magFilter=q.toLowerCase().trim();magRender();}
 function magRender(){if(!_magData)_magData=magLoad();var grid=document.getElementById('magGrid');if(!grid)return;var parts=MAG_PARTS;if(_magFilter)parts=parts.filter(function(p){return p.n.toLowerCase().indexOf(_magFilter)>=0||p.k.toLowerCase().indexOf(_magFilter)>=0;});parts=parts.slice().sort(function(a,b){var ord={empty:0,warn:1,ok:2};var sa=ord[magSt(a.id)],sb=ord[magSt(b.id)];if(sa!==sb)return sa-sb;return a.cat.localeCompare(b.cat);});var warn=0,empty=0;MAG_PARTS.forEach(function(p){var s=magSt(p.id);if(s==='empty')empty++;else if(s==='warn')warn++;});var e1=document.getElementById('mst1');if(e1)e1.textContent=MAG_PARTS.length;var e2=document.getElementById('mst2');if(e2)e2.textContent=warn;var e3=document.getElementById('mst3');if(e3)e3.textContent=empty;if(!parts.length){grid.innerHTML='<div style="grid-column:1/-1;padding:20px;text-align:center;font-size:13px;color:#A19F9D">Brak wynikow</div>';return;}var h='',lastCat='';parts.forEach(function(p){var d=magGet(p.id),st=magSt(p.id);if(!_magFilter&&p.cat!==lastCat){h+='<div style="grid-column:1/-1;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A19F9D;padding:6px 2px 2px">'+esc(p.cat)+'</div>';lastCat=p.cat;}h+='<div class="mag-card">';h+='<div class="mag-bar" style="background:'+(st==='ok'?'#34C759':st==='warn'?'#FF9500':'#FF3B30')+'"></div>';h+='<div class="mag-photo" onclick="magMinus('+p.id+')" style="cursor:pointer">';if(d.photo){h+='<img src="'+d.photo+'" loading="lazy">';}else{h+='<svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="#C8C6C4" stroke-width="1.3" stroke-linecap="round"><rect x="2" y="5" width="22" height="16" rx="3"/><circle cx="13" cy="13" r="4"/><path d="M8 5l1.5-3h7L18 5"/></svg>';}h+='<div style="position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;font-weight:800;padding:2px 7px;border-radius:7px">'+Math.max(0,d.qty)+'</div>';h+='<button data-mid="'+p.id+'" onclick="event.stopPropagation();magOpenCamById(this)" style="position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(0,0,0,.45);border:none;border-radius:6px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="1.3" stroke-linecap="round"><rect x="1" y="2.5" width="10" height="8" rx="1.5"/><circle cx="6" cy="6.5" r="1.8"/><path d="M3.5 2.5l1-2h3l1 2"/></svg></button>';h+='</div>';h+='<div style="padding:6px 8px 8px;cursor:pointer" onclick="magOpenSheet('+p.id+')"><div style="font-size:11px;font-weight:600;color:#323130;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">'+esc(p.n)+'</div><div style="font-size:9px;color:#A19F9D;font-family:monospace;margin-top:1px">'+esc(p.k)+'</div></div></div>';});grid.innerHTML=h;}
-function magMinus(id){if(!_magData)_magData=magLoad();var d=magGet(id);if(d.qty<=0){showToast('Stan = 0');return;}d.qty--;magSave();magRender();var p=MAG_PARTS.find(function(x){return x.id===id;});showToast('-1 · '+(p?p.n.split(' ').slice(0,3).join(' '):''));}
+function magMinus(id){
+  if(!_magData)_magData=magLoad();
+  var d=magGet(id);
+  if(d.qty<=0){showToast('Stan = 0');return;}
+  d.qty--;
+  magSave();
+  var p=(magGetAll?magGetAll():MAG_PARTS).find(function(x){return x.id===id;});
+  magHistoryAdd(p, 1);
+  magRender();
+  showToast('-1 · '+(p?p.n.split(' ').slice(0,3).join(' '):''));
+}
 function magOpenCamById(btn){_magOpenId=parseInt(btn.getAttribute('data-mid'));var inp=document.getElementById('magCamInp');if(inp)inp.click();}
 function magOpenSheet(id){if(!_magData)_magData=magLoad();_magOpenId=id;var p=MAG_PARTS.find(function(x){return x.id===id;});var d=magGet(id);var st=magSt(id);if(!p)return;var nm=document.getElementById('msh_name');if(nm)nm.textContent=p.n;var cd=document.getElementById('msh_code');if(cd)cd.textContent=p.k;var qt=document.getElementById('msh_qty');if(qt)qt.textContent=d.qty;var mn=document.getElementById('msh_min');if(mn)mn.textContent=d.min;var stEl=document.getElementById('msh_status');if(stEl){stEl.textContent=st==='empty'?'Brak':st==='warn'?'Niski stan':'OK';stEl.style.color=st==='empty'?'#FF3B30':st==='warn'?'#FF9500':'#34C759';}var ph=document.getElementById('msh_photo');if(ph){if(d.photo){ph.innerHTML='<img src="'+d.photo+'" style="width:100%;height:100%;object-fit:cover">';}else{ph.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:6px;color:#C8C6C4"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#C8C6C4" stroke-width="1.4" stroke-linecap="round"><rect x="3" y="7" width="30" height="22" rx="4"/><circle cx="18" cy="18" r="6"/><path d="M10 7l2.5-4h11l2.5 4"/></svg><span style="font-size:12px">Brak zdjecia</span></div>';}}openSh('shMagPart');}
 function mshQtyEdit() {
@@ -3001,7 +3015,7 @@ function mshQtyEdit() {
 }
 function mshAdj(d){if(_magOpenId===null)return;var item=magGet(_magOpenId);item.qty=Math.max(0,item.qty+d);magSave();var el=document.getElementById('msh_qty');if(el)el.textContent=item.qty;var st=magSt(_magOpenId);var stEl=document.getElementById('msh_status');if(stEl){stEl.textContent=st==='empty'?'Brak':st==='warn'?'Niski stan':'OK';stEl.style.color=st==='empty'?'#FF3B30':st==='warn'?'#FF9500':'#34C759';}magRender();}
 function mshAdjMin(d){if(_magOpenId===null)return;var item=magGet(_magOpenId);item.min=Math.max(0,(item.min||1)+d);magSave();var el=document.getElementById('msh_min');if(el)el.textContent=item.min;magRender();}
-function mshUse(){if(_magOpenId===null)return;var p=MAG_PARTS.find(function(x){return x.id===_magOpenId;});var d=magGet(_magOpenId);if(!p)return;if(d.qty>0){d.qty--;magSave();}var idx=WH.findIndex(function(c){return c.k===p.k;});if(idx<0){var ci=custParts.findIndex(function(c){return c.k===p.k;});if(ci<0){custParts.push({n:p.n,k:p.k,qty:1});ss('rv_cp',custParts);}idx=WH.length+custParts.findIndex(function(c){return c.k===p.k;});}if(idx>=0){var sp=curMode==='G'?selPartsG:selPartsS;var pq=curMode==='G'?partQtyG:partQtyS;sp['p'+idx]=true;pq['p'+idx]=(pq['p'+idx]||0)+1;ss('rv_sp'+curMode,sp);ss('rv_pq'+curMode,pq);}closeOv('shMagPart');renderParts();renderSummary();showToast('Dodano do raportu · stan: '+d.qty);}
+function mshUse(){if(_magOpenId===null)return;var p=MAG_PARTS.find(function(x){return x.id===_magOpenId;});var d=magGet(_magOpenId);if(!p)return;if(d.qty>0){d.qty--;magSave();}var idx=WH.findIndex(function(c){return c.k===p.k;});if(idx<0){var ci=custParts.findIndex(function(c){return c.k===p.k;});if(ci<0){custParts.push({n:p.n,k:p.k,qty:1});ss('rv_cp',custParts);}idx=WH.length+custParts.findIndex(function(c){return c.k===p.k;});}if(idx>=0){var sp=curMode==='G'?selPartsG:selPartsS;var pq=curMode==='G'?partQtyG:partQtyS;sp['p'+idx]=true;pq['p'+idx]=(pq['p'+idx]||0)+1;ss('rv_sp'+curMode,sp);ss('rv_pq'+curMode,pq);}magHistoryAdd(p, 1);closeOv('shMagPart');renderParts();renderSummary();showToast('Dodano do raportu · stan: '+d.qty);}
 function mshCam(){var inp=document.getElementById('magCamInp');if(inp)inp.click();}
 function mshPhoto(input){var file=input.files[0];if(!file||_magOpenId===null)return;var r=new FileReader();r.onload=function(e){var d=magGet(_magOpenId);d.photo=e.target.result;magSave();var ph=document.getElementById('msh_photo');if(ph)ph.innerHTML='<img src="'+d.photo+'" style="width:100%;height:100%;object-fit:cover">';magRender();showToast('Zdjecie zapisane');};r.readAsDataURL(file);input.value='';}
 
@@ -4322,6 +4336,28 @@ function shopGetLabel() {
   </div>
 </div>
 
+
+<div class="ov" id="shMagHistory" style="display:none" onclick="if(event.target===this)closeOv('shMagHistory')">
+  <div class="sh" style="max-height:96vh;overflow-y:auto;padding:16px 0 32px">
+    <div class="sh-bar"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;margin-bottom:12px">
+      <div style="font-size:17px;font-weight:800;color:#323130">Historia pobrań</div>
+      <div style="display:flex;gap:6px">
+        <button onclick="magHistoryExportCSV()" style="padding:6px 12px;background:#34C759;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">CSV</button>
+        <button onclick="magHistoryClear()" style="padding:6px 12px;background:#FF3B30;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Wyczyść</button>
+        <button onclick="closeOv('shMagHistory')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">×</button>
+      </div>
+    </div>
+    <div style="padding:0 16px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px;background:#F5F5F7;border-radius:10px;padding:8px 12px">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#C8C6C4" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="4"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
+        <input placeholder="Filtruj po sklepie..." oninput="magRenderHistory(this.value)" style="border:none;background:none;font-size:13px;font-family:inherit;outline:none;color:#323130;flex:1">
+      </div>
+    </div>
+    <div id="magHistBody" style="padding:0 16px"></div>
+  </div>
+</div>
+
 </body>
 </html>
 <script>
@@ -4539,4 +4575,116 @@ if (_schedDay !== null) {
     schedRequestPermission();
   }, 500);
 }
+</script>
+<script>
+// ============================================================
+// HISTORIA MAGAZYNU
+// ============================================================
+var _magHistory = [];
+
+function magHistoryLoad() {
+  try { _magHistory = JSON.parse(localStorage.getItem('rv_mag_hist') || '[]'); } catch(e) { _magHistory = []; }
+}
+
+function magHistorySave() {
+  // Храним последние 500 записей
+  if (_magHistory.length > 500) _magHistory = _magHistory.slice(-500);
+  try { localStorage.setItem('rv_mag_hist', JSON.stringify(_magHistory)); } catch(e) {}
+}
+
+function magHistoryAdd(part, qty) {
+  if (!part) return;
+  if (!_magHistory.length) magHistoryLoad();
+  var now = new Date();
+  var shop = (typeof _currentShop !== 'undefined' && _currentShop)
+    ? (_currentShop.chain + (_currentShop.id ? ' ' + _currentShop.id : '') + (_currentShop.city ? ', ' + _currentShop.city : ''))
+    : '—';
+  _magHistory.push({
+    ts: now.toISOString(),
+    date: now.toLocaleDateString('pl-PL'),
+    time: now.toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'}),
+    shop: shop,
+    partId: part.id,
+    partName: part.n,
+    partCode: part.k,
+    qty: qty || 1
+  });
+  magHistorySave();
+}
+
+function magShowHistory() {
+  if (!_magHistory.length) magHistoryLoad();
+  openSh('shMagHistory');
+  magRenderHistory('all');
+}
+
+var _histFilter = 'all';
+
+function magRenderHistory(filter) {
+  _histFilter = filter || 'all';
+  var body = document.getElementById('magHistBody');
+  if (!body) return;
+
+  var items = _magHistory.slice().reverse(); // новые сверху
+
+  // Фильтр по магазину
+  if (filter !== 'all') {
+    items = items.filter(function(h){ return h.shop.toLowerCase().indexOf(filter.toLowerCase()) >= 0; });
+  }
+
+  if (!items.length) {
+    body.innerHTML = '<div style="text-align:center;padding:24px;font-size:13px;color:#A19F9D">Brak historii</div>';
+    return;
+  }
+
+  var h = '';
+  var lastDate = '';
+  items.forEach(function(rec) {
+    if (rec.date !== lastDate) {
+      h += '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;padding:10px 0 4px">' + rec.date + '</div>';
+      lastDate = rec.date;
+    }
+    h += '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid #F5F5F7">';
+    h += '<div style="width:36px;height:36px;border-radius:8px;background:#F5F5F7;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;font-weight:800;color:#0078D4">−'+rec.qty+'</div>';
+    h += '<div style="flex:1;min-width:0">';
+    h += '<div style="font-size:13px;font-weight:600;color:#323130;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(rec.partName) + '</div>';
+    h += '<div style="font-size:10px;color:#A19F9D;font-family:monospace">' + esc(rec.partCode) + '</div>';
+    h += '<div style="font-size:11px;color:#605E5C;margin-top:1px">📍 ' + esc(rec.shop) + '</div>';
+    h += '</div>';
+    h += '<div style="font-size:11px;color:#A19F9D;flex-shrink:0">' + rec.time + '</div>';
+    h += '</div>';
+  });
+
+  body.innerHTML = h;
+}
+
+function magHistoryExportCSV() {
+  if (!_magHistory.length) magHistoryLoad();
+  var rows = ['Data,Godzina,Sklep,Nazwa części,Kod,Ilość'];
+  _magHistory.forEach(function(r) {
+    rows.push([r.date, r.time, r.shop, r.partName, r.partCode, r.qty].map(function(v){
+      return '"' + String(v||'').replace(/"/g,'""') + '"';
+    }).join(','));
+  });
+  var csv = '\uFEFF' + rows.join('\n');
+  var blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'historia_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('CSV pobrane');
+}
+
+function magHistoryClear() {
+  if (!confirm('Wyczyścić całą historię?')) return;
+  _magHistory = [];
+  magHistorySave();
+  magRenderHistory('all');
+  showToast('Historia wyczyszczona');
+}
+
+// Инициализируем
+magHistoryLoad();
 </script>
