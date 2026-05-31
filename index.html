@@ -2572,19 +2572,21 @@ function restoreData(input){
 
   <!-- Dodaj do biblioteki -->
   <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
-    <div style="font-size:13px;font-weight:700;color:#323130;margin-bottom:10px">Biblioteka słów</div>
-    <div style="margin-bottom:8px">
-      <select id="libCol" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:8px">
-        <option value="el">Element urządzenia</option>
-        <option value="def">Usterka / problem</option>
-        <option value="sol">Co zrobiono</option>
-        <option value="kon">Typ serwisu</option>
-      </select>
-      <input id="libPl" placeholder="Nazwa po polsku (wymagane)" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:6px">
-      <input id="libRu" placeholder="Название по-русски (необязательно)" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:10px">
+    <div style="font-size:13px;font-weight:700;color:#323130;margin-bottom:12px">Biblioteka słów</div>
+    <div style="margin-bottom:6px">
+      <input id="libRu" placeholder="По-русски (напр: пассик)" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:6px">
+      <input id="libPl" placeholder="Po polsku (np: pasek klinowy)" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:10px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;margin-bottom:6px">Moduł:</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
+        <button onclick="libSetCol('kon')" id="libBtn_kon" style="padding:9px;background:#F5F5F7;border:1.5px solid #EDEBE9;border-radius:9px;font-size:12px;font-weight:600;color:#605E5C;cursor:pointer;font-family:inherit">0 — Serwis</button>
+        <button onclick="libSetCol('el')" id="libBtn_el" style="padding:9px;background:#F5F5F7;border:1.5px solid #EDEBE9;border-radius:9px;font-size:12px;font-weight:600;color:#605E5C;cursor:pointer;font-family:inherit">1 — Element</button>
+        <button onclick="libSetCol('def')" id="libBtn_def" style="padding:9px;background:#F5F5F7;border:1.5px solid #EDEBE9;border-radius:9px;font-size:12px;font-weight:600;color:#605E5C;cursor:pointer;font-family:inherit">2 — Usterka</button>
+        <button onclick="libSetCol('sol')" id="libBtn_sol" style="padding:9px;background:#F5F5F7;border:1.5px solid #EDEBE9;border-radius:9px;font-size:12px;font-weight:600;color:#605E5C;cursor:pointer;font-family:inherit">3 — Co zrobiono</button>
+      </div>
+      <input type="hidden" id="libCol" value="el">
       <button onclick="libAdd()" style="width:100%;padding:12px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Dodaj do biblioteki</button>
     </div>
-    <div id="libList" style="max-height:150px;overflow-y:auto;font-size:12px;color:#605E5C"></div>
+    <div id="libList" style="max-height:180px;overflow-y:auto;font-size:12px;color:#605E5C;margin-top:8px"></div>
   </div>
   </div>
 
@@ -2980,6 +2982,26 @@ function mshPhoto(input){var file=input.files[0];if(!file||_magOpenId===null)ret
 var _micCol = 'el';
 var _micTimer = null;
 var _micItems = null;
+
+function libSetCol(col) {
+  document.getElementById('libCol').value = col;
+  var cols = ['kon','el','def','sol'];
+  var labels = {kon:'0 — Serwis', el:'1 — Element', def:'2 — Usterka', sol:'3 — Co zrobiono'};
+  var colors = {kon:'#8764B8', el:'#107C10', def:'#D83B01', sol:'#0078D4'};
+  cols.forEach(function(c) {
+    var btn = document.getElementById('libBtn_'+c);
+    if (!btn) return;
+    if (c === col) {
+      btn.style.background = colors[c];
+      btn.style.color = '#fff';
+      btn.style.borderColor = colors[c];
+    } else {
+      btn.style.background = '#F5F5F7';
+      btn.style.color = '#605E5C';
+      btn.style.borderColor = '#EDEBE9';
+    }
+  });
+}
 
 function libAdd() {
   var col = document.getElementById('libCol').value;
