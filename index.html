@@ -306,8 +306,38 @@ body.dark .mag-card,.dark .photo-add{background:#1E1E26}
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.min.js"></script>
-<style>.set-body{display:none}.set-body.open{display:block}.set-hdr{cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:space-between;padding:4px 0}.set-arr{color:#A19F9D;font-size:11px;transition:transform .2s}.set-arr.open{transform:rotate(180deg)}</style>
-</head>
+<style>
+/* Fix settings sections layout */
+#shSet .sh > div[style*="border-top:1px solid #EDEBE9"] {
+  display: block !important;
+  width: 100% !important;
+  float: none !important;
+  clear: both !important;
+}
+#shSet .sh > div[style*="border-top:1px solid #EDEBE9"] input,
+#shSet .sh > div[style*="border-top:1px solid #EDEBE9"] select,
+#shSet .sh > div[style*="border-top:1px solid #EDEBE9"] textarea,
+#shSet .sh > div[style*="border-top:1px solid #EDEBE9"] button {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+</style>
+<style>
+.set-acc-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  padding: 2px 0 8px;
+}
+.set-acc-hdr:active { opacity: 0.7; }
+.set-acc-body { display: none; }
+.set-acc-body.open { display: block; }
+.set-acc-arr { color: #A19F9D; font-size: 12px; transition: transform .25s; }
+.set-acc-arr.open { transform: rotate(180deg); }
+</style></head>
 <body>
 <div style="height:2px;background:linear-gradient(90deg,#003E42,#007A7A,#34DDD0,#007A7A,#003E42);position:sticky;top:0;z-index:81"></div>
 
@@ -2585,8 +2615,11 @@ function restoreData(input){
 }</script>
 
   <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
-    <div style="font-size:13px;font-weight:700;color:#323130;margin-bottom:0"><div class="set-hdr" onclick="setAcc('accEmail')">📧 Ustawienia e-mail<span class="set-arr" id="accEmailArr">▼</span></div></div>
-    <div class="set-body" id="accEmail">
+    <div class="set-acc-hdr" onclick="setAcc('accEmail')">
+      <div style="font-size:13px;font-weight:700;color:#323130">📧 Ustawienia e-mail</div>
+      <span class="set-acc-arr" id="accEmailArr">▼</span>
+    </div>
+    <div class="set-acc-body" id="accEmail">
     <div style="font-size:11px;color:#A19F9D;margin-bottom:8px">Adresy odbiorców (jeden na linię)</div>
     <textarea id="emailRecipients" placeholder="np.&#10;ksiegowosc@firma.com&#10;kierownik@firma.com" rows="3" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;font-family:inherit;outline:none;resize:none;color:#323130;margin-bottom:8px"></textarea>
     <button onclick="emailSettingsSave()" style="width:100%;padding:11px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Zapisz adresy</button>
@@ -2595,8 +2628,11 @@ function restoreData(input){
 
     </div>
   <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
-    <div style="font-size:13px;font-weight:700;color:#323130;margin-bottom:0"><div class="set-hdr" onclick="setAcc('accSched')">⏰ Harmonogram raportów<span class="set-arr" id="accSchedArr">▼</span></div></div>
-    <div class="set-body" id="accSched">
+    <div class="set-acc-hdr" onclick="setAcc('accSched')">
+      <div style="font-size:13px;font-weight:700;color:#323130">⏰ Harmonogram raportów</div>
+      <span class="set-acc-arr" id="accSchedArr">▼</span>
+    </div>
+    <div class="set-acc-body" id="accSched">
     <div style="font-size:11px;color:#A19F9D;margin-bottom:10px">Powiadomienie w wybranym dniu i godzinie</div>
     <div style="margin-bottom:8px">
       <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;display:block;margin-bottom:4px">Dzień tygodnia</span>
@@ -2618,8 +2654,11 @@ function restoreData(input){
 
     </div>
   <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
-    <div style="font-size:13px;font-weight:700;color:#323130;margin-bottom:0"><div class="set-hdr" onclick="setAcc('accLib')">📚 Biblioteka słów<span class="set-arr" id="accLibArr">▼</span></div></div>
-    <div class="set-body" id="accLib">
+    <div class="set-acc-hdr" onclick="setAcc('accLib')">
+      <div style="font-size:13px;font-weight:700;color:#323130">📚 Biblioteka słów</div>
+      <span class="set-acc-arr" id="accLibArr">▼</span>
+    </div>
+    <div class="set-acc-body" id="accLib">
     <div style="margin-bottom:8px">
       <select id="libCol" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:8px">
         <option value="el">Element urządzenia</option>
@@ -2633,9 +2672,9 @@ function restoreData(input){
     </div>
     <div id="libList" style="max-height:150px;overflow-y:auto;font-size:12px;color:#605E5C"></div>
   </div>
-    </div>
   </div>
 
+    </div>
 </div>
 </div>
 </div>
@@ -4824,22 +4863,17 @@ function sendReportEmail() {
 emailLoad();
 
 function setAcc(id) {
-  var body = document.getElementById(id);
-  var arr = document.getElementById(id + 'Arr');
-  if (!body) return;
-  var isOpen = body.classList.contains('open');
-  // Закрываем все
   ['accEmail','accSched','accLib'].forEach(function(a) {
     var b = document.getElementById(a);
-    var r = document.getElementById(a + 'Arr');
+    var r = document.getElementById(a+'Arr');
+    var wasOpen = b && b.classList.contains('open');
     if (b) b.classList.remove('open');
     if (r) r.classList.remove('open');
+    if (a === id && !wasOpen) {
+      if (b) b.classList.add('open');
+      if (r) r.classList.add('open');
+    }
   });
-  // Открываем нужную если была закрыта
-  if (!isOpen) {
-    body.classList.add('open');
-    if (arr) arr.classList.add('open');
-  }
 }
 
 </script>
