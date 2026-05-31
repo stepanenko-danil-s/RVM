@@ -2584,6 +2584,14 @@ function restoreData(input){
 }</script>
 
   <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
+    <div style="font-size:13px;font-weight:700;color:#323130;margin-bottom:12px">Ustawienia e-mail</div>
+    <div style="font-size:11px;color:#A19F9D;margin-bottom:8px">Adresy odbiorców (jeden na linię)</div>
+    <textarea id="emailRecipients" placeholder="np.&#10;ksiegowosc@firma.com&#10;kierownik@firma.com" rows="3" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;font-family:inherit;outline:none;resize:none;color:#323130;margin-bottom:8px"></textarea>
+    <button onclick="emailSettingsSave()" style="width:100%;padding:11px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Zapisz adresy</button>
+    <div id="emailStatus" style="font-size:12px;color:#A19F9D;margin-top:6px;text-align:center"></div>
+  </div>
+
+  <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
     <div style="font-size:13px;font-weight:700;color:#323130;margin-bottom:12px">Harmonogram raportów</div>
     <div style="font-size:11px;color:#A19F9D;margin-bottom:10px">Powiadomienie w wybranym dniu i godzinie</div>
     <div style="margin-bottom:8px">
@@ -4462,27 +4470,40 @@ function magExportCSV() {
 }
 
 function magExportEmail() {
+  var recipients = emailGetRecipients();
   if (!_magData) _magData = magLoad();
   var all = magGetAll ? magGetAll() : MAG_PARTS;
   var date = new Date().toLocaleDateString('pl-PL');
-  var lines = ['Stan magazynu RVM — ' + date, ''];
 
   var empty = [], warn = [], ok = [];
   all.forEach(function(p) {
     var d = magGet(p.id);
     var st = magSt(p.id);
-    var line = p.n + ' (' + p.k + '): ' + d.qty + ' szt.';
+    var line = p.n + ' [' + p.k + ']: ' + d.qty + ' szt. (min: ' + d.min + ')';
     if (st==='empty') empty.push(line);
     else if (st==='warn') warn.push(line);
     else ok.push(line);
   });
 
-  if (empty.length) { lines.push('=== BRAK ==='); empty.forEach(function(l){lines.push('• '+l);}); lines.push(''); }
-  if (warn.length) { lines.push('=== MAŁO ==='); warn.forEach(function(l){lines.push('• '+l);}); lines.push(''); }
-  if (ok.length) { lines.push('=== OK ==='); ok.forEach(function(l){lines.push('• '+l);}); }
+  var lines = [
+    'Stan magazynu RVM — ' + date,
+    '',
+    'Podsumowanie:',
+    '• Brak: ' + empty.length + ' pozycji',
+    '• Mało: ' + warn.length + ' pozycji',
+    '• OK: ' + ok.length + ' pozycji',
+    ''
+  ];
+  if (empty.length) { lines.push('=== BRAK (zamów jak najszybciej) ==='); empty.forEach(function(l){lines.push('  ' + l);}); lines.push(''); }
+  if (warn.length) { lines.push('=== MAŁO (uzupełnij wkrótce) ==='); warn.forEach(function(l){lines.push('  ' + l);}); lines.push(''); }
+  lines.push('=== PEŁNY STAN ===');
+  ok.forEach(function(l){lines.push('  ' + l);});
+  lines.push('');
+  lines.push('--- Wygenerowano przez RVM Raport ---');
 
-  var subj = 'Stan magazynu RVM — ' + date;
-  window.location.href = 'mailto:?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(lines.join('\n'));
+  var subj = 'Stan magazynu RVM — ' + date + ' (Brak: ' + empty.length + ', Mało: ' + warn.length + ')';
+  var to = recipients.join(';');
+  window.location.href = 'mailto:' + encodeURIComponent(to) + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(lines.join(String.fromCharCode(10)));
 }
 </script>
 <script>
@@ -4687,4 +4708,63 @@ function magHistoryClear() {
 
 // Инициализируем
 magHistoryLoad();
+</script>
+<script>
+// ============================================================
+// EMAIL USTAWIENIA
+// ============================================================
+var _emailRecipients = [];
+
+function emailLoad() {
+  try {
+    _emailRecipients = JSON.parse(localStorage.getItem('rv_email_rec') || '[]');
+    var ta = document.getElementById('emailRecipients');
+    if (ta && _emailRecipients.length) ta.value = _emailRecipients.join('\n');
+    var status = document.getElementById('emailStatus');
+    if (status && _emailRecipients.length) status.textContent = '✓ ' + _emailRecipients.length + ' adresów zapisanych';
+  } catch(e) {}
+}
+
+function emailSettingsSave() {
+  var ta = document.getElementById('emailRecipients');
+  if (!ta) return;
+  var raw = ta.value.trim();
+  _emailRecipients = raw.split('\n').map(function(s){return s.trim();}).filter(function(s){return s.indexOf('@')>0;});
+  localStorage.setItem('rv_email_rec', JSON.stringify(_emailRecipients));
+  var status = document.getElementById('emailStatus');
+  if (status) status.textContent = '✓ Zapisano ' + _emailRecipients.length + ' adresów';
+  showToast('Adresy zapisane: ' + _emailRecipients.length);
+}
+
+function emailGetRecipients() {
+  if (!_emailRecipients.length) emailLoad();
+  return _emailRecipients.length ? _emailRecipients : [''];
+}
+
+// Отправка рапорта сервиса по email
+function sendReportEmail() {
+  var recipients = emailGetRecipients();
+  var to = recipients.join(';');
+  var date = new Date().toLocaleDateString('pl-PL');
+  var shop = (typeof _currentShop !== 'undefined' && _currentShop)
+    ? (_currentShop.chain + (_currentShop.id ? ' ' + _currentShop.id : '') + (_currentShop.city ? ', ' + _currentShop.city : ''))
+    : '';
+
+  // Берём текст из repEdit
+  var repEdit = document.getElementById('repEdit');
+  var repText = repEdit ? (repEdit.innerText || repEdit.textContent || '') : '';
+
+  var lines = ['Raport serwisowy RVM — ' + date];
+  if (shop) lines.push('Sklep: ' + shop);
+  lines.push('');
+  lines.push(repText);
+  lines.push('');
+  lines.push('--- Wygenerowano przez RVM Raport ---');
+
+  var subj = 'Raport serwisowy RVM' + (shop ? ' — ' + shop : '') + ' — ' + date;
+  window.location.href = 'mailto:' + encodeURIComponent(to) + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(lines.join(String.fromCharCode(10)));
+}
+
+// Инициализируем при загрузке
+emailLoad();
 </script>
