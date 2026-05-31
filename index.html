@@ -2952,15 +2952,19 @@ function micShSearch() {
 
 function micShSearchAI(text) {
   var prev = document.getElementById('micShPrev'); if (!prev) return;
-  prev.innerHTML = '<div style="padding:10px;text-align:center;font-size:13px;color:#A19F9D">Strukturyzuję...</div>';
+  prev.innerHTML = '<div style="padding:10px;text-align:center;font-size:13px;color:#A19F9D">Analizuję...</div>';
   prev.style.display = 'block';
 
-  var colNames = {el:'element urzadzenia', def:'usterka/problem', sol:'co zrobiono', kon:'typ serwisu'};
-  var prompt = 'Jestes asystentem serwisanta RVM. Przeanalizuj opis i zwroc ustrukturyzowany tekst dla kategorii: '
-    + colNames[_micCol] + '.\n'
-    + 'Podaj 1-3 opcje jako JSON array: [{"pl":"gotowy tekst do raportu"}]\n'
-    + 'Tekst ma byc krotki, profesjonalny, po polsku.\n'
-    + 'Opis serwisanta: ' + text;
+  var colNames = {el:'element urzadzenia RVM', def:'usterka lub problem techniczny', sol:'co zostalo zrobione (akcja serwisanta)', kon:'typ serwisu'};
+  var sample = (D[_micCol]||[]).slice(0,15).map(function(x){return x.pl;}).join(', ');
+
+  var prompt = 'Jestes asystentem serwisanta automatow RVM. Kategoria: ' + colNames[_micCol] + '.\n'
+    + 'Przyklady z katalogu: ' + sample + '.\n'
+    + 'Zadanie: przeanalizuj opis i podaj 1-3 najlepsze opcje.\n'
+    + 'Jesli opis jest zrozumialy - ustrukturyzuj go krotko po polsku.\n'
+    + 'Jesli opis jest niejasny lub losowy - wybierz najblizsze pasujace pozycje z katalogu powyzej.\n'
+    + 'Odpowiedz TYLKO jako JSON array: [{"pl":"tekst opcji"}]\n'
+    + 'Opis: ' + text;
 
   fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -2975,41 +2979,70 @@ function micShSearchAI(text) {
       var parsed=JSON.parse(clean);
       if(!Array.isArray(parsed))parsed=[parsed];
       micShShowResults(parsed.map(function(p){return {pl:p.pl||p};}));
-    } catch(e){ micShShowResults([{pl:text}]); }
+    } catch(e){
+      // Если AI не ответил - берём из библиотеки офлайн
+      micShSearchOff(text);
+    }
   })
-  .catch(function(){ micShShowResults([{pl:text}]); });
-}
-
-function micShSearchOff(text) {
-  var norm = vsNorm(text);
-  var words = norm.split(' ').filter(function(w){return w.length>2;});
-  var all = (D[_micCol]||[]).concat(custom[_micCol]||[]);
-  var res = [];
-  all.forEach(function(item){
-    var pl=vsNorm(item.pl), ru=vsNorm(item.ru||''), sc=0;
-    if(norm.indexOf(pl)>=0)sc+=10;
-    if(ru&&norm.indexOf(ru)>=0)sc+=10;
-    pl.split(' ').filter(function(w){return w.length>2;}).forEach(function(w){if(norm.indexOf(w)>=0)sc+=3;});
-    words.forEach(function(w){if(pl.indexOf(w)>=0)sc+=2;if(ru&&ru.indexOf(w)>=0)sc+=2;});
-    if(sc>0)res.push({item:item,sc:sc});
-  });
-  res.sort(function(a,b){return b.sc-a.sc;});
-  var top = res.slice(0,4).map(function(r){return {pl:r.item.pl, score:r.sc};});
-  if(!top.length) top=[{pl:text,score:5}];
-  micShShowResults(top);
+  .catch(function(){ micShSearchOff(text); });
 }
 
 function micShShowResults(items) {
   var prev = document.getElementById('micShPrev'); if (!prev) return;
   _micItems = items;
-  var h = '<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#A19F9D;margin-bottom:6px">Wybierz:</div>';
-  items.forEach(function(item, i){
-    h += '<div onclick="micShPick('+i+')" style="padding:10px 12px;background:#F5F5F7;border-radius:9px;margin-bottom:5px;cursor:pointer;font-size:13px;font-weight:500;color:#323130;display:flex;align-items:center;justify-content:space-between;-webkit-tap-highlight-color:transparent">';
-    h += '<span>'+esc(item.pl)+'</span>';
-    h += '<span style="font-size:11px;color:#C8C6C4">+</span></div>';
+
+  var h = '<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#A19F9D;margin-bottom:8px">Wybierz lub edytuj:</div>';
+  
+  items.forEach(function(item, i) {
+    h += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">';
+    // Тег с текстом
+    h += '<div id="mstag_'+i+'" onclick="micShPick('+i+')" style="flex:1;padding:9px 12px;background:#EAF4FB;border:1.5px solid #0078D4;border-radius:9px;font-size:13px;font-weight:500;color:#0078D4;cursor:pointer;-webkit-tap-highlight-color:transparent">'+esc(item.pl)+'</div>';
+    // Кнопка редактирования
+    h += '<button onclick="micShEdit('+i+')" style="width:32px;height:32px;background:#F5F5F7;border:0.5px solid #EDEBE9;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;-webkit-tap-highlight-color:transparent">';
+    h += '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#605E5C" stroke-width="1.5" stroke-linecap="round"><path d="M10 2l2 2-7 7H3v-2l7-7z"/></svg></button>';
+    // Крестик удалить
+    h += '<button onclick="micShRemove('+i+')" style="width:32px;height:32px;background:#FFF0F0;border:0.5px solid rgba(255,59,48,.2);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;-webkit-tap-highlight-color:transparent">';
+    h += '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#FF3B30" stroke-width="1.8" stroke-linecap="round"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg></button>';
+    h += '</div>';
   });
+
   prev.innerHTML = h;
   prev.style.display = 'block';
+}
+
+function micShEdit(i) {
+  if (!_micItems || !_micItems[i]) return;
+  var tag = document.getElementById('mstag_'+i);
+  if (!tag) return;
+  var oldVal = _micItems[i].pl;
+  var inp = document.createElement('input');
+  inp.id = 'msinp_'+i;
+  inp.value = oldVal;
+  inp.style.cssText = 'flex:1;padding:9px 12px;background:#fff;border:1.5px solid #0078D4;border-radius:9px;font-size:13px;font-family:inherit;outline:none;color:#323130;min-width:0';
+  inp.setAttribute('data-idx', i);
+  inp.addEventListener('blur', function(){micShSaveEdit(i,this);});
+  inp.addEventListener('keydown', function(e){if(e.key==='Enter')this.blur();});
+  tag.parentNode.replaceChild(inp, tag);
+  setTimeout(function(){inp.focus();inp.select();},50);
+}
+
+function micShSaveEdit(i, inp) {
+  var val = inp.value.trim();
+  if (!val) return;
+  _micItems[i].pl = val;
+  // Заменяем input обратно на тег
+  inp.outerHTML = '<div id="mstag_'+i+'" onclick="micShPick('+i+')" style="flex:1;padding:9px 12px;background:#EAF4FB;border:1.5px solid #0078D4;border-radius:9px;font-size:13px;font-weight:500;color:#0078D4;cursor:pointer">'+esc(val)+'</div>';
+}
+
+function micShRemove(i) {
+  if (!_micItems) return;
+  _micItems.splice(i, 1);
+  if (_micItems.length === 0) {
+    var prev = document.getElementById('micShPrev');
+    if (prev) { prev.style.display='none'; prev.innerHTML=''; }
+  } else {
+    micShShowResults(_micItems);
+  }
 }
 
 function micShPick(i) {
