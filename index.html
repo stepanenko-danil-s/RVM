@@ -2947,7 +2947,49 @@ function micShAutoProc(el) {
 function micShSearch() {
   var text = (document.getElementById('micShInp')||{}).value||'';
   text = text.trim(); if (!text) return;
-  micShSearchAI(text);
+  var prev = document.getElementById('micShPrev'); if (!prev) return;
+  prev.innerHTML = '<div style="padding:10px;text-align:center;font-size:13px;color:#A19F9D">Strukturyzuję...</div>';
+  prev.style.display = 'block';
+  
+  // Таймаут 5 секунд - если AI не ответил берём текст как есть
+  var _done = false;
+  var _timeout = setTimeout(function() {
+    if (!_done) { _done = true; micShShowResults([{pl: text}]); }
+  }, 5000);
+
+  var colNames = {el:'element urzadzenia RVM (automat skupu butelek)', def:'usterka lub problem techniczny', sol:'co zostalo zrobione przez serwisanta', kon:'typ serwisu'};
+  var sample = (D[_micCol]||[]).slice(0,12).map(function(x){return x.pl;}).join(', ');
+
+  var prompt = 'Jestes asystentem serwisanta RVM. Kategoria: ' + colNames[_micCol] + '.\n'
+    + 'Przyklady z katalogu: ' + sample + '.\n'
+    + 'Przeanalizuj opis i podaj 1-3 opcje jako JSON array: [{"pl":"krotki techniczny tekst po polsku"}]\n'
+    + 'Jesli opis niejasny - wybierz najblizsze z katalogu.\n'
+    + 'Opis: ' + text;
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({model: 'claude-sonnet-4-20250514', max_tokens: 150, messages: [{role: 'user', content: prompt}]})
+  })
+  .then(function(r){return r.json();})
+  .then(function(data){
+    if (_done) return;
+    _done = true;
+    clearTimeout(_timeout);
+    var txt=(data.content||[]).map(function(c){return c.text||'';}).join('');
+    var clean=txt.replace(/```json|```/g,'').trim();
+    try {
+      var parsed=JSON.parse(clean);
+      if(!Array.isArray(parsed))parsed=[parsed];
+      micShShowResults(parsed.map(function(p){return {pl:p.pl||p};}));
+    } catch(e){ micShShowResults([{pl:text}]); }
+  })
+  .catch(function(){
+    if (_done) return;
+    _done = true;
+    clearTimeout(_timeout);
+    micShShowResults([{pl:text}]);
+  });
 }
 
 function micShSearchAI(text) {
