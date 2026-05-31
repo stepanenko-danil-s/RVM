@@ -2556,6 +2556,38 @@ function restoreData(input){
   input.value="";
 }</script>
 
+  <div style="margin-top:20px;padding-top:16px;border-top:1px solid #EDEBE9">
+    <div style="font-size:13px;font-weight:700;color:#323130;margin-bottom:4px">Słownik synonimów RU→PL</div>
+    <div style="font-size:11px;color:#A19F9D;margin-bottom:10px">Dodaj rosyjskie słowa które system będzie rozumieć</div>
+    
+    <!-- Список синонимов -->
+    <div id="synList" style="margin-bottom:10px;max-height:200px;overflow-y:auto"></div>
+    
+    <!-- Добавить новый -->
+    <div style="display:flex;gap:6px;margin-bottom:6px">
+      <input id="synRu" placeholder="Русское слово" style="flex:1;background:#F5F5F7;border:none;border-radius:8px;padding:9px 11px;font-size:13px;font-family:inherit;outline:none;color:#323130">
+      <input id="synPl" placeholder="Polski odpowiednik" style="flex:1;background:#F5F5F7;border:none;border-radius:8px;padding:9px 11px;font-size:13px;font-family:inherit;outline:none;color:#323130">
+    </div>
+    <button onclick="synAdd()" style="width:100%;padding:10px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">+ Dodaj synonim</button>
+
+  <!-- Dodaj do biblioteki -->
+  <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
+    <div style="font-size:13px;font-weight:700;color:#323130;margin-bottom:10px">Biblioteka słów</div>
+    <div style="margin-bottom:8px">
+      <select id="libCol" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:8px">
+        <option value="el">Element urządzenia</option>
+        <option value="def">Usterka / problem</option>
+        <option value="sol">Co zrobiono</option>
+        <option value="kon">Typ serwisu</option>
+      </select>
+      <input id="libPl" placeholder="Nazwa po polsku (wymagane)" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:6px">
+      <input id="libRu" placeholder="Название по-русски (необязательно)" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:10px">
+      <button onclick="libAdd()" style="width:100%;padding:12px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Dodaj do biblioteki</button>
+    </div>
+    <div id="libList" style="max-height:150px;overflow-y:auto;font-size:12px;color:#605E5C"></div>
+  </div>
+  </div>
+
 </div>
 </div>
 </div>
@@ -2948,6 +2980,64 @@ function mshPhoto(input){var file=input.files[0];if(!file||_magOpenId===null)ret
 var _micCol = 'el';
 var _micTimer = null;
 var _micItems = null;
+
+function libAdd() {
+  var col = document.getElementById('libCol').value;
+  var pl = (document.getElementById('libPl').value||'').trim();
+  var ru = (document.getElementById('libRu').value||'').trim();
+  if (!pl) { showToast('Wpisz nazwę po polsku'); return; }
+
+  // Добавляем в custom
+  if (!custom[col]) custom[col] = [];
+  // Проверяем дубль
+  var exists = custom[col].some(function(x){return x.pl.toLowerCase()===pl.toLowerCase();});
+  if (exists) { showToast('Już istnieje'); return; }
+  custom[col].push({pl: pl, ru: ru || pl});
+  ss('rv_custom', custom);
+
+  // Очищаем поля
+  document.getElementById('libPl').value = '';
+  document.getElementById('libRu').value = '';
+
+  // Обновляем список
+  libRender();
+  showToast('Dodano: ' + pl);
+}
+
+function libRender() {
+  var list = document.getElementById('libList');
+  if (!list) return;
+  var cols = {el:'Element', def:'Usterka', sol:'Wykonano', kon:'Serwis'};
+  var h = '';
+  var hasAny = false;
+  Object.keys(cols).forEach(function(col) {
+    var items = custom[col] || [];
+    items.forEach(function(item, i) {
+      hasAny = true;
+      h += '<div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:0.5px solid #F3F2F1">';
+      h += '<span style="font-size:9px;font-weight:700;color:#fff;background:#0078D4;padding:2px 5px;border-radius:4px">'+cols[col]+'</span>';
+      h += '<span style="flex:1">'+esc(item.pl)+'</span>';
+      var delBtn = document.createElement('button');
+      delBtn.textContent = '×';
+      delBtn.style.cssText = 'background:none;border:none;color:#FF3B30;font-size:14px;cursor:pointer;padding:0;line-height:1';
+      h += '<button data-col="'+col+'" data-idx="'+i+'" onclick="libDelByData(this)" style="background:none;border:none;color:#FF3B30;font-size:14px;cursor:pointer;padding:0;line-height:1">×</button>';
+      h += '</div>';
+    });
+  });
+  list.innerHTML = hasAny ? h : '<div style="color:#A19F9D;padding:4px 0">Biblioteka jest pusta</div>';
+}
+
+function libDelByData(btn) {
+  var col = btn.getAttribute('data-col');
+  var idx = parseInt(btn.getAttribute('data-idx'));
+  libDel(col, idx);
+}
+function libDel(col, idx) {
+  if (!custom[col]) return;
+  custom[col].splice(idx, 1);
+  ss('rv_custom', custom);
+  libRender();
+}
 
 function modMic(col) {
   _micCol = col;
@@ -3414,6 +3504,77 @@ function mainMicAdd() {
   closeOv('shMainMic');
   showToast('Dodano do raportu');
 }
+
+</script>
+<script>
+
+// ============================================================
+// СИНОНИМЫ - пользовательские
+// ============================================================
+function synLoad() {
+  try { var v = localStorage.getItem('rv_syn'); if(v) return JSON.parse(v); } catch(e) {}
+  return {};
+}
+function synSave(d) { try { localStorage.setItem('rv_syn', JSON.stringify(d)); } catch(e) {} }
+
+function synRender() {
+  var list = document.getElementById('synList'); if (!list) return;
+  var d = synLoad();
+  var keys = Object.keys(d);
+  if (!keys.length) {
+    list.innerHTML = '<div style="font-size:12px;color:#A19F9D;padding:6px 0">Brak własnych synonimów</div>';
+    return;
+  }
+  var h = '';
+  keys.forEach(function(ru) {
+    h += '<div style="display:flex;align-items:center;gap:6px;padding:6px 8px;background:#F5F5F7;border-radius:7px;margin-bottom:4px">';
+    h += '<span style="flex:1;font-size:12px;color:#323130"><b>' + esc(ru) + '</b> → ' + esc(d[ru]) + '</span>';
+    h += '<button data-ru="'+esc(ru)+'" onclick="synDelByData(this)" style="background:none;border:none;color:#FF3B30;font-size:16px;cursor:pointer;padding:0 4px;line-height:1">×</button>';
+    h += '</div>';
+  });
+  list.innerHTML = h;
+}
+
+function synAdd() {
+  var ru = (document.getElementById('synRu')||{}).value||'';
+  var pl = (document.getElementById('synPl')||{}).value||'';
+  ru = ru.trim().toLowerCase();
+  pl = pl.trim().toLowerCase();
+  if (!ru || !pl) { showToast('Wypelnij oba pola'); return; }
+  var d = synLoad();
+  d[ru] = pl;
+  synSave(d);
+  // Добавляем в RU_SYN
+  RU_SYN[ru] = pl;
+  document.getElementById('synRu').value = '';
+  document.getElementById('synPl').value = '';
+  synRender();
+  showToast('Dodano: ' + ru + ' → ' + pl);
+}
+
+function synDelByData(btn) {
+  synDel(btn.getAttribute('data-ru'));
+}
+function synDel(ru) {
+  var d = synLoad();
+  delete d[ru];
+  delete RU_SYN[ru];
+  synSave(d);
+  synRender();
+}
+
+// Загружаем пользовательские синонимы при старте
+(function() {
+  var d = synLoad();
+  Object.keys(d).forEach(function(ru) { RU_SYN[ru] = d[ru]; });
+})();
+
+// Рендерим список когда открываются настройки
+var _origOpenSh = openSh;
+openSh = function(id) {
+  _origOpenSh(id);
+  if (id === 'shSet') setTimeout(synRender, 100);
+};
 
 </script>
 </body>
