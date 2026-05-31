@@ -4333,7 +4333,6 @@ function shopGetLabel() {
     <div style="display:flex;gap:6px;padding:0 16px 10px">
       <button onclick="magExportCSV()" style="flex:1;padding:10px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">CSV</button>
       <button onclick="magExportEmail()" style="flex:1;padding:10px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Email</button>
-      <button id="schedPlanBtn" style="flex:1;padding:10px;background:#986F0B;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent">&#9200; Plan</button>
     </div>
     <div style="display:flex;gap:6px;padding:0 16px 12px;border-bottom:0.5px solid #EDEBE9">
       <button onclick="magTableFilter('all')" id="mtf_all" style="flex:1;padding:8px;background:#1C1C1E;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Wszystkie</button>
@@ -4836,6 +4835,21 @@ if (_origMST) {
     setTimeout(schedBindBtn, 200);
   };
 }
+
+function schedSave() {
+  var day = document.getElementById('schedDay');
+  var time = document.getElementById('schedTime');
+  if (!day || !time) return;
+  _schedDay = parseInt(day.value);
+  _schedTime = time.value;
+  localStorage.setItem('rv_sched', JSON.stringify({day: _schedDay, time: _schedTime}));
+  if (typeof schedStart === 'function') schedStart();
+  var days = ['Niedziela','Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota'];
+  var status = document.getElementById('schedStatus');
+  if (status) status.textContent = '✓ ' + days[_schedDay] + ' o ' + _schedTime;
+  showToast('Harmonogram zapisany');
+}
+
 </script>
 </body>
 </html>
