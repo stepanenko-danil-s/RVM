@@ -2591,28 +2591,7 @@ function restoreData(input){
     <div id="emailStatus" style="font-size:12px;color:#A19F9D;margin-top:6px;text-align:center"></div>
   </div>
 
-  <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
-    <div style="font-size:13px;font-weight:700;color:#323130;margin-bottom:12px">Harmonogram raportów</div>
-    <div style="font-size:11px;color:#A19F9D;margin-bottom:10px">Powiadomienie w wybranym dniu i godzinie</div>
-    <div style="margin-bottom:8px">
-      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;display:block;margin-bottom:4px">Dzień tygodnia</span>
-      <select id="schedDay" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:8px">
-        <option value="1">Poniedziałek</option>
-        <option value="2">Wtorek</option>
-        <option value="3">Środa</option>
-        <option value="4">Czwartek</option>
-        <option value="5">Piątek</option>
-        <option value="6">Sobota</option>
-        <option value="0">Niedziela</option>
-      </select>
-      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;display:block;margin-bottom:4px">Godzina</span>
-      <input type="time" id="schedTime" value="08:00" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:10px">
-      <button onclick="schedSave()" style="width:100%;padding:12px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Zapisz harmonogram</button>
-    </div>
-    <div id="schedStatus" style="font-size:12px;color:#A19F9D;margin-top:8px;text-align:center"></div>
-  </div>
-
-  <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
+    <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
     <div style="font-size:13px;font-weight:700;color:#323130;margin-bottom:10px">Biblioteka słów</div>
     <div style="margin-bottom:8px">
       <select id="libCol" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:8px">
@@ -4331,6 +4310,7 @@ function shopGetLabel() {
       <div style="display:flex;gap:6px">
         <button onclick="magExportCSV()" style="padding:6px 12px;background:#34C759;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">CSV</button>
         <button onclick="magExportEmail()" style="padding:6px 12px;background:#0078D4;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Email</button>
+        <button onclick="schedOpenInTable()" style="padding:6px 12px;background:#986F0B;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">⏰</button>
         <button onclick="closeOv('shMagTable')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">×</button>
       </div>
     </div>
@@ -4767,4 +4747,43 @@ function sendReportEmail() {
 
 // Инициализируем при загрузке
 emailLoad();
+</script>
+<script>
+function schedOpenInTable() {
+  // Показываем мини-панель расписания прямо в таблице
+  var body = document.getElementById('magTableBody');
+  if (!body) return;
+
+  var days = ['Niedziela','Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota'];
+  var currentDay = _schedDay !== null ? _schedDay : 1;
+  var currentTime = _schedTime || '08:00';
+
+  var schedHtml = '<div style="background:#FFF8EC;border:1.5px solid #986F0B;border-radius:12px;padding:14px;margin-bottom:12px">'
+    + '<div style="font-size:13px;font-weight:700;color:#986F0B;margin-bottom:10px">⏰ Harmonogram raportów</div>'
+    + '<div style="display:flex;gap:8px;margin-bottom:8px">'
+    + '<select id="schedDayT" style="flex:1;padding:9px 10px;background:#fff;border:1px solid #EDEBE9;border-radius:9px;font-size:13px;font-family:inherit;outline:none;color:#323130">'
+    + days.map(function(d,i){ return '<option value="'+i+'"'+(i===currentDay?' selected':'')+'>'+d+'</option>'; }).join('')
+    + '</select>'
+    + '<input type="time" id="schedTimeT" value="'+currentTime+'" style="width:90px;padding:9px 10px;background:#fff;border:1px solid #EDEBE9;border-radius:9px;font-size:13px;font-family:inherit;outline:none;color:#323130">'
+    + '</div>'
+    + '<button onclick="schedSaveFromTable()" style="width:100%;padding:10px;background:#986F0B;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Zapisz harmonogram</button>'
+    + '</div>';
+
+  // Вставляем перед таблицей
+  body.innerHTML = schedHtml + body.innerHTML;
+}
+
+function schedSaveFromTable() {
+  var day = document.getElementById('schedDayT');
+  var time = document.getElementById('schedTimeT');
+  if (!day || !time) return;
+  _schedDay = parseInt(day.value);
+  _schedTime = time.value;
+  localStorage.setItem('rv_sched', JSON.stringify({day: _schedDay, time: _schedTime}));
+  schedStart();
+  var days = ['Niedziela','Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota'];
+  showToast('✓ Harmonogram: ' + days[_schedDay] + ' o ' + _schedTime);
+  // Перерисовываем таблицу без панели
+  magRenderTable();
+}
 </script>
