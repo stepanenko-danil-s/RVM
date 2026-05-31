@@ -3202,6 +3202,42 @@ function mainMicNorm(s) {
     .replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
 }
 
+// Словарь русских синонимов → польские слова для поиска
+var RU_SYN = {
+  // Части
+  'passik':'pasek',   'ремень':'pas',      'пасик':'pasek',
+  'чуйник':'czujnik', 'датчик':'czujnik',  'сенсор':'czujnik',
+  'сортер':'sorter',  'плата':'plyta',     'контроллер':'plyta',
+  'двигатель':'silnik','мотор':'silnik',   'движок':'silnik',
+  'замок':'zamek',    'засов':'zamek',     'ключ':'klucz',
+  'камера':'kamera',  'ридер':'czytnik',   'считыватель':'czytnik',
+  'цепь':'lancuch',   'цепочка':'lancuch', 'лента':'pas',
+  'принтер':'drukarka','блок питания':'zasilacz','блок':'zasilacz',
+  'лампа':'zarowka',  'лампочка':'zarowka','предохранитель':'wylacznik',
+  'выключатель':'wylacznik','кнопка':'wylacznik',
+  // Usterka
+  'не работает':'nie dziala', 'сломался':'uszkodzony', 'порвался':'zerwany',
+  'не крутится':'nie obraca', 'заклинило':'zaciety',   'скрипит':'skrzypi',
+  'нет сигнала':'brak sygnalu','слабый':'slaby',        'грязный':'zabrudzony',
+  'износился':'zuzyty',       'погнутый':'pogiety',     'треснул':'pekniecie',
+  // Co zrobiono
+  'заменил':'wymieniono',  'заменили':'wymieniono',  'поменял':'wymieniono',
+  'почистил':'wyczyszczono','проверил':'sprawdzono',  'отрегулировал':'wyregulowano',
+  'смазал':'nasmarowano',  'подтянул':'dokrecono',   'отремонтировал':'naprawiono',
+  'установил':'zamontowano','снял':'zdemontowano',    'новый':'nowy',
+  // Serwis
+  'гарантия':'gwarancja',  'гарантийный':'gwarancyjny',
+  'техобслуживание':'przeglad','осмотр':'przeglad',
+};
+
+function mainMicTranslate(text) {
+  var t = text.toLowerCase();
+  Object.keys(RU_SYN).forEach(function(ru) {
+    t = t.replace(new RegExp(ru, 'g'), RU_SYN[ru]);
+  });
+  return t;
+}
+
 function mainMicScore(text, item) {
   var norm = mainMicNorm(text);
   var pl = mainMicNorm(item.pl);
@@ -3226,7 +3262,9 @@ function mainMicSearch() {
   text = text.trim(); if (!text) return;
 
   var prev = document.getElementById('mainMicPrev'); if (!prev) return;
-  var norm = mainMicNorm(text);
+  // Переводим русские слова в польские для лучшего поиска
+  var translated = mainMicTranslate(text);
+  var norm = mainMicNorm(translated);
 
   // Ищем лучшее совпадение для каждой категории
   var bestEl = null, bestDef = null, bestSol = null, bestKon = null;
