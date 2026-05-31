@@ -4370,8 +4370,9 @@ function shopGetLabel() {
 
 // schedOpenInTable + schedSaveFromTable
 function schedOpenInTable() {
+  showToast('Plan...');
   var body = document.getElementById('magTableBody');
-  if (!body) { showToast('Otwórz tabelę aby ustawić plan'); return; }
+  if (!body) { showToast('Brak body'); return; }
   var days = ['Niedziela','Poniedziałek','Wtorek','Sroda','Czwartek','Piatek','Sobota'];
   var cd = (typeof _schedDay!=='undefined'&&_schedDay!==null)?_schedDay:1;
   var ct = (typeof _schedTime!=='undefined'&&_schedTime)?_schedTime:'08:00';
