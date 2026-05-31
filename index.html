@@ -2912,8 +2912,8 @@ function mshPhoto(input){var file=input.files[0];if(!file||_magOpenId===null)ret
 
     <textarea id="micShInp" placeholder="Mów lub pisz..." style="width:100%;min-height:70px;background:#F5F5F7;border:1.5px solid rgba(0,120,212,.2);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;outline:none;resize:none;color:#323130;line-height:1.5;margin-bottom:8px" oninput="micShAutoProc(this)"></textarea>
     <div style="font-size:11px;color:#A19F9D;margin-bottom:10px">Użyj mikrofonu iPhone na klawiaturze</div>
-    <div id="micShPrev" style="display:none;margin-bottom:10px"></div>
-    <button onclick="micShSearch()" style="width:100%;padding:10px;background:#F5F5F7;border:1px solid #EDEBE9;border-radius:10px;font-size:13px;font-weight:600;color:#0078D4;cursor:pointer;margin-bottom:8px;font-family:inherit">Szukaj</button>
+
+
     <button onclick="micShAdd()" style="width:100%;padding:12px;background:#0078D4;border:none;border-radius:10px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;margin-bottom:8px;font-family:inherit">Dodaj</button>
     <button onclick="closeOv('shModMic')" class="sh-btn lt">Anuluj</button>
   </div>
@@ -3052,16 +3052,10 @@ function micShPick(i) {
 }
 
 function micShAdd() {
-  var inp = document.getElementById('micShInp'); 
+  var inp = document.getElementById('micShInp');
   var text = inp ? inp.value.trim() : '';
-  // Если есть результаты - берём первый выбранный
-  if (_micItems && _micItems.length) {
-    micShApply(_micItems[0].pl);
-  } else if (text) {
-    micShApply(text);
-  } else {
-    showToast('Wpisz lub wybierz');
-  }
+  if (!text) { showToast('Wpisz lub powiedz'); return; }
+  micShApply(text);
 }
 
 function micShApply(val) {
