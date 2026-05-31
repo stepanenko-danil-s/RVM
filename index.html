@@ -305,6 +305,7 @@ body.dark .mag-card,.dark .photo-add{background:#1E1E26}
 .mmr-skip{background:#FFF0F0;border-color:rgba(255,59,48,.2);color:#FF3B30}
 </style>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.min.js"></script>
 </head>
 <body>
 <div style="height:2px;background:linear-gradient(90deg,#003E42,#007A7A,#34DDD0,#007A7A,#003E42);position:sticky;top:0;z-index:81"></div>
@@ -464,9 +465,24 @@ body.dark .mag-card,.dark .photo-add{background:#1E1E26}
   <div class="ptab-row"><button onclick="ptab('c')" id="ptb-c" class="on">Części</button><button onclick="ptab('m')" id="ptb-m">Magazyn</button></div>
   <div id="ptb-c-body"><div class="parts-body" id="partsBody">
     <div id="partsList" style="max-height:38vh;overflow-y:auto;padding:6px 10px 10px"></div>
-  </div></div><!-- /ptb-c-body -->
+  </div></div></div><!-- /ptb-c-body -->
   <div id="ptb-m-body" style="display:none">
-    <div style="padding:8px 8px 4px"><div style="display:flex;align-items:center;gap:8px;background:#F5F5F7;border-radius:10px;padding:8px 12px"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#C8C6C4" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="4"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg><input id="magQ" placeholder="Szukaj..." oninput="magSearch(this.value)" autocomplete="off" style="flex:1;border:none;background:none;font-size:13px;font-family:inherit;outline:none;color:#323130"></div></div>
+    <!-- Кнопки действий -->
+    <div style="display:flex;gap:6px;padding:8px 8px 4px">
+      <button onclick="magScanQR()" style="flex:1;padding:9px 6px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;-webkit-tap-highlight-color:transparent">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="1" width="4" height="4" rx="0.5"/><rect x="9" y="1" width="4" height="4" rx="0.5"/><rect x="1" y="9" width="4" height="4" rx="0.5"/><line x1="9" y1="9" x2="9" y2="9.01"/><line x1="11" y1="9" x2="13" y2="9"/><line x1="9" y1="11" x2="9" y2="13"/><line x1="11" y1="11" x2="13" y2="13"/><line x1="11" y1="9" x2="11" y2="11"/></svg>
+        Skanuj QR
+      </button>
+      <button onclick="magAddNew()" style="flex:1;padding:9px 6px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;-webkit-tap-highlight-color:transparent">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
+        Dodaj część
+      </button>
+      <button onclick="magPrintQR()" style="flex:1;padding:9px 6px;background:#605E5C;color:#fff;border:none;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;-webkit-tap-highlight-color:transparent">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="4" width="10" height="7" rx="1"/><path d="M4 4V2h6v2"/><line x1="4" y1="8" x2="10" y2="8"/></svg>
+        QR PDF
+      </button>
+    </div>
+    <div style="padding:0 8px 4px"><div style="display:flex;align-items:center;gap:8px;background:#F5F5F7;border-radius:10px;padding:8px 12px"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#C8C6C4" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="4"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg><input id="magQ" placeholder="Szukaj..." oninput="magSearch(this.value)" autocomplete="off" style="flex:1;border:none;background:none;font-size:13px;font-family:inherit;outline:none;color:#323130"></div></div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:0 8px 6px"><div style="background:#F5F5F7;border-radius:8px;padding:8px;text-align:center"><div style="font-size:18px;font-weight:800;color:#323130" id="mst1">43</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;margin-top:2px">Pozycji</div></div><div style="background:#F5F5F7;border-radius:8px;padding:8px;text-align:center"><div style="font-size:18px;font-weight:800;color:#FF9500" id="mst2">0</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;margin-top:2px">Malo</div></div><div style="background:#F5F5F7;border-radius:8px;padding:8px;text-align:center"><div style="font-size:18px;font-weight:800;color:#FF3B30" id="mst3">0</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;margin-top:2px">Brak</div></div></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 8px 8px" id="magGrid"></div>
     <input type="file" id="magCamInp" accept="image/*" capture="environment" style="display:none" onchange="mshPhoto(this)">
@@ -3549,6 +3565,229 @@ var _origOpenSh = openSh;
 openSh = function(id) {
   _origOpenSh(id);
   if (id === 'shSet') setTimeout(synRender, 100);
+};
+
+</script>
+
+<div class="ov" id="shMagScan" style="display:none" onclick="if(event.target===this){magStopCamera();closeOv('shMagScan')}">
+  <div class="sh" style="max-height:85vh;overflow-y:auto">
+    <div class="sh-bar"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-size:17px;font-weight:800;color:#0078D4">Skanuj QR</div>
+      <button onclick="magStopCamera();closeOv('shMagScan')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">×</button>
+    </div>
+    <div style="position:relative;width:100%;border-radius:12px;overflow:hidden;background:#000;margin-bottom:12px">
+      <video id="magScanVideo" playsinline style="width:100%;display:block"></video>
+      <canvas id="magScanCanvas" style="display:none"></canvas>
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60%;aspect-ratio:1;border:2px solid rgba(255,255,255,.6);border-radius:8px;pointer-events:none"></div>
+    </div>
+    <div style="text-align:center;font-size:12px;color:#A19F9D;margin-bottom:12px">Nakieruj kamerę na kod QR na naklejce</div>
+    <button onclick="magStopCamera();closeOv('shMagScan')" class="sh-btn lt">Anuluj</button>
+  </div>
+</div>
+
+<div class="ov" id="shMagAdd" style="display:none" onclick="if(event.target===this)closeOv('shMagAdd')">
+  <div class="sh" style="max-height:85vh;overflow-y:auto">
+    <div class="sh-bar"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="font-size:17px;font-weight:800;color:#34C759">Nowa część</div>
+      <button onclick="closeOv('shMagAdd')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">×</button>
+    </div>
+    <div style="margin-bottom:8px"><span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;display:block;margin-bottom:4px">Nazwa</span>
+      <input id="magNewName" placeholder="Np. Silnik 24V 80rpm" style="width:100%;padding:11px 13px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130">
+    </div>
+    <div style="margin-bottom:8px"><span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;display:block;margin-bottom:4px">Kod części</span>
+      <input id="magNewCode" placeholder="Np. 10018200" style="width:100%;padding:11px 13px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130">
+    </div>
+    <div style="margin-bottom:14px"><span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;display:block;margin-bottom:4px">Kategoria</span>
+      <input id="magNewCat" placeholder="Np. Silniki" style="width:100%;padding:11px 13px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130">
+    </div>
+    <button onclick="magAddSave()" style="width:100%;padding:13px;background:#34C759;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px">Dodaj do magazynu</button>
+    <button onclick="closeOv('shMagAdd')" class="sh-btn lt">Anuluj</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// MAGAZYN - новые функции: QR, добавление, печать
+// ============================================================
+
+// --- QR СКАНЕР ---
+function magScanQR() {
+  openSh('shMagScan');
+  setTimeout(function() { magStartCamera(); }, 300);
+}
+
+var _magScanStream = null;
+
+function magStartCamera() {
+  var video = document.getElementById('magScanVideo');
+  if (!video) return;
+  navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment'}})
+    .then(function(stream) {
+      _magScanStream = stream;
+      video.srcObject = stream;
+      video.play();
+      magScanLoop();
+    })
+    .catch(function(err) {
+      showToast('Brak dostepu do kamery');
+      closeOv('shMagScan');
+    });
+}
+
+function magStopCamera() {
+  if (_magScanStream) {
+    _magScanStream.getTracks().forEach(function(t) { t.stop(); });
+    _magScanStream = null;
+  }
+}
+
+var _magScanActive = false;
+function magScanLoop() {
+  var video = document.getElementById('magScanVideo');
+  var canvas = document.getElementById('magScanCanvas');
+  if (!video || !canvas || !_magScanStream) return;
+  _magScanActive = true;
+
+  var ctx = canvas.getContext('2d');
+  function tick() {
+    if (!_magScanActive || !_magScanStream) return;
+    if (video.readyState === video.HAVE_ENOUGH_DATA) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0);
+      var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      try {
+        var code = jsQR(imgData.data, imgData.width, imgData.height);
+        if (code && code.data) {
+          magScanFound(code.data);
+          return;
+        }
+      } catch(e) {}
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+function magScanFound(code) {
+  _magScanActive = false;
+  magStopCamera();
+  closeOv('shMagScan');
+
+  // Ищем деталь по коду
+  if (!_magData) _magData = magLoad();
+  var all = MAG_PARTS.concat(_magCustParts || []);
+  var found = all.find(function(p) {
+    return p.k && p.k.toLowerCase() === code.toLowerCase();
+  });
+
+  if (found) {
+    showToast('Znaleziono: ' + found.n.split(' ').slice(0,3).join(' '));
+    setTimeout(function() { magOpenSheet(found.id); }, 300);
+  } else {
+    showToast('Nie znaleziono kodu: ' + code);
+  }
+}
+
+// --- DODAJ NOWĄ CZĘŚĆ ---
+var _magCustParts = [];
+
+function magLoadCust() {
+  try { _magCustParts = JSON.parse(localStorage.getItem('rv_mag_cust') || '[]'); } catch(e) { _magCustParts = []; }
+}
+
+function magSaveCust() {
+  try { localStorage.setItem('rv_mag_cust', JSON.stringify(_magCustParts)); } catch(e) {}
+}
+
+function magAddNew() {
+  var inp_n = document.getElementById('magNewName');
+  var inp_k = document.getElementById('magNewCode');
+  var inp_c = document.getElementById('magNewCat');
+  if (inp_n) inp_n.value = '';
+  if (inp_k) inp_k.value = '';
+  if (inp_c) inp_c.value = '';
+  openSh('shMagAdd');
+  setTimeout(function() { if (inp_n) inp_n.focus(); }, 400);
+}
+
+function magAddSave() {
+  var n = (document.getElementById('magNewName').value || '').trim();
+  var k = (document.getElementById('magNewCode').value || '').trim();
+  var cat = (document.getElementById('magNewCat').value || 'Inne').trim();
+  if (!n || !k) { showToast('Wpisz nazwe i kod'); return; }
+
+  if (!_magCustParts) magLoadCust();
+
+  // Проверим дубль
+  var allParts = MAG_PARTS.concat(_magCustParts);
+  if (allParts.find(function(p) { return p.k.toLowerCase() === k.toLowerCase(); })) {
+    showToast('Taki kod juz istnieje'); return;
+  }
+
+  var newId = 1000 + _magCustParts.length + 1;
+  var newPart = {id: newId, n: n, k: k, cat: cat};
+  _magCustParts.push(newPart);
+  magSaveCust();
+
+  if (!_magData) _magData = magLoad();
+  _magData[newId] = {qty: 0, min: 1, photo: null};
+  magSave();
+
+  closeOv('shMagAdd');
+  magRender();
+  showToast('Dodano: ' + n);
+}
+
+// Обновим MAG_PARTS чтобы включал кастомные
+function magGetAll() {
+  if (!_magCustParts) magLoadCust();
+  return MAG_PARTS.concat(_magCustParts);
+}
+
+// --- ПЕЧАТЬ QR ---
+function magPrintQR() {
+  var allParts = magGetAll();
+  if (!_magData) _magData = magLoad();
+
+  // Строим HTML страницу для печати
+  var css = '*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;background:#fff}.page{width:210mm;padding:8mm;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:36mm;gap:2mm}.sticker{border:1px solid #ccc;display:flex;overflow:hidden;border-radius:3px}.stripe{width:5mm;background:#007A7A;flex-shrink:0}.info{flex:1;padding:3mm 2mm;display:flex;flex-direction:column;justify-content:center;gap:2mm}.nm{font-size:9pt;font-weight:700;color:#111;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.cd{font-size:8pt;color:#555;font-family:monospace}.qrbox{width:34mm;height:36mm;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:2mm}.qrbox canvas,.qrbox img{width:30mm!important;height:30mm!important}';
+  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script><style>'+css+'</style></head><body><div class="page">';
+
+  allParts.forEach(function(p) {
+    html += '<div class="sticker">'
+      + '<div class="stripe"></div>'
+      + '<div class="info"><div class="nm">' + p.n + '</div><div class="cd">' + p.k + '</div></div>'
+      + '<div class="qrbox" id="qr_' + p.id + '"></div>'
+      + '</div>';
+  });
+
+  html += '</div>'
+    + '<scr' + 'ipt>window.onload=function(){var parts='+JSON.stringify(allParts)+';parts.forEach(function(p){var el=document.getElementById("qr_"+p.id);if(el){try{new QRCode(el,{text:p.k,width:114,height:114,colorDark:"#000",colorLight:"#fff",correctLevel:QRCode.CorrectLevel.L});}catch(e){}}});setTimeout(function(){window.print();},1000);};' + '<' + '/script></body></html>';
+
+  var w = window.open('', '_blank');
+  if (w) { w.document.write(html); w.document.close(); }
+  else { showToast('Zezwol na popup w przegladarce'); }
+}
+
+// Инициализация кастомных деталей
+magLoadCust();
+
+// Патч magRender чтобы использовал magGetAll
+var _origMagRender = magRender;
+magRender = function() {
+  // Добавляем кастомные детали в MAG_PARTS временно
+  var origLen = MAG_PARTS.length;
+  if (_magCustParts && _magCustParts.length) {
+    _magCustParts.forEach(function(p) {
+      if (!MAG_PARTS.find(function(x){return x.id===p.id;})) {
+        MAG_PARTS.push(p);
+      }
+    });
+  }
+  _origMagRender();
 };
 
 </script>
