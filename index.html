@@ -4387,6 +4387,7 @@ var body = document.getElementById('magTableBody');
     + '<button onclick="schedSaveFromTable()" style="width:100%;padding:10px;background:#986F0B;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Zapisz harmonogram</button>'
     + '</div>';
   body.innerHTML = h + body.innerHTML;
+  } catch(e) { alert('Error: ' + e.message); }
 }
 
 function schedSaveFromTable() {
