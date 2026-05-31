@@ -4331,6 +4331,7 @@ function shopGetLabel() {
       <div style="display:flex;gap:6px">
         <button onclick="magExportCSV()" style="padding:6px 12px;background:#34C759;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">CSV</button>
         <button onclick="magExportEmail()" style="padding:6px 12px;background:#0078D4;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Email</button>
+        <button onclick="schedOpenInTable()" style="padding:6px 12px;background:#986F0B;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">&#9200;</button>
         <button onclick="closeOv('shMagTable')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">×</button>
       </div>
     </div>
@@ -4370,8 +4371,7 @@ function shopGetLabel() {
 
 // schedOpenInTable + schedSaveFromTable
 function schedOpenInTable() {
-  alert("schedOpenInTable wywolano");
-  var body = document.getElementById('magTableBody');
+var body = document.getElementById('magTableBody');
   if (!body) return;
   var days = ['Niedziela','Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota'];
   var currentDay = (typeof _schedDay !== 'undefined' && _schedDay !== null) ? _schedDay : 1;
