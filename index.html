@@ -4523,9 +4523,7 @@ function magExportEmail() {
     + (empty.length ? ' 🔴 Brak:' + empty.length : '')
     + (warn.length ? ' 🟡 Mało:' + warn.length : '');
 
-  window.location.href = 'mailto:' + encodeURIComponent(to)
-    + '?subject=' + encodeURIComponent(subj)
-    + '&body=' + encodeURIComponent(lines.join(String.fromCharCode(10)));
+  var _mu='mailto:'+encodeURIComponent(to)+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(lines.join(String.fromCharCode(10)));window.open(_mu,'_self');
 }
 
 
@@ -4562,9 +4560,7 @@ function sendReportEmail() {
 
   var subj = '[RVM] Raport serwisowy' + (shop ? ' — ' + shop : '') + ' — ' + date;
 
-  window.location.href = 'mailto:' + encodeURIComponent(to)
-    + '?subject=' + encodeURIComponent(subj)
-    + '&body=' + encodeURIComponent(lines.join(String.fromCharCode(10)));
+  var _mu='mailto:'+encodeURIComponent(to)+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(lines.join(String.fromCharCode(10)));window.open(_mu,'_self');
 }
 
 
