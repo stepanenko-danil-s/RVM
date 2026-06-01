@@ -1667,7 +1667,10 @@ function toggleMod(i){
   _updateFlowState();
 }
 function toggleModS(){
-  if(mOpenS){if(SEL.el.length||SEL.kon.length||SEL.def.length||SEL.sol.length)_commitEntry();}
+  if(mOpenS){
+    // При закрытии заголовком - просто сворачиваем БЕЗ коммита
+    // Коммит происходит только через кнопку OK/Dodaj
+  }
   mOpenS=!mOpenS;
   var hdr=document.getElementById("hdrS"),body=document.getElementById("bodyS"),arr=document.getElementById("arrS"),bdg=document.getElementById("bdgS");
   if(body)body.className="mod-body"+(mOpenS?" open":"");
@@ -5085,16 +5088,23 @@ function shopFindByAddress(city, street) {
     var score = 0;
     var sCityN = shopNorm(s.city);
     var sAddrN = shopNorm(s.addr);
+    // Совпадение города
     if (cityN && sCityN === cityN) score += 10;
-    else if (cityN && sCityN.indexOf(cityN) >= 0) score += 6;
+    else if (cityN && (sCityN.indexOf(cityN) >= 0 || cityN.indexOf(sCityN) >= 0)) score += 6;
+    // Совпадение улицы
     if (streetN && sAddrN.length > 3) {
-      streetN.split(' ').filter(function(w){return w.length>3;}).forEach(function(w){
+      streetN.split(' ').filter(function(w){return w.length>2;}).forEach(function(w){
         if (sAddrN.indexOf(w) >= 0) score += 5;
       });
+      // Совпадение номера дома
+      var houseMatch = streetN.match(/\d+/g);
+      var addrMatch = sAddrN.match(/\d+/g);
+      if (houseMatch && addrMatch && houseMatch[0] === addrMatch[0]) score += 8;
     }
     if (score > bestScore) { bestScore = score; best = s; }
   });
-  return bestScore >= 15 ? best : null;
+  // Порог снижаем до 10 (только город) если нет улицы
+  return bestScore >= (streetN ? 15 : 10) ? best : null;
 }
 
 // Переопределяем функцию GPS чтобы после Overpass искала в базе
