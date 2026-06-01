@@ -339,100 +339,93 @@ body.dark .mag-card,.dark .photo-add{background:#1E1E26}
 .set-acc-arr.open { transform: rotate(180deg); }
 </style><style id="themesCSS">
 /* ===== v17: ТЕМЫ ===== */
-
-/* Базовые стили (без темы = T1) */
-.shop-bar { background:#fff; border-bottom:0.5px solid #EDEBE9; }
-.shop-btn-gps { background:#007AFF; border-radius:8px; color:#fff; border:none; }
-.nav-title { font-size:17px; font-weight:800; color:#fff; letter-spacing:-.01em; }
-.theme-pick-btn { padding:12px 8px; border:1.5px solid #EDEBE9; border-radius:10px; cursor:pointer; font-family:inherit; font-size:12px; font-weight:600; -webkit-tap-highlight-color:transparent; }
-.theme-pick-btn.active { border-width:2.5px; border-color:#007A7A; }
+.theme-pick-btn{padding:12px 8px;border:1.5px solid #EDEBE9;border-radius:10px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;-webkit-tap-highlight-color:transparent}
+.theme-pick-btn.active{border-width:2.5px;border-color:#007A7A}
+.shop-btn-gps{color:#fff;border:none}
+.nav-title{font-size:17px;font-weight:800;color:#fff;letter-spacing:-.01em}
 
 /* ══════════════════════════════════════
    T1 — iOS стандартный
-   Скруглённые карточки, отступы, тени
+   Скруглённые карточки с тенями, отступы
 ══════════════════════════════════════ */
-body.theme-1 { background:#F2F2F7; }
-body.theme-1 .nav { background:linear-gradient(160deg,#004E52,#006E68 60%,#008878); }
-body.theme-1 .nav-title { color:#fff; font-size:17px; font-weight:800; letter-spacing:-.01em; }
-body.theme-1 .shop-bar { background:#fff; border-bottom:none; border-radius:14px; margin:8px 12px; box-shadow:0 1px 4px rgba(0,0,0,.08); }
-body.theme-1 .shop-btn-gps { background:#007AFF; border-radius:8px; color:#fff; }
-body.theme-1 .acc-card { background:#fff; border-radius:14px; margin:0 0 10px; box-shadow:0 1px 4px rgba(0,0,0,.08); border:0.5px solid #E5E5EA; }
-body.theme-1 .acc-hdr { background:transparent; border-radius:0; margin:0; border-bottom:none; }
-body.theme-1 .acc-body { border-top:0.5px solid #E5E5EA; }
-body.theme-1 .rep-mod { border-radius:14px; box-shadow:0 1px 4px rgba(0,0,0,.08); border:0.5px solid #E5E5EA; }
-body.theme-1 .copy-btn { background:rgba(116,116,128,.18); color:#007AFF; border-radius:10px; border:none; }
-body.theme-1 .send-btn { background:#34C759; border-radius:10px; }
-body.theme-1 .ai-btn { background:#007A7A; border-radius:13px; }
+body.theme-1{background:#F2F2F7 !important}
+body.theme-1 .nav{background:linear-gradient(160deg,#004E52,#006E68 60%,#008878) !important;box-shadow:0 3px 20px rgba(0,0,0,.3) !important}
+body.theme-1 .nav-title{color:#fff !important;font-size:17px !important;font-weight:800 !important;letter-spacing:-.01em !important}
+body.theme-1 #shopBar{background:#fff !important;border-bottom:none !important;border-radius:14px !important;margin:8px 12px !important;box-shadow:0 1px 4px rgba(0,0,0,.1) !important}
+body.theme-1 .shop-btn-gps{background:#007AFF !important;border-radius:8px !important}
+body.theme-1 .acc-card{background:#fff !important;border-radius:14px !important;overflow:hidden !important;box-shadow:0 2px 8px rgba(0,0,0,.1) !important;border:0.5px solid #E5E5EA !important;margin:0 0 10px !important}
+body.theme-1 .rep-mod{border-radius:14px !important;overflow:hidden !important;box-shadow:0 2px 8px rgba(0,0,0,.1) !important;border:0.5px solid #E5E5EA !important}
+body.theme-1 .copy-btn{background:rgba(116,116,128,.18) !important;color:#007AFF !important;border-radius:10px !important;border:none !important}
+body.theme-1 .send-btn{background:#34C759 !important;border-radius:10px !important}
+body.theme-1 .ai-btn{background:#007A7A !important;border-radius:13px !important}
 
 /* ══════════════════════════════════════
    T2 — Microsoft Fluent
-   Прямые углы, разделители, без теней
+   БЕЗ скруглений, от края до края, разделители
 ══════════════════════════════════════ */
-body.theme-2 { background:#F5F5F5; }
-body.theme-2 .nav { background:#0078D4; box-shadow:0 2px 4px rgba(0,0,0,.2); }
-body.theme-2 .nav-title { color:#fff; font-size:16px; font-weight:600; letter-spacing:-.2px; }
-body.theme-2 .shop-bar { background:#fff; border-bottom:1px solid #EDEBE9; border-radius:0; margin:0; box-shadow:none; }
-body.theme-2 .shop-btn-gps { background:#0078D4; border-radius:2px; color:#fff; }
-body.theme-2 .acc-card { background:#fff; border-radius:0 !important; margin:0 0 1px; box-shadow:none; border:none; border-bottom:1px solid #EDEBE9; overflow:visible; }
-body.theme-2 .acc-hdr { background:transparent; border-radius:0; margin:0; border-bottom:none; }
-body.theme-2 .acc-body { border-top:1px solid #EDEBE9; }
-body.theme-2 .rep-mod { border-radius:0; box-shadow:none; border:none; border-top:2px solid #0078D4; margin-top:1px; }
-body.theme-2 .copy-btn { background:#fff; color:#0078D4; border-radius:0; border:none; border-right:1px solid #EDEBE9; }
-body.theme-2 .send-btn { background:#0078D4; border-radius:0; }
-body.theme-2 .ai-btn { background:#0078D4; border-radius:0; }
+body.theme-2{background:#F0F0F0 !important}
+body.theme-2 .nav{background:#0078D4 !important;box-shadow:0 2px 4px rgba(0,120,212,.4) !important;border-radius:0 !important}
+body.theme-2 .nav-title{color:#fff !important;font-size:15px !important;font-weight:600 !important;letter-spacing:0 !important}
+body.theme-2 #shopBar{background:#fff !important;border-bottom:1px solid #EDEBE9 !important;border-radius:0 !important;margin:0 !important;box-shadow:none !important}
+body.theme-2 .shop-btn-gps{background:#0078D4 !important;border-radius:2px !important}
+body.theme-2 .page{padding:0 !important}
+body.theme-2 .acc-card{background:#fff !important;border-radius:0 !important;overflow:visible !important;box-shadow:none !important;border:none !important;border-bottom:1px solid #EDEBE9 !important;margin:0 !important}
+body.theme-2 .acc-hdr{border-radius:0 !important}
+body.theme-2 .acc-body{border-top:1px solid #EDEBE9 !important}
+body.theme-2 .rep-mod{border-radius:0 !important;overflow:visible !important;box-shadow:none !important;border:none !important;border-top:3px solid #0078D4 !important;margin-top:0 !important}
+body.theme-2 .copy-btn{background:#fff !important;color:#0078D4 !important;border-radius:0 !important;border:none !important;border-right:1px solid #EDEBE9 !important}
+body.theme-2 .send-btn{background:#0078D4 !important;border-radius:0 !important}
+body.theme-2 .ai-btn{background:#0078D4 !important;border-radius:0 !important}
+body.theme-2 .v16-gng{border-radius:0 !important}
+body.theme-2 .sec{color:#0078D4 !important;letter-spacing:.1em !important}
 
 /* ══════════════════════════════════════
-   T3 — iOS оранжевый акцент
-   Как T1 но акцент оранжевый
+   T3 — iOS оранжевый
 ══════════════════════════════════════ */
-body.theme-3 { background:#F2F2F7; }
-body.theme-3 .nav { background:linear-gradient(160deg,#004E52,#006E68 60%,#008878); }
-body.theme-3 .nav-title { color:#fff; font-size:17px; font-weight:800; letter-spacing:-.01em; }
-body.theme-3 .shop-bar { background:#FFF9F0; border-bottom:0.5px solid #FFE4B5; border-radius:14px; margin:8px 12px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
-body.theme-3 .shop-btn-gps { background:#FF9500; border-radius:8px; color:#fff; }
-body.theme-3 .acc-card { background:#fff; border-radius:14px; margin:0 0 10px; box-shadow:0 1px 4px rgba(0,0,0,.08); border:0.5px solid #E5E5EA; }
-body.theme-3 .acc-hdr { background:transparent; border-radius:0; margin:0; border-bottom:none; }
-body.theme-3 .acc-body { border-top:0.5px solid #FFE4B5; }
-body.theme-3 .rep-mod { border-radius:14px; box-shadow:0 1px 4px rgba(0,0,0,.08); border:0.5px solid #FFE4B5; }
-body.theme-3 .copy-btn { background:#FFF3E0; color:#FF9500; border-radius:10px; border:none; }
-body.theme-3 .send-btn { background:#FF9500; border-radius:10px; }
-body.theme-3 .ai-btn { background:#FF9500; border-radius:13px; }
+body.theme-3{background:#F2F2F7 !important}
+body.theme-3 .nav{background:linear-gradient(160deg,#004E52,#006E68 60%,#008878) !important;box-shadow:0 3px 20px rgba(0,0,0,.3) !important}
+body.theme-3 .nav-title{color:#fff !important;font-size:17px !important;font-weight:800 !important}
+body.theme-3 #shopBar{background:#FFF9F0 !important;border-bottom:0.5px solid #FFE4B5 !important;border-radius:14px !important;margin:8px 12px !important;box-shadow:0 1px 4px rgba(255,149,0,.1) !important}
+body.theme-3 .shop-btn-gps{background:#FF9500 !important;border-radius:8px !important}
+body.theme-3 .acc-card{background:#fff !important;border-radius:14px !important;overflow:hidden !important;box-shadow:0 2px 8px rgba(0,0,0,.1) !important;border:0.5px solid #FFE4B5 !important;margin:0 0 10px !important}
+body.theme-3 .rep-mod{border-radius:14px !important;overflow:hidden !important;box-shadow:0 2px 8px rgba(255,149,0,.15) !important;border:0.5px solid #FFE4B5 !important}
+body.theme-3 .copy-btn{background:#FFF3E0 !important;color:#FF9500 !important;border-radius:10px !important;border:none !important}
+body.theme-3 .send-btn{background:#FF9500 !important;border-radius:10px !important}
+body.theme-3 .ai-btn{background:#FF9500 !important;border-radius:13px !important}
 
 /* ══════════════════════════════════════
    T4 — Fluent тёмная шапка
-   Как T2 но шапка тёмная
 ══════════════════════════════════════ */
-body.theme-4 { background:#F5F5F5; }
-body.theme-4 .nav { background:#201F1E; box-shadow:0 2px 8px rgba(0,0,0,.4); }
-body.theme-4 .nav-title { color:#fff; font-size:16px; font-weight:600; letter-spacing:-.2px; }
-body.theme-4 .shop-bar { background:#252423; border-bottom:1px solid #3B3A39; border-radius:0; margin:0; box-shadow:none; }
-body.theme-4 .shop-bar svg { stroke:#C8C6C4 !important; }
-body.theme-4 .shop-bar button { color:#C8C6C4 !important; }
-body.theme-4 .shop-btn-gps { background:#0078D4; border-radius:2px; color:#fff !important; }
-body.theme-4 .acc-card { background:#fff; border-radius:0 !important; margin:0 0 1px; box-shadow:none; border:none; border-bottom:1px solid #EDEBE9; overflow:visible; }
-body.theme-4 .acc-hdr { background:transparent; border-radius:0; margin:0; border-bottom:none; }
-body.theme-4 .acc-body { border-top:1px solid #EDEBE9; }
-body.theme-4 .rep-mod { border-radius:0; box-shadow:none; border:none; border-top:2px solid #107C10; margin-top:1px; }
-body.theme-4 .copy-btn { background:#fff; color:#0078D4; border-radius:0; border:none; }
-body.theme-4 .send-btn { background:#107C10; border-radius:0; }
-body.theme-4 .ai-btn { background:#107C10; border-radius:0; }
+body.theme-4{background:#F0F0F0 !important}
+body.theme-4 .nav{background:#1B1A19 !important;box-shadow:0 2px 8px rgba(0,0,0,.5) !important;border-radius:0 !important}
+body.theme-4 .nav-title{color:#fff !important;font-size:15px !important;font-weight:600 !important;letter-spacing:0 !important}
+body.theme-4 #shopBar{background:#252423 !important;border-bottom:1px solid #3B3A39 !important;border-radius:0 !important;margin:0 !important;box-shadow:none !important}
+body.theme-4 #shopBar svg{stroke:#C8C6C4 !important}
+body.theme-4 #shopBtn{color:#C8C6C4 !important}
+body.theme-4 .shop-btn-gps{background:#0078D4 !important;border-radius:2px !important}
+body.theme-4 .page{padding:0 !important}
+body.theme-4 .acc-card{background:#fff !important;border-radius:0 !important;overflow:visible !important;box-shadow:none !important;border:none !important;border-bottom:1px solid #EDEBE9 !important;margin:0 !important}
+body.theme-4 .acc-hdr{border-radius:0 !important}
+body.theme-4 .acc-body{border-top:1px solid #EDEBE9 !important}
+body.theme-4 .rep-mod{border-radius:0 !important;overflow:visible !important;box-shadow:none !important;border:none !important;border-top:3px solid #107C10 !important;margin-top:0 !important}
+body.theme-4 .copy-btn{background:#fff !important;color:#0078D4 !important;border-radius:0 !important;border:none !important}
+body.theme-4 .send-btn{background:#107C10 !important;border-radius:0 !important}
+body.theme-4 .ai-btn{background:#107C10 !important;border-radius:0 !important}
+body.theme-4 .sec{color:#107C10 !important;letter-spacing:.1em !important}
 
 /* ══════════════════════════════════════
    T5 — iOS крупный заголовок
-   Как T1 но nav светлый и заголовок большой
 ══════════════════════════════════════ */
-body.theme-5 { background:#F2F2F7; }
-body.theme-5 .nav { background:#F2F2F7; box-shadow:none; border-bottom:0.5px solid rgba(60,60,67,.15); padding-top:20px; }
-body.theme-5 .nav-title { color:#000; font-size:28px; font-weight:700; letter-spacing:-.5px; }
-body.theme-5 .shop-bar { background:#fff; border-bottom:none; border-radius:14px; margin:8px 12px; box-shadow:0 1px 4px rgba(0,0,0,.08); }
-body.theme-5 .shop-btn-gps { background:#007AFF; border-radius:20px; color:#fff; }
-body.theme-5 .acc-card { background:#fff; border-radius:14px; margin:0 0 10px; box-shadow:0 1px 4px rgba(0,0,0,.08); border:0.5px solid #E5E5EA; }
-body.theme-5 .acc-hdr { background:transparent; border-radius:0; margin:0; border-bottom:none; }
-body.theme-5 .acc-body { border-top:0.5px solid #E5E5EA; }
-body.theme-5 .rep-mod { border-radius:14px; box-shadow:0 1px 4px rgba(0,0,0,.08); border:0.5px solid #E5E5EA; }
-body.theme-5 .copy-btn { background:#fff; color:#007AFF; border:0.5px solid rgba(60,60,67,.18); border-radius:10px; }
-body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
-body.theme-5 .ai-btn { background:#007A7A; border-radius:13px; }
+body.theme-5{background:#F2F2F7 !important}
+body.theme-5 .nav{background:#F2F2F7 !important;box-shadow:none !important;border-bottom:0.5px solid rgba(60,60,67,.15) !important;padding-top:20px !important}
+body.theme-5 .nav-title{color:#000 !important;font-size:28px !important;font-weight:700 !important;letter-spacing:-.5px !important}
+body.theme-5 #shopBar{background:#fff !important;border-bottom:none !important;border-radius:14px !important;margin:8px 12px !important;box-shadow:0 1px 4px rgba(0,0,0,.1) !important}
+body.theme-5 .shop-btn-gps{background:#007AFF !important;border-radius:20px !important}
+body.theme-5 .acc-card{background:#fff !important;border-radius:14px !important;overflow:hidden !important;box-shadow:0 2px 8px rgba(0,0,0,.1) !important;border:0.5px solid #E5E5EA !important;margin:0 0 10px !important}
+body.theme-5 .rep-mod{border-radius:14px !important;overflow:hidden !important;box-shadow:0 2px 8px rgba(0,0,0,.1) !important;border:0.5px solid #E5E5EA !important}
+body.theme-5 .copy-btn{background:#fff !important;color:#007AFF !important;border:0.5px solid rgba(60,60,67,.18) !important;border-radius:10px !important}
+body.theme-5 .send-btn{background:#34C759 !important;border-radius:10px !important}
+body.theme-5 .ai-btn{background:#007A7A !important;border-radius:13px !important}
 </style>
 
 </head>
