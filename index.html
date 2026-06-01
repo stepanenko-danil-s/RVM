@@ -2157,7 +2157,7 @@ function renderSummary(){
 function doCopy(){
   _commitEntry();
   var txt=_fmtRep();
-  var html='<!DOCTYPE html><html><body style="font-family:-apple-system,sans-serif;font-size:14px;line-height:1.75;color:#1C1C1E">'+_fmtRepHTML()+'</body></html>';
+  var html='<!DOCTYPE html><html><body style="font-family:-apple-system,sans-serif;font-size:14px;line-height:1.75;color:#1C1C1E">'+_fmtRepHTML()+'';
   var btn=document.getElementById("copyBtn");
   function ok(){btn.className="copy-btn ok";setTimeout(function(){btn.className="copy-btn";},1800);}
   // Try ClipboardItem (works on HTTPS - Chrome, Edge, Safari 16.4+)
@@ -3003,8 +3003,7 @@ function parOCR(base64img) {
       return;
     }
     var txt=(data.content||[]).map(function(c){return c.text||'';}).join('');
-    console.log('OCR response:', txt);
-    var clean=txt.replace(/```json|```/g,'').trim();
+        var clean=txt.replace(/```json|```/g,'').trim();
     try {
       var p=JSON.parse(clean);
       var co=document.getElementById('par_co');
@@ -3985,7 +3984,7 @@ function magPrintQR() {
   });
 
   html += '</div>'
-    + '<scr' + 'ipt>window.onload=function(){var parts='+JSON.stringify(allParts)+';parts.forEach(function(p){var el=document.getElementById("qr_"+p.id);if(el){try{new QRCode(el,{text:p.k,width:114,height:114,colorDark:"#000",colorLight:"#fff",correctLevel:QRCode.CorrectLevel.L});}catch(e){}}});setTimeout(function(){window.print();},1000);};' + '<' + '/script></body></html>';
+    + '<scr' + 'ipt>window.onload=function(){var parts='+JSON.stringify(allParts)+';parts.forEach(function(p){var el=document.getElementById("qr_"+p.id);if(el){try{new QRCode(el,{text:p.k,width:114,height:114,colorDark:"#000",colorLight:"#fff",correctLevel:QRCode.CorrectLevel.L});}catch(e){}}});setTimeout(function(){window.print();},1000);};' + '<' + '/script>';
 
   var w = window.open('', '_blank');
   if (w) { w.document.write(html); w.document.close(); }
@@ -4539,8 +4538,7 @@ function magHistoryClear(){if(!confirm('Wyczyścić całą historię?'))return;_
 magHistoryLoad();
 
 </script>
-</body>
-</html>
+
 <script>
 var _magTableFilter = 'all';
 
