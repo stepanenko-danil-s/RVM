@@ -426,7 +426,7 @@ body { background:var(--t-bg); }
 </div>
 
 <!-- SHOP BAR -->
-<div style="background:#fff;border-bottom:0.5px solid #EDEBE9;padding:6px 12px;display:flex;align-items:center;gap:6px">
+<div id="shopBar" style="background:#fff;border-bottom:0.5px solid #EDEBE9;padding:6px 12px;display:flex;align-items:center;gap:6px">
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#A19F9D" stroke-width="1.5" stroke-linecap="round"><path d="M7 1C4.24 1 2 3.24 2 6c0 3.75 5 8 5 8s5-4.25 5-8c0-2.76-2.24-5-5-5z"/><circle cx="7" cy="6" r="1.5"/></svg>
   <button id="shopBtn" onclick="shopOpen()" style="flex:1;text-align:left;background:none;border:none;font-size:12px;color:#A19F9D;cursor:pointer;font-family:inherit;padding:0;-webkit-tap-highlight-color:transparent">Wybierz sklep...</button>
   <button id="shopGpsBtn" onclick="shopGPS()" style="background:none;border:none;font-size:11px;color:#0078D4;cursor:pointer;font-family:inherit;padding:2px 4px;font-weight:600">&#128205; GPS</button>
@@ -5294,14 +5294,8 @@ var THEME_CFG = {
 function applyThemeStyles(n) {
   var c = THEME_CFG[n]; if (!c) return;
   // shop-bar
-  var sb = document.querySelector('[style*="border-bottom:0.5px solid #EDEBE9"][style*="padding:6px 12px"]') ||
-           document.querySelector('.shop-bar') ||
-           (function(){ var els = document.querySelectorAll('div'); for(var i=0;i<els.length;i++){ if(els[i].id==='shopBar') return els[i]; } return null; })();
-  if (!sb) {
-    // find by shopBtn parent
-    var shopBtn = document.getElementById('shopBtn');
-    if (shopBtn) sb = shopBtn.parentElement;
-  }
+  var sb = document.getElementById('shopBar');
+  if (!sb) { var shopBtn = document.getElementById('shopBtn'); if (shopBtn) sb = shopBtn.parentElement; }
   if (sb) {
     sb.style.setProperty('background', c.shopbarBg, 'important');
     sb.style.setProperty('border-bottom', c.shopbarBd, 'important');
