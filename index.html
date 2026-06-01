@@ -4337,12 +4337,41 @@ function shopFetchNearby(lat, lon, radius) {
       var t = el.tags || {};
       var elat = el.type==='node' ? el.lat : (el.center && el.center.lat);
       var elon = el.type==='node' ? el.lon : (el.center && el.center.lon);
+      var city = t['addr:city'] || '';
+      var street = [t['addr:street']||'', t['addr:housenumber']||''].filter(Boolean).join(' ');
+      var storeId = t.ref || t.branch || t.store_id || t.official_ref || '';
+      var brand = t.brand || t.name || '?';
+
+      // Обогащаем из SHOPS_DB если нет номера
+      if (!storeId && typeof SHOPS_DB !== 'undefined') {
+        var dbMatch = shopFindByAddress(city, street);
+        if (!dbMatch && brand) {
+          // Ищем по бренду + городу
+          var brandN = shopNorm(brand);
+          var cityN = shopNorm(city);
+          SHOPS_DB.forEach(function(s) {
+            if (!storeId && shopNorm(s.chain).indexOf(brandN) >= 0 && shopNorm(s.city) === cityN) {
+              // Сравниваем улицу
+              var sAddrN = shopNorm(s.addr);
+              var streetN = shopNorm(street);
+              if (streetN && sAddrN) {
+                var words = streetN.split(' ').filter(function(w){return w.length>3;});
+                var match = words.some(function(w){ return sAddrN.indexOf(w) >= 0; });
+                if (match) { storeId = String(s.id); city = city || s.city; street = street || s.addr; }
+              }
+            }
+          });
+        } else if (dbMatch) {
+          storeId = String(dbMatch.id);
+        }
+      }
+
       return {
-        brand: t.brand || t.name || '?',
-        name: t.name || t.brand || 'Sklep',
-        city: t['addr:city'] || '',
-        street: [t['addr:street']||'', t['addr:housenumber']||''].filter(Boolean).join(' '),
-        storeId: t.ref || t.branch || t.store_id || t.official_ref || '',
+        brand: brand,
+        name: t.name || brand || 'Sklep',
+        city: city,
+        street: street,
+        storeId: storeId,
         lat: elat, lon: elon
       };
     }).filter(function(s){ return s.lat && s.lon; })
