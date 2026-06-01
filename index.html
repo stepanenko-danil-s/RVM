@@ -4027,6 +4027,11 @@ magRender = function() {
       <button id="shopGpsBtnSheet" onclick="shopGPS()" style="padding:0 12px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">📍 GPS</button>
     </div>
     <div id="shopStatus" style="font-size:11px;color:#A19F9D;margin-bottom:8px;min-height:16px;text-align:center"></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <span style="font-size:11px;color:#A19F9D;white-space:nowrap">Radius:</span>
+      <input type="range" id="shopRadius" min="200" max="5000" step="100" value="800" oninput="shopRadiusUpdate(this.value)" style="flex:1;accent-color:#0078D4">
+      <span id="shopRadiusVal" style="font-size:11px;font-weight:700;color:#0078D4;white-space:nowrap;min-width:45px">800 m</span>
+    </div>
     <div style="font-size:11px;color:#A19F9D;margin-bottom:8px">Lub dodaj własny sklep:</div>
     <div style="display:flex;gap:6px;margin-bottom:12px">
       <input id="shopCustomInp" placeholder="Np. Bing Rzeszów, al. Piłsudskiego" style="flex:1;padding:9px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;font-family:inherit;outline:none;color:#323130">
@@ -4301,7 +4306,7 @@ function shopGPS() {
     if (btn) btn.textContent = '📍';
     if (gpsBtn) gpsBtn.textContent = '📍 GPS';
     if (status) status.textContent = 'Szukam sklepów w pobliżu...';
-    shopFetchNearby(_myLat, _myLon, 800);
+    shopFetchNearby(_myLat, _myLon, shopGetRadius());
   }, function(err) {
     if (btn) btn.textContent = '📍';
     if (gpsBtn) gpsBtn.textContent = '📍 GPS';
@@ -5099,6 +5104,17 @@ shopFetchNearby = function(lat, lon, radius) {
 };
 
 shopLoadCustom();
+
+
+function shopRadiusUpdate(val) {
+  var lbl = document.getElementById('shopRadiusVal');
+  if (lbl) lbl.textContent = val >= 1000 ? (val/1000).toFixed(1)+' km' : val+' m';
+}
+
+function shopGetRadius() {
+  var el = document.getElementById('shopRadius');
+  return el ? parseInt(el.value) : 800;
+}
 
 </script>
 </body>
