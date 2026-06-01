@@ -338,81 +338,101 @@ body.dark .mag-card,.dark .photo-add{background:#1E1E26}
 .set-acc-arr { color: #A19F9D; font-size: 12px; transition: transform .25s; }
 .set-acc-arr.open { transform: rotate(180deg); }
 </style><style id="themesCSS">
-/* ===== v17: БАЗОВЫЕ СТИЛИ + ТЕМЫ ===== */
+/* ===== v17: ТЕМЫ ===== */
 
-/* Базовые стили для элементов без inline цветов */
+/* Базовые стили (без темы = T1) */
 .shop-bar { background:#fff; border-bottom:0.5px solid #EDEBE9; }
 .shop-btn-gps { background:#007AFF; border-radius:8px; color:#fff; border:none; }
 .nav-title { font-size:17px; font-weight:800; color:#fff; letter-spacing:-.01em; }
 .theme-pick-btn { padding:12px 8px; border:1.5px solid #EDEBE9; border-radius:10px; cursor:pointer; font-family:inherit; font-size:12px; font-weight:600; -webkit-tap-highlight-color:transparent; }
 .theme-pick-btn.active { border-width:2.5px; border-color:#007A7A; }
 
-/* T1 — iOS стандартный (default) */
+/* ══════════════════════════════════════
+   T1 — iOS стандартный
+   Скруглённые карточки, отступы, тени
+══════════════════════════════════════ */
 body.theme-1 { background:#F2F2F7; }
-body.theme-1 .nav { background:linear-gradient(160deg,#004E52,#006E68 60%,#008878); border-bottom:none; }
+body.theme-1 .nav { background:linear-gradient(160deg,#004E52,#006E68 60%,#008878); }
 body.theme-1 .nav-title { color:#fff; font-size:17px; font-weight:800; letter-spacing:-.01em; }
-body.theme-1 .shop-bar { background:#fff; border-bottom:0.5px solid #EDEBE9; border-radius:12px; margin:8px 12px; }
+body.theme-1 .shop-bar { background:#fff; border-bottom:none; border-radius:14px; margin:8px 12px; box-shadow:0 1px 4px rgba(0,0,0,.08); }
 body.theme-1 .shop-btn-gps { background:#007AFF; border-radius:8px; color:#fff; }
-body.theme-1 .acc-card { border-radius:14px; background:#fff; }
-body.theme-1 .acc-hdr { background:#fff; border-radius:12px; margin:0 12px 6px; border-bottom:none; }
-body.theme-1 .rep-wrap { background:#fff; border-radius:12px; margin:0 12px; }
+body.theme-1 .acc-card { background:#fff; border-radius:14px; margin:0 0 10px; box-shadow:0 1px 4px rgba(0,0,0,.08); border:0.5px solid #E5E5EA; }
+body.theme-1 .acc-hdr { background:transparent; border-radius:0; margin:0; border-bottom:none; }
+body.theme-1 .acc-body { border-top:0.5px solid #E5E5EA; }
+body.theme-1 .rep-mod { border-radius:14px; box-shadow:0 1px 4px rgba(0,0,0,.08); border:0.5px solid #E5E5EA; }
 body.theme-1 .copy-btn { background:rgba(116,116,128,.18); color:#007AFF; border-radius:10px; border:none; }
 body.theme-1 .send-btn { background:#34C759; border-radius:10px; }
-body.theme-1 .ai-btn { background:#007A7A; }
+body.theme-1 .ai-btn { background:#007A7A; border-radius:13px; }
 
-/* T2 — Microsoft Fluent */
-body.theme-2 { background:#fff; }
-body.theme-2 .nav { background:#0078D4; border-bottom:none; }
+/* ══════════════════════════════════════
+   T2 — Microsoft Fluent
+   Прямые углы, разделители, без теней
+══════════════════════════════════════ */
+body.theme-2 { background:#F5F5F5; }
+body.theme-2 .nav { background:#0078D4; box-shadow:0 2px 4px rgba(0,0,0,.2); }
 body.theme-2 .nav-title { color:#fff; font-size:16px; font-weight:600; letter-spacing:-.2px; }
-body.theme-2 .shop-bar { background:#fff; border-bottom:1px solid #EDEBE9; border-radius:0; margin:0; }
+body.theme-2 .shop-bar { background:#fff; border-bottom:1px solid #EDEBE9; border-radius:0; margin:0; box-shadow:none; }
 body.theme-2 .shop-btn-gps { background:#0078D4; border-radius:2px; color:#fff; }
-body.theme-2 .acc-card { border-radius:0; margin-bottom:0; border-left:none; border-right:none; }
-body.theme-2 .acc-hdr { background:#fff; border-radius:0; border-bottom:1px solid #EDEBE9; margin:0; }
-body.theme-2 .rep-wrap { background:#F5F5F5; border-top:2px solid #0078D4; border-radius:0; margin:0; }
-body.theme-2 .copy-btn { background:#fff; color:#0078D4; border-radius:0; border:none; }
+body.theme-2 .acc-card { background:#fff; border-radius:0; margin:0 0 1px; box-shadow:none; border:none; border-bottom:1px solid #EDEBE9; }
+body.theme-2 .acc-hdr { background:transparent; border-radius:0; margin:0; border-bottom:none; }
+body.theme-2 .acc-body { border-top:1px solid #EDEBE9; }
+body.theme-2 .rep-mod { border-radius:0; box-shadow:none; border:none; border-top:2px solid #0078D4; margin-top:1px; }
+body.theme-2 .copy-btn { background:#fff; color:#0078D4; border-radius:0; border:none; border-right:1px solid #EDEBE9; }
 body.theme-2 .send-btn { background:#0078D4; border-radius:0; }
-body.theme-2 .ai-btn { background:#0078D4; }
+body.theme-2 .ai-btn { background:#0078D4; border-radius:0; }
 
-/* T3 — iOS оранжевый акцент */
+/* ══════════════════════════════════════
+   T3 — iOS оранжевый акцент
+   Как T1 но акцент оранжевый
+══════════════════════════════════════ */
 body.theme-3 { background:#F2F2F7; }
-body.theme-3 .nav { background:linear-gradient(160deg,#004E52,#006E68 60%,#008878); border-bottom:none; }
+body.theme-3 .nav { background:linear-gradient(160deg,#004E52,#006E68 60%,#008878); }
 body.theme-3 .nav-title { color:#fff; font-size:17px; font-weight:800; letter-spacing:-.01em; }
-body.theme-3 .shop-bar { background:#FFF9F0; border-bottom:0.5px solid #FFE4B5; border-radius:0; margin:0; }
+body.theme-3 .shop-bar { background:#FFF9F0; border-bottom:0.5px solid #FFE4B5; border-radius:14px; margin:8px 12px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
 body.theme-3 .shop-btn-gps { background:#FF9500; border-radius:8px; color:#fff; }
-body.theme-3 .acc-card { border-radius:14px; background:#fff; }
-body.theme-3 .acc-hdr { background:#fff; border-radius:12px; margin:0 12px 6px; border-bottom:none; }
-body.theme-3 .rep-wrap { background:#fff; border-radius:12px; margin:0 12px; }
-body.theme-3 .copy-btn { background:#F2F2F7; color:#FF9500; border-radius:0 0 0 12px; border:none; }
-body.theme-3 .send-btn { background:#FF9500; border-radius:0 0 12px 0; }
-body.theme-3 .ai-btn { background:#FF9500; }
+body.theme-3 .acc-card { background:#fff; border-radius:14px; margin:0 0 10px; box-shadow:0 1px 4px rgba(0,0,0,.08); border:0.5px solid #E5E5EA; }
+body.theme-3 .acc-hdr { background:transparent; border-radius:0; margin:0; border-bottom:none; }
+body.theme-3 .acc-body { border-top:0.5px solid #FFE4B5; }
+body.theme-3 .rep-mod { border-radius:14px; box-shadow:0 1px 4px rgba(0,0,0,.08); border:0.5px solid #FFE4B5; }
+body.theme-3 .copy-btn { background:#FFF3E0; color:#FF9500; border-radius:10px; border:none; }
+body.theme-3 .send-btn { background:#FF9500; border-radius:10px; }
+body.theme-3 .ai-btn { background:#FF9500; border-radius:13px; }
 
-/* T4 — Fluent тёмная шапка */
-body.theme-4 { background:#fff; }
-body.theme-4 .nav { background:#201F1E; border-bottom:none; }
+/* ══════════════════════════════════════
+   T4 — Fluent тёмная шапка
+   Как T2 но шапка тёмная
+══════════════════════════════════════ */
+body.theme-4 { background:#F5F5F5; }
+body.theme-4 .nav { background:#201F1E; box-shadow:0 2px 8px rgba(0,0,0,.4); }
 body.theme-4 .nav-title { color:#fff; font-size:16px; font-weight:600; letter-spacing:-.2px; }
-body.theme-4 .shop-bar { background:#252423; border-bottom:1px solid #3B3A39; border-radius:0; margin:0; }
-body.theme-4 .shop-bar * { color:#C8C6C4 !important; }
-body.theme-4 .shop-btn-gps { background:#0078D4; border-radius:2px; color:#fff; }
-body.theme-4 .acc-card { border-radius:0; margin-bottom:0; border-left:none; border-right:none; background:#fff; }
-body.theme-4 .acc-hdr { background:#fff; border-radius:0; border-bottom:1px solid #EDEBE9; margin:0; }
-body.theme-4 .rep-wrap { background:#F5F5F5; border-top:1px solid #EDEBE9; border-radius:0; margin:0; }
+body.theme-4 .shop-bar { background:#252423; border-bottom:1px solid #3B3A39; border-radius:0; margin:0; box-shadow:none; }
+body.theme-4 .shop-bar svg { stroke:#C8C6C4 !important; }
+body.theme-4 .shop-bar button { color:#C8C6C4 !important; }
+body.theme-4 .shop-btn-gps { background:#0078D4; border-radius:2px; color:#fff !important; }
+body.theme-4 .acc-card { background:#fff; border-radius:0; margin:0 0 1px; box-shadow:none; border:none; border-bottom:1px solid #EDEBE9; }
+body.theme-4 .acc-hdr { background:transparent; border-radius:0; margin:0; border-bottom:none; }
+body.theme-4 .acc-body { border-top:1px solid #EDEBE9; }
+body.theme-4 .rep-mod { border-radius:0; box-shadow:none; border:none; border-top:2px solid #107C10; margin-top:1px; }
 body.theme-4 .copy-btn { background:#fff; color:#0078D4; border-radius:0; border:none; }
 body.theme-4 .send-btn { background:#107C10; border-radius:0; }
-body.theme-4 .ai-btn { background:#107C10; }
+body.theme-4 .ai-btn { background:#107C10; border-radius:0; }
 
-/* T5 — iOS крупные заголовки */
+/* ══════════════════════════════════════
+   T5 — iOS крупный заголовок
+   Как T1 но nav светлый и заголовок большой
+══════════════════════════════════════ */
 body.theme-5 { background:#F2F2F7; }
-body.theme-5 .nav { background:#F2F2F7; border-bottom:0.5px solid rgba(60,60,67,.18); padding-top:20px; }
-body.theme-5 .nav-title { color:#000; font-size:28px; font-weight:500; letter-spacing:-.5px; }
-body.theme-5 .shop-bar { background:transparent; border-bottom:none; padding:0 12px 10px; margin:0; }
-body.theme-5 .shop-bar-inner { background:#fff; border-radius:20px; padding:6px 14px; display:flex; align-items:center; gap:8px; }
+body.theme-5 .nav { background:#F2F2F7; box-shadow:none; border-bottom:0.5px solid rgba(60,60,67,.15); padding-top:20px; }
+body.theme-5 .nav-title { color:#000; font-size:28px; font-weight:700; letter-spacing:-.5px; }
+body.theme-5 .shop-bar { background:#fff; border-bottom:none; border-radius:14px; margin:8px 12px; box-shadow:0 1px 4px rgba(0,0,0,.08); }
 body.theme-5 .shop-btn-gps { background:#007AFF; border-radius:20px; color:#fff; }
-body.theme-5 .acc-card { border-radius:14px; background:#fff; }
-body.theme-5 .acc-hdr { background:#fff; border-radius:12px; margin:0 12px 6px; border-bottom:none; }
-body.theme-5 .rep-wrap { background:#fff; border-radius:12px; margin:0 12px; }
+body.theme-5 .acc-card { background:#fff; border-radius:14px; margin:0 0 10px; box-shadow:0 1px 4px rgba(0,0,0,.08); border:0.5px solid #E5E5EA; }
+body.theme-5 .acc-hdr { background:transparent; border-radius:0; margin:0; border-bottom:none; }
+body.theme-5 .acc-body { border-top:0.5px solid #E5E5EA; }
+body.theme-5 .rep-mod { border-radius:14px; box-shadow:0 1px 4px rgba(0,0,0,.08); border:0.5px solid #E5E5EA; }
 body.theme-5 .copy-btn { background:#fff; color:#007AFF; border:0.5px solid rgba(60,60,67,.18); border-radius:10px; }
 body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
-body.theme-5 .ai-btn { background:#007A7A; }
+body.theme-5 .ai-btn { background:#007A7A; border-radius:13px; }
 </style>
 
 </head>
