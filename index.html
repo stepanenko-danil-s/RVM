@@ -4363,7 +4363,7 @@ function magPrintQR() {
   });
 
   html += '</div>'
-    + '<scr' + 'ipt>window.onload=function(){var parts='+JSON.stringify(allParts)+';parts.forEach(function(p){var el=document.getElementById("qr_"+p.id);if(el){try{new QRCode(el,{text:p.k,width:114,height:114,colorDark:"#000",colorLight:"#fff",correctLevel:QRCode.CorrectLevel.L});}catch(e){}}});setTimeout(function(){window.print();},1000);};' + '<' + '/script>';
+    + '<scr' + 'ipt>window.onload=function(){var parts='+JSON.stringify(allParts)+';parts.forEach(function(p){var el=document.getElementById("qr_"+p.id);if(el){try{new QRCode(el,{text:p.k,width:114,height:114,colorDark:"#000",colorLight:"#fff",correctLevel:QRCode.CorrectLevel.L});}catch(e){}}});setTimeout(function(){window.print();},1000);};' + '<\/scr' + 'ipt>';
 
   var w = window.open('', '_blank');
   if (w) { w.document.write(html); w.document.close(); }
