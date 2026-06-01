@@ -4116,7 +4116,7 @@ magRender = function() {
     <div id="shopStatus" style="font-size:11px;color:#A19F9D;margin-bottom:8px;min-height:16px;text-align:center"></div>
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
       <span style="font-size:11px;color:#A19F9D;white-space:nowrap">Radius:</span>
-      <input type="range" id="shopRadius" min="200" max="5000" step="100" value="800" oninput="shopRadiusUpdate(this.value)" style="flex:1;accent-color:#0078D4">
+      <input type="range" id="shopRadius" min="200" max="5000" step="100" value="800" oninput="shopRadiusUpdate(this.value)" onchange="shopRadiusChanged(this.value)" style="flex:1;accent-color:#0078D4">
       <span id="shopRadiusVal" style="font-size:11px;font-weight:700;color:#0078D4;white-space:nowrap;min-width:45px">800 m</span>
     </div>
     <div style="font-size:11px;color:#A19F9D;margin-bottom:8px">Lub dodaj własny sklep:</div>
@@ -5227,6 +5227,13 @@ shopFetchNearby = function(lat, lon, radius) {
 
 shopLoadCustom();
 
+
+function shopRadiusChanged(val) {
+  // Запускаем поиск только если уже были координаты
+  if (_myLat && _myLon) {
+    shopFetchNearby(_myLat, _myLon, parseInt(val));
+  }
+}
 
 function shopRadiusUpdate(val) {
   var lbl = document.getElementById('shopRadiusVal');
