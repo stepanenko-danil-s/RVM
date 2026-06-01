@@ -3028,7 +3028,17 @@ function parOCR(base64img) {
 function parSend(){var co=(document.getElementById('par_co')||{}).value||'';var kw=(document.getElementById('par_kwota')||{}).value||'';var nr=(document.getElementById('par_nr')||{}).value||'';var dt=(document.getElementById('par_data')||{}).value||'';if(!co&&!kw&&!nr){showToast('Wypelnij pola');return;}var subj='Faktura/Paragon '+(nr||dt||new Date().toLocaleDateString('pl-PL'));var lines=['Faktura/Paragon',''];if(co)lines.push('Co kupiono: '+co);if(kw)lines.push('Kwota: '+kw+' zl');if(nr)lines.push('Nr faktury: '+nr);if(dt)lines.push('Data: '+new Date(dt).toLocaleDateString('pl-PL'));lines.push('','Wyslano z RVM Raport');window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(lines.join(String.fromCharCode(10)));setTimeout(function(){['par_co','par_kwota','par_nr','par_data'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});_parPhoto=null;var w=document.getElementById('parPhotoWrap');if(w)w.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:6px;color:#A19F9D"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#A19F9D" stroke-width="1.4" stroke-linecap="round"><rect x="2" y="5" width="24" height="18" rx="3"/><circle cx="14" cy="14" r="5"/><path d="M8.5 5l2-3h7l2 3"/></svg><span style="font-size:13px;font-weight:600">Zrob zdjecie paragonu</span></div>';showToast('Wyslano');},500);}
 
 // Magazyn
-var MAG_PARTS=[{id:1,n:"Adapter v4 - 3D - PETG",k:"AD-3D-V4-PETG",cat:"Elektronika"},{id:2,n:"Adapter złączka RJ45 IP67",k:"AD-RJ45-6-WP",cat:"Komunikacja"},{id:3,n:"Czujnik indukcyjny M8",k:"10018133",cat:"Czujniki"},{id:4,n:"Czujnik indukcyjny M12",k:"10018137",cat:"Czujniki"},{id:5,n:"Czytnik kart lojalnościowych",k:"10019143",cat:"Druk i Karta"},{id:6,n:"Czytnik kart Mk2",k:"10030391",cat:"Druk i Karta"},{id:7,n:"Drukarka Epson",k:"700236",cat:"Druk i Karta"},{id:8,n:"Fotokomórka rozruchowa",k:"1076486",cat:"Czujniki"},{id:9,n:"Interfejs Epson",k:"700237",cat:"Druk i Karta"},{id:10,n:"Kabel USB A-B 1.8m",k:"CB-USB-A-B-180",cat:"Komunikacja"},{id:11,n:"Kamera ARC EMC",k:"10017938",cat:"Identyfikacja"},{id:12,n:"Klapa obrotowa X2",k:"10017132",cat:"Mechanika"},{id:13,n:"Klapa obrotowa X3",k:"10017436",cat:"Mechanika"},{id:14,n:"Klucz magnetyczny",k:"380346",cat:"Narzędzia"},{id:15,n:"Klucz trójkątny",k:"1073890",cat:"Narzędzia"},{id:16,n:"Łańcuch długi PET",k:"850-34-PET",cat:"Napęd"},{id:17,n:"Łańcuch krótki PET",k:"625-25-PET",cat:"Napęd"},{id:18,n:"Wyłącznik magnetyczny",k:"10012515",cat:"Elektryczne"},{id:19,n:"Odbłyśnik E39-R42",k:"10011291",cat:"Identyfikacja"},{id:20,n:"Pas podajnika",k:"10017568",cat:"Napęd"},{id:21,n:"Pas przenośnika Proline",k:"10014234",cat:"Napęd"},{id:22,n:"Pas tylny Proline",k:"10016947",cat:"Napęd"},{id:23,n:"Pasek klinowy eXtend",k:"10029936",cat:"Napęd"},{id:24,n:"Pasek klinowy 8mm",k:"700351",cat:"Napęd"},{id:25,n:"PCBA wykrywacz metalu",k:"10014821S",cat:"Elektronika"},{id:26,n:"Płyta kontrolna PCBA",k:"10026751S",cat:"Elektronika"},{id:27,n:"Płyta sortera I/O 2",k:"10011255",cat:"Elektronika"},{id:28,n:"Podajnik Assy RVM",k:"10012664",cat:"Mechanika"},{id:29,n:"Pojemnik kosz 800x600",k:"800600B",cat:"Pojemniki"},{id:30,n:"Silnik 24V 40rpm",k:"1075738",cat:"Silniki"},{id:31,n:"Silnik pasa Bosch",k:"10010946",cat:"Silniki"},{id:32,n:"Silnik przenośnika",k:"10027202",cat:"Silniki"},{id:33,n:"Silnik przesłony HL2",k:"10011181",cat:"Silniki"},{id:34,n:"Sorter MIX Lewy",k:"10026513",cat:"Sortowanie"},{id:35,n:"Sorter MIX eXtend",k:"10024703",cat:"Sortowanie"},{id:36,n:"Sorter MIX Prawy",k:"10014853",cat:"Sortowanie"},{id:37,n:"Wlot kurtyna",k:"10030988",cat:"Mechanika"},{id:38,n:"Wlot stożek",k:"10030965",cat:"Mechanika"},{id:39,n:"Wyłącznik bezpieczeństwa",k:"380345",cat:"Elektryczne"},{id:40,n:"Wyłącznik GMK AB",k:"1074820",cat:"Elektryczne"},{id:41,n:"Zamek trójkątny",k:"1073494",cat:"Mechanika"},{id:42,n:"Zasilacz 24V 13.4A",k:"10026911",cat:"Elektryczne"},{id:43,n:"Żarówka 24-30V",k:"3393399",cat:"Elektryczne"}];
+var MAG_PARTS=[{id:1,n:"Adapter v4 - 3D - PETG",k:"AD-3D-V4-PETG",cat:"Elektronika"},{id:2,n:"Adapter złączka RJ45 IP67",k:"AD-RJ45-6-WP",cat:"Komunikacja"},{id:3,n:"Czujnik indukcyjny M8",k:"10018133",cat:"Czujniki"},{id:4,n:"Czujnik indukcyjny M12",k:"10018137",cat:"Czujniki"},{id:5,n:"Czytnik kart lojalnościowych",k:"10019143",cat:"Druk i Karta"},{id:6,n:"Czytnik kart Mk2",k:"10030391",cat:"Druk i Karta"},{id:7,n:"Drukarka Epson",k:"700236",cat:"Druk i Karta"},{id:8,n:"Fotokomórka rozruchowa",k:"1076486",cat:"Czujniki"},{id:9,n:"Interfejs Epson",k:"700237",cat:"Druk i Karta"},{id:10,n:"Kabel USB A-B 1.8m",k:"CB-USB-A-B-180",cat:"Komunikacja"},{id:11,n:"Kamera ARC EMC",k:"10017938",cat:"Identyfikacja"},{id:12,n:"Klapa obrotowa X2",k:"10017132",cat:"Mechanika"},{id:13,n:"Klapa obrotowa X3",k:"10017436",cat:"Mechanika"},{id:14,n:"Klucz magnetyczny",k:"380346",cat:"Narzędzia"},{id:15,n:"Klucz trójkątny",k:"1073890",cat:"Narzędzia"},{id:16,n:"Łańcuch długi PET",k:"850-34-PET",cat:"Napęd"},{id:17,n:"Łańcuch krótki PET",k:"625-25-PET",cat:"Napęd"},{id:18,n:"Wyłącznik magnetyczny",k:"10012515",cat:"Elektryczne"},{id:19,n:"Odbłyśnik E39-R42",k:"10011291",cat:"Identyfikacja"},{id:20,n:"Pas podajnika",k:"10017568",cat:"Napęd"},{id:21,n:"Pas przenośnika Proline",k:"10014234",cat:"Napęd"},{id:22,n:"Pas tylny Proline",k:"10016947",cat:"Napęd"},{id:23,n:"Pasek klinowy eXtend",k:"10029936",cat:"Napęd"},{id:24,n:"Pasek klinowy 8mm",k:"700351",cat:"Napęd"},{id:25,n:"PCBA wykrywacz metalu",k:"10014821S",cat:"Elektronika"},{id:26,n:"Płyta kontrolna PCBA",k:"10026751S",cat:"Elektronika"},{id:27,n:"Płyta sortera I/O 2",k:"10011255",cat:"Elektronika"},{id:28,n:"Podajnik Assy RVM",k:"10012664",cat:"Mechanika"},{id:29,n:"Pojemnik kosz 800x600",k:"800600B",cat:"Pojemniki"},{id:30,n:"Silnik 24V 40rpm",k:"1075738",cat:"Silniki"},{id:31,n:"Silnik pasa Bosch",k:"10010946",cat:"Silniki"},{id:32,n:"Silnik przenośnika",k:"10027202",cat:"Silniki"},{id:33,n:"Silnik przesłony HL2",k:"10011181",cat:"Silniki"},{id:34,n:"Sorter MIX Lewy",k:"10026513",cat:"Sortowanie"},{id:35,n:"Sorter MIX eXtend",k:"10024703",cat:"Sortowanie"},{id:36,n:"Sorter MIX Prawy",k:"10014853",cat:"Sortowanie"},{id:37,n:"Wlot kurtyna",k:"10030988",cat:"Mechanika"},{id:38,n:"Wlot stożek",k:"10030965",cat:"Mechanika"},{id:39,n:"Wyłącznik bezpieczeństwa",k:"380345",cat:"Elektryczne"},{id:40,n:"Wyłącznik GMK AB",k:"1074820",cat:"Elektryczne"},{id:41,n:"Zamek trójkątny",k:"1073494",cat:"Mechanika"},{id:42,n:"Zasilacz 24V 13.4A",k:"10026911",cat:"Elektryczne"},{id:43,n:"Żarówka 24-30V",k:"3393399",cat:"Elektryczne"},
+{id:44,n:"Falownik 1.5kW 230V",k:"700357",cat:"Elektryczne"},
+{id:45,n:"Filtr falownika 1.5kW",k:"700358",cat:"Elektryczne"},
+{id:46,n:"Bezpiecznik 10A SLOW",k:"1076553",cat:"Elektryczne"},
+{id:47,n:"Bezpiecznik 3A 32V",k:"10020877",cat:"Elektryczne"},
+{id:48,n:"Przekaźnik bezpieczeństwa",k:"10011281",cat:"Elektryczne"},
+{id:49,n:"Ekran dotykowy 10.4",k:"10011588",cat:"Elektronika"},
+{id:50,n:"Kamera KS-2S543",k:"10026645",cat:"Elektronika"},
+{id:51,n:"SDrop Lewy 1-fazowy",k:"10025300",cat:"Mechanika"},
+{id:52,n:"SDrop Prawy 1-fazowy",k:"10025304",cat:"Mechanika"},
+{id:53,n:"Sprężyna gazowa",k:"10022366",cat:"Mechanika"}];
 var _magData=null,_magFilter='',_magOpenId=null;
 function magLoad(){try{var v=localStorage.getItem('rv_mag2');if(v)return JSON.parse(v);}catch(e){}var d={};MAG_PARTS.forEach(function(p){d[p.id]={qty:0,min:1,photo:null};});return d;}
 function magSave(){try{localStorage.setItem('rv_mag2',JSON.stringify(_magData));}catch(e){}}
@@ -3413,30 +3423,61 @@ function mainMicNorm(s) {
 
 // Словарь русских синонимов → польские слова для поиска
 var RU_SYN = {
-  // Части
-  'passik':'pasek',   'ремень':'pas',      'пасик':'pasek',
-  'чуйник':'czujnik', 'датчик':'czujnik',  'сенсор':'czujnik',
-  'сортер':'sorter',  'плата':'plyta',     'контроллер':'plyta',
-  'двигатель':'silnik','мотор':'silnik',   'движок':'silnik',
-  'замок':'zamek',    'засов':'zamek',     'ключ':'klucz',
-  'камера':'kamera',  'ридер':'czytnik',   'считыватель':'czytnik',
-  'цепь':'lancuch',   'цепочка':'lancuch', 'лента':'pas',
-  'принтер':'drukarka','блок питания':'zasilacz','блок':'zasilacz',
-  'лампа':'zarowka',  'лампочка':'zarowka','предохранитель':'wylacznik',
-  'выключатель':'wylacznik','кнопка':'wylacznik',
-  // Usterka
-  'не работает':'nie dziala', 'сломался':'uszkodzony', 'порвался':'zerwany',
-  'не крутится':'nie obraca', 'заклинило':'zaciety',   'скрипит':'skrzypi',
-  'нет сигнала':'brak sygnalu','слабый':'slaby',        'грязный':'zabrudzony',
-  'износился':'zuzyty',       'погнутый':'pogiety',     'треснул':'pekniecie',
-  // Co zrobiono
-  'заменил':'wymieniono',  'заменили':'wymieniono',  'поменял':'wymieniono',
-  'почистил':'wyczyszczono','проверил':'sprawdzono',  'отрегулировал':'wyregulowano',
-  'смазал':'nasmarowano',  'подтянул':'dokrecono',   'отремонтировал':'naprawiono',
-  'установил':'zamontowano','снял':'zdemontowano',    'новый':'nowy',
-  // Serwis
-  'гарантия':'gwarancja',  'гарантийный':'gwarancyjny',
-  'техобслуживание':'przeglad','осмотр':'przeglad',
+  // Детали
+  'датчик':'czujnik', 'чуйник':'czujnik', 'сенсор':'czujnik',
+  'фотоэлемент':'fotokomurka', 'фотодатчик':'fotokomurka',
+  'ремень':'pas', 'пассик':'pasek', 'пас':'pas',
+  'цепь':'lancuch', 'цепочка':'lancuch',
+  'двигатель':'silnik', 'мотор':'silnik', 'движок':'silnik',
+  'шестерня':'kolo', 'звёздочка':'kolo',
+  'плата':'plyta', 'контроллер':'plyta',
+  'принтер':'drukarka', 'считыватель':'czytnik', 'ридер':'czytnik',
+  'камера':'kamera', 'сканер':'skaner',
+  'заслонка':'klapa', 'клапан':'klapa',
+  'сортер':'sorter', 'сортировщик':'sorter',
+  'компрессор':'zgniatarka', 'зжималка':'zgniatarka',
+  'выключатель':'wylacznik', 'кнопка':'przycisk',
+  'реле':'przekaznik', 'предохранитель':'bezpiecznik',
+  'блок питания':'zasilacz', 'бп':'zasilacz', 'источник':'zasilacz',
+  'частотник':'falownik', 'инвертор':'falownik',
+  'конвейер':'przenosnik', 'транспортёр':'przenosnik',
+  'подающий':'podajnik', 'подача':'podajnik',
+  'замок':'zamek', 'ключ':'klucz',
+  'лампочка':'zarowka', 'лампа':'zarowka',
+  'контейнер':'pojemnik', 'корзина':'pojemnik', 'кош':'pojemnik',
+  'экран':'ekran', 'дисплей':'ekran',
+  'роутер':'router', 'модем':'modem',
+  'кабель':'kabel', 'провод':'kabel', 'шнур':'kabel',
+  'адаптер':'adapter', 'переходник':'adapter',
+  'пружина':'sprezyna', 'амортизатор':'amortyzator',
+  'дверь':'drzwi', 'дверца':'drzwi',
+  'подшипник':'lozysko', 'вал':'wal',
+  // Действия
+  'заменил':'wymieniono', 'заменили':'wymieniono', 'поменял':'wymieniono', 'замінили':'wymieniono',
+  'почистил':'wyczyszczono', 'очистил':'wyczyszczono', 'почищено':'wyczyszczono',
+  'проверил':'sprawdzono', 'проверили':'sprawdzono',
+  'отрегулировал':'wyregulowano', 'отрегулировали':'wyregulowano', 'регулировал':'wyregulowano',
+  'законтрил':'zabezpieczono', 'подтянул':'dokrecono', 'затянул':'dokrecono', 'подкрутил':'dokrecono',
+  'смазал':'nasmarowano', 'смазали':'nasmarowano',
+  'установил':'zamontowano', 'поставил':'zamontowano', 'вставил':'zamontowano',
+  'снял':'zdemontowano', 'демонтировал':'zdemontowano',
+  'отремонтировал':'naprawiono', 'починил':'naprawiono',
+  'откалибровал':'skalibrowano', 'настроил':'skonfigurowano',
+  'перезагрузил':'zresetowano', 'сбросил':'zresetowano',
+  // Проблемы
+  'не работает':'nie dziala', 'сломался':'uszkodzony', 'неисправен':'niesprawny',
+  'порвался':'zerwany', 'порван':'zerwany',
+  'заклинило':'zablokowany', 'застрял':'zablokowany',
+  'не крутится':'nie obraca', 'не вращается':'nie obraca',
+  'грязный':'zabrudzony', 'загрязнён':'zabrudzony',
+  'износился':'zuzyty', 'изношен':'zuzyty',
+  'нет сигнала':'brak sygnalu', 'нет связи':'brak polaczenia',
+  'перегрев':'przegrzanie', 'перегрелся':'przegrzanie',
+  'слабый':'slaby', 'треснул':'pekniecie', 'погнутый':'pogiety',
+  // Типы сервиса
+  'гарантия':'gwarancja', 'гарантийный':'gwarancyjny',
+  'техобслуживание':'przeglad', 'осмотр':'przeglad', 'то':'przeglad',
+  'плановый':'planowy', 'аварийный':'awaryjna',
 };
 
 function mainMicTranslate(text) {
