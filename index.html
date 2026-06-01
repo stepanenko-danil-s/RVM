@@ -4936,6 +4936,71 @@ function setAcc(id) {
   });
 }
 
+
+// Сравнение адреса GPS с базой магазинов
+function shopNorm(s) {
+  return (s||'').toLowerCase()
+    .replace(/ą/g,'a').replace(/ę/g,'e').replace(/ó/g,'o')
+    .replace(/ś/g,'s').replace(/ź/g,'z').replace(/ż/g,'z')
+    .replace(/ć/g,'c').replace(/ń/g,'n').replace(/ł/g,'l')
+    .replace(/[^a-z0-9 ]/g,' ').replace(/ +/g,' ').trim();
+}
+
+function shopFindByAddress(city, street) {
+  var cityN = shopNorm(city);
+  var streetN = shopNorm(street);
+  var best = null, bestScore = 0;
+  SHOPS_DB.forEach(function(s) {
+    var score = 0;
+    var sCityN = shopNorm(s.city);
+    var sAddrN = shopNorm(s.addr);
+    if (cityN && sCityN === cityN) score += 10;
+    else if (cityN && sCityN.indexOf(cityN) >= 0) score += 6;
+    if (streetN && sAddrN.length > 3) {
+      streetN.split(' ').filter(function(w){return w.length>3;}).forEach(function(w){
+        if (sAddrN.indexOf(w) >= 0) score += 5;
+      });
+    }
+    if (score > bestScore) { bestScore = score; best = s; }
+  });
+  return bestScore >= 15 ? best : null;
+}
+
+// Переопределяем функцию GPS чтобы после Overpass искала в базе
+var _origShopFetchNearby = shopFetchNearby;
+shopFetchNearby = function(lat, lon, radius) {
+  // Сначала ищем адрес через nominatim
+  var status = document.getElementById('shopStatus');
+  if (status) status.textContent = 'Sprawdzam adres...';
+  
+  fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat='+lat+'&lon='+lon+'&zoom=16&accept-language=pl')
+  .then(function(r){ return r.json(); })
+  .then(function(data) {
+    var addr = data.address || {};
+    var city = addr.city || addr.town || addr.village || '';
+    var street = (addr.road || '') + ' ' + (addr.house_number || '');
+    
+    // Ищем в нашей базе
+    var found = shopFindByAddress(city, street.trim());
+    if (found) {
+      if (status) status.textContent = 'Znaleziono w bazie: ' + found.chain + ' ' + found.id;
+      shopRenderResults([{
+        brand: found.chain, name: found.chain + ' ' + found.id,
+        city: found.city, street: found.addr, storeId: String(found.id), dist: null
+      }]);
+      // Также uruchamiamy Overpass dla innych sklepów
+    } else {
+      if (status) status.textContent = 'Szukam sklepów w pobliżu...';
+    }
+    // В любом случае запускаем Overpass
+    _origShopFetchNearby(lat, lon, radius);
+  })
+  .catch(function() {
+    // Nominatim недоступен - только Overpass
+    _origShopFetchNearby(lat, lon, radius);
+  });
+};
+
 </script>
 </body>
 </html>
