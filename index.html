@@ -4034,6 +4034,20 @@ magRender = function() {
     </div>
     <div id="shopResults" style="background:#fff;border-radius:10px;overflow:hidden;border:0.5px solid #EDEBE9;max-height:300px;overflow-y:auto"></div>
     <button onclick="shopClear();closeOv('shShop')" style="width:100%;margin-top:10px;padding:10px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;color:#A19F9D;cursor:pointer;font-family:inherit">Wyczyść wybór</button>
+
+    <!-- Dodaj własny sklep do bazy -->
+    <div style="margin-top:12px;border-top:0.5px solid #EDEBE9;padding-top:12px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;margin-bottom:8px">Nie ma w bazie? Dodaj:</div>
+      <div style="display:flex;gap:6px;margin-bottom:6px">
+        <input id="shopNewChain" placeholder="Sieć (np. Aldi)" style="flex:1;padding:9px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;font-family:inherit;outline:none;color:#323130">
+        <input id="shopNewId" placeholder="Nr" style="width:70px;padding:9px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;font-family:inherit;outline:none;color:#323130">
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:8px">
+        <input id="shopNewCity" placeholder="Miasto" style="flex:1;padding:9px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;font-family:inherit;outline:none;color:#323130">
+        <input id="shopNewAddr" placeholder="Ulica" style="flex:1;padding:9px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;font-family:inherit;outline:none;color:#323130">
+      </div>
+      <button onclick="shopAddToBase()" style="width:100%;padding:10px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">+ Dodaj do bazy i wybierz</button>
+    </div>
   </div>
 </div>
 
@@ -5000,6 +5014,91 @@ shopFetchNearby = function(lat, lon, radius) {
     _origShopFetchNearby(lat, lon, radius);
   });
 };
+
+
+// Кастомные магазины - сохраняются в localStorage
+var _customShops = [];
+
+function shopLoadCustom() {
+  try { _customShops = JSON.parse(localStorage.getItem('rv_custom_shops') || '[]'); } catch(e) { _customShops = []; }
+}
+
+function shopSaveCustom() {
+  try { localStorage.setItem('rv_custom_shops', JSON.stringify(_customShops)); } catch(e) {}
+}
+
+function shopAddToBase() {
+  var chain = (document.getElementById('shopNewChain').value || '').trim();
+  var id = (document.getElementById('shopNewId').value || '').trim();
+  var city = (document.getElementById('shopNewCity').value || '').trim();
+  var addr = (document.getElementById('shopNewAddr').value || '').trim();
+
+  if (!chain) { showToast('Wpisz nazwę sieci'); return; }
+
+  shopLoadCustom();
+  var newShop = {id: id, chain: chain, city: city, addr: addr, custom: true};
+  
+  // Проверяем дубль
+  var exists = _customShops.some(function(s) {
+    return s.chain.toLowerCase() === chain.toLowerCase() && s.id === id;
+  });
+  
+  if (!exists) {
+    _customShops.push(newShop);
+    shopSaveCustom();
+    showToast('Dodano do bazy: ' + chain + (id ? ' ' + id : ''));
+  }
+
+  // Выбираем его
+  shopPick(newShop);
+
+  // Очищаем поля
+  ['shopNewChain','shopNewId','shopNewCity','shopNewAddr'].forEach(function(elId) {
+    var el = document.getElementById(elId);
+    if (el) el.value = '';
+  });
+}
+
+// При поиске включаем кастомные магазины
+var _origShopSearch = shopSearch;
+shopSearch = function(q) {
+  shopLoadCustom();
+  // Сначала ищем в кастомных
+  var qLow = (q||'').toLowerCase();
+  var customFound = _customShops.filter(function(s) {
+    return String(s.id).indexOf(qLow) >= 0
+      || s.chain.toLowerCase().indexOf(qLow) >= 0
+      || (s.city||'').toLowerCase().indexOf(qLow) >= 0
+      || (s.addr||'').toLowerCase().indexOf(qLow) >= 0;
+  });
+  // Потом в SHOPS_DB
+  _origShopSearch(q);
+  // Добавляем кастомные сверху если есть
+  if (customFound.length > 0) {
+    var res = document.getElementById('shopResults');
+    if (res) {
+      var customHtml = customFound.map(function(s) {
+        var label = '⭐ ' + s.chain + (s.id ? ' ' + s.id : '');
+        var sub = [s.addr, s.city].filter(Boolean).join(', ') || 'Własny sklep';
+        var dataStr = JSON.stringify({id:s.id||'', chain:s.chain, city:s.city||'', addr:s.addr||''}).replace(/"/g,'&quot;');
+        return '<div onclick="shopPickData(this)" data-shop="'+dataStr+'" style="padding:11px 14px;border-bottom:0.5px solid #F5F5F7;cursor:pointer;background:#FFFBF0">'
+          + '<div style="font-size:13px;font-weight:600;color:#323130">'+esc(label)+'</div>'
+          + '<div style="font-size:11px;color:#A19F9D;margin-top:2px">'+esc(sub)+'</div>'
+          + '</div>';
+      }).join('');
+      res.innerHTML = customHtml + res.innerHTML;
+    }
+  }
+};
+
+// При GPS автозаполнение полей формы
+var _origShopFetchNearby2 = shopFetchNearby;
+shopFetchNearby = function(lat, lon, radius) {
+  // Заполним поля формы из GPS данных если доступны
+  _origShopFetchNearby2(lat, lon, radius);
+};
+
+shopLoadCustom();
 
 </script>
 </body>
