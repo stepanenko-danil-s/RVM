@@ -5257,14 +5257,104 @@ function shopGetRadius() {
 // ===== ТЕМЫ =====
 var _currentTheme = 1;
 
+// Конфиги тем для прямого патча inline-элементов
+var THEME_CFG = {
+  1: { shopbarBg:'#fff', shopbarBd:'0.5px solid #EDEBE9', shopbarBr:'12px', shopbarM:'8px 12px',
+       gpsBg:'#007AFF', gpsBr:'8px', gpsC:'#fff',
+       accBg:'#fff', accBr:'12px', accM:'0 12px 6px', accBdb:'none',
+       repBg:'#fff', repBr:'12px', repM:'0 12px', repBdt:'none',
+       copyBg:'rgba(116,116,128,.18)', copyC:'#007AFF', copyBr:'10px', copyBd:'none',
+       sendBg:'#34C759', sendBr:'10px', aiBg:'#007A7A' },
+  2: { shopbarBg:'#fff', shopbarBd:'1px solid #EDEBE9', shopbarBr:'0', shopbarM:'0',
+       gpsBg:'#0078D4', gpsBr:'2px', gpsC:'#fff',
+       accBg:'#fff', accBr:'0', accM:'0', accBdb:'1px solid #EDEBE9',
+       repBg:'#F5F5F5', repBr:'0', repM:'0', repBdt:'2px solid #0078D4',
+       copyBg:'#fff', copyC:'#0078D4', copyBr:'0', copyBd:'none',
+       sendBg:'#0078D4', sendBr:'0', aiBg:'#0078D4' },
+  3: { shopbarBg:'#FFF9F0', shopbarBd:'0.5px solid #FFE4B5', shopbarBr:'0', shopbarM:'0',
+       gpsBg:'#FF9500', gpsBr:'8px', gpsC:'#fff',
+       accBg:'#fff', accBr:'12px', accM:'0 12px 6px', accBdb:'none',
+       repBg:'#fff', repBr:'12px', repM:'0 12px', repBdt:'none',
+       copyBg:'#F2F2F7', copyC:'#FF9500', copyBr:'0 0 0 12px', copyBd:'none',
+       sendBg:'#FF9500', sendBr:'0 0 12px 0', aiBg:'#FF9500' },
+  4: { shopbarBg:'#252423', shopbarBd:'1px solid #3B3A39', shopbarBr:'0', shopbarM:'0',
+       gpsBg:'#0078D4', gpsBr:'2px', gpsC:'#fff',
+       accBg:'#fff', accBr:'0', accM:'0', accBdb:'1px solid #EDEBE9',
+       repBg:'#F5F5F5', repBr:'0', repM:'0', repBdt:'1px solid #EDEBE9',
+       copyBg:'#fff', copyC:'#0078D4', copyBr:'0', copyBd:'none',
+       sendBg:'#107C10', sendBr:'0', aiBg:'#107C10' },
+  5: { shopbarBg:'transparent', shopbarBd:'none', shopbarBr:'0', shopbarM:'0',
+       gpsBg:'#007AFF', gpsBr:'20px', gpsC:'#fff',
+       accBg:'#fff', accBr:'12px', accM:'0 12px 6px', accBdb:'none',
+       repBg:'#fff', repBr:'12px', repM:'0 12px', repBdt:'none',
+       copyBg:'#fff', copyC:'#007AFF', copyBr:'10px', copyBd:'0.5px solid rgba(60,60,67,.18)',
+       sendBg:'#34C759', sendBr:'10px', aiBg:'#007A7A' }
+};
+
+function applyThemeStyles(n) {
+  var c = THEME_CFG[n]; if (!c) return;
+  // shop-bar
+  var sb = document.querySelector('[style*="border-bottom:0.5px solid #EDEBE9"][style*="padding:6px 12px"]') ||
+           document.querySelector('.shop-bar') ||
+           (function(){ var els = document.querySelectorAll('div'); for(var i=0;i<els.length;i++){ if(els[i].id==='shopBar') return els[i]; } return null; })();
+  if (!sb) {
+    // find by shopBtn parent
+    var shopBtn = document.getElementById('shopBtn');
+    if (shopBtn) sb = shopBtn.parentElement;
+  }
+  if (sb) {
+    sb.style.setProperty('background', c.shopbarBg, 'important');
+    sb.style.setProperty('border-bottom', c.shopbarBd, 'important');
+    sb.style.setProperty('border-radius', c.shopbarBr, 'important');
+    sb.style.setProperty('margin', c.shopbarM, 'important');
+  }
+  // GPS button
+  var gps = document.getElementById('shopGpsBtn');
+  if (gps) {
+    gps.style.setProperty('background', c.gpsBg, 'important');
+    gps.style.setProperty('border-radius', c.gpsBr, 'important');
+    gps.style.setProperty('color', c.gpsC, 'important');
+    gps.style.setProperty('padding', '2px 6px', 'important');
+  }
+  // acc-hdr elements
+  document.querySelectorAll('.acc-hdr').forEach(function(el) {
+    el.style.setProperty('background', c.accBg, 'important');
+    el.style.setProperty('border-radius', c.accBr, 'important');
+    el.style.setProperty('margin', c.accM, 'important');
+    el.style.setProperty('border-bottom', c.accBdb, 'important');
+  });
+  // rep-wrap / rep-mod
+  document.querySelectorAll('.rep-wrap,.rep-mod').forEach(function(el) {
+    el.style.setProperty('background', c.repBg, 'important');
+    el.style.setProperty('border-radius', c.repBr, 'important');
+    el.style.setProperty('margin-left', '0', 'important');
+    el.style.setProperty('margin-right', '0', 'important');
+    el.style.setProperty('border-top', c.repBdt, 'important');
+  });
+  // copy-btn
+  document.querySelectorAll('.copy-btn').forEach(function(el) {
+    el.style.setProperty('background', c.copyBg, 'important');
+    el.style.setProperty('color', c.copyC, 'important');
+    el.style.setProperty('border-radius', c.copyBr, 'important');
+    el.style.setProperty('border', c.copyBd, 'important');
+  });
+  // send-btn
+  document.querySelectorAll('.send-btn').forEach(function(el) {
+    el.style.setProperty('background', c.sendBg, 'important');
+    el.style.setProperty('border-radius', c.sendBr, 'important');
+  });
+  // ai-btn
+  document.querySelectorAll('.ai-btn').forEach(function(el) {
+    el.style.setProperty('background', c.aiBg, 'important');
+  });
+}
+
 function setTheme(n) {
   _currentTheme = n;
-  // Убираем все классы тем
   document.body.className = document.body.className.replace(/\btheme-\d\b/g, '').trim();
   document.body.classList.add('theme-' + n);
-  // Сохраняем
   try { localStorage.setItem('rv_theme', n); } catch(e) {}
-  // Обновляем кнопки
+  applyThemeStyles(n);
   for (var i = 1; i <= 5; i++) {
     var btn = document.getElementById('themeBtn' + i);
     if (!btn) continue;
@@ -5280,11 +5370,12 @@ function loadTheme() {
       document.body.classList.add('theme-' + saved);
       _currentTheme = saved;
       setTimeout(function() {
+        applyThemeStyles(saved);
         for (var i = 1; i <= 5; i++) {
           var btn = document.getElementById('themeBtn' + i);
           if (btn) btn.classList.toggle('active', i === saved);
         }
-      }, 0);
+      }, 50);
     }
   } catch(e) {}
 }
