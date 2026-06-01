@@ -337,7 +337,68 @@ body.dark .mag-card,.dark .photo-add{background:#1E1E26}
 .set-acc-body.open { display: block; }
 .set-acc-arr { color: #A19F9D; font-size: 12px; transition: transform .25s; }
 .set-acc-arr.open { transform: rotate(180deg); }
-</style></head>
+</style><style id="themesCSS">
+/* ===== ТЕМЫ ===== */
+
+/* T1 — iOS стандартный (default) */
+body.theme-1 { background:#F2F2F7; }
+body.theme-1 .nav { background:#F2F2F7; border-bottom:0.5px solid rgba(60,60,67,.18); }
+body.theme-1 .nav-title { color:#000; font-size:22px; letter-spacing:-.5px; }
+body.theme-1 .shop-bar { background:#fff; border-radius:12px; margin:8px 12px; border-bottom:none; }
+body.theme-1 .shop-btn-gps { background:#007AFF; border-radius:8px; }
+body.theme-1 .acc-hdr { background:#fff; border-radius:12px; margin:0 12px 6px; border-bottom:none; }
+body.theme-1 .rep-wrap { background:#fff; border-radius:12px; margin:0 12px; }
+body.theme-1 .copy-btn { background:rgba(116,116,128,.18); color:#007AFF; border-radius:10px; border:none; }
+body.theme-1 .send-btn { background:#34C759; border-radius:10px; }
+
+/* T2 — Microsoft Fluent */
+body.theme-2 { background:#fff; }
+body.theme-2 .nav { background:#0078D4; border-bottom:none; }
+body.theme-2 .nav-title { color:#fff; font-size:16px; letter-spacing:-.2px; }
+body.theme-2 .shop-bar { background:#fff; border-bottom:1px solid #EDEBE9; border-radius:0; margin:0; }
+body.theme-2 .shop-btn-gps { background:#0078D4; border-radius:2px; }
+body.theme-2 .acc-hdr { background:#fff; border-radius:0; border-bottom:1px solid #EDEBE9; margin:0; }
+body.theme-2 .rep-wrap { background:#F5F5F5; border-top:2px solid #0078D4; border-radius:0; margin:0; }
+body.theme-2 .copy-btn { background:#fff; color:#0078D4; border-radius:0; border:none; border-right:1px solid #EDEBE9; }
+body.theme-2 .send-btn { background:#0078D4; border-radius:0; }
+
+/* T3 — iOS оранжевый акцент */
+body.theme-3 { background:#F2F2F7; }
+body.theme-3 .nav { background:#fff; border-bottom:0.5px solid rgba(60,60,67,.12); }
+body.theme-3 .nav-title { color:#000; font-size:17px; }
+body.theme-3 .shop-bar { background:#FFF9F0; border-bottom:0.5px solid #FFE4B5; border-radius:0; margin:0; }
+body.theme-3 .shop-btn-gps { background:#FF9500; border-radius:8px; }
+body.theme-3 .acc-hdr { background:#fff; border-radius:12px; margin:0 12px 6px; border-bottom:none; }
+body.theme-3 .rep-wrap { background:#fff; border-radius:12px; margin:0 12px; overflow:hidden; }
+body.theme-3 .copy-btn { background:#F2F2F7; color:#FF9500; border-radius:0 0 0 12px; border:none; }
+body.theme-3 .send-btn { background:#FF9500; border-radius:0 0 12px 0; }
+
+/* T4 — Fluent тёмная шапка */
+body.theme-4 { background:#fff; }
+body.theme-4 .nav { background:#201F1E; border-bottom:none; }
+body.theme-4 .nav-title { color:#fff; font-size:16px; }
+body.theme-4 .shop-bar { background:#252423; border-bottom:1px solid #3B3A39; border-radius:0; margin:0; }
+body.theme-4 .shop-bar * { color:#C8C6C4 !important; }
+body.theme-4 .shop-btn-gps { background:#0078D4; border-radius:2px; }
+body.theme-4 .acc-hdr { background:#fff; border-radius:0; border-bottom:1px solid #EDEBE9; margin:0; }
+body.theme-4 .rep-wrap { background:#F5F5F5; border-top:1px solid #EDEBE9; border-radius:0; margin:0; }
+body.theme-4 .copy-btn { background:#fff; color:#0078D4; border-radius:0; border:none; }
+body.theme-4 .send-btn { background:#107C10; border-radius:0; }
+
+/* T5 — iOS крупные заголовки */
+body.theme-5 { background:#F2F2F7; }
+body.theme-5 .nav { background:#F2F2F7; border-bottom:none; padding-top:20px; }
+body.theme-5 .nav-title { color:#000; font-size:28px; font-weight:500; letter-spacing:-.5px; }
+body.theme-5 .shop-bar { background:transparent; border-bottom:none; padding:0 12px 10px; margin:0; }
+body.theme-5 .shop-bar-inner { background:#fff; border-radius:20px; padding:6px 14px; display:flex; align-items:center; gap:8px; }
+body.theme-5 .shop-btn-gps { background:#007AFF; border-radius:20px; }
+body.theme-5 .acc-hdr { background:#fff; border-radius:12px; margin:0 12px 6px; border-bottom:none; }
+body.theme-5 .rep-wrap { background:#fff; border-radius:12px; margin:0 12px; }
+body.theme-5 .copy-btn { background:#fff; color:#007AFF; border:0.5px solid rgba(60,60,67,.18); border-radius:10px; }
+body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
+</style>
+
+</head>
 <body>
 <div style="height:2px;background:linear-gradient(90deg,#003E42,#007A7A,#34DDD0,#007A7A,#003E42);position:sticky;top:0;z-index:81"></div>
 
@@ -848,6 +909,30 @@ body.dark .mag-card,.dark .photo-add{background:#1E1E26}
       <button onclick="closeOv('shSet')" style="background:rgba(118,118,128,.15);border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:rgba(60,60,67,.5);display:flex;align-items:center;justify-content:center;flex-shrink:0">&#215;</button>
     </div>
     <div style="height:1px;background:rgba(60,60,67,.08);margin:10px 0"></div>
+    <!-- Выбор темы -->
+    <div style="margin-bottom:20px">
+      <div style="font-size:13px;font-weight:700;color:#323130;margin-bottom:12px">🎨 Motyw</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <button onclick="setTheme(1)" id="themeBtn1" style="padding:12px 8px;border:2px solid #0078D4;border-radius:10px;background:#F2F2F7;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#000;-webkit-tap-highlight-color:transparent">
+          iOS стандарт
+        </button>
+        <button onclick="setTheme(2)" id="themeBtn2" style="padding:12px 8px;border:1.5px solid #EDEBE9;border-radius:10px;background:#fff;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#323130;-webkit-tap-highlight-color:transparent">
+          <span style="color:#0078D4">■</span> MS Fluent
+        </button>
+        <button onclick="setTheme(3)" id="themeBtn3" style="padding:12px 8px;border:1.5px solid #EDEBE9;border-radius:10px;background:#FFF9F0;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#323130;-webkit-tap-highlight-color:transparent">
+          <span style="color:#FF9500">■</span> iOS оранжевый
+        </button>
+        <button onclick="setTheme(4)" id="themeBtn4" style="padding:12px 8px;border:1.5px solid #EDEBE9;border-radius:10px;background:#201F1E;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#fff;-webkit-tap-highlight-color:transparent">
+          <span style="color:#0078D4">■</span> Fluent Dark
+        </button>
+        <button onclick="setTheme(5)" id="themeBtn5" style="padding:12px 8px;border:1.5px solid #EDEBE9;border-radius:10px;background:#F2F2F7;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#000;-webkit-tap-highlight-color:transparent;grid-column:span 2">
+          iOS крупный заголовок
+        </button>
+      </div>
+    </div>
+    <div style="border-top:0.5px solid #EDEBE9;margin-bottom:16px"></div>
+
+
     <div style="font-size:11px;font-weight:700;color:rgba(60,60,67,.4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Diagnostyka</div>
     <button class="sh-btn" onclick="runDiagnostics()" style="width:100%;text-align:left;display:flex;align-items:center;gap:8px;background:#F7F9FC;border:1.5px solid #DDE0E8">
       <span style="font-size:16px">&#128269;</span>
@@ -5142,6 +5227,44 @@ function shopGetRadius() {
   var el = document.getElementById('shopRadius');
   return el ? parseInt(el.value) : 800;
 }
+
+
+// ===== ТЕМЫ =====
+var _currentTheme = 1;
+
+function setTheme(n) {
+  _currentTheme = n;
+  // Убираем все классы тем
+  document.body.className = document.body.className.replace(/\btheme-\d\b/g, '').trim();
+  document.body.classList.add('theme-' + n);
+  // Сохраняем
+  try { localStorage.setItem('rv_theme', n); } catch(e) {}
+  // Обновляем кнопки
+  for (var i = 1; i <= 5; i++) {
+    var btn = document.getElementById('themeBtn' + i);
+    if (!btn) continue;
+    if (i === n) {
+      btn.style.borderWidth = '2.5px';
+      btn.style.borderColor = i===2||i===4 ? '#0078D4' : i===3 ? '#FF9500' : '#007AFF';
+    } else {
+      btn.style.borderWidth = '1.5px';
+      btn.style.borderColor = '#EDEBE9';
+    }
+  }
+  showToast('Motyw ' + n + ' zastosowany');
+}
+
+function loadTheme() {
+  try {
+    var saved = parseInt(localStorage.getItem('rv_theme') || '1');
+    if (saved >= 1 && saved <= 5) {
+      document.body.classList.add('theme-' + saved);
+      _currentTheme = saved;
+    }
+  } catch(e) {}
+}
+
+loadTheme();
 
 </script>
 </body>
