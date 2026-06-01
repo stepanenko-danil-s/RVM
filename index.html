@@ -4527,6 +4527,54 @@ function shopAutoProc(el) {
 
 function shopPick(s) {
   _currentShop = s;
+  // Если нет номера — спрашиваем вручную
+  if (!s.id) {
+    shopPickConfirm(s);
+    return;
+  }
+  shopPickApply(s);
+}
+
+function shopPickConfirm(s) {
+  // Показываем панель ввода номера
+  var panel = document.getElementById('shopIdPanel');
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.id = 'shopIdPanel';
+    panel.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+    panel.innerHTML = '<div style="background:#fff;border-radius:14px;padding:20px;width:100%;max-width:320px">'
+      + '<div style="font-size:15px;font-weight:700;color:#000;margin-bottom:6px">' + esc(s.chain) + '</div>'
+      + '<div style="font-size:12px;color:#8E8E93;margin-bottom:14px">' + esc((s.city||'') + (s.addr ? ', ' + s.addr : '')) + '</div>'
+      + '<div style="font-size:13px;color:#323130;margin-bottom:8px">Numer sklepu (opcjonalnie):</div>'
+      + '<input id="shopIdInput" type="number" placeholder="np. 5369" style="width:100%;padding:10px 12px;background:#F2F2F7;border:none;border-radius:10px;font-size:16px;font-family:inherit;outline:none;margin-bottom:14px">'
+      + '<div style="display:flex;gap:8px">'
+      + '<button onclick="shopPickWithId(' + JSON.stringify(s).replace(/</g,'\u003c') + ')" style="flex:1;padding:12px;background:#007AFF;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit">Wybierz</button>'
+      + '<button onclick="document.getElementById('shopIdPanel').remove()" style="flex:1;padding:12px;background:#F2F2F7;color:#000;border:none;border-radius:10px;font-size:15px;cursor:pointer;font-family:inherit">Anuluj</button>'
+      + '</div></div>';
+    document.body.appendChild(panel);
+  } else {
+    panel.style.display = 'flex';
+  }
+  setTimeout(function(){ var inp = document.getElementById('shopIdInput'); if(inp) inp.focus(); }, 100);
+}
+
+function shopPickWithId(s) {
+  var inp = document.getElementById('shopIdInput');
+  var inputId = inp ? inp.value.trim() : '';
+  if (inputId) {
+    s.id = parseInt(inputId);
+    // Сохраняем в кастомную базу
+    shopLoadCustom();
+    var exists = _customShops.some(function(c){ return c.chain === s.chain && c.city === s.city && c.addr === s.addr; });
+    if (!exists) { _customShops.push(s); shopSaveCustom(); }
+  }
+  var panel = document.getElementById('shopIdPanel');
+  if (panel) panel.remove();
+  shopPickApply(s);
+}
+
+function shopPickApply(s) {
+  _currentShop = s;
   var label = s.chain + (s.id ? ' ' + s.id : '') + (s.city ? ' — ' + s.city : '') + (s.addr ? ', ' + s.addr : '');
   var btn = document.getElementById('shopBtn');
   if (btn) {
