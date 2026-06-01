@@ -5293,54 +5293,18 @@ var THEME_CFG = {
 
 function applyThemeStyles(n) {
   var c = THEME_CFG[n]; if (!c) return;
-  // shop-bar
-  var sb = document.getElementById('shopBar');
-  if (!sb) { var shopBtn = document.getElementById('shopBtn'); if (shopBtn) sb = shopBtn.parentElement; }
-  if (sb) {
-    sb.style.setProperty('background', c.shopbarBg, 'important');
-    sb.style.setProperty('border-bottom', c.shopbarBd, 'important');
-    sb.style.setProperty('border-radius', c.shopbarBr, 'important');
-    sb.style.setProperty('margin', c.shopbarM, 'important');
-  }
-  // GPS button
-  var gps = document.getElementById('shopGpsBtn');
-  if (gps) {
-    gps.style.setProperty('background', c.gpsBg, 'important');
-    gps.style.setProperty('border-radius', c.gpsBr, 'important');
-    gps.style.setProperty('color', c.gpsC, 'important');
-    gps.style.setProperty('padding', '2px 6px', 'important');
-  }
-  // acc-hdr elements
-  document.querySelectorAll('.acc-hdr').forEach(function(el) {
-    el.style.setProperty('background', c.accBg, 'important');
-    el.style.setProperty('border-radius', c.accBr, 'important');
-    el.style.setProperty('margin', c.accM, 'important');
-    el.style.setProperty('border-bottom', c.accBdb, 'important');
-  });
-  // rep-wrap / rep-mod
-  document.querySelectorAll('.rep-wrap,.rep-mod').forEach(function(el) {
-    el.style.setProperty('background', c.repBg, 'important');
-    el.style.setProperty('border-radius', c.repBr, 'important');
-    el.style.setProperty('margin-left', '0', 'important');
-    el.style.setProperty('margin-right', '0', 'important');
-    el.style.setProperty('border-top', c.repBdt, 'important');
-  });
-  // copy-btn
-  document.querySelectorAll('.copy-btn').forEach(function(el) {
-    el.style.setProperty('background', c.copyBg, 'important');
-    el.style.setProperty('color', c.copyC, 'important');
-    el.style.setProperty('border-radius', c.copyBr, 'important');
-    el.style.setProperty('border', c.copyBd, 'important');
-  });
-  // send-btn
-  document.querySelectorAll('.send-btn').forEach(function(el) {
-    el.style.setProperty('background', c.sendBg, 'important');
-    el.style.setProperty('border-radius', c.sendBr, 'important');
-  });
-  // ai-btn
-  document.querySelectorAll('.ai-btn').forEach(function(el) {
-    el.style.setProperty('background', c.aiBg, 'important');
-  });
+  // Инжектируем <style> тег который перебивает inline стили
+  var el = document.getElementById('_themeOverride');
+  if (!el) { el = document.createElement('style'); el.id = '_themeOverride'; document.head.appendChild(el); }
+  el.textContent = [
+    '#shopBar { background:'+c.shopbarBg+' !important; border-bottom:'+c.shopbarBd+' !important; border-radius:'+c.shopbarBr+' !important; margin:'+c.shopbarM+' !important; }',
+    '#shopGpsBtn { background:'+c.gpsBg+' !important; border-radius:'+c.gpsBr+' !important; color:'+c.gpsC+' !important; padding:2px 6px !important; }',
+    '.acc-hdr { background:'+c.accBg+' !important; border-radius:'+c.accBr+' !important; margin:'+c.accM+' !important; border-bottom:'+c.accBdb+' !important; }',
+    '.rep-wrap,.rep-mod { background:'+c.repBg+' !important; border-radius:'+c.repBr+' !important; border-top:'+c.repBdt+' !important; }',
+    '.copy-btn:not(.ok) { background:'+c.copyBg+' !important; color:'+c.copyC+' !important; border-radius:'+c.copyBr+' !important; border:'+c.copyBd+' !important; }',
+    '.send-btn { background:'+c.sendBg+' !important; border-radius:'+c.sendBr+' !important; }',
+    '.ai-btn { background:'+c.aiBg+' !important; }'
+  ].join('\n');
 }
 
 function setTheme(n) {
