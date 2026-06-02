@@ -434,8 +434,52 @@ body.theme-2 .sec{color:#0078D4 !important;letter-spacing:.2em !important;font-s
   </div>
 </div>
 
-<div id="flowWrap" style="display:none">
+<div id="flowWrap">
 
+<!-- ===== v18: ЗАПИСИ С ПИЛЮЛЯМИ ===== -->
+<div id="entriesWrap" style="padding:8px 0 4px">
+
+  <!-- Список добавленных записей -->
+  <div id="entryCards"></div>
+
+  <!-- Активная запись (редактируется) -->
+  <div id="activeEntry" style="display:none;background:#fff;border-radius:14px;margin:0 0 8px;box-shadow:0 2px 8px rgba(0,0,0,.1);border:0.5px solid #E5E5EA;overflow:hidden">
+
+    <!-- Статус AI -->
+    <div id="aeAIStatus" style="display:none;padding:8px 14px;background:rgba(0,122,122,.06);font-size:12px;color:#007A7A;font-weight:600">▸ AI analizuje...</div>
+
+    <!-- Пилюли -->
+    <div style="padding:10px 12px 6px;display:flex;gap:6px;flex-wrap:wrap;min-height:44px;align-items:center" id="aePills">
+      <div id="aePillEl" onclick="aePillTap('el')" style="display:none"></div>
+      <div id="aePillDef" onclick="aePillTap('def')" style="display:none"></div>
+      <div id="aePillSol" onclick="aePillTap('sol')" style="display:none"></div>
+      <div id="aePlaceholder" style="font-size:12px;color:#A19F9D">Podyktuj lub wpisz opis...</div>
+    </div>
+
+    <!-- Поле ввода -->
+    <div style="padding:0 12px 10px;display:flex;gap:8px;align-items:flex-end">
+      <textarea id="aeInput" placeholder="np. czujnik startu nie działa wymieniono nowy" style="flex:1;min-height:38px;max-height:80px;background:#F5F5F7;border:1.5px solid rgba(0,120,212,.2);border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;resize:none;color:#323130;line-height:1.5" oninput="aeAutoResize(this)"></textarea>
+      <button onclick="aeAI()" style="flex-shrink:0;width:38px;height:38px;background:#007A7A;border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent" title="AI">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,11.5 3.5,15 5,9.5 1,6 6,6"/></svg>
+      </button>
+    </div>
+
+    <!-- OK / Отмена -->
+    <div style="display:flex;border-top:0.5px solid #E5E5EA">
+      <button onclick="aeCancel()" style="flex:1;padding:11px;background:transparent;border:none;border-right:0.5px solid #E5E5EA;font-size:13px;color:#A19F9D;cursor:pointer;font-family:inherit">Anuluj</button>
+      <button onclick="aeOK()" id="aeOKBtn" style="flex:2;padding:11px;background:transparent;border:none;font-size:13px;font-weight:700;color:#0078D4;cursor:pointer;font-family:inherit">OK — dodaj</button>
+    </div>
+  </div>
+
+  <!-- Кнопка + новая запись -->
+  <button onclick="aeNew()" id="aeNewBtn" style="width:100%;padding:12px;background:rgba(0,120,212,.06);border:1.5px dashed rgba(0,120,212,.25);border-radius:12px;font-size:13px;font-weight:600;color:#0078D4;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;-webkit-tap-highlight-color:transparent">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7.5" y1="1" x2="7.5" y2="14"/><line x1="1" y1="7.5" x2="14" y2="7.5"/></svg>
+    Nowa pozycja
+  </button>
+
+</div>
+
+<!-- Модуль Serwis остаётся -->
 <div class="mod" style="margin-bottom:10px" id="serwisBlock">
   <div class="mod-hdr idle" id="hdrS" onclick="toggleModS()">
     <div class="badge idle" id="bdgS" style="font-size:11px;font-weight:900">S</div>
@@ -447,7 +491,7 @@ body.theme-2 .sec{color:#0078D4 !important;letter-spacing:.2em !important;font-s
     <div class="mod-arr" id="arrS">&#8250;</div>
   </div>
   <div class="mod-body" id="bodyS">
-    <div style="display:flex;justify-content:flex-end;padding:6px 10px 0"><button onclick="toggleEditMode('kon')" id="editBtn-kon" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
+    <div style="display:flex;justify-content:flex-end;padding:6px 10px 0"><button onclick="toggleEditMode('kon')" id="editBtn-kon" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1">&#215;</button></div>
     <div class="ilist" id="lst-kon"></div>
     <div style="padding:4px 8px 8px;display:flex;gap:4px">
       <input id="konQuickAdd" placeholder="+ Dodaj aktywnosc..." style="flex:1;background:rgba(118,118,128,.09);border:none;border-radius:10px;padding:7px 10px;font-size:12px;font-family:inherit;outline:none;color:#1C1C1E;min-width:0" onkeydown="if(event.key==='Enter')addKonQuick()">
@@ -456,116 +500,8 @@ body.theme-2 .sec{color:#0078D4 !important;letter-spacing:.2em !important;font-s
   </div>
 </div>
 
-
-
-
-<div class="mod" id="mod1block">
-  <div class="mod-hdr idle" id="hdr1" onclick="toggleMod(0)">
-    <div class="badge idle" id="bdg1">1</div>
-    <div class="mod-info">
-      <div class="mod-ttl" style="font-size:13px">Element</div>
-      <div class="mod-val" id="val1">Wybierz element</div>
-    </div>
-    <button onclick="event.stopPropagation();modMic('el')" style="background:none;border:none;padding:4px;cursor:pointer;color:#0078D4;display:flex;align-items:center;-webkit-tap-highlight-color:transparent" title="Dyktuj"><svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/><line x1="6" y1="17" x2="12" y2="17"/></svg></button>
-    <div class="mod-arr" id="arr1">&#8250;</div>
-  </div>
-  <div class="mod-body" id="body1">
-    <div style="display:flex;justify-content:flex-end;padding:6px 10px 0"><button onclick="toggleEditMode('el')" id="editBtn-el" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
-    <div class="ilist" id="lst-el"></div>
-    <button class="add-own" onclick="openCust('el')">+ Dodaj w&#322;asny</button>
-  </div>
 </div>
 
-<div id="defFlowWrap">
-<div class="mod">
-  <div class="mod-hdr idle" id="hdr2" onclick="toggleMod(1)">
-    <div class="badge idle" id="bdg2">2</div>
-    <div class="mod-info">
-      <div class="mod-ttl">Nieśność</div>
-      <div class="mod-val" id="val2">Wybierz usterk&#281;</div>
-    </div>
-    <button onclick="event.stopPropagation();modMic('def')" style="background:none;border:none;padding:4px;cursor:pointer;color:#0078D4;display:flex;align-items:center;-webkit-tap-highlight-color:transparent" title="Dyktuj"><svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/><line x1="6" y1="17" x2="12" y2="17"/></svg></button>
-    <div class="mod-arr" id="arr2">&#8250;</div>
-  </div>
-  <div class="mod-body" id="body2">
-    <div style="display:flex;justify-content:flex-end;padding:6px 10px 0"><button onclick="aiSuggestDef()" style="background:rgba(0,122,122,.08);border:1px solid rgba(0,122,122,.2);border-radius:8px;color:#007A7A;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;margin-right:4px" style="display:inline-flex;align-items:center;justify-content:center;gap:6px"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polygon points="6.5,1 8,5 12,5 9,8 10,12 6.5,9.5 3,12 4,8 1,5 5,5"/></svg> AI</button><button onclick="toggleEditMode('def')" id="editBtn-def" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
-    <div class="ilist" id="lst-def"></div>
-    <div style="padding:4px 10px 8px;display:flex;gap:6px;align-items:center">
-      <input id="defQuickAdd" placeholder="+ Dodaj własną usterkę..." style="flex:1;background:rgba(118,118,128,.09);border:none;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;color:#1C1C1E" onkeydown="if(event.key==='Enter')addDefQuick()">
-      <button onclick="addDefQuick()" style="background:#007A7A;border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:700;padding:8px 12px;cursor:pointer;white-space:nowrap">OK</button>
-    </div>
-    <button class="add-own" onclick="openCust('def')">+ Dodaj do listy</button>
-  </div>
-</div>
-</div>
-
-<div class="mod">
-  <div class="mod-hdr idle" id="hdr3" onclick="toggleMod(2)">
-    <div class="badge idle" id="bdg3">3</div>
-    <div class="mod-info">
-      <div class="mod-ttl">Co zrobiono? <span style="font-size:11px;font-weight:400;color:rgba(60,60,67,.3)">kilka opcji</span></div>
-      <div class="mod-val" id="val3">Wybierz lub dodaj dzialanie</div>
-    </div>
-    <button onclick="event.stopPropagation();modMic('sol')" style="background:none;border:none;padding:4px;cursor:pointer;color:#0078D4;display:flex;align-items:center;-webkit-tap-highlight-color:transparent" title="Dyktuj"><svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/><line x1="6" y1="17" x2="12" y2="17"/></svg></button>
-    <div class="mod-arr" id="arr3">&#8250;</div>
-  </div>
-  <div class="mod-body" id="body3">
-    <div class="sol-ban" id="solBan"></div>
-    <div style="display:flex;justify-content:flex-end;padding:4px 10px 0"><button onclick="aiSuggestSol()" style="background:rgba(0,122,122,.08);border:1px solid rgba(0,122,122,.2);border-radius:8px;color:#007A7A;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;margin-right:4px">&#10024; AI</button><button onclick="toggleEditMode('sol')" id="editBtn-sol" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
-    <div class="ilist" id="lst-sol"></div>
-    <div style="padding:4px 10px 8px;display:flex;gap:6px;align-items:center">
-      <input id="solQuickAdd" placeholder="+ Dodaj wlasne dzialanie..." style="flex:1;background:rgba(118,118,128,.09);border:none;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;color:#1C1C1E" onkeydown="if(event.key==='Enter')addSolQuick()">
-      <button onclick="addSolQuick()" style="background:#007A7A;border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:700;padding:8px 12px;cursor:pointer;white-space:nowrap">OK</button>
-    </div>
-  </div>
-</div>
-
-<div id="partsSection" style="display:none">
-<div class="parts-mod">
-  <div class="parts-hdr" onclick="togParts()">
-    <div style="width:34px;height:34px;border-radius:10px;background:rgba(0,122,122,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#007A7A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="3" rx="1"/><rect x="2" y="11" width="14" height="3" rx="1"/><line x1="5" y1="4" x2="5" y2="6"/><line x1="9" y1="4" x2="9" y2="6"/><line x1="13" y1="4" x2="13" y2="6"/></svg></div>
-    <div style="flex:1">
-      <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(60,60,67,.5);margin-bottom:2px">Cz&#281;&#347;ci zamienne <span id="partsModeTag" style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:rgba(52,199,89,.12);color:#34C759;margin-left:6px;border:1px solid rgba(52,199,89,.25);transition:all .2s"></span></div>
-      <div style="font-size:12px;color:rgba(20,20,50,.45);margin-top:2px" id="partsVal">Dotknij aby wybra&#263;</div>
-    </div>
-    <div style="font-size:16px;color:rgba(60,60,67,.22);transition:transform .2s" id="partsArr">&#8250;</div>
-    <button onclick="event.stopPropagation();openSh('shParts')" style="background:none;border:none;color:#007A7A;font-size:12px;font-weight:600;padding:4px 8px;cursor:pointer">+ Dodaj</button>
-  </div>
-  <div class="ptab-row"><button onclick="ptab('c')" id="ptb-c" class="on">Części</button><button onclick="ptab('m')" id="ptb-m">Magazyn</button></div>
-  <div id="ptb-c-body"><div class="parts-body" id="partsBody">
-    <div id="partsList" style="max-height:38vh;overflow-y:auto;padding:6px 10px 10px"></div>
-  </div></div></div><!-- /ptb-c-body -->
-  <div id="ptb-m-body" style="display:none">
-    <!-- Кнопки действий -->
-    <div style="display:flex;gap:6px;padding:8px 8px 4px">
-      <button onclick="magScanQR()" style="flex:1;padding:9px 6px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;-webkit-tap-highlight-color:transparent">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="1" width="4" height="4" rx="0.5"/><rect x="9" y="1" width="4" height="4" rx="0.5"/><rect x="1" y="9" width="4" height="4" rx="0.5"/><line x1="9" y1="9" x2="9" y2="9.01"/><line x1="11" y1="9" x2="13" y2="9"/><line x1="9" y1="11" x2="9" y2="13"/><line x1="11" y1="11" x2="13" y2="13"/><line x1="11" y1="9" x2="11" y2="11"/></svg>
-        Skanuj QR
-      </button>
-      <button onclick="magAddNew()" style="flex:1;padding:9px 6px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;-webkit-tap-highlight-color:transparent">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
-        Dodaj część
-      </button>
-      <button onclick="magPrintQR()" style="flex:1;padding:9px 6px;background:#605E5C;color:#fff;border:none;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;-webkit-tap-highlight-color:transparent">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="4" width="10" height="7" rx="1"/><path d="M4 4V2h6v2"/><line x1="4" y1="8" x2="10" y2="8"/></svg>
-        QR PDF
-      </button>
-      <button onclick="magShowTable()" style="flex:1;padding:9px 6px;background:#8764B8;color:#fff;border:none;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;-webkit-tap-highlight-color:transparent">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="1" width="12" height="12" rx="1"/><line x1="1" y1="5" x2="13" y2="5"/><line x1="1" y1="9" x2="13" y2="9"/><line x1="5" y1="1" x2="5" y2="13"/></svg>
-        Tabela
-      </button>
-      <button onclick="magShowHistory()" style="flex:1;padding:9px 6px;background:#986F0B;color:#fff;border:none;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;-webkit-tap-highlight-color:transparent">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><polyline points="7,4 7,7 9,9"/></svg>
-        Historia
-      </button>
-    </div>
-    <div style="padding:0 8px 4px"><div style="display:flex;align-items:center;gap:8px;background:#F5F5F7;border-radius:10px;padding:8px 12px"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#C8C6C4" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="4"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg><input id="magQ" placeholder="Szukaj..." oninput="magSearch(this.value)" autocomplete="off" style="flex:1;border:none;background:none;font-size:13px;font-family:inherit;outline:none;color:#323130"></div></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:0 8px 6px"><div style="background:#F5F5F7;border-radius:8px;padding:8px;text-align:center"><div style="font-size:18px;font-weight:800;color:#323130" id="mst1">43</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;margin-top:2px">Pozycji</div></div><div style="background:#F5F5F7;border-radius:8px;padding:8px;text-align:center"><div style="font-size:18px;font-weight:800;color:#FF9500" id="mst2">0</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;margin-top:2px">Malo</div></div><div style="background:#F5F5F7;border-radius:8px;padding:8px;text-align:center"><div style="font-size:18px;font-weight:800;color:#FF3B30" id="mst3">0</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;margin-top:2px">Brak</div></div></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 8px 8px" id="magGrid"></div>
-    <input type="file" id="magCamInp" accept="image/*" capture="environment" style="display:none" onchange="mshPhoto(this)">
-  </div>
-</div>
-  </div>
 </div>
 
 </div>
@@ -2470,6 +2406,7 @@ function _buildAIExp(){
       serwisowy:{pozycje:eS.map(function(e){return{element:e.el,niesprawnosc:_arr(e.def),serwis:_arr(e.kon),wykonano:_arr(e.sol)};}),czesci:spS}
     }
   },null,2);
+  aeRenderCards();
 }
 function genAIExp(){
   var txt=_buildAIExp();
@@ -5337,6 +5274,226 @@ function setTheme(n) {
   showToast('Motyw ' + n + ' zastosowany');
 }
 
+
+// ===== v18 ENTRY SYSTEM =====
+// ===== v18: ACTIVE ENTRY (ЗАПИСИ С ПИЛЮЛЯМИ) =====
+
+var _aeData = { el: null, def: null, sol: null }; // текущая запись
+var _aeEditing = null; // индекс редактируемой записи (null = новая)
+
+// Стиль пилюли
+function _aePillStyle(color) {
+  return 'display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;' +
+    'background:' + color + ';color:#fff;border:none;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
+}
+
+// Обновить пилюли
+function aeRenderPills() {
+  var d = _aeData;
+  var ph = document.getElementById('aePlaceholder');
+  var hasPill = d.el || d.def || d.sol;
+  if (ph) ph.style.display = hasPill ? 'none' : 'block';
+
+  var pEl = document.getElementById('aePillEl');
+  var pDef = document.getElementById('aePillDef');
+  var pSol = document.getElementById('aePillSol');
+
+  if (pEl) {
+    pEl.style.display = d.el ? 'inline-flex' : 'none';
+    pEl.innerHTML = d.el ? '<span style="' + _aePillStyle('#0078D4') + '">' + esc(d.el) + ' ×</span>' : '';
+  }
+  if (pDef) {
+    pDef.style.display = d.def ? 'inline-flex' : 'none';
+    pDef.innerHTML = d.def ? '<span style="' + _aePillStyle('#E53935') + '">' + esc(d.def) + ' ×</span>' : '';
+  }
+  if (pSol) {
+    pSol.style.display = d.sol ? 'inline-flex' : 'none';
+    pSol.innerHTML = d.sol ? '<span style="' + _aePillStyle('#34C759') + '">' + esc(d.sol) + ' ×</span>' : '';
+  }
+}
+
+// Нажатие на пилюлю — открыть выбор
+function aePillTap(col) {
+  var title = col==='el' ? 'Element' : col==='def' ? 'Usterka' : 'Co zrobiono';
+  var items = (D[col] || []).map(function(x){ return x.pl; });
+  // Показать простой лист выбора
+  var sh = document.getElementById('shAEPick');
+  if (!sh) {
+    sh = document.createElement('div');
+    sh.id = 'shAEPick';
+    sh.className = 'ov';
+    sh.style.cssText = 'display:none';
+    sh.onclick = function(e){ if(e.target===sh) closeOv('shAEPick'); };
+    document.body.appendChild(sh);
+  }
+  var html = '<div class="sh" style="max-height:70vh;overflow-y:auto">';
+  html += '<div class="sh-bar"></div>';
+  html += '<div style="font-size:15px;font-weight:700;margin-bottom:12px">' + title + '</div>';
+  html += '<div style="display:flex;gap:6px;flex-wrap:wrap">';
+  items.forEach(function(item) {
+    var active = _aeData[col] === item;
+    html += '<button onclick="aePickItem(\'' + col + '\',\'' + item.replace(/'/g,"\\'") + '\')" style="padding:7px 14px;border-radius:20px;border:1.5px solid ' + (active?'#0078D4':'#EDEBE9') + ';background:' + (active?'#0078D4':'#fff') + ';color:' + (active?'#fff':'#323130') + ';font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">' + esc(item) + '</button>';
+  });
+  // Кнопка убрать
+  html += '<button onclick="aePickItem(\'' + col + '\',null)" style="padding:7px 14px;border-radius:20px;border:1.5px solid #EDEBE9;background:#fff;color:#A19F9D;font-size:12px;cursor:pointer;font-family:inherit">× Usuń</button>';
+  html += '</div></div>';
+  sh.innerHTML = html;
+  sh.style.display = 'flex';
+}
+
+function aePickItem(col, val) {
+  _aeData[col] = val;
+  aeRenderPills();
+  closeOv('shAEPick');
+}
+
+// Авто-resize textarea
+function aeAutoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 80) + 'px';
+}
+
+// AI анализ
+async function aeAI() {
+  var txt = (document.getElementById('aeInput').value || '').trim();
+  if (!txt) { showToast('Wpisz opis'); return; }
+
+  var st = document.getElementById('aeAIStatus');
+  if (st) { st.style.display='block'; st.textContent='▸ AI analizuje...'; }
+
+  try {
+    var elList = D.el.map(function(x){return x.pl;}).slice(0,80).join(', ');
+    var defList = D.def.map(function(x){return x.pl;}).slice(0,80).join(', ');
+    var solList = D.sol.map(function(x){return x.pl;}).slice(0,80).join(', ');
+
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 200,
+        messages: [{
+          role: 'user',
+          content: 'Serwisant RVM. Jedna fraza = jeden wpis. Zwroc JSON {"el":"...","def":"...","sol":"..."}.\n' +
+            'Wybieraj z list lub krotko po polsku.\n' +
+            'Elementy: ' + elList + '\nUsterki: ' + defList + '\nDzialania: ' + solList + '\n' +
+            'Opis: ' + txt + '\nOdpowiedz TYLKO JSON.'
+        }]
+      })
+    });
+    var data = await resp.json();
+    var raw = (data.content && data.content[0] ? data.content[0].text : '{}').replace(/```json|```/g,'').trim();
+    var p = JSON.parse(raw);
+    if (p.el) _aeData.el = p.el;
+    if (p.def) _aeData.def = p.def;
+    if (p.sol) _aeData.sol = p.sol;
+    aeRenderPills();
+    if (st) st.style.display = 'none';
+  } catch(e) {
+    if (st) st.style.display = 'none';
+    showToast('Błąd AI');
+  }
+}
+
+// Открыть новую запись
+function aeNew() {
+  _aeData = { el: null, def: null, sol: null };
+  _aeEditing = null;
+  var inp = document.getElementById('aeInput');
+  if (inp) inp.value = '';
+  aeRenderPills();
+  var ae = document.getElementById('activeEntry');
+  if (ae) ae.style.display = 'block';
+  var nb = document.getElementById('aeNewBtn');
+  if (nb) nb.style.display = 'none';
+  setTimeout(function(){ var i=document.getElementById('aeInput'); if(i)i.focus(); }, 300);
+}
+
+// OK — добавить запись
+function aeOK() {
+  var d = _aeData;
+  if (!d.el && !d.def && !d.sol) {
+    // Попробуем добавить текст как есть
+    var txt = (document.getElementById('aeInput').value||'').trim();
+    if (!txt) { showToast('Dodaj coś'); return; }
+    d.sol = txt;
+  }
+  // Сохраняем в entries
+  if (_aeEditing !== null) {
+    entries[_aeEditing] = { el:d.el||'', def:[d.def||''].filter(Boolean), sol:[d.sol||''].filter(Boolean), kon:[], mode:curMode, ts:Date.now() };
+  } else {
+    entries.push({ el:d.el||'', def:[d.def||''].filter(Boolean), sol:[d.sol||''].filter(Boolean), kon:[], mode:curMode, ts:Date.now() });
+  }
+  ss('rv_e', entries);
+  aeClose();
+  aeRenderCards();
+  renderReport();
+  showToast('Dodano');
+}
+
+// Отмена
+function aeCancel() {
+  aeClose();
+}
+
+function aeClose() {
+  var ae = document.getElementById('activeEntry');
+  if (ae) ae.style.display = 'none';
+  var nb = document.getElementById('aeNewBtn');
+  if (nb) nb.style.display = 'flex';
+  _aeEditing = null;
+}
+
+// Рендер карточек записей
+function aeRenderCards() {
+  var wrap = document.getElementById('entryCards');
+  if (!wrap) return;
+  if (!entries.length) { wrap.innerHTML = ''; return; }
+  var html = '';
+  entries.forEach(function(e, i) {
+    html += '<div style="background:#fff;border-radius:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);border:0.5px solid #E5E5EA;overflow:hidden">';
+    html += '<div style="padding:10px 12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">';
+    html += '<span style="width:22px;height:22px;border-radius:50%;background:' + (e.mode==='G'?'#34C759':'#FF9500') + ';color:#fff;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">' + (i+1) + '</span>';
+    if (e.el) html += '<span style="padding:4px 10px;border-radius:20px;background:#E3F0FF;color:#0078D4;font-size:11px;font-weight:600">' + esc(e.el) + '</span>';
+    e.def.forEach(function(d){ html += '<span style="padding:4px 10px;border-radius:20px;background:#FFEBEE;color:#E53935;font-size:11px;font-weight:600">' + esc(d) + '</span>'; });
+    e.sol.forEach(function(s){ html += '<span style="padding:4px 10px;border-radius:20px;background:#E8F5E9;color:#34C759;font-size:11px;font-weight:600">' + esc(s) + '</span>'; });
+    html += '</div>';
+    html += '<div style="display:flex;border-top:0.5px solid #F0F0F0">';
+    html += '<button onclick="aeEdit(' + i + ')" style="flex:1;padding:8px;background:none;border:none;font-size:11px;color:#0078D4;cursor:pointer;font-family:inherit">Edytuj</button>';
+    html += '<button onclick="aeDel(' + i + ')" style="flex:1;padding:8px;background:none;border:none;border-left:0.5px solid #F0F0F0;font-size:11px;color:#E53935;cursor:pointer;font-family:inherit">Usuń</button>';
+    html += '</div></div>';
+  });
+  wrap.innerHTML = html;
+}
+
+// Редактировать запись
+function aeEdit(i) {
+  var e = entries[i];
+  _aeEditing = i;
+  _aeData = { el:e.el||null, def:e.def[0]||null, sol:e.sol[0]||null };
+  var inp = document.getElementById('aeInput');
+  if (inp) inp.value = '';
+  aeRenderPills();
+  var ae = document.getElementById('activeEntry');
+  if (ae) ae.style.display = 'block';
+  var nb = document.getElementById('aeNewBtn');
+  if (nb) nb.style.display = 'none';
+}
+
+// Удалить запись
+function aeDel(i) {
+  entries.splice(i, 1);
+  ss('rv_e', entries);
+  aeRenderCards();
+  renderReport();
+}
+
+// Инициализация при загрузке
+function aeInit() {
+  aeRenderCards();
+}
+
+
 function loadTheme() {
   try {
     var saved = parseInt(localStorage.getItem('rv_theme') || '1');
@@ -5348,6 +5505,7 @@ function loadTheme() {
 }
 
 loadTheme();
+aeInit();
 
 
 function shopSaveNum() {
