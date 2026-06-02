@@ -3432,11 +3432,19 @@ function setModeNG() {
       <button onclick="closeOv('shMainMic')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">×</button>
     </div>
     <div style="font-size:11px;color:#A19F9D;margin-bottom:10px">Opisz element, usterkę i co zrobiono — jednym zdaniem</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <span style="font-size:11px;font-weight:700;color:#605E5C;text-transform:uppercase;letter-spacing:.07em">Tryb:</span>
+      <div id="micModeWrap" style="display:flex;background:#F0F0F0;border-radius:8px;padding:2px;gap:2px">
+        <button id="micModeOff" onclick="setMicMode(0)" style="padding:4px 14px;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;background:#fff;color:#323130;box-shadow:0 1px 3px rgba(0,0,0,.15)">Off</button>
+        <button id="micModeAI" onclick="setMicMode(1)" style="padding:4px 14px;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;background:transparent;color:#A19F9D">AI</button>
+      </div>
+    </div>
     <textarea id="mainMicInp" placeholder="Np: czujnik startu nie dziala wymieniono nowy&#10;Np: пассик порвался замінили новий" style="width:100%;min-height:80px;background:#F5F5F7;border:1.5px solid rgba(0,120,212,.2);border-radius:10px;padding:11px 13px;font-size:14px;font-family:inherit;outline:none;resize:none;color:#323130;line-height:1.6;margin-bottom:8px" oninput="mainMicAutoProc(this)"></textarea>
     <div style="font-size:11px;color:#A19F9D;margin-bottom:12px">Użyj mikrofonu iPhone na klawiaturze</div>
     <div id="mainMicPrev" style="display:none;margin-bottom:10px"></div>
     <button onclick="mainMicSearch()" style="width:100%;padding:10px;background:#F5F5F7;border:1px solid #EDEBE9;border-radius:10px;font-size:13px;font-weight:600;color:#0078D4;cursor:pointer;margin-bottom:8px;font-family:inherit">Szukaj w bibliotece</button>
-    <button onclick="mainMicAdd()" style="width:100%;padding:13px;background:#0078D4;border:none;border-radius:12px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;margin-bottom:8px;font-family:inherit">Dodaj do raportu</button>
+    <div id="micAIStatus" style="display:none;font-size:11px;color:#007A7A;text-align:center;margin-bottom:6px">▸ Przetwarzanie AI...</div>
+    <button id="micAddBtn" onclick="mainMicAdd()" style="width:100%;padding:13px;background:#0078D4;border:none;border-radius:12px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;margin-bottom:8px;font-family:inherit">Dodaj do raportu</button>
     <button onclick="closeOv('shMainMic')" class="sh-btn lt">Anuluj</button>
   </div>
 </div>
@@ -3445,13 +3453,71 @@ function setModeNG() {
 // ============================================================
 // ГЛАВНЫЙ МИКРОФОН - офлайн алгоритм
 // ============================================================
+var _micMode = 0; // 0=Off, 1=AI
+
+function setMicMode(n) {
+  _micMode = n;
+  var btnOff = document.getElementById('micModeOff');
+  var btnAI = document.getElementById('micModeAI');
+  if (!btnOff || !btnAI) return;
+  if (n === 0) {
+    btnOff.style.background = '#fff';
+    btnOff.style.color = '#323130';
+    btnOff.style.boxShadow = '0 1px 3px rgba(0,0,0,.15)';
+    btnAI.style.background = 'transparent';
+    btnAI.style.color = '#A19F9D';
+    btnAI.style.boxShadow = 'none';
+  } else {
+    btnAI.style.background = '#007A7A';
+    btnAI.style.color = '#fff';
+    btnAI.style.boxShadow = '0 1px 3px rgba(0,0,0,.15)';
+    btnOff.style.background = 'transparent';
+    btnOff.style.color = '#A19F9D';
+    btnOff.style.boxShadow = 'none';
+  }
+}
+
 function mainMicOpen() {
   var inp = document.getElementById('mainMicInp');
   if (inp) inp.value = '';
   var prev = document.getElementById('mainMicPrev');
   if (prev) { prev.style.display='none'; prev.innerHTML=''; }
+  var st = document.getElementById('micAIStatus');
+  if (st) st.style.display = 'none';
   openSh('shMainMic');
   setTimeout(function(){var i=document.getElementById('mainMicInp');if(i)i.focus();},400);
+}
+
+async function mainMicAddAI(text) {
+  var st = document.getElementById('micAIStatus');
+  var btn = document.getElementById('micAddBtn');
+  if (st) st.style.display = 'block';
+  if (btn) btn.disabled = true;
+  try {
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 300,
+        messages: [{
+          role: 'user',
+          content: 'Jesteś asystentem serwisanta RVM. Przetwórz opis usterki na profesjonalny zapis serwisowy po polsku. Zachowaj techniczną terminologię. Odpowiedz TYLKO gotowym tekstem bez komentarzy.
+
+Opis: ' + text
+        }]
+      })
+    });
+    var data = await resp.json();
+    var result = data.content && data.content[0] && data.content[0].text ? data.content[0].text.trim() : text;
+    if (st) st.style.display = 'none';
+    if (btn) btn.disabled = false;
+    return result;
+  } catch(e) {
+    if (st) st.style.display = 'none';
+    if (btn) btn.disabled = false;
+    return text;
+  }
 }
 
 var _mainMicTimer = null;
@@ -3708,6 +3774,18 @@ function mmrEdit(col) {
 }
 
 function mainMicAdd() {
+  var txt = (document.getElementById('mainMicInp').value || '').trim();
+  if (!txt) { showToast('Wpisz lub podyktuj opis'); return; }
+  if (_micMode === 1) {
+    mainMicAddAI(txt).then(function(result) {
+      _commitMainMic(result);
+    });
+  } else {
+    _commitMainMic(txt);
+  }
+}
+
+function _commitMainMic(txt) {
   var d = window._mmrData || {};
   var added = false;
 
