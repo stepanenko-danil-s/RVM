@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8"><!-- build:1780350148 -->
+<meta charset="UTF-8"><!-- build:175600 -->
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -338,94 +338,64 @@ body.dark .mag-card,.dark .photo-add{background:#1E1E26}
 .set-acc-arr { color: #A19F9D; font-size: 12px; transition: transform .25s; }
 .set-acc-arr.open { transform: rotate(180deg); }
 </style><style id="themesCSS">
-/* ===== v17: ТЕМЫ ===== */
-.theme-pick-btn{padding:12px 8px;border:1.5px solid #EDEBE9;border-radius:10px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;-webkit-tap-highlight-color:transparent}
-.theme-pick-btn.active{border-width:2.5px;border-color:#007A7A}
-.shop-btn-gps{color:#fff;border:none}
-.nav-title{font-size:17px;font-weight:800;color:#fff;letter-spacing:-.01em}
+/* ===== ТЕМЫ ===== */
 
-/* ══════════════════════════════════════
-   T1 — iOS стандартный
-   Скруглённые карточки с тенями, отступы
-══════════════════════════════════════ */
-body.theme-1{background:#F2F2F7 !important}
-body.theme-1 .nav{background:linear-gradient(160deg,#004E52,#006E68 60%,#008878) !important;box-shadow:0 3px 20px rgba(0,0,0,.3) !important}
-body.theme-1 .nav-title{color:#fff !important;font-size:17px !important;font-weight:800 !important;letter-spacing:-.01em !important}
-body.theme-1 #shopBar{background:#fff !important;border-bottom:none !important;border-radius:14px !important;margin:8px 12px !important;box-shadow:0 1px 4px rgba(0,0,0,.1) !important}
-body.theme-1 .shop-btn-gps{background:#007AFF !important;border-radius:8px !important}
-body.theme-1 .acc-card{background:#fff !important;border-radius:14px !important;overflow:hidden !important;box-shadow:0 2px 8px rgba(0,0,0,.1) !important;border:0.5px solid #E5E5EA !important;margin:0 0 10px !important}
-body.theme-1 .rep-mod{border-radius:14px !important;overflow:hidden !important;box-shadow:0 2px 8px rgba(0,0,0,.1) !important;border:0.5px solid #E5E5EA !important}
-body.theme-1 .copy-btn{background:rgba(116,116,128,.18) !important;color:#007AFF !important;border-radius:10px !important;border:none !important}
-body.theme-1 .send-btn{background:#34C759 !important;border-radius:10px !important}
-body.theme-1 .ai-btn{background:#007A7A !important;border-radius:13px !important}
+/* T1 — iOS стандартный (default) */
+body.theme-1 { background:#F2F2F7; }
+body.theme-1 .nav { background:#F2F2F7; border-bottom:0.5px solid rgba(60,60,67,.18); }
+body.theme-1 .nav-title { color:#000; font-size:22px; letter-spacing:-.5px; }
+body.theme-1 .shop-bar { background:#fff; border-radius:12px; margin:8px 12px; border-bottom:none; }
+body.theme-1 .shop-btn-gps { background:#007AFF; border-radius:8px; }
+body.theme-1 .acc-hdr { background:#fff; border-radius:12px; margin:0 12px 6px; border-bottom:none; }
+body.theme-1 .rep-wrap { background:#fff; border-radius:12px; margin:0 12px; }
+body.theme-1 .copy-btn { background:rgba(116,116,128,.18); color:#007AFF; border-radius:10px; border:none; }
+body.theme-1 .send-btn { background:#34C759; border-radius:10px; }
 
-/* ══════════════════════════════════════
-   T2 — Microsoft Fluent
-   БЕЗ скруглений, от края до края, разделители
-══════════════════════════════════════ */
-body.theme-2{background:#F0F0F0 !important}
-body.theme-2 .nav{background:#0078D4 !important;box-shadow:0 2px 4px rgba(0,120,212,.4) !important;border-radius:0 !important}
-body.theme-2 .nav-title{color:#fff !important;font-size:15px !important;font-weight:600 !important;letter-spacing:0 !important}
-body.theme-2 #shopBar{background:#fff !important;border-bottom:1px solid #EDEBE9 !important;border-radius:0 !important;margin:0 !important;box-shadow:none !important}
-body.theme-2 .shop-btn-gps{background:#0078D4 !important;border-radius:2px !important}
-body.theme-2 .page{padding:0 !important}
-body.theme-2 .acc-card{background:#fff !important;border-radius:0 !important;overflow:visible !important;box-shadow:none !important;border:none !important;border-bottom:1px solid #EDEBE9 !important;margin:0 !important}
-body.theme-2 .acc-hdr{border-radius:0 !important}
-body.theme-2 .acc-body{border-top:1px solid #EDEBE9 !important}
-body.theme-2 .rep-mod{border-radius:0 !important;overflow:visible !important;box-shadow:none !important;border:none !important;border-top:3px solid #0078D4 !important;margin-top:0 !important}
-body.theme-2 .copy-btn{background:#fff !important;color:#0078D4 !important;border-radius:0 !important;border:none !important;border-right:1px solid #EDEBE9 !important}
-body.theme-2 .send-btn{background:#0078D4 !important;border-radius:0 !important}
-body.theme-2 .ai-btn{background:#0078D4 !important;border-radius:0 !important}
-body.theme-2 .v16-gng{border-radius:0 !important}
-body.theme-2 .sec{color:#0078D4 !important;letter-spacing:.1em !important}
+/* T2 — Microsoft Fluent */
+body.theme-2 { background:#fff; }
+body.theme-2 .nav { background:#0078D4; border-bottom:none; }
+body.theme-2 .nav-title { color:#fff; font-size:16px; letter-spacing:-.2px; }
+body.theme-2 .shop-bar { background:#fff; border-bottom:1px solid #EDEBE9; border-radius:0; margin:0; }
+body.theme-2 .shop-btn-gps { background:#0078D4; border-radius:2px; }
+body.theme-2 .acc-hdr { background:#fff; border-radius:0; border-bottom:1px solid #EDEBE9; margin:0; }
+body.theme-2 .rep-wrap { background:#F5F5F5; border-top:2px solid #0078D4; border-radius:0; margin:0; }
+body.theme-2 .copy-btn { background:#fff; color:#0078D4; border-radius:0; border:none; border-right:1px solid #EDEBE9; }
+body.theme-2 .send-btn { background:#0078D4; border-radius:0; }
 
-/* ══════════════════════════════════════
-   T3 — iOS оранжевый
-══════════════════════════════════════ */
-body.theme-3{background:#F2F2F7 !important}
-body.theme-3 .nav{background:linear-gradient(160deg,#004E52,#006E68 60%,#008878) !important;box-shadow:0 3px 20px rgba(0,0,0,.3) !important}
-body.theme-3 .nav-title{color:#fff !important;font-size:17px !important;font-weight:800 !important}
-body.theme-3 #shopBar{background:#FFF9F0 !important;border-bottom:0.5px solid #FFE4B5 !important;border-radius:14px !important;margin:8px 12px !important;box-shadow:0 1px 4px rgba(255,149,0,.1) !important}
-body.theme-3 .shop-btn-gps{background:#FF9500 !important;border-radius:8px !important}
-body.theme-3 .acc-card{background:#fff !important;border-radius:14px !important;overflow:hidden !important;box-shadow:0 2px 8px rgba(0,0,0,.1) !important;border:0.5px solid #FFE4B5 !important;margin:0 0 10px !important}
-body.theme-3 .rep-mod{border-radius:14px !important;overflow:hidden !important;box-shadow:0 2px 8px rgba(255,149,0,.15) !important;border:0.5px solid #FFE4B5 !important}
-body.theme-3 .copy-btn{background:#FFF3E0 !important;color:#FF9500 !important;border-radius:10px !important;border:none !important}
-body.theme-3 .send-btn{background:#FF9500 !important;border-radius:10px !important}
-body.theme-3 .ai-btn{background:#FF9500 !important;border-radius:13px !important}
+/* T3 — iOS оранжевый акцент */
+body.theme-3 { background:#F2F2F7; }
+body.theme-3 .nav { background:#fff; border-bottom:0.5px solid rgba(60,60,67,.12); }
+body.theme-3 .nav-title { color:#000; font-size:17px; }
+body.theme-3 .shop-bar { background:#FFF9F0; border-bottom:0.5px solid #FFE4B5; border-radius:0; margin:0; }
+body.theme-3 .shop-btn-gps { background:#FF9500; border-radius:8px; }
+body.theme-3 .acc-hdr { background:#fff; border-radius:12px; margin:0 12px 6px; border-bottom:none; }
+body.theme-3 .rep-wrap { background:#fff; border-radius:12px; margin:0 12px; overflow:hidden; }
+body.theme-3 .copy-btn { background:#F2F2F7; color:#FF9500; border-radius:0 0 0 12px; border:none; }
+body.theme-3 .send-btn { background:#FF9500; border-radius:0 0 12px 0; }
 
-/* ══════════════════════════════════════
-   T4 — Fluent тёмная шапка
-══════════════════════════════════════ */
-body.theme-4{background:#F0F0F0 !important}
-body.theme-4 .nav{background:#1B1A19 !important;box-shadow:0 2px 8px rgba(0,0,0,.5) !important;border-radius:0 !important}
-body.theme-4 .nav-title{color:#fff !important;font-size:15px !important;font-weight:600 !important;letter-spacing:0 !important}
-body.theme-4 #shopBar{background:#252423 !important;border-bottom:1px solid #3B3A39 !important;border-radius:0 !important;margin:0 !important;box-shadow:none !important}
-body.theme-4 #shopBar svg{stroke:#C8C6C4 !important}
-body.theme-4 #shopBtn{color:#C8C6C4 !important}
-body.theme-4 .shop-btn-gps{background:#0078D4 !important;border-radius:2px !important}
-body.theme-4 .page{padding:0 !important}
-body.theme-4 .acc-card{background:#fff !important;border-radius:0 !important;overflow:visible !important;box-shadow:none !important;border:none !important;border-bottom:1px solid #EDEBE9 !important;margin:0 !important}
-body.theme-4 .acc-hdr{border-radius:0 !important}
-body.theme-4 .acc-body{border-top:1px solid #EDEBE9 !important}
-body.theme-4 .rep-mod{border-radius:0 !important;overflow:visible !important;box-shadow:none !important;border:none !important;border-top:3px solid #107C10 !important;margin-top:0 !important}
-body.theme-4 .copy-btn{background:#fff !important;color:#0078D4 !important;border-radius:0 !important;border:none !important}
-body.theme-4 .send-btn{background:#107C10 !important;border-radius:0 !important}
-body.theme-4 .ai-btn{background:#107C10 !important;border-radius:0 !important}
-body.theme-4 .sec{color:#107C10 !important;letter-spacing:.1em !important}
+/* T4 — Fluent тёмная шапка */
+body.theme-4 { background:#fff; }
+body.theme-4 .nav { background:#201F1E; border-bottom:none; }
+body.theme-4 .nav-title { color:#fff; font-size:16px; }
+body.theme-4 .shop-bar { background:#252423; border-bottom:1px solid #3B3A39; border-radius:0; margin:0; }
+body.theme-4 .shop-bar * { color:#C8C6C4 !important; }
+body.theme-4 .shop-btn-gps { background:#0078D4; border-radius:2px; }
+body.theme-4 .acc-hdr { background:#fff; border-radius:0; border-bottom:1px solid #EDEBE9; margin:0; }
+body.theme-4 .rep-wrap { background:#F5F5F5; border-top:1px solid #EDEBE9; border-radius:0; margin:0; }
+body.theme-4 .copy-btn { background:#fff; color:#0078D4; border-radius:0; border:none; }
+body.theme-4 .send-btn { background:#107C10; border-radius:0; }
 
-/* ══════════════════════════════════════
-   T5 — iOS крупный заголовок
-══════════════════════════════════════ */
-body.theme-5{background:#F2F2F7 !important}
-body.theme-5 .nav{background:#F2F2F7 !important;box-shadow:none !important;border-bottom:0.5px solid rgba(60,60,67,.15) !important;padding-top:20px !important}
-body.theme-5 .nav-title{color:#000 !important;font-size:28px !important;font-weight:700 !important;letter-spacing:-.5px !important}
-body.theme-5 #shopBar{background:#fff !important;border-bottom:none !important;border-radius:14px !important;margin:8px 12px !important;box-shadow:0 1px 4px rgba(0,0,0,.1) !important}
-body.theme-5 .shop-btn-gps{background:#007AFF !important;border-radius:20px !important}
-body.theme-5 .acc-card{background:#fff !important;border-radius:14px !important;overflow:hidden !important;box-shadow:0 2px 8px rgba(0,0,0,.1) !important;border:0.5px solid #E5E5EA !important;margin:0 0 10px !important}
-body.theme-5 .rep-mod{border-radius:14px !important;overflow:hidden !important;box-shadow:0 2px 8px rgba(0,0,0,.1) !important;border:0.5px solid #E5E5EA !important}
-body.theme-5 .copy-btn{background:#fff !important;color:#007AFF !important;border:0.5px solid rgba(60,60,67,.18) !important;border-radius:10px !important}
-body.theme-5 .send-btn{background:#34C759 !important;border-radius:10px !important}
-body.theme-5 .ai-btn{background:#007A7A !important;border-radius:13px !important}
+/* T5 — iOS крупные заголовки */
+body.theme-5 { background:#F2F2F7; }
+body.theme-5 .nav { background:#F2F2F7; border-bottom:none; padding-top:20px; }
+body.theme-5 .nav-title { color:#000; font-size:28px; font-weight:500; letter-spacing:-.5px; }
+body.theme-5 .shop-bar { background:transparent; border-bottom:none; padding:0 12px 10px; margin:0; }
+body.theme-5 .shop-bar-inner { background:#fff; border-radius:20px; padding:6px 14px; display:flex; align-items:center; gap:8px; }
+body.theme-5 .shop-btn-gps { background:#007AFF; border-radius:20px; }
+body.theme-5 .acc-hdr { background:#fff; border-radius:12px; margin:0 12px 6px; border-bottom:none; }
+body.theme-5 .rep-wrap { background:#fff; border-radius:12px; margin:0 12px; }
+body.theme-5 .copy-btn { background:#fff; color:#007AFF; border:0.5px solid rgba(60,60,67,.18); border-radius:10px; }
+body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
 </style>
 
 </head>
@@ -433,7 +403,7 @@ body.theme-5 .ai-btn{background:#007A7A !important;border-radius:13px !important
 <div style="height:2px;background:linear-gradient(90deg,#003E42,#007A7A,#34DDD0,#007A7A,#003E42);position:sticky;top:0;z-index:81"></div>
 
 <div class="nav" style="gap:0">
-  <div style="flex-shrink:0"><span class="nav-title">RVM Raport</span></div>
+  <div style="flex-shrink:0"><span style="font-size:17px;font-weight:800;color:#fff;letter-spacing:-.01em">RVM Raport</span></div>
   <div style="flex:1;display:flex;justify-content:center">
     <div class="tgl-wrap" id="tglWrap" style="display:none">
       <div class="tgl-pill" id="tglPill"></div>
@@ -448,10 +418,10 @@ body.theme-5 .ai-btn{background:#007A7A !important;border-radius:13px !important
 </div>
 
 <!-- SHOP BAR -->
-<div id="shopBar" class="shop-bar" style="padding:6px 12px;display:flex;align-items:center;gap:6px">
+<div style="background:#fff;border-bottom:0.5px solid #EDEBE9;padding:6px 12px;display:flex;align-items:center;gap:6px">
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#A19F9D" stroke-width="1.5" stroke-linecap="round"><path d="M7 1C4.24 1 2 3.24 2 6c0 3.75 5 8 5 8s5-4.25 5-8c0-2.76-2.24-5-5-5z"/><circle cx="7" cy="6" r="1.5"/></svg>
   <button id="shopBtn" onclick="shopOpen()" style="flex:1;text-align:left;background:none;border:none;font-size:12px;color:#A19F9D;cursor:pointer;font-family:inherit;padding:0;-webkit-tap-highlight-color:transparent">Wybierz sklep...</button>
-  <button id="shopGpsBtn" class="shop-btn-gps" onclick="shopGPS()" style="border:none;font-size:11px;cursor:pointer;font-family:inherit;padding:2px 4px;font-weight:600">&#128205; GPS</button>
+  <button id="shopGpsBtn" onclick="shopGPS()" style="background:none;border:none;font-size:11px;color:#0078D4;cursor:pointer;font-family:inherit;padding:2px 4px;font-weight:600">&#128205; GPS</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -943,19 +913,19 @@ body.theme-5 .ai-btn{background:#007A7A !important;border-radius:13px !important
     <div style="margin-bottom:20px">
       <div style="font-size:13px;font-weight:700;color:#323130;margin-bottom:12px">🎨 Motyw</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <button onclick="setTheme(1)" id="themeBtn1" class="theme-pick-btn active" style="background:#F2F2F7;color:#000">
+        <button onclick="setTheme(1)" id="themeBtn1" style="padding:12px 8px;border:2px solid #0078D4;border-radius:10px;background:#F2F2F7;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#000;-webkit-tap-highlight-color:transparent">
           iOS стандарт
         </button>
-        <button onclick="setTheme(2)" id="themeBtn2" class="theme-pick-btn" style="background:#fff;color:#323130">
+        <button onclick="setTheme(2)" id="themeBtn2" style="padding:12px 8px;border:1.5px solid #EDEBE9;border-radius:10px;background:#fff;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#323130;-webkit-tap-highlight-color:transparent">
           <span style="color:#0078D4">■</span> MS Fluent
         </button>
-        <button onclick="setTheme(3)" id="themeBtn3" class="theme-pick-btn" style="background:#FFF9F0;color:#323130">
+        <button onclick="setTheme(3)" id="themeBtn3" style="padding:12px 8px;border:1.5px solid #EDEBE9;border-radius:10px;background:#FFF9F0;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#323130;-webkit-tap-highlight-color:transparent">
           <span style="color:#FF9500">■</span> iOS оранжевый
         </button>
-        <button onclick="setTheme(4)" id="themeBtn4" class="theme-pick-btn" style="background:#201F1E;color:#fff">
+        <button onclick="setTheme(4)" id="themeBtn4" style="padding:12px 8px;border:1.5px solid #EDEBE9;border-radius:10px;background:#201F1E;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#fff;-webkit-tap-highlight-color:transparent">
           <span style="color:#0078D4">■</span> Fluent Dark
         </button>
-        <button onclick="setTheme(5)" id="themeBtn5" class="theme-pick-btn" style="background:#F2F2F7;color:#000;grid-column:span 2">
+        <button onclick="setTheme(5)" id="themeBtn5" style="padding:12px 8px;border:1.5px solid #EDEBE9;border-radius:10px;background:#F2F2F7;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#000;-webkit-tap-highlight-color:transparent;grid-column:span 2">
           iOS крупный заголовок
         </button>
       </div>
@@ -5290,7 +5260,13 @@ function setTheme(n) {
   for (var i = 1; i <= 5; i++) {
     var btn = document.getElementById('themeBtn' + i);
     if (!btn) continue;
-    btn.classList.toggle('active', i === n);
+    if (i === n) {
+      btn.style.borderWidth = '2.5px';
+      btn.style.borderColor = i===2||i===4 ? '#0078D4' : i===3 ? '#FF9500' : '#007AFF';
+    } else {
+      btn.style.borderWidth = '1.5px';
+      btn.style.borderColor = '#EDEBE9';
+    }
   }
   showToast('Motyw ' + n + ' zastosowany');
 }
