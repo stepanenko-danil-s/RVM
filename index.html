@@ -3502,35 +3502,52 @@ async function mainMicAddAI(text) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 300,
+        max_tokens: 500,
         messages: [{
           role: 'user',
-          content: 'Jestes asystentem serwisanta maszyn RVM.\nPrzeanalizuj opis i zwroc JSON z polami: el (element), def (usterka), sol (co zrobiono).\nWybieraj z list lub napisz po polsku jesli nie ma.\nOdpowiedz TYLKO JSON.\n\nElementy: ' + elList + '\nUsterki: ' + defList + '\nDzialania: ' + solList + '\n\nOpis: ' + text + '\n\nFormat: {"el":"...","def":"...","sol":"..."}'
+          content: 'Jestes asystentem serwisanta maszyn RVM (automaty zwrotu butelek).\n' +
+            'Przeanalizuj opis i zwroc TABLICE JSON gdzie kazdy obiekt to JEDEN element z usterka.\n' +
+            'Jesli w opisie jest kilka elementow/usterek — zwroc kilka obiektow.\n' +
+            'Wybieraj z list lub napisz po polsku jesli nie ma dopasowania.\n' +
+            'Odpowiedz TYLKO tablica JSON bez komentarzy.\n\n' +
+            'Elementy: ' + elList + '\n' +
+            'Usterki: ' + defList + '\n' +
+            'Dzialania: ' + solList + '\n\n' +
+            'Opis (moze byc po rosyjsku, ukrainsku lub polsku): ' + text + '\n\n' +
+            'Format: [{"el":"...","def":"...","sol":"..."},{"el":"...","def":"...","sol":"..."}]'
         }]
       })
     });
     var data = await resp.json();
-    var raw = (data.content && data.content[0] ? data.content[0].text : '{}').replace(/```json|```/g,'').trim();
-    var parsed = JSON.parse(raw);
+    var raw = (data.content && data.content[0] ? data.content[0].text : '[]').replace(/```json|```/g,'').trim();
+    var items = JSON.parse(raw);
+    if (!Array.isArray(items)) items = [items];
     if (st) st.style.display = 'none';
     if (btn) btn.disabled = false;
     closeOv('shMainMic');
-    if (parsed.el) {
-      var elM = D.el.find(function(x){ return x.pl.toLowerCase()===parsed.el.toLowerCase(); }) || {pl:parsed.el};
-      if (SEL.el.length>0) _commitEntry();
-      SEL.el=[elM.pl]; SEL.mode=curMode;
-      _updV('el'); renderList('el'); renderList('def'); renderList('sol');
-    }
-    if (parsed.def) {
-      var defM = D.def.find(function(x){ return x.pl.toLowerCase()===parsed.def.toLowerCase(); }) || {pl:parsed.def};
-      SEL.def=[defM.pl]; _updV('def'); renderList('def'); renderList('sol');
-    }
-    if (parsed.sol) {
-      var solM = D.sol.find(function(x){ return x.pl.toLowerCase()===parsed.sol.toLowerCase(); }) || {pl:parsed.sol};
-      SEL.sol=[solM.pl]; _updV('sol'); renderList('sol');
-    }
+
+    var count = 0;
+    items.forEach(function(parsed) {
+      if (!parsed.el && !parsed.def) return;
+      if (SEL.el.length > 0) _commitEntry();
+      if (parsed.el) {
+        var elM = D.el.find(function(x){ return x.pl.toLowerCase()===parsed.el.toLowerCase(); }) || {pl:parsed.el};
+        SEL.el=[elM.pl]; SEL.mode=curMode;
+        _updV('el'); renderList('el'); renderList('def'); renderList('sol');
+      }
+      if (parsed.def) {
+        var defM = D.def.find(function(x){ return x.pl.toLowerCase()===parsed.def.toLowerCase(); }) || {pl:parsed.def};
+        SEL.def=[defM.pl]; _updV('def'); renderList('def'); renderList('sol');
+      }
+      if (parsed.sol) {
+        var solM = D.sol.find(function(x){ return x.pl.toLowerCase()===parsed.sol.toLowerCase(); }) || {pl:parsed.sol};
+        SEL.sol=[solM.pl]; _updV('sol'); renderList('sol');
+      }
+      _commitEntry();
+      count++;
+    });
     renderSummary(); _updateFlowState();
-    showToast('AI wypelnilo moduly');
+    showToast('AI dodalo ' + count + ' pozycji');
   } catch(e) {
     if (st) st.style.display = 'none';
     if (btn) btn.disabled = false;
