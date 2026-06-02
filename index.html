@@ -661,7 +661,7 @@ body.theme-2 .sec{color:#0078D4 !important;letter-spacing:.2em !important;font-s
 <div class="ov" id="shSaveTmpl" style="display:none" onclick="if(event.target===this)closeOv('shSaveTmpl')">
   <div class="sh">
     <div class="sh-bar"></div>
-    <div class="sh-title">💾 Zapisz</div>
+    <div class="sh-title">Zapisz</div>
     <input class="sh-inp" id="tmplName" placeholder="Nazwa..." maxlength="40">
     <div style="margin:10px 0 12px;display:flex;flex-direction:column;gap:10px">
       <label style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(52,199,89,.07);border:1px solid rgba(52,199,89,.2);border-radius:12px;cursor:pointer">
@@ -725,10 +725,10 @@ body.theme-2 .sec{color:#0078D4 !important;letter-spacing:.2em !important;font-s
       <div class="rst-opt" id="ro-prot" onclick="setRst('prot')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">▬ Blokowy</div><div style="font-size:12px;color:rgba(60,60,67,.45)">Wyraźne bloki, nagłówki</div></div></div>
       <div class="rst-opt" id="ro-tec" onclick="setRst('tec')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">⌨ Techniczny</div><div style="font-size:12px;color:rgba(60,60,67,.45)">Monospace, kody</div></div></div>
     </div>
-    <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(60,60,67,.4);margin:14px 0 7px">Własne style ✏️</div>
+    <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(60,60,67,.4);margin:14px 0 7px">Własne style</div>
     <div id="myStylesList" style="display:flex;flex-direction:column;gap:6px"></div>
     <button onclick="openMyStyleEdit(-1)" style="width:100%;margin-top:8px;padding:10px;border-radius:12px;border:1.5px dashed rgba(0,122,122,.3);background:rgba(0,122,122,.03);color:#007A7A;font-size:13px;font-weight:600;cursor:pointer">+ Nowy własny styl</button>
-    <div style="font-size:11px;color:rgba(60,60,67,.35);text-align:center;margin-top:8px">💡 Zapisz styl przy zapisie szablonu</div>
+    <div style="font-size:11px;color:rgba(60,60,67,.35);text-align:center;margin-top:8px">Zapisz styl przy zapisie szablonu</div>
     <div style="height:6px"></div>
     <button class="sh-btn lt" onclick="closeOv('shRst')">Zamknij</button>
   </div>
@@ -737,7 +737,7 @@ body.theme-2 .sec{color:#0078D4 !important;letter-spacing:.2em !important;font-s
 <div class="ov" id="shMyStyle" style="display:none" onclick="if(event.target===this)closeOv('shMyStyle')">
   <div class="sh" style="max-height:94vh;overflow-y:auto">
     <div class="sh-bar"></div>
-    <div class="sh-title">✏️ Własny styl</div>
+    <div class="sh-title">Własny styl</div>
 
     <input class="sh-inp" id="mysName" placeholder="Nazwa stylu (np. Dla WhatsApp, Dla szefa...)" maxlength="30" oninput="prevMyStyle()">
 
@@ -881,7 +881,7 @@ body.theme-2 .sec{color:#0078D4 !important;letter-spacing:.2em !important;font-s
     <div style="height:1px;background:rgba(60,60,67,.08);margin:10px 0"></div>
     <!-- Выбор темы -->
     <div style="margin-bottom:20px">
-      <div style="font-size:13px;font-weight:700;color:#323130;margin-bottom:12px">🎨 Motyw</div>
+      <div style="font-size:13px;font-weight:700;color:#323130;margin-bottom:12px">Motyw</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
         <button onclick="setTheme(1)" id="themeBtn1" class="theme-pick-btn active" style="background:#F2F2F7;color:#000;border-color:#34C759">
           iOS
@@ -896,7 +896,7 @@ body.theme-2 .sec{color:#0078D4 !important;letter-spacing:.2em !important;font-s
 
     <div style="font-size:11px;font-weight:700;color:rgba(60,60,67,.4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Diagnostyka</div>
     <button class="sh-btn" onclick="runDiagnostics()" style="width:100%;text-align:left;display:flex;align-items:center;gap:8px;background:#F7F9FC;border:1.5px solid #DDE0E8">
-      <span style="font-size:16px">&#128269;</span>
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="4.5"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
       <span style="font-size:13px;font-weight:700">Sprawdź błędy i dane</span>
     </button>
     <div id="diagResult" style="display:none;margin-top:8px;padding:10px 12px;background:#F7F9FC;border:1px solid #E0E3EA;border-radius:10px;font-size:12px;line-height:1.7"></div>
@@ -2548,7 +2548,7 @@ function initDark(){
 function runDiagnostics(){
   var log=[],fixed=0,warn=0,ok=0;
   var r=document.getElementById("diagResult");
-  if(r){r.style.display="block";r.innerHTML="🔄 Sprawdzanie...";}
+  if(r){r.style.display="block";r.innerHTML="Sprawdzanie...";}
 
   function chk(label,cond){if(cond){log.push("✅ "+label);ok++;}else{log.push("❌ "+label);warn++;}}
   function fix(label,fn){try{fn();log.push("🔧 Naprawiono: "+label);fixed++;}catch(e){log.push("⚠️ Błąd naprawy: "+label+" — "+e.message);warn++;}}
@@ -2666,7 +2666,7 @@ function restoreData(input){
 <div style="display:flex;flex-direction:column;gap:0;width:100%">
   <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
     <div class="set-acc-hdr" onclick="setAcc('accEmail')">
-      <div style="font-size:13px;font-weight:700;color:#323130">📧 Ustawienia e-mail</div>
+      <div style="font-size:13px;font-weight:700;color:#323130">Ustawienia e-mail</div>
       <span class="set-acc-arr" id="accEmailArr">▼</span>
     </div>
     <div class="set-acc-body" id="accEmail">
@@ -2679,7 +2679,7 @@ function restoreData(input){
     </div>
   <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
     <div class="set-acc-hdr" onclick="setAcc('accSched')">
-      <div style="font-size:13px;font-weight:700;color:#323130">⏰ Harmonogram raportów</div>
+      <div style="font-size:13px;font-weight:700;color:#323130">Harmonogram raportów</div>
       <span class="set-acc-arr" id="accSchedArr">▼</span>
     </div>
     <div class="set-acc-body" id="accSched">
@@ -2705,7 +2705,7 @@ function restoreData(input){
     </div>
   <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
     <div class="set-acc-hdr" onclick="setAcc('accLib')">
-      <div style="font-size:13px;font-weight:700;color:#323130">📚 Biblioteka słów</div>
+      <div style="font-size:13px;font-weight:700;color:#323130">Biblioteka słów</div>
       <span class="set-acc-arr" id="accLibArr">▼</span>
     </div>
     <div class="set-acc-body" id="accLib">
@@ -4351,13 +4351,13 @@ function shopGPS() {
   navigator.geolocation.getCurrentPosition(function(pos) {
     _myLat = pos.coords.latitude;
     _myLon = pos.coords.longitude;
-    if (btn) btn.textContent = '📍';
-    if (gpsBtn) gpsBtn.textContent = '📍 GPS';
+    if (btn) btn.textContent = '◉';
+    if (gpsBtn) gpsBtn.textContent = '◉ GPS';
     if (status) status.textContent = 'Szukam sklepów w pobliżu...';
     shopFetchNearby(_myLat, _myLon, shopGetRadius());
   }, function(err) {
-    if (btn) btn.textContent = '📍';
-    if (gpsBtn) gpsBtn.textContent = '📍 GPS';
+    if (btn) btn.textContent = '◉';
+    if (gpsBtn) gpsBtn.textContent = '◉ GPS';
     if (status) status.textContent = 'Błąd GPS: ' + err.message;
     showToast('GPS: ' + err.message);
   }, {enableHighAccuracy: true, timeout: 12000});
