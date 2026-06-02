@@ -3491,9 +3491,12 @@ function mainMicOpen() {
 async function mainMicAddAI(text) {
   var st = document.getElementById('micAIStatus');
   var btn = document.getElementById('micAddBtn');
-  if (st) st.style.display = 'block';
+  if (st) { st.style.display = 'block'; st.textContent = '▸ Analizowanie...'; }
   if (btn) btn.disabled = true;
   try {
+    var elList = D.el.map(function(x){return x.pl;}).slice(0,60).join(', ');
+    var defList = D.def.map(function(x){return x.pl;}).slice(0,60).join(', ');
+    var solList = D.sol.map(function(x){return x.pl;}).slice(0,60).join(', ');
     var resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -3502,21 +3505,36 @@ async function mainMicAddAI(text) {
         max_tokens: 300,
         messages: [{
           role: 'user',
-          content: 'Jesteś asystentem serwisanta RVM. Przetwórz opis usterki na profesjonalny zapis serwisowy po polsku. Zachowaj techniczną terminologię. Odpowiedz TYLKO gotowym tekstem bez komentarzy.
-
-Opis: ' + text
+          content: 'Jestes asystentem serwisanta maszyn RVM.\nPrzeanalizuj opis i zwroc JSON z polami: el (element), def (usterka), sol (co zrobiono).\nWybieraj z list lub napisz po polsku jesli nie ma.\nOdpowiedz TYLKO JSON.\n\nElementy: ' + elList + '\nUsterki: ' + defList + '\nDzialania: ' + solList + '\n\nOpis: ' + text + '\n\nFormat: {"el":"...","def":"...","sol":"..."}'
         }]
       })
     });
     var data = await resp.json();
-    var result = data.content && data.content[0] && data.content[0].text ? data.content[0].text.trim() : text;
+    var raw = (data.content && data.content[0] ? data.content[0].text : '{}').replace(/```json|```/g,'').trim();
+    var parsed = JSON.parse(raw);
     if (st) st.style.display = 'none';
     if (btn) btn.disabled = false;
-    return result;
+    closeOv('shMainMic');
+    if (parsed.el) {
+      var elM = D.el.find(function(x){ return x.pl.toLowerCase()===parsed.el.toLowerCase(); }) || {pl:parsed.el};
+      if (SEL.el.length>0) _commitEntry();
+      SEL.el=[elM.pl]; SEL.mode=curMode;
+      _updV('el'); renderList('el'); renderList('def'); renderList('sol');
+    }
+    if (parsed.def) {
+      var defM = D.def.find(function(x){ return x.pl.toLowerCase()===parsed.def.toLowerCase(); }) || {pl:parsed.def};
+      SEL.def=[defM.pl]; _updV('def'); renderList('def'); renderList('sol');
+    }
+    if (parsed.sol) {
+      var solM = D.sol.find(function(x){ return x.pl.toLowerCase()===parsed.sol.toLowerCase(); }) || {pl:parsed.sol};
+      SEL.sol=[solM.pl]; _updV('sol'); renderList('sol');
+    }
+    renderSummary(); _updateFlowState();
+    showToast('AI wypelnilo moduly');
   } catch(e) {
     if (st) st.style.display = 'none';
     if (btn) btn.disabled = false;
-    return text;
+    showToast('Blad AI');
   }
 }
 
@@ -3777,9 +3795,7 @@ function mainMicAdd() {
   var txt = (document.getElementById('mainMicInp').value || '').trim();
   if (!txt) { showToast('Wpisz lub podyktuj opis'); return; }
   if (_micMode === 1) {
-    mainMicAddAI(txt).then(function(result) {
-      _commitMainMic(result);
-    });
+    mainMicAddAI(txt);
   } else {
     _commitMainMic(txt);
   }
