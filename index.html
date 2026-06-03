@@ -1495,13 +1495,18 @@ function renderList(col){
   // Apply search filter
   var _q = (_modFilter && _modFilter[col]) ? _modFilter[col] : '';
   if (_q) {
-    all = _filterItems(all, _q);
-    if (!all.length) {
-      var lid2 = isK ? "lst-kon" : "lst-" + col;
-      var el2 = document.getElementById(lid2);
-      if (el2) el2.innerHTML = '<div style="padding:16px;text-align:center;color:#A19F9D;font-size:13px">Brak wyników dla "<b>' + esc(_q) + '</b>"</div>';
+    var _filtered = _filterItems(all, _q);
+    var lid2 = isK ? "lst-kon" : "lst-" + col;
+    var el2 = document.getElementById(lid2);
+    if (!el2) return;
+    if (!_filtered.length) {
+      el2.innerHTML = '<div style="padding:16px;text-align:center;color:#A19F9D;font-size:13px">Brak: <b>' + esc(_q) + '</b></div>';
       return;
     }
+    var hf = '';
+    _filtered.forEach(function(it){ hf += _liH(it, col, sel, false, customPls.indexOf(it.pl)>=0); });
+    el2.innerHTML = hf;
+    return;
   }
 
   if(col==="sol"){
