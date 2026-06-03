@@ -503,12 +503,12 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
     </div>
     <div class="mod-arr" id="arr1">&#8250;</div>
   </div>
+  <div class="mod-body" id="body1">
   <div class="mod-search">
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#A19F9D" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4"/><line x1="9" y1="9" x2="13" y2="13"/></svg>
     <input id="srch-el" onfocus="if(!mOpen[0])openMod(0)" placeholder="Szukaj elementu..." oninput="modSearch('el',this.value)" onfocus="this.select()" autocomplete="off" autocorrect="off" spellcheck="false">
     <button class="mod-search-clear" onclick="modSearchClear('el')" style="display:none" id="srchClr-el">&#215;</button>
   </div>
-  <div class="mod-body" id="body1">
     <div style="display:flex;justify-content:flex-end;padding:2px 10px 0"><button onclick="toggleEditMode('el')" id="editBtn-el" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
     <div class="ilist" id="lst-el"></div>
     <button class="add-own" onclick="openCust('el')">+ Dodaj w&#322;asny</button>
@@ -527,12 +527,12 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
     <div class="mod-arr" id="arr2">&#8250;</div>
   </div>
   <div class="mod-body" id="body2">
-    <div class="mod-search">
+  <div class="mod-search">
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#A19F9D" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4"/><line x1="9" y1="9" x2="13" y2="13"/></svg>
     <input id="srch-def" onfocus="if(!mOpen[1])openMod(1)" placeholder="Szukaj usterki..." oninput="modSearch('def',this.value)" onfocus="this.select()" autocomplete="off" autocorrect="off" spellcheck="false">
     <button class="mod-search-clear" onclick="modSearchClear('def')" style="display:none" id="srchClr-def">&#215;</button>
   </div>
-    <div style="display:flex;justify-content:flex-end;padding:2px 10px 0"><button onclick="toggleEditMode('def')" id="editBtn-def" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
+      <div style="display:flex;justify-content:flex-end;padding:2px 10px 0"><button onclick="toggleEditMode('def')" id="editBtn-def" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
     <div class="ilist" id="lst-def"></div>
     <div style="padding:4px 10px 8px;display:flex;gap:6px;align-items:center">
       <input id="defQuickAdd" placeholder="+ Dodaj własną usterkę..." style="flex:1;background:rgba(118,118,128,.09);border:none;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;color:#1C1C1E" onkeydown="if(event.key==='Enter')addDefQuick()">
@@ -554,13 +554,13 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
     <div class="mod-arr" id="arr3">&#8250;</div>
   </div>
   <div class="mod-body" id="body3">
-    <div class="sol-ban" id="solBan"></div>
-    <div class="mod-search">
+  <div class="mod-search">
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#A19F9D" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4"/><line x1="9" y1="9" x2="13" y2="13"/></svg>
     <input id="srch-sol" onfocus="if(!mOpen[2])openMod(2)" placeholder="Szukaj działania..." oninput="modSearch('sol',this.value)" onfocus="this.select()" autocomplete="off" autocorrect="off" spellcheck="false">
     <button class="mod-search-clear" onclick="modSearchClear('sol')" style="display:none" id="srchClr-sol">&#215;</button>
   </div>
-    <div style="display:flex;justify-content:flex-end;padding:2px 10px 0"><button onclick="toggleEditMode('sol')" id="editBtn-sol" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
+    <div class="sol-ban" id="solBan"></div>
+      <div style="display:flex;justify-content:flex-end;padding:2px 10px 0"><button onclick="toggleEditMode('sol')" id="editBtn-sol" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
     <div class="ilist" id="lst-sol"></div>
     <div style="padding:4px 10px 8px;display:flex;gap:6px;align-items:center">
       <input id="solQuickAdd" placeholder="+ Dodaj wlasne dzialanie..." style="flex:1;background:rgba(118,118,128,.09);border:none;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;color:#1C1C1E" onkeydown="if(event.key==='Enter')addSolQuick()">
