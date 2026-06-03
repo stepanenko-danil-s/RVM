@@ -664,7 +664,7 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
 
     <div id="repPhotos" style="display:none"><div style="padding:8px 14px 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D">Zdjęcia</div><div style="display:flex;gap:6px;overflow-x:auto;padding:0 14px 10px;-webkit-overflow-scrolling:touch" id="repPhotosList"></div></div>
     <div class="rep-btns" style="flex-wrap:wrap;gap:8px">
-      <button class="ai-btn" onclick="openAIPanel()" style="flex:1;min-width:60px">&#10024; AI</button>
+      <button class="ai-btn" onclick="generateReportAI()" id="aiBtnMain" style="flex:1;min-width:60px">&#10024; AI</button>
       <button onclick="openSh('shPhotos')" style="flex:1;min-width:60px;padding:13px;background:#F5F5F7;border:1px solid #EDEBE9;border-radius:13px;font-size:13px;font-weight:700;color:#605E5C;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="2.5" width="13" height="10" rx="2"/><circle cx="7.5" cy="7.5" r="2.2"/><path d="M4.5 2.5l1.2-2h3.6l1.2 2"/></svg>Zdjecia<span id="photoBadge" style="display:none;background:#007A7A;color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:9px;line-height:17px;text-align:center;padding:0 3px;margin-left:3px">0</span></button>
       <button class="copy-btn" id="copyBtn" onclick="doCopy()" style="flex:2;min-width:100px">Kopiuj</button>
     </div>
@@ -5406,6 +5406,64 @@ function _filterItems(items, q) {
     var ru = (it.ru || '').toLowerCase();
     return pl.indexOf(q) >= 0 || ru.indexOf(q) >= 0;
   });
+}
+
+
+// ===== ВСТРОЕННЫЙ AI ДЛЯ РАПОРТА =====
+async function generateReportAI() {
+  if (!entries.length && !_liveEntry()) { showToast('Najpierw dodaj pozycje'); return; }
+  _commitEntry();
+
+  var btn = document.getElementById('aiBtnMain');
+  if (btn) { btn.textContent = '⏳ AI...'; btn.disabled = true; }
+
+  try {
+    var raport = _fmtRep();
+    var shop = (document.getElementById('shopBtn') || {}).textContent || '';
+
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 800,
+        messages: [{
+          role: 'user',
+          content: 'Jesteś asystentem technika serwisowego RVM (automaty zwrotu butelek Biedronka).
+' +
+            'Na podstawie danych serwisowych napisz profesjonalny, zwięzły raport serwisowy po polsku.
+' +
+            'Raport ma być gotowy do wysłania do kierownika — formalny, techniczny, bez zbędnych słów.
+' +
+            'Struktura: lokalizacja → typ serwisu → wykonane prace → użyte części → status.
+
+' +
+            'Dane serwisowe:
+' + raport + '
+
+' +
+            'Napisz TYLKO treść raportu, bez komentarzy.'
+        }]
+      })
+    });
+
+    var data = await resp.json();
+    var result = data.content && data.content[0] ? data.content[0].text.trim() : '';
+
+    if (result) {
+      var ed = document.getElementById('repEdit');
+      if (ed) {
+        ed.value = result;
+        ed.dispatchEvent(new Event('input'));
+      }
+      showToast('✓ AI wygenerował raport');
+    }
+
+  } catch(e) {
+    showToast('Błąd AI — brak połączenia');
+  } finally {
+    if (btn) { btn.textContent = '✨ AI'; btn.disabled = false; }
+  }
 }
 
 function loadTheme() {
