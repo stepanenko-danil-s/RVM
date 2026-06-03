@@ -5409,53 +5409,66 @@ function _filterItems(items, q) {
 }
 
 
-// ===== ВСТРОЕННЫЙ AI ДЛЯ РАПОРТА =====
+// ===== PEŁNY AI DLA RAPORTU =====
 async function generateReportAI() {
   if (!entries.length && !_liveEntry()) { showToast('Najpierw dodaj pozycje'); return; }
   _commitEntry();
-
   var btn = document.getElementById('aiBtnMain');
-  if (btn) { btn.textContent = '⏳ AI...'; btn.disabled = true; }
-
+  if (btn) { btn.textContent = '⏳...'; btn.disabled = true; }
   try {
-    var raport = _fmtRep();
-    var shop = (document.getElementById('shopBtn') || {}).textContent || '';
-
+    var shop = (document.getElementById('shopBtn') || {}).textContent || 'nieznany';
+    var today = new Date().toLocaleDateString('pl-PL');
+    var entriesText = entries.map(function(e, i) {
+      var line = (i+1) + '. [' + (e.mode==='G'?'GWARANCJA':'SERWIS') + '] ';
+      if (e.el) line += e.el;
+      if (e.def && e.def.length) line += ' → ' + e.def.join(', ');
+      if (e.sol && e.sol.length) line += ' → ' + e.sol.join(', ');
+      return line;
+    }).join('\n');
+    var allParts = (typeof magGetAll === 'function') ? magGetAll() : [];
+    var partsText = allParts.length ? allParts.map(function(p){ return p.n + ' x' + (p.q||1); }).join(', ') : 'brak';
+    var prompt =
+      'Jesteś doświadczonym technikiem i asystentem AI dla serwisanta RVM (automaty zwrotu butelek, modele TOMRA/Wincor, sieć Biedronka Polska).\n\n' +
+      'DANE SERWISOWE:\n' +
+      'Sklep: ' + shop + '\n' +
+      'Data: ' + today + '\n' +
+      'Wpisy:\n' + entriesText + '\n' +
+      'Użyte części: ' + partsText + '\n\n' +
+      'WYKONAJ:\n\n' +
+      '1. DIAGNOZA: Prawdopodobna przyczyna każdej usterki (wiedza techniczna RVM/TOMRA).\n\n' +
+      '2. UZUPEŁNIENIE: Jeśli wpis jest niepełny — zaproponuj brakujące dane w [nawiasach].\n\n' +
+      '3. SŁOWNIK: Nowe terminy techniczne z tego serwisu (termin — znaczenie).\n\n' +
+      '4. RAPORT KOŃCOWY gotowy do wysłania do kierownika:\n' +
+      '   Nagłówek: sklep, data, typ serwisu\n' +
+      '   Wykonane prace (każda pozycja osobno)\n' +
+      '   Użyte części\n' +
+      '   Status maszyny po serwisie\n' +
+      '   Uwagi/zalecenia\n\n' +
+      'Język: polski. Styl: profesjonalny, techniczny, bez zbędnych słów.';
     var resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 800,
-        messages: [{
-          role: 'user',
-          content: 'Jesteś asystentem technika serwisowego RVM (automaty zwrotu butelek Biedronka).
-' +
-            'Na podstawie danych serwisowych napisz profesjonalny, zwięzły raport serwisowy po polsku.
-' +
-            'Raport ma być gotowy do wysłania do kierownika — formalny, techniczny, bez zbędnych słów.
-' +
-            'Struktura: lokalizacja → typ serwisu → wykonane prace → użyte części → status.
-
-' +
-            'Dane serwisowe:
-' + raport + '
-
-' +
-            'Napisz TYLKO treść raportu, bez komentarzy.'
-        }]
+        max_tokens: 1500,
+        messages: [{ role: 'user', content: prompt }]
       })
     });
-
     var data = await resp.json();
     var result = data.content && data.content[0] ? data.content[0].text.trim() : '';
-
     if (result) {
       var ed = document.getElementById('repEdit');
-      if (ed) {
-        ed.value = result;
-        ed.dispatchEvent(new Event('input'));
-      }
+      if (ed) { ed.value = result; ed.dispatchEvent(new Event('input')); }
+      showToast('✓ AI gotowy');
+    } else {
+      showToast('Błąd: brak odpowiedzi AI');
+    }
+  } catch(e) {
+    showToast('Błąd AI — sprawdz połączenie');
+  } finally {
+    if (btn) { btn.textContent = '✨ AI'; btn.disabled = false; }
+  }
+}
       showToast('✓ AI wygenerował raport');
     }
 
