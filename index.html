@@ -505,7 +505,7 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
   </div>
   <div class="mod-search">
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#A19F9D" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4"/><line x1="9" y1="9" x2="13" y2="13"/></svg>
-    <input id="srch-el" placeholder="Szukaj elementu..." oninput="modSearch('el',this.value)" onfocus="this.select()" autocomplete="off" autocorrect="off" spellcheck="false">
+    <input id="srch-el" onfocus="if(!mOpen[0])openMod(0)" placeholder="Szukaj elementu..." oninput="modSearch('el',this.value)" onfocus="this.select()" autocomplete="off" autocorrect="off" spellcheck="false">
     <button class="mod-search-clear" onclick="modSearchClear('el')" style="display:none" id="srchClr-el">&#215;</button>
   </div>
   <div class="mod-body" id="body1">
@@ -529,7 +529,7 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
   <div class="mod-body" id="body2">
     <div class="mod-search">
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#A19F9D" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4"/><line x1="9" y1="9" x2="13" y2="13"/></svg>
-    <input id="srch-def" placeholder="Szukaj usterki..." oninput="modSearch('def',this.value)" onfocus="this.select()" autocomplete="off" autocorrect="off" spellcheck="false">
+    <input id="srch-def" onfocus="if(!mOpen[1])openMod(1)" placeholder="Szukaj usterki..." oninput="modSearch('def',this.value)" onfocus="this.select()" autocomplete="off" autocorrect="off" spellcheck="false">
     <button class="mod-search-clear" onclick="modSearchClear('def')" style="display:none" id="srchClr-def">&#215;</button>
   </div>
     <div style="display:flex;justify-content:flex-end;padding:2px 10px 0"><button onclick="toggleEditMode('def')" id="editBtn-def" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
@@ -557,7 +557,7 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
     <div class="sol-ban" id="solBan"></div>
     <div class="mod-search">
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#A19F9D" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4"/><line x1="9" y1="9" x2="13" y2="13"/></svg>
-    <input id="srch-sol" placeholder="Szukaj działania..." oninput="modSearch('sol',this.value)" onfocus="this.select()" autocomplete="off" autocorrect="off" spellcheck="false">
+    <input id="srch-sol" onfocus="if(!mOpen[2])openMod(2)" placeholder="Szukaj działania..." oninput="modSearch('sol',this.value)" onfocus="this.select()" autocomplete="off" autocorrect="off" spellcheck="false">
     <button class="mod-search-clear" onclick="modSearchClear('sol')" style="display:none" id="srchClr-sol">&#215;</button>
   </div>
     <div style="display:flex;justify-content:flex-end;padding:2px 10px 0"><button onclick="toggleEditMode('sol')" id="editBtn-sol" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
@@ -5408,11 +5408,11 @@ function modSearch(col, val) {
   _modFilter[col] = val.trim().toLowerCase();
   var clr = document.getElementById('srchClr-' + col);
   if (clr) clr.style.display = val ? 'block' : 'none';
+  // Auto-open module
+  var bodyMap = { el: 0, def: 1, sol: 2 };
+  var idx = bodyMap[col];
+  if (idx !== undefined && !mOpen[idx]) openMod(idx);
   renderList(col);
-  // Auto-open module if closed
-  var bodyMap = { el: 1, def: 2, sol: 3 };
-  var idx = (bodyMap[col] || 1) - 1;
-  if (!mOpen[idx] && val) openMod(idx);
 }
 
 function modSearchClear(col) {
