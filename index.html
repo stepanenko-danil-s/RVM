@@ -500,7 +500,12 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
     <div class="mod-arr" id="arr1">&#8250;</div>
   </div>
   <div class="mod-body" id="body1">
-    <div style="display:flex;justify-content:flex-end;padding:6px 10px 0"><button onclick="toggleEditMode('el')" id="editBtn-el" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
+    <div style="padding:8px 10px 4px;display:flex;gap:6px;align-items:center">
+      <input id="aiInp-el" placeholder="Opisz element..." style="flex:1;background:rgba(118,118,128,.09);border:none;border-radius:10px;padding:7px 12px;font-size:13px;font-family:inherit;outline:none;color:#1C1C1E" onkeydown="if(event.key==='Enter')aiPills('el')">
+      <button onclick="aiPills('el')" style="flex-shrink:0;padding:7px 12px;background:#007A7A;border:none;border-radius:10px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">AI</button>
+    </div>
+    <div id="aiPills-el" style="display:none;padding:2px 10px 8px;display:flex;flex-wrap:wrap;gap:6px"></div>
+    <div style="display:flex;justify-content:flex-end;padding:2px 10px 0"><button onclick="toggleEditMode('el')" id="editBtn-el" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
     <div class="ilist" id="lst-el"></div>
     <button class="add-own" onclick="openCust('el')">+ Dodaj w&#322;asny</button>
   </div>
@@ -518,7 +523,12 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
     <div class="mod-arr" id="arr2">&#8250;</div>
   </div>
   <div class="mod-body" id="body2">
-    <div style="display:flex;justify-content:flex-end;padding:6px 10px 0"><button onclick="aiSuggestDef()" style="background:rgba(0,122,122,.08);border:1px solid rgba(0,122,122,.2);border-radius:8px;color:#007A7A;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;margin-right:4px">&#10024; AI</button><button onclick="toggleEditMode('def')" id="editBtn-def" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
+    <div style="padding:8px 10px 4px;display:flex;gap:6px;align-items:center">
+      <input id="aiInp-def" placeholder="Opisz usterkę..." style="flex:1;background:rgba(118,118,128,.09);border:none;border-radius:10px;padding:7px 12px;font-size:13px;font-family:inherit;outline:none;color:#1C1C1E" onkeydown="if(event.key==='Enter')aiPills('def')">
+      <button onclick="aiPills('def')" style="flex-shrink:0;padding:7px 12px;background:#007A7A;border:none;border-radius:10px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">AI</button>
+    </div>
+    <div id="aiPills-def" style="display:none;padding:2px 10px 8px;display:flex;flex-wrap:wrap;gap:6px"></div>
+    <div style="display:flex;justify-content:flex-end;padding:2px 10px 0"><button onclick="toggleEditMode('def')" id="editBtn-def" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
     <div class="ilist" id="lst-def"></div>
     <div style="padding:4px 10px 8px;display:flex;gap:6px;align-items:center">
       <input id="defQuickAdd" placeholder="+ Dodaj własną usterkę..." style="flex:1;background:rgba(118,118,128,.09);border:none;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;color:#1C1C1E" onkeydown="if(event.key==='Enter')addDefQuick()">
@@ -541,7 +551,12 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
   </div>
   <div class="mod-body" id="body3">
     <div class="sol-ban" id="solBan"></div>
-    <div style="display:flex;justify-content:flex-end;padding:4px 10px 0"><button onclick="aiSuggestSol()" style="background:rgba(0,122,122,.08);border:1px solid rgba(0,122,122,.2);border-radius:8px;color:#007A7A;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;margin-right:4px">&#10024; AI</button><button onclick="toggleEditMode('sol')" id="editBtn-sol" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
+    <div style="padding:8px 10px 4px;display:flex;gap:6px;align-items:center">
+      <input id="aiInp-sol" placeholder="Opisz co zrobiono..." style="flex:1;background:rgba(118,118,128,.09);border:none;border-radius:10px;padding:7px 12px;font-size:13px;font-family:inherit;outline:none;color:#1C1C1E" onkeydown="if(event.key==='Enter')aiPills('sol')">
+      <button onclick="aiPills('sol')" style="flex-shrink:0;padding:7px 12px;background:#007A7A;border:none;border-radius:10px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">AI</button>
+    </div>
+    <div id="aiPills-sol" style="display:none;padding:2px 10px 8px;display:flex;flex-wrap:wrap;gap:6px"></div>
+    <div style="display:flex;justify-content:flex-end;padding:2px 10px 0"><button onclick="toggleEditMode('sol')" id="editBtn-sol" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
     <div class="ilist" id="lst-sol"></div>
     <div style="padding:4px 10px 8px;display:flex;gap:6px;align-items:center">
       <input id="solQuickAdd" placeholder="+ Dodaj wlasne dzialanie..." style="flex:1;background:rgba(118,118,128,.09);border:none;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;color:#1C1C1E" onkeydown="if(event.key==='Enter')addSolQuick()">
@@ -5269,6 +5284,97 @@ function setTheme(n) {
     }
   }
   showToast('Motyw ' + n + ' zastosowany');
+}
+
+
+// ===== AI PILLS =====
+var _aiPillsColors = { el:'#0078D4', def:'#E53935', sol:'#34C759' };
+
+async function aiPills(col) {
+  var inp = document.getElementById('aiInp-' + col);
+  var pillsWrap = document.getElementById('aiPills-' + col);
+  var txt = (inp ? inp.value : '').trim();
+  if (!txt) { showToast('Wpisz opis'); return; }
+
+  var btn = inp ? inp.nextElementSibling : null;
+  if (btn) { btn.textContent = '...'; btn.disabled = true; }
+
+  try {
+    var items = (D[col] || []).map(function(x){return x.pl;}).slice(0,80).join(', ');
+    var colName = col==='el' ? 'element maszyny' : col==='def' ? 'usterka/problem' : 'co zrobiono/działanie';
+
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 200,
+        messages: [{
+          role: 'user',
+          content: 'Serwisant RVM. Podaj 3-5 najlepszych propozycji dla kategorii "' + colName + '".
+' +
+            'Dostępne opcje: ' + items + '
+' +
+            'Opis: ' + txt + '
+' +
+            'Zwróć TYLKO tablicę JSON z tekstami po polsku, np: ["opcja1","opcja2","opcja3"]
+' +
+            'Wybieraj z dostępnych opcji lub twórz nowe krótkie terminy techniczne.'
+        }]
+      })
+    });
+    var data = await resp.json();
+    var raw = (data.content && data.content[0] ? data.content[0].text : '[]').replace(/```json|```/g,'').trim();
+    var suggestions = JSON.parse(raw);
+    if (!Array.isArray(suggestions)) suggestions = [];
+
+    if (btn) { btn.textContent = 'AI'; btn.disabled = false; }
+
+    if (!suggestions.length) { showToast('Brak propozycji'); return; }
+
+    // Render pills
+    var color = _aiPillsColors[col] || '#007A7A';
+    var html = '';
+    suggestions.forEach(function(s) {
+      html += '<button onclick="aiPillSelect('' + col + '','' + s.replace(/'/g,"\'") + '')" ' +
+        'style="padding:6px 14px;border-radius:20px;border:1.5px solid ' + color + ';background:#fff;' +
+        'color:' + color + ';font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;' +
+        '-webkit-tap-highlight-color:transparent">' + esc(s) + '</button>';
+    });
+    pillsWrap.innerHTML = html;
+    pillsWrap.style.display = 'flex';
+
+  } catch(e) {
+    if (btn) { btn.textContent = 'AI'; btn.disabled = false; }
+    showToast('Błąd AI');
+  }
+}
+
+function aiPillSelect(col, val) {
+  // Add to SEL and update list
+  if (col === 'el') {
+    if (SEL.el.indexOf(val) < 0) SEL.el.push(val);
+    _updV('el'); renderList('el'); renderList('def'); renderList('sol');
+  } else if (col === 'def') {
+    if (SEL.def.indexOf(val) < 0) SEL.def.push(val);
+    _updV('def'); renderList('def'); renderList('sol');
+  } else if (col === 'sol') {
+    if (SEL.sol.indexOf(val) < 0) SEL.sol.push(val);
+    _updV('sol'); renderList('sol');
+  }
+  renderSummary();
+
+  // Mark selected pill
+  var pillsWrap = document.getElementById('aiPills-' + col);
+  if (pillsWrap) {
+    var color = _aiPillsColors[col] || '#007A7A';
+    Array.from(pillsWrap.querySelectorAll('button')).forEach(function(b) {
+      var isSelected = b.textContent === val;
+      b.style.background = isSelected ? color : '#fff';
+      b.style.color = isSelected ? '#fff' : color;
+    });
+  }
+  showToast('Dodano: ' + val);
 }
 
 function loadTheme() {
