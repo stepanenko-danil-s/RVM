@@ -5296,8 +5296,16 @@ async function aiPills(col) {
   var txt = (inp ? inp.value : '').trim();
   if (!txt) { showToast('Wpisz opis'); return; }
 
+  // Убираем клавиатуру
+  if (inp) inp.blur();
+
   var btn = inp ? inp.nextElementSibling : null;
   if (btn) { btn.textContent = '...'; btn.disabled = true; }
+  // Показываем загрузку
+  if (pillsWrap) {
+    pillsWrap.style.display = 'flex';
+    pillsWrap.innerHTML = '<span style="font-size:12px;color:#A19F9D">▸ AI analizuje...</span>';
+  }
 
   try {
     var items = (D[col] || []).map(function(x){return x.pl;}).slice(0,80).join(', ');
