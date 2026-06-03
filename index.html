@@ -5428,7 +5428,7 @@ async function generateReportAI() {
     var allParts = (typeof magGetAll === 'function') ? magGetAll() : [];
     var partsText = allParts.length ? allParts.map(function(p){ return p.n + ' x' + (p.q||1); }).join(', ') : 'brak';
     var prompt =
-      'Jesteś doświadczonym technikiem i asystentem AI dla serwisanta RVM (automaty zwrotu butelek, modele TOMRA/Wincor, sieć Biedronka Polska).\n\n' +
+      'Jesteś doświadczonym technikiem i asystentem AI dla serwisanta firmy RVM Systems Sp. z o.o. (Polska, sieć Biedronka).\nObsługiwane maszyny RVM Systems: X2 (stand-alone CAN+PET, 1/4 palety), X3 (X2+szafka boczna szkło), X10 (1 frakcja 1/2 palety), X20 (CAN+PET 1/2 palety), X30 (X20+szkło), X100 (1 frakcja 1 paleta), X200 (CAN+PET 1/1 palety), RVM X ProLine (modularny dla supermarketów).\nGłówne podzespoły: czujniki fotoelektryczne (rozruchowy/zatrzymania), kamera ARC, skaner 2DH, czytnik kodów 360°, sorter MIX Lewy/Prawy/eXtend, kompaktor (silnik 24V, pas, łańcuch PET), płyta kontrolna PCBA, płyta I/O sortera, drukarka Epson TM, zasilacz 24V, przekaźnik bezpieczeństwa OMRON G9SB-301-B, czytnik kart MK2.\nNajczęstsze usterki: zablokowany podajnik (pas/łańcuch), brak odczytu kodów (kamera/czujnik), błąd kompaktor (silnik/czujnik pełny), awaria drukarka Epson, błąd safety relay (OMRON G9SB), zacięcie sortera MIX, błąd komunikacji PCBA.\nTyp serwisu: G=gwarancja, S=płatny serwis.\n\n' +
       'DANE SERWISOWE:\n' +
       'Sklep: ' + shop + '\n' +
       'Data: ' + today + '\n' +
