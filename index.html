@@ -10,7 +10,6 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#E8EBF2;max-width:430px;margin:0 auto;-webkit-font-smoothing:antialiased}
 input,button,textarea{font-family:inherit;-webkit-appearance:none;appearance:none}
-button:active{opacity:.65;transform:scale(.97);transition:opacity .08s,transform .08s}
 button{cursor:pointer}
 ::-webkit-scrollbar{display:none}
 /* NAV */
@@ -460,12 +459,6 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
   </div>
 </div>
 
-<div style="padding:0 12px 8px">
-  <button onclick="mainMicOpen()" ontouchend="mainMicOpen()" style="width:100%;padding:13px 16px;background:linear-gradient(135deg,#005A9E,#0078D4);color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px;-webkit-tap-highlight-color:transparent;box-shadow:0 2px 8px rgba(0,120,212,.3)">
-    <svg width="20" height="20" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/><line x1="6" y1="17" x2="12" y2="17"/></svg>
-    Dyktuj opis serwisu
-  </button>
-</div>
 <div id="flowWrap" style="display:none">
 
 <div class="mod" style="margin-bottom:10px" id="serwisBlock">
@@ -489,7 +482,12 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
 </div>
 
 
-
+<div style="padding:0 0 8px">
+  <button onclick="mainMicOpen()" style="width:100%;padding:11px 16px;background:linear-gradient(135deg,#0078D4,#005A9E);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;-webkit-tap-highlight-color:transparent">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/><line x1="6" y1="17" x2="12" y2="17"/></svg>
+    Dyktuj opis serwisu
+  </button>
+</div>
 
 <div class="mod" id="mod1block">
   <div class="mod-hdr idle" id="hdr1" onclick="toggleMod(0)">
@@ -498,10 +496,11 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
       <div class="mod-ttl" style="font-size:13px">Element</div>
       <div class="mod-val" id="val1">Wybierz element</div>
     </div>
+    <button onclick="event.stopPropagation();modMic('el')" style="background:none;border:none;padding:4px;cursor:pointer;color:#0078D4;display:flex;align-items:center;-webkit-tap-highlight-color:transparent" title="Dyktuj"><svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/><line x1="6" y1="17" x2="12" y2="17"/></svg></button>
     <div class="mod-arr" id="arr1">&#8250;</div>
   </div>
   <div class="mod-body" id="body1">
-<div style="display:flex;justify-content:flex-end;padding:2px 10px 0"><button onclick="toggleEditMode('el')" id="editBtn-el" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
+    <div style="display:flex;justify-content:flex-end;padding:6px 10px 0"><button onclick="toggleEditMode('el')" id="editBtn-el" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
     <div class="ilist" id="lst-el"></div>
     <button class="add-own" onclick="openCust('el')">+ Dodaj w&#322;asny</button>
   </div>
@@ -519,7 +518,7 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
     <div class="mod-arr" id="arr2">&#8250;</div>
   </div>
   <div class="mod-body" id="body2">
-<div style="display:flex;justify-content:flex-end;padding:2px 10px 0"><button onclick="toggleEditMode('def')" id="editBtn-def" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
+    <div style="display:flex;justify-content:flex-end;padding:6px 10px 0"><button onclick="aiSuggestDef()" style="background:rgba(0,122,122,.08);border:1px solid rgba(0,122,122,.2);border-radius:8px;color:#007A7A;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;margin-right:4px">&#10024; AI</button><button onclick="toggleEditMode('def')" id="editBtn-def" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
     <div class="ilist" id="lst-def"></div>
     <div style="padding:4px 10px 8px;display:flex;gap:6px;align-items:center">
       <input id="defQuickAdd" placeholder="+ Dodaj własną usterkę..." style="flex:1;background:rgba(118,118,128,.09);border:none;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;color:#1C1C1E" onkeydown="if(event.key==='Enter')addDefQuick()">
@@ -541,8 +540,8 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
     <div class="mod-arr" id="arr3">&#8250;</div>
   </div>
   <div class="mod-body" id="body3">
-<div class="sol-ban" id="solBan"></div>
-      <div style="display:flex;justify-content:flex-end;padding:2px 10px 0"><button onclick="toggleEditMode('sol')" id="editBtn-sol" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
+    <div class="sol-ban" id="solBan"></div>
+    <div style="display:flex;justify-content:flex-end;padding:4px 10px 0"><button onclick="aiSuggestSol()" style="background:rgba(0,122,122,.08);border:1px solid rgba(0,122,122,.2);border-radius:8px;color:#007A7A;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;margin-right:4px">&#10024; AI</button><button onclick="toggleEditMode('sol')" id="editBtn-sol" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
     <div class="ilist" id="lst-sol"></div>
     <div style="padding:4px 10px 8px;display:flex;gap:6px;align-items:center">
       <input id="solQuickAdd" placeholder="+ Dodaj wlasne dzialanie..." style="flex:1;background:rgba(118,118,128,.09);border:none;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;color:#1C1C1E" onkeydown="if(event.key==='Enter')addSolQuick()">
@@ -665,7 +664,7 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
 
     <div id="repPhotos" style="display:none"><div style="padding:8px 14px 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D">Zdjęcia</div><div style="display:flex;gap:6px;overflow-x:auto;padding:0 14px 10px;-webkit-overflow-scrolling:touch" id="repPhotosList"></div></div>
     <div class="rep-btns" style="flex-wrap:wrap;gap:8px">
-      <button class="ai-btn" onclick="generateReportAI()" ontouchend="event.preventDefault();generateReportAI()" id="aiBtnMain" style="flex:1;min-width:60px">&#10024; AI</button>
+      <button class="ai-btn" onclick="openAIPanel()" style="flex:1;min-width:60px">&#10024; AI</button>
       <button onclick="openSh('shPhotos')" style="flex:1;min-width:60px;padding:13px;background:#F5F5F7;border:1px solid #EDEBE9;border-radius:13px;font-size:13px;font-weight:700;color:#605E5C;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="2.5" width="13" height="10" rx="2"/><circle cx="7.5" cy="7.5" r="2.2"/><path d="M4.5 2.5l1.2-2h3.6l1.2 2"/></svg>Zdjecia<span id="photoBadge" style="display:none;background:#007A7A;color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:9px;line-height:17px;text-align:center;padding:0 3px;margin-left:3px">0</span></button>
       <button class="copy-btn" id="copyBtn" onclick="doCopy()" style="flex:2;min-width:100px">Kopiuj</button>
     </div>
@@ -1474,11 +1473,6 @@ function renderList(col){
   var customPls=allC.map(function(x){return x.pl;});
   var sel=SEL[col];
   var h="";
-  var hf = '';
-    _filtered.forEach(function(it){ hf += _liH(it, col, sel, false, customPls.indexOf(it.pl)>=0); });
-    el2.innerHTML = hf;
-    return;
-  }
 
   if(col==="sol"){
     var sug=getSugSols();
@@ -5275,209 +5269,6 @@ function setTheme(n) {
     }
   }
   showToast('Motyw ' + n + ' zastosowany');
-}
-
-
-// ===== AI PILLS =====
-var _aiPillsColors = { el:'#0078D4', def:'#E53935', sol:'#34C759' };
-
-async function aiPills(col) {
-  var inp = document.getElementById('aiInp-' + col);
-  var pillsWrap = document.getElementById('aiPills-' + col);
-  var txt = (inp ? inp.value : '').trim();
-  if (!txt) { showToast('Wpisz opis'); return; }
-
-  // Убираем клавиатуру
-  if (inp) inp.blur();
-
-  var btn = inp ? inp.nextElementSibling : null;
-  if (btn) { btn.textContent = '...'; btn.disabled = true; }
-  // Показываем загрузку
-  if (pillsWrap) {
-    pillsWrap.style.display = 'flex';
-    pillsWrap.innerHTML = '<span style="font-size:12px;color:#A19F9D">▸ AI analizuje...</span>';
-  }
-
-  try {
-    var items = (D[col] || []).map(function(x){return x.pl;}).slice(0,80).join(', ');
-    var colName = col==='el' ? 'element maszyny' : col==='def' ? 'usterka/problem' : 'co zrobiono/działanie';
-
-    var resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 200,
-        messages: [{
-          role: 'user',
-          content: 'Serwisant RVM. Podaj 3-5 najlepszych propozycji dla kategorii "' + colName + '".
-' +
-            'Dostępne opcje: ' + items + '
-' +
-            'Opis: ' + txt + '
-' +
-            'Zwróć TYLKO tablicę JSON z tekstami po polsku, np: ["opcja1","opcja2","opcja3"]
-' +
-            'Wybieraj z dostępnych opcji lub twórz nowe krótkie terminy techniczne.'
-        }]
-      })
-    });
-    var data = await resp.json();
-    var raw = (data.content && data.content[0] ? data.content[0].text : '[]').replace(/```json|```/g,'').trim();
-    var suggestions = JSON.parse(raw);
-    if (!Array.isArray(suggestions)) suggestions = [];
-
-    if (btn) { btn.textContent = 'AI'; btn.disabled = false; }
-
-    if (!suggestions.length) { showToast('Brak propozycji'); return; }
-
-    // Render pills
-    var color = _aiPillsColors[col] || '#007A7A';
-    var html = '';
-    suggestions.forEach(function(s) {
-      html += '<button onclick="aiPillSelect('' + col + '','' + s.replace(/'/g,"\'") + '')" ' +
-        'style="padding:6px 14px;border-radius:20px;border:1.5px solid ' + color + ';background:#fff;' +
-        'color:' + color + ';font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;' +
-        '-webkit-tap-highlight-color:transparent">' + esc(s) + '</button>';
-    });
-    pillsWrap.innerHTML = html;
-    pillsWrap.style.display = 'flex';
-
-  } catch(e) {
-    if (btn) { btn.textContent = 'AI'; btn.disabled = false; }
-    showToast('Błąd AI');
-  }
-}
-
-function aiPillSelect(col, val) {
-  // Add to SEL and update list
-  if (col === 'el') {
-    if (SEL.el.indexOf(val) < 0) SEL.el.push(val);
-    _updV('el'); renderList('el'); renderList('def'); renderList('sol');
-  } else if (col === 'def') {
-    if (SEL.def.indexOf(val) < 0) SEL.def.push(val);
-    _updV('def'); renderList('def'); renderList('sol');
-  } else if (col === 'sol') {
-    if (SEL.sol.indexOf(val) < 0) SEL.sol.push(val);
-    _updV('sol'); renderList('sol');
-  }
-  renderSummary();
-
-  // Mark selected pill
-  var pillsWrap = document.getElementById('aiPills-' + col);
-  if (pillsWrap) {
-    var color = _aiPillsColors[col] || '#007A7A';
-    Array.from(pillsWrap.querySelectorAll('button')).forEach(function(b) {
-      var isSelected = b.textContent === val;
-      b.style.background = isSelected ? color : '#fff';
-      b.style.color = isSelected ? '#fff' : color;
-    });
-  }
-  showToast('Dodano: ' + val);
-}
-
-
-// ===== БЫСТРЫЙ ПОИСК В МОДУЛЯХ =====
-var _modFilter = { el: '', def: '', sol: '' };
-
-function modSearch(col, val) {
-  _modFilter[col] = val.trim().toLowerCase();
-  var clr = document.getElementById('srchClr-' + col);
-  if (clr) clr.style.display = val ? 'block' : 'none';
-  // Auto-open module
-  var bodyMap = { el: 0, def: 1, sol: 2 };
-  var idx = bodyMap[col];
-  if (idx !== undefined && !mOpen[idx]) openMod(idx);
-  renderList(col);
-}
-
-function modSearchClear(col) {
-  _modFilter[col] = '';
-  var inp = document.getElementById('srch-' + col);
-  if (inp) { inp.value = ''; inp.focus(); }
-  var clr = document.getElementById('srchClr-' + col);
-  if (clr) clr.style.display = 'none';
-  renderList(col);
-}
-
-function _filterItems(items, q) {
-  if (!q) return items;
-  return items.filter(function(it) {
-    var pl = (it.pl || '').toLowerCase();
-    var ru = (it.ru || '').toLowerCase();
-    return pl.indexOf(q) >= 0 || ru.indexOf(q) >= 0;
-  });
-}
-
-
-// ===== PEŁNY AI DLA RAPORTU =====
-async function generateReportAI() {
-  if (!entries.length && !_liveEntry()) { showToast('Najpierw dodaj pozycje'); return; }
-  _commitEntry();
-  var btn = document.getElementById('aiBtnMain');
-  if (btn) { btn.textContent = '⏳...'; btn.disabled = true; }
-  try {
-    var shop = (document.getElementById('shopBtn') || {}).textContent || 'nieznany';
-    var today = new Date().toLocaleDateString('pl-PL');
-    var entriesText = entries.map(function(e, i) {
-      var line = (i+1) + '. [' + (e.mode==='G'?'GWARANCJA':'SERWIS') + '] ';
-      if (e.el) line += e.el;
-      if (e.def && e.def.length) line += ' → ' + e.def.join(', ');
-      if (e.sol && e.sol.length) line += ' → ' + e.sol.join(', ');
-      return line;
-    }).join('\n');
-    var allParts = (typeof magGetAll === 'function') ? magGetAll() : [];
-    var partsText = allParts.length ? allParts.map(function(p){ return p.n + ' x' + (p.q||1); }).join(', ') : 'brak';
-    var prompt =
-      'Jesteś doświadczonym technikiem i asystentem AI dla serwisanta firmy RVM Systems Sp. z o.o. (Polska, sieć Biedronka).\nObsługiwane maszyny RVM Systems: X2 (stand-alone CAN+PET, 1/4 palety), X3 (X2+szafka boczna szkło), X10 (1 frakcja 1/2 palety), X20 (CAN+PET 1/2 palety), X30 (X20+szkło), X100 (1 frakcja 1 paleta), X200 (CAN+PET 1/1 palety), RVM X ProLine (modularny dla supermarketów).\nGłówne podzespoły: czujniki fotoelektryczne (rozruchowy/zatrzymania), kamera ARC, skaner 2DH, czytnik kodów 360°, sorter MIX Lewy/Prawy/eXtend, kompaktor (silnik 24V, pas, łańcuch PET), płyta kontrolna PCBA, płyta I/O sortera, drukarka Epson TM, zasilacz 24V, przekaźnik bezpieczeństwa OMRON G9SB-301-B, czytnik kart MK2.\nNajczęstsze usterki: zablokowany podajnik (pas/łańcuch), brak odczytu kodów (kamera/czujnik), błąd kompaktor (silnik/czujnik pełny), awaria drukarka Epson, błąd safety relay (OMRON G9SB), zacięcie sortera MIX, błąd komunikacji PCBA.\nTyp serwisu: G=gwarancja, S=płatny serwis.\n\n' +
-      'DANE SERWISOWE:\n' +
-      'Sklep: ' + shop + '\n' +
-      'Data: ' + today + '\n' +
-      'Wpisy:\n' + entriesText + '\n' +
-      'Użyte części: ' + partsText + '\n\n' +
-      'WYKONAJ:\n\n' +
-      '1. DIAGNOZA: Prawdopodobna przyczyna każdej usterki (wiedza techniczna RVM/TOMRA).\n\n' +
-      '2. UZUPEŁNIENIE: Jeśli wpis jest niepełny — zaproponuj brakujące dane w [nawiasach].\n\n' +
-      '3. SŁOWNIK: Nowe terminy techniczne z tego serwisu (termin — znaczenie).\n\n' +
-      '4. RAPORT KOŃCOWY gotowy do wysłania do kierownika:\n' +
-      '   Nagłówek: sklep, data, typ serwisu\n' +
-      '   Wykonane prace (każda pozycja osobno)\n' +
-      '   Użyte części\n' +
-      '   Status maszyny po serwisie\n' +
-      '   Uwagi/zalecenia\n\n' +
-      'Język: polski. Styl: profesjonalny, techniczny, bez zbędnych słów.';
-    var resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1500,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-    var data = await resp.json();
-    var result = data.content && data.content[0] ? data.content[0].text.trim() : '';
-    if (result) {
-      var ed = document.getElementById('repEdit');
-      if (ed) { ed.value = result; ed.dispatchEvent(new Event('input')); }
-      showToast('✓ AI gotowy');
-    } else {
-      showToast('Błąd: brak odpowiedzi AI');
-    }
-  } catch(e) {
-    showToast('Błąd AI — sprawdz połączenie');
-  } finally {
-    if (btn) { btn.textContent = '✨ AI'; btn.disabled = false; }
-  }
-}
-      showToast('✓ AI wygenerował raport');
-    }
-
-  } catch(e) {
-    showToast('Błąd AI — brak połączenia');
-  } finally {
-    if (btn) { btn.textContent = '✨ AI'; btn.disabled = false; }
-  }
 }
 
 function loadTheme() {
