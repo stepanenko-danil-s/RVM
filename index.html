@@ -444,15 +444,7 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
 </div>
 
 
-<div class="acc-card" style="margin-bottom:10px">
-  <div class="acc-hdr" onclick="accOpen('manual')">
-    <span class="acc-hdr-t">Dodaj ręcznie</span>
-    <span class="acc-arr" id="accArr-manual">▼</span>
-  </div>
-  <div class="acc-body" id="accBody-manual">
-    <div id="manualInner" style="padding:4px 8px"></div>
-  </div>
-</div>
+<div id="manualInner"></div>
 
 <div class="acc-card" style="margin-bottom:10px">
   <div class="acc-hdr" onclick="accOpen('parts')">
@@ -942,7 +934,14 @@ function showToast(msg){var t=document.getElementById("toast");if(!t)return;t.in
 function openSh(id){var el=document.getElementById(id);if(el){el.style.display="flex";setTimeout(function(){el.classList.add("open");},10);}}
 function closeOv(id){var el=document.getElementById(id);if(el){el.classList.remove("open");setTimeout(function(){el.style.display="none";},300);}}
 function _applyMod(i){var n=i+1;var hdr=document.getElementById("hdr"+n),body=document.getElementById("body"+n),bdg=document.getElementById("bdg"+n),arr=document.getElementById("arr"+n);var has=(i===0&&SEL.el.length)||(i===1&&(SEL.def.length||SEL.kon.length))||(i===2&&SEL.sol.length);var open=mOpen[i];if(body)body.className="mod-body"+(open?" open":"");if(arr)arr.className="mod-arr"+(open?" open":"");if(hdr)hdr.className="mod-hdr"+(open?" active":has?" done":" idle");if(bdg){bdg.className="badge"+(open?" active":has?" done":" idle");}}
-function _updateFlowState(){var s1=document.getElementById("serwisBlock"),m1=document.getElementById("mod1block"),df=document.getElementById("defFlowWrap");if(s1)s1.style.display="block";if(m1)m1.style.display="block";if(df)df.style.display="block";}
+function _updateFlowState(){
+  var s1=document.getElementById("serwisBlock"),m1=document.getElementById("mod1block"),df=document.getElementById("defFlowWrap");
+  if(s1)s1.style.display="block";if(m1)m1.style.display="block";if(df)df.style.display="block";
+  // Keep flowWrap in manualInner always
+  var mi=document.getElementById("manualInner");
+  var fw=document.getElementById("flowWrap");
+  if(mi&&fw&&!mi.contains(fw)){fw.style.display="";mi.appendChild(fw);}
+}
 function setMode(m){var changing=(curMode!==m);if(changing){if(SEL.el.length)_commitEntry();if(curMode==="G")selKonG=SEL.kon.slice();else selKonS=SEL.kon.slice();if(m==="G"){timeG={od:"",do:""};}else{timeS={od:"",do:""};}var restoredKon=(m==="G"?selKonG:selKonS);SEL={el:[],def:[],sol:[],kon:restoredKon.slice(),mode:""};lastDefCat="";mOpenS=false;var bS=document.getElementById("bodyS");if(bS)bS.className="mod-body";var aS=document.getElementById("arrS");if(aS)aS.className="mod-arr";var hS=document.getElementById("hdrS");if(hS)hS.className="mod-hdr"+(restoredKon&&restoredKon.length?" done":" idle");var dS2=document.getElementById("bdgS");if(dS2){dS2.style.background=restoredKon&&restoredKon.length?"rgba(52,199,89,.1)":"rgba(0,122,122,.12)";dS2.style.color=restoredKon&&restoredKon.length?"#34C759":"#007A7A";};[0,1,2].forEach(function(i){mOpen[i]=false;_applyMod(i);});var e1=document.getElementById("val1");if(e1){e1.textContent="Wybierz element";e1.className="mod-val";}var e2=document.getElementById("val2");if(e2){e2.textContent="Wybierz usterke";e2.className="mod-val";}var e3=document.getElementById("val3");if(e3){e3.textContent="Wybierz lub dodaj dzialanie";e3.className="mod-val";}renderList("el");renderList("def");renderList("kon");renderList("sol");_updV("kon");}curMode=m;ss("rv_mode",m);var g=m==="G";var tG=document.getElementById("tglG"),tS=document.getElementById("tglNG"),tw=document.getElementById("tglWrap");if(tG)tG.className="tgl g"+(g?" on":"");if(tS)tS.className="tgl s"+(!g?" on":"");if(tw)tw.className="tgl-wrap"+(g?"":" s");var tag=document.getElementById("partsModeTag");if(tag){tag.innerHTML=g?'<span style="width:6px;height:6px;border-radius:50%;background:#34C759;display:inline-block"></span>Gwar.':'<span style="width:6px;height:6px;border-radius:50%;background:#007A7A;display:inline-block"></span>Nie gwar.';tag.style.background=g?"rgba(52,199,89,.1)":"rgba(0,122,122,.1)";tag.style.color=g?"#34C759":"#007A7A";}partsOpen=false;var _pb=document.getElementById("partsBody");if(_pb)_pb.className="parts-body";var _pa=document.getElementById("partsArr");if(_pa)_pa.style.transform="none";renderParts();_syncTimeInputs();renderSummary();}
 function getRelCats(){var defs=SEL.def.concat(SEL.kon);if(!defs.length)return null;var cats=[];defs.forEach(function(d){var it=(D.def.concat(D.kon)).find(function(x){return x.pl===d;});if(it&&it.cat&&cats.indexOf(it.cat)<0)cats.push(it.cat);});if(!cats.length)return null;var solCats=[];cats.forEach(function(c){if(window.CATMAP&&CATMAP[c])CATMAP[c].forEach(function(s){if(solCats.indexOf(s)<0)solCats.push(s);});});return solCats.length?solCats:null;}
 var _savedSel=null;
