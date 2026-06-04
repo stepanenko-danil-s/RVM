@@ -741,10 +741,13 @@ body.theme-2 .tgl.on { background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.15); co
     <div class="sh-bar"></div>
     <div class="sh-title">Styl raportu</div>
     <div class="rst-row">
-      <div class="rst-opt on" id="ro-biz" onclick="setRst('biz')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">Biznesowy</div><div style="font-size:12px;color:rgba(60,60,67,.45)">Karty z kolorami</div></div></div>
-      <div class="rst-opt" id="ro-kls" onclick="setRst('kls')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">• Klasyczny</div><div style="font-size:12px;color:rgba(60,60,67,.45)">Punkty, działa wszędzie</div></div></div>
-      <div class="rst-opt" id="ro-kmp" onclick="setRst('kmp')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">▦ Tabelaryczny</div><div style="font-size:12px;color:rgba(60,60,67,.45)">Etykieta │ wartość w kolumnie</div></div></div>
-      <div class="rst-opt" id="ro-prot" onclick="setRst('prot')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">▬ Blokowy</div><div style="font-size:12px;color:rgba(60,60,67,.45)">Wyraźne bloki, nagłówki</div></div></div>
+      <div class="rst-opt" id="ro-kls" onclick="setRst('kls')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">A ─ Klasyczny</div><div style="font-size:12px;color:rgba(60,60,67,.45)">=== symbole ===</div></div></div>
+      <div class="rst-opt" id="ro-biz" onclick="setRst('biz')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">B ━ Delovoy</div><div style="font-size:12px;color:rgba(60,60,67,.45)">Element: Usterka: Naprawa:</div></div></div>
+      <div class="rst-opt" id="ro-tec" onclick="setRst('tec')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">C ▌ Pionowy</div><div style="font-size:12px;color:rgba(60,60,67,.45)">│ linia boczna</div></div></div>
+      <div class="rst-opt" id="ro-kmp" onclick="setRst('kmp')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">D ■ Korporacyjny</div><div style="font-size:12px;color:rgba(60,60,67,.45)">━━━ ramka ━━━</div></div></div>
+      <div class="rst-opt" id="ro-prot" onclick="setRst('prot')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">E ▶▶ Strzalkowy</div><div style="font-size:12px;color:rgba(60,60,67,.45)">┌─ └─ drzewo</div></div></div>
+      <div class="rst-opt" id="ro-frm" onclick="setRst('frm')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">F ┌┐ Ramkowy</div><div style="font-size:12px;color:rgba(60,60,67,.45)">┌───┐ ramka</div></div></div>
+      <div class="rst-opt" id="ro-tel" onclick="setRst('tel')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">G =[ Telegraf</div><div style="font-size:12px;color:rgba(60,60,67,.45)">=[ styl ]=</div></div></div><div><div style="font-size:14px;font-weight:700">▬ Blokowy</div><div style="font-size:12px;color:rgba(60,60,67,.45)">Wyraźne bloki, nagłówki</div></div></div>
       <div class="rst-opt" id="ro-tec" onclick="setRst('tec')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">⌨ Techniczny</div><div style="font-size:12px;color:rgba(60,60,67,.45)">Monospace, kody</div></div></div>
     </div>
     <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(60,60,67,.4);margin:14px 0 7px">Własne style ✏️</div>
@@ -1856,7 +1859,7 @@ function pickRst(s){
 }
 function setRst(s){
   rstStyle=s;ss("rv_rst",s);
-  ["biz","tec","kls","kmp","prot"].forEach(function(x){var el=document.getElementById("ro-"+x);if(el)el.className="rst-opt"+(x===s?" on":"");});
+  ["kls","biz","tec","kmp","prot","frm","tel"].forEach(function(x){var el=document.getElementById("ro-"+x);if(el)el.className="rst-opt"+(x===s?" on":"");});
   renderMyStylesList();
   var lbl={kls:"A ─ Klasyczny",biz:"B ━ Delovoy",tec:"C ▌ Pionowy",kmp:"D ■ Korporacyjny",prot:"E ▶ Strzalkowy",frm:"F ┌┐ Ramkowy",tel:"G =[ Telegraf"};
   var lE=document.getElementById("rstLbl");
