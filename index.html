@@ -4235,7 +4235,7 @@ function magPrintQR() {
       + '</div>';
   });
 
-  html += '</div>'
+  html += '<button onclick="window.close()" style="position:fixed;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:none;background:#333;color:#fff;font-size:20px;cursor:pointer;z-index:999;display:flex;align-items:center;justify-content:center">&#215;</button></div>'
     + '<scr' + 'ipt>window.onload=function(){var parts='+JSON.stringify(allParts)+';parts.forEach(function(p){var el=document.getElementById("qr_"+p.id);if(el){try{new QRCode(el,{text:p.k,width:114,height:114,colorDark:"#000",colorLight:"#fff",correctLevel:QRCode.CorrectLevel.L});}catch(e){}}});setTimeout(function(){window.print();},1000);};' + '<' + '/script>';
 
   var w = window.open('', '_blank');
