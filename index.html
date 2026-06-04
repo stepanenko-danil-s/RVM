@@ -691,7 +691,7 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
 <div class="ov" id="shSaveTmpl" style="display:none" onclick="if(event.target===this)closeOv('shSaveTmpl')">
   <div class="sh">
     <div class="sh-bar"></div>
-    <div class="sh-title">💾 Zapisz</div>
+    <div class="sh-title">Zapisz</div>
     <input class="sh-inp" id="tmplName" placeholder="Nazwa..." maxlength="40">
     <div style="margin:10px 0 12px;display:flex;flex-direction:column;gap:10px">
       <label style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(52,199,89,.07);border:1px solid rgba(52,199,89,.2);border-radius:12px;cursor:pointer">
@@ -758,7 +758,7 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
     <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(60,60,67,.4);margin:14px 0 7px">Własne style ✏️</div>
     <div id="myStylesList" style="display:flex;flex-direction:column;gap:6px"></div>
     <button onclick="openMyStyleEdit(-1)" style="width:100%;margin-top:8px;padding:10px;border-radius:12px;border:1.5px dashed rgba(0,122,122,.3);background:rgba(0,122,122,.03);color:#007A7A;font-size:13px;font-weight:600;cursor:pointer">+ Nowy własny styl</button>
-    <div style="font-size:11px;color:rgba(60,60,67,.35);text-align:center;margin-top:8px">💡 Zapisz styl przy zapisie szablonu</div>
+    <div style="font-size:11px;color:rgba(60,60,67,.35);text-align:center;margin-top:8px">Zapisz styl przy zapisie szablonu</div>
     <div style="height:6px"></div>
     <button class="sh-btn lt" onclick="closeOv('shRst')">Zamknij</button>
   </div>
@@ -810,7 +810,7 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
       <button class="fmt-btn" onmousedown="event.preventDefault();fmtMys('underline')" title="Podkreślenie"><u>U</u></button>
       <button class="fmt-btn" onmousedown="event.preventDefault();fmtMys('strikeThrough')" title="Przekreślenie" style="text-decoration:line-through">S</button>
       <div style="width:.5px;height:18px;background:rgba(60,60,67,.15);margin:0 2px"></div>
-      <button class="fmt-btn" onmousedown="event.preventDefault();fmtMys('removeFormat')" title="Usuń formatowanie" style="font-size:11px">✕fmt</button>
+      <button class="fmt-btn" onmousedown="event.preventDefault();fmtMys('removeFormat')" title="Usuń formatowanie" style="font-size:11px">fmt</button>
       <div style="width:.5px;height:18px;background:rgba(60,60,67,.15);margin:0 2px"></div>
       <button class="col-btn" onmousedown="event.preventDefault();fmtMysColor('#1C1C1E')" style="background:#1C1C1E" title="Czarny"></button>
       <button class="col-btn" onmousedown="event.preventDefault();fmtMysColor('#007A7A')" style="background:#007A7A" title="Morski"></button>
@@ -828,10 +828,10 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
 
     <!-- contenteditable поля — выделяй любое слово и форматируй -->
     <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(60,60,67,.4);margin-bottom:5px">Etykiety — zaznacz tekst i formatuj</div>
-    <div class="mys-ce" id="mysElPre"  contenteditable="true" data-ph="Prefiks elementu (np. 🔧 lub ▸ )"   oninput="prevMyStyle()" onkeydown="mysEnter(event)"></div>
+    <div class="mys-ce" id="mysElPre"  contenteditable="true" data-ph="Prefiks elementu (np. lub ▸ )"   oninput="prevMyStyle()" onkeydown="mysEnter(event)"></div>
     <div class="mys-ce" id="mysDefLbl" contenteditable="true" data-ph="Etykieta usterki (np. ⚠️ Usterka: )"  oninput="prevMyStyle()" onkeydown="mysEnter(event)"></div>
-    <div class="mys-ce" id="mysSolLbl" contenteditable="true" data-ph="Etykieta działania (np. ✅ Wykonano: )" oninput="prevMyStyle()" onkeydown="mysEnter(event)"></div>
-    <div class="mys-ce" id="mysKonLbl" contenteditable="true" data-ph="Etykieta serwisu (np. 🛠 Serwis: )"  oninput="prevMyStyle()" onkeydown="mysEnter(event)"></div>
+    <div class="mys-ce" id="mysSolLbl" contenteditable="true" data-ph="Etykieta działania (np. Wykonano: )" oninput="prevMyStyle()" onkeydown="mysEnter(event)"></div>
+    <div class="mys-ce" id="mysKonLbl" contenteditable="true" data-ph="Etykieta serwisu (np. Serwis: )"  oninput="prevMyStyle()" onkeydown="mysEnter(event)"></div>
 
     <!-- Kolor akcentu karty -->
     <div style="display:flex;align-items:center;gap:8px;margin:8px 0 4px">
@@ -911,23 +911,10 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
     <div style="height:1px;background:rgba(60,60,67,.08);margin:10px 0"></div>
     <!-- Выбор темы -->
     <div style="margin-bottom:20px">
-      <div style="font-size:13px;font-weight:700;color:#323130;margin-bottom:12px">🎨 Motyw</div>
+      <div style="font-size:13px;font-weight:700;color:#323130;margin-bottom:12px">Motyw</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <button onclick="setTheme(1)" id="themeBtn1" style="padding:12px 8px;border:2px solid #0078D4;border-radius:10px;background:#F2F2F7;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#000;-webkit-tap-highlight-color:transparent">
-          iOS стандарт
-        </button>
-        <button onclick="setTheme(2)" id="themeBtn2" style="padding:12px 8px;border:1.5px solid #EDEBE9;border-radius:10px;background:#fff;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#323130;-webkit-tap-highlight-color:transparent">
-          <span style="color:#0078D4">■</span> MS Fluent
-        </button>
-        <button onclick="setTheme(3)" id="themeBtn3" style="padding:12px 8px;border:1.5px solid #EDEBE9;border-radius:10px;background:#FFF9F0;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#323130;-webkit-tap-highlight-color:transparent">
-          <span style="color:#FF9500">■</span> iOS оранжевый
-        </button>
-        <button onclick="setTheme(4)" id="themeBtn4" style="padding:12px 8px;border:1.5px solid #EDEBE9;border-radius:10px;background:#201F1E;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#fff;-webkit-tap-highlight-color:transparent">
-          <span style="color:#0078D4">■</span> Fluent Dark
-        </button>
-        <button onclick="setTheme(5)" id="themeBtn5" style="padding:12px 8px;border:1.5px solid #EDEBE9;border-radius:10px;background:#F2F2F7;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#000;-webkit-tap-highlight-color:transparent;grid-column:span 2">
-          iOS крупный заголовок
-        </button>
+        <button onclick="setTheme(1)" id="themeBtn1" class="theme-pick-btn active" style="background:#F2F2F7;color:#000">iOS</button>
+        <button onclick="setTheme(2)" id="themeBtn2" class="theme-pick-btn" style="background:#fff;color:#0078D4">Fluent</button>
       </div>
     </div>
     <div style="border-top:0.5px solid #EDEBE9;margin-bottom:16px"></div>
@@ -1992,7 +1979,7 @@ function mysEnter(e){if(e.key==="Enter"){e.preventDefault();}}
 function mysFocus(inp){/* legacy */}
 function openMyStyleEdit(idx){
   _editMysIdx=idx;
-  var dflt={name:"",elPre:"",defLbl:"⚠️ Usterka: ",solLbl:"✅ Wykonano: ",konLbl:"🛠 Serwis: ",accent:"#007A7A",titleSize:13,titleWeight:"bold"};
+  var dflt={name:"",elPre:"",defLbl:"⚠️ Usterka: ",solLbl:"Wykonano: ",konLbl:"Serwis: ",accent:"#007A7A",titleSize:13,titleWeight:"bold"};
   var m=idx>=0&&myStyles[idx]?Object.assign({},dflt,myStyles[idx]):dflt;
   document.getElementById("mysName").value=m.name||"";
   // contenteditable fields - support both plain text (old) and HTML (new)
@@ -2011,8 +1998,8 @@ function openMyStyleEdit(idx){
 function prevMyStyle(){
   var pre=document.getElementById("mysElPre").innerHTML;
   var dLbl=document.getElementById("mysDefLbl").innerHTML||"⚠️ Usterka: ";
-  var sLbl=document.getElementById("mysSolLbl").innerHTML||"✅ Wykonano: ";
-  var kLbl=document.getElementById("mysKonLbl").innerHTML||"🛠 Serwis: ";
+  var sLbl=document.getElementById("mysSolLbl").innerHTML||"Wykonano: ";
+  var kLbl=document.getElementById("mysKonLbl").innerHTML||"Serwis: ";
   var c=_mysColor;var sz=_mysSize;var fw=_mysWeight;
   var tStyle="font-size:"+sz+"px;font-weight:"+((fw==="bold")?"700":"400")+";font-style:"+((fw==="italic")?"italic":"normal")+";color:"+c+";margin-bottom:4px";
   var el=document.getElementById("mysPrev");if(!el)return;
@@ -2030,15 +2017,15 @@ function saveMyStyle(){
     name:name,
     elPre:document.getElementById("mysElPre").innerHTML,
     defLbl:document.getElementById("mysDefLbl").innerHTML||"⚠️ Usterka: ",
-    solLbl:document.getElementById("mysSolLbl").innerHTML||"✅ Wykonano: ",
-    konLbl:document.getElementById("mysKonLbl").innerHTML||"🛠 Serwis: ",
+    solLbl:document.getElementById("mysSolLbl").innerHTML||"Wykonano: ",
+    konLbl:document.getElementById("mysKonLbl").innerHTML||"Serwis: ",
     accent:_mysColor,titleSize:_mysSize,titleWeight:_mysWeight
   };
   if(_editMysIdx>=0&&myStyles[_editMysIdx])myStyles[_editMysIdx]=obj;
   else myStyles.push(obj);
   ss("rv_mys",myStyles);
   closeOv("shMyStyle");openSh("shRst");
-  renderMyStylesList();showToast("✓ Styl zapisany");
+  renderMyStylesList();showToast("Styl zapisany");
 }
 function delMyStyle(){
   if(_editMysIdx<0||!myStyles[_editMysIdx])return;
@@ -2051,7 +2038,7 @@ function delMyStyle(){
   }
   ss("rv_mys",myStyles);
   closeOv("shMyStyle");openSh("shRst");
-  renderMyStylesList();showToast("✓ Usunięto");
+  renderMyStylesList();showToast("Usunięto");
 }
 function _fmtRep(){
 var live=_liveEntry();
@@ -2152,7 +2139,7 @@ function _fmtRepHTML(){
   var partsHtml=function(sp,label){
     if(!sp.length)return "";
     var s='<div style="margin-top:8px;padding:7px 10px;background:rgba(118,118,128,.05);border-radius:8px;font-size:12px">';
-    s+='<div style="font-weight:700;color:rgba(60,60,67,.5);margin-bottom:4px;font-size:10px;text-transform:uppercase;letter-spacing:.08em">'+(label||"🔩 Części zamienne")+'</div>';
+    s+='<div style="font-weight:700;color:rgba(60,60,67,.5);margin-bottom:4px;font-size:10px;text-transform:uppercase;letter-spacing:.08em">'+(label||"Części zamienne")+'</div>';
     sp.forEach(function(p){s+='<div style="color:#555">&bull; '+E(p)+'</div>';});
     return s+'</div>';
   };
@@ -2186,7 +2173,7 @@ function _fmtRepHTML(){
     if(style==="tec")return '<div style="font-family:monospace;font-size:11px;font-weight:700;color:'+color+';padding:4px 0;margin-top:4px">'+timeBlock+'=== '+(isG?"GWARANCYJNY":"NIE GWARANCYJNY")+' ===</div>';
     if(style==="pro")return '<div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(60,60,67,.4);margin:10px 0 6px">'+timeBlock+(isG?"Naprawy gwarancyjne":"Naprawy niegwarancyjne")+'</div>';
     if(style==="eml")return '<div style="border-top:2px solid '+(isG?"#34C759":"#007A7A")+';padding-top:8px;margin:12px 0 8px;font-size:12px;font-weight:700;color:'+color+';text-transform:uppercase;letter-spacing:.08em">'+timeBlock+(isG?"— Naprawy gwarancyjne —":"— Naprawy niegwarancyjne —")+'</div>';
-    if(style==="tab")return '<tr><th colspan="5" style="background:'+(isG?"rgba(52,199,89,.1)":"rgba(0,122,122,.08)")+';color:'+color+';text-align:left;padding:6px 8px;font-size:11px;letter-spacing:.07em;text-transform:uppercase">'+timeBlock+(isG?"✅ Gwarancyjny":"🔶 Nie gwarancyjny")+'</th></tr>';
+    if(style==="tab")return '<tr><th colspan="5" style="background:'+(isG?"rgba(52,199,89,.1)":"rgba(0,122,122,.08)")+';color:'+color+';text-align:left;padding:6px 8px;font-size:11px;letter-spacing:.07em;text-transform:uppercase">'+timeBlock+(isG?"Gwarancyjny":"Nie gwarancyjny")+'</th></tr>';
     if(style==="skr")return '<span style="font-weight:700;color:'+color+'">'+timeBlock+(isG?"GWAR:":"SERW:")+'</span> ';
     return '<div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:'+color+';margin-bottom:6px;margin-top:4px;display:flex;align-items:center;justify-content:space-between"><span>'+label+'</span><span>'+odPill+arr+doPill+durB+'</span></div>';
   };
@@ -2207,7 +2194,7 @@ function _fmtRepHTML(){
   var serwisHtml=function(kon,color){
     if(!kon.length)return "";
     var s='<div style="margin-top:8px;padding:8px 12px;background:rgba(0,122,122,.06);border:1px solid rgba(0,122,122,.15);border-radius:9px">';
-    s+='<div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#007A7A;margin-bottom:5px">🛠 Serwis</div>';
+    s+='<div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#007A7A;margin-bottom:5px">Serwis</div>';
     s+=kon.map(function(k){return'<div style="font-size:12px;line-height:1.7;color:#333">• '+E(k)+'</div>';}).join('');
     return s+'</div>';
   };
@@ -2233,14 +2220,14 @@ function _fmtRepHTML(){
   var colParts=function(sp){
     if(!sp.length)return "";
     var s='<div style="margin-top:6px;padding:6px 10px;background:rgba(118,118,128,.05);border-radius:7px">';
-    s+='<div style="font-size:11px;font-weight:700;color:rgba(60,60,67,.4);margin-bottom:3px">🔩 Części zamienne</div>';
+    s+='<div style="font-size:11px;font-weight:700;color:rgba(60,60,67,.4);margin-bottom:3px">Części zamienne</div>';
     sp.forEach(function(p){s+='<div style="font-size:12px;color:#555;padding-left:8px;line-height:1.7">• '+E(p)+'</div>';});
     return s+'</div>';
   };
   var serwisCol=function(kon){
     if(!kon.length)return "";
     var s='<div style="margin-top:7px;padding:8px 12px;background:rgba(0,122,122,.06);border:1px solid rgba(0,122,122,.15);border-radius:9px">';
-    s+='<div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#007A7A;margin-bottom:4px">🛠 Serwis</div>';
+    s+='<div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#007A7A;margin-bottom:4px">Serwis</div>';
     kon.forEach(function(k){s+='<div style="font-size:12px;color:#333;padding-left:8px;line-height:1.7">• '+E(k)+'</div>';});
     return s+'</div>';
   };
@@ -2274,7 +2261,7 @@ function _fmtRepHTML(){
       if(sl.length){s+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(60,60,67,.35);margin:5px 0 2px">Wykonano</div>';sl.forEach(function(d){s+='<div style="font-size:12px;padding:2px 8px;background:rgba(52,199,89,.07);border-left:2px solid #34C759;margin-bottom:2px;border-radius:0 4px 4px 0">'+E(d)+'</div>';});}
       return s+'</div>';
     };
-    var secHdrProt=function(m,cnt){var isG=m==="G";return'<div style="background:rgba('+(isG?'52,199,89':'0,122,122')+',.1);border-radius:8px;padding:7px 12px;margin-bottom:4px"><span style="font-size:12px;font-weight:800;color:'+(isG?'#218838':'#007A7A')+';text-transform:uppercase;letter-spacing:.06em">'+(isG?'✅ Gwarancyjny':'🔶 Nie gwarancyjny')+'</span> <span style="font-size:11px;color:rgba(60,60,67,.4)">'+cnt+'</span></div>';};
+    var secHdrProt=function(m,cnt){var isG=m==="G";return'<div style="background:rgba('+(isG?'52,199,89':'0,122,122')+',.1);border-radius:8px;padding:7px 12px;margin-bottom:4px"><span style="font-size:12px;font-weight:800;color:'+(isG?'#218838':'#007A7A')+';text-transform:uppercase;letter-spacing:.06em">'+(isG?'Gwarancyjny':'Nie gwarancyjny')+'</span> <span style="font-size:11px;color:rgba(60,60,67,.4)">'+cnt+'</span></div>';};
     if(eG.length||konG.length||spG.length){h+=secHdrProt("G",eG.filter(function(e){return e.el;}).length+' '+(eG.filter(function(e){return e.el;}).length===1?'naprawa':'naprawy'));eG.forEach(function(e,i){h+=entFn(e,i,"#34C759");});h+=serwisCol(konG)+colParts(spG);}
     var ngHasContent=eS.length||konS.length||spS.length;
     if(ngHasContent||(timeS._set&&(eG.length||konG.length||spG.length))){if(eG.length||konG.length||spG.length)h+='<div style="height:12px"></div>';h+=secHdrProt("S",eS.filter(function(e){return e.el;}).length+' '+(eS.filter(function(e){return e.el;}).length===1?'naprawa':'naprawy'));eS.forEach(function(e,i){h+=entFn(e,i,"#007A7A");});h+=serwisCol(konS)+colParts(spS);}
@@ -2307,7 +2294,7 @@ function _fmtRepHTML(){
       var s='<div style="background:#F8F9FA;border-radius:8px;padding:9px 12px;margin-bottom:7px;border-left:3px solid '+color+'">';
       s+='<div style="font-size:13px;font-weight:700;margin-bottom:6px"><span style="color:rgba(60,60,67,.3);margin-right:4px">'+(i+1)+'.</span>'+E(e.el)+'</div>';
       s+=col(df,"⚠️ Usterka","rgba(60,60,67,.4)","#666");
-      s+=col(sl,"✅ Wykonano","rgba(60,60,67,.4)","#333");
+      s+=col(sl,"Wykonano","rgba(60,60,67,.4)","#333");
       return s+'</div>';
     };
     if(eG.length||konG.length||spG.length){h+=secHdr("G","biz");eG.forEach(function(e,i){h+=entFn(e,i,"#34C759");});h+=serwisCol(konG)+colParts(spG);}
@@ -2335,7 +2322,7 @@ function _fmtRepHTML(){
 
   // ── MÓJ STYL ─────────────────────────────────────────────────────────────────
   var mysIdx=parseInt((st||"").replace("mys",""));
-  var mycfg=(!isNaN(mysIdx)&&myStyles[mysIdx])?myStyles[mysIdx]:{elPre:"📍 ",defLbl:"⚠️ Usterka",solLbl:"✅ Wykonano",konLbl:"🛠 Serwis",accent:"#007A7A",titleSize:13,titleWeight:"bold"};
+  var mycfg=(!isNaN(mysIdx)&&myStyles[mysIdx])?myStyles[mysIdx]:{elPre:"📍 ",defLbl:"⚠️ Usterka",solLbl:"Wykonano",konLbl:"Serwis",accent:"#007A7A",titleSize:13,titleWeight:"bold"};
   var mAcc=mycfg.accent||"#007A7A";
   var mTitleStyle="font-size:"+(mycfg.titleSize||13)+"px;font-weight:"+((mycfg.titleWeight==="bold")?"700":"400")+";font-style:"+((mycfg.titleWeight==="italic")?"italic":"normal")+";color:"+mAcc+";margin-bottom:4px";
   var entFn=function(e,i,color){
@@ -2568,7 +2555,7 @@ function saveTmpl(){
   if(doStyle){
     var sname=(document.getElementById("styleNameInp")||{}).value||"";
     sname=sname.trim()||name;
-    var dflt={name:sname,elPre:"",defLbl:"⚠️ Usterka: ",solLbl:"✅ Wykonano: ",konLbl:"🛠 Serwis: ",accent:"#007A7A",titleSize:13,titleWeight:"bold"};
+    var dflt={name:sname,elPre:"",defLbl:"⚠️ Usterka: ",solLbl:"Wykonano: ",konLbl:"Serwis: ",accent:"#007A7A",titleSize:13,titleWeight:"bold"};
     var mysIdx=parseInt((rstStyle||"").replace("mys",""));
     var cfg=(!isNaN(mysIdx)&&myStyles[mysIdx])?Object.assign({},myStyles[mysIdx],{name:sname}):Object.assign({},dflt);
     myStyles.push(cfg);ss("rv_mys",myStyles);renderMyStylesList();
@@ -2577,7 +2564,7 @@ function saveTmpl(){
   var sw=document.getElementById("styleNameWrap");if(sw)sw.style.display="none";
   var chkS=document.getElementById("chkStyle");if(chkS)chkS.checked=false;
   closeOv("shSaveTmpl");
-  showToast("✓ Zapisano"+(doTmpl?" szablon":"")+(doStyle?" + styl":""));
+  showToast("Zapisano"+(doTmpl?" szablon":"")+(doStyle?" + styl":""));
 }
 function loadTmpl(i){
   var t=repTmpls[i];
@@ -2809,7 +2796,7 @@ function toggleDark(){
   var sw=document.getElementById('darkSwitch'),th=document.getElementById('darkThumb'),lb=document.getElementById('themeLbl');
   if(sw)sw.style.background=dark?'#34C759':'#E5E5EA';
   if(th)th.style.left=dark?'25px':'3px';
-  if(lb)lb.textContent=dark?'☽ Ciemny motyw':'☀︎ Tryb dzienny';
+  if(lb)lb.textContent=dark?'Ciemny motyw':'☀︎ Tryb dzienny';
   try{localStorage.setItem('rv_dark',dark?'1':'0');}catch(e){}
 }
 function initDark(){
@@ -2817,22 +2804,22 @@ function initDark(){
     document.body.classList.add('dark');
     var sw=document.getElementById('darkSwitch'),th=document.getElementById('darkThumb'),lb=document.getElementById('themeLbl');
     if(sw)sw.style.background='#34C759';if(th)th.style.left='25px';
-    if(lb)lb.textContent='☽ Ciemny motyw';
+    if(lb)lb.textContent='Ciemny motyw';
   }
 }
 function runDiagnostics(){
   var log=[],fixed=0,warn=0,ok=0;
   var r=document.getElementById("diagResult");
-  if(r){r.style.display="block";r.innerHTML="🔄 Sprawdzanie...";}
+  if(r){r.style.display="block";r.innerHTML="Sprawdzanie...";}
 
   function chk(label,cond){if(cond){log.push("✅ "+label);ok++;}else{log.push("❌ "+label);warn++;}}
-  function fix(label,fn){try{fn();log.push("🔧 Naprawiono: "+label);fixed++;}catch(e){log.push("⚠️ Błąd naprawy: "+label+" — "+e.message);warn++;}}
+  function fix(label,fn){try{fn();log.push("Naprawiono: "+label);fixed++;}catch(e){log.push("⚠️ Błąd naprawy: "+label+" — "+e.message);warn++;}}
 
   // 1. DOM — krytyczne elementy
   var domIds=["repEdit","partsBody","partsArr","lst-el","lst-def","lst-kon","lst-sol","hdr1","hdr2","hdr3","hdrS","bodyS","tglG","tglNG"];
   var missingDom=domIds.filter(function(id){return !document.getElementById(id);});
   if(missingDom.length===0){chk("DOM: wszystkie elementy obecne",true);}
-  else{log.push("❌ DOM brakuje: "+missingDom.join(", "));warn++;}
+  else{log.push("DOM brakuje: "+missingDom.join(", "));warn++;}
 
   // 2. Zmienne globalne
   chk("entries: tablica",Array.isArray(entries));
@@ -2964,13 +2951,13 @@ function runDiagnostics(){
   try{
     renderList("el");renderList("def");renderList("kon");renderList("sol");
     renderParts();renderSummary();renderTmplList();renderMyStylesList();
-    log.push("🔄 UI odświeżony");
+    log.push("UI odświeżony");
   }catch(e){log.push("⚠️ Błąd odświeżenia UI: "+e.message);warn++;}
 
   // Podsumowanie
   var sumColor=warn===0?"#34C759":"#FF9500";
   var summary="<div style='font-weight:700;color:"+sumColor+";margin-bottom:6px'>"+
-    (warn===0&&fixed===0?"✅ Wszystko OK":"⚠️ "+warn+" problemów, naprawiono: "+fixed)+
+    (warn===0&&fixed===0?"Wszystko OK":"⚠️ "+warn+" problemów, naprawiono: "+fixed)+
     " | OK: "+ok+"</div>";
 
   if(r){r.innerHTML=summary+log.map(function(l){
@@ -2978,8 +2965,8 @@ function runDiagnostics(){
     return '<div style="color:'+c+'">'+l+'</div>';
   }).join("");}
 
-  if(fixed>0)showToast("🔧 Naprawiono: "+fixed+" problemów");
-  else if(warn===0)showToast("✅ Aplikacja działa poprawnie");
+  if(fixed>0)showToast("Naprawiono: "+fixed+" problemów");
+  else if(warn===0)showToast("Aplikacja działa poprawnie");
 }
 
 function backupData(){
@@ -3017,7 +3004,7 @@ function restoreData(input){
 <div style="display:flex;flex-direction:column;gap:0;width:100%">
   <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
     <div class="set-acc-hdr" onclick="setAcc('accEmail')">
-      <div style="font-size:13px;font-weight:700;color:#323130">📧 Ustawienia e-mail</div>
+      <div style="font-size:13px;font-weight:700;color:#323130">Ustawienia e-mail</div>
       <span class="set-acc-arr" id="accEmailArr">▼</span>
     </div>
     <div class="set-acc-body" id="accEmail">
@@ -3030,7 +3017,7 @@ function restoreData(input){
     </div>
   <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
     <div class="set-acc-hdr" onclick="setAcc('accSched')">
-      <div style="font-size:13px;font-weight:700;color:#323130">⏰ Harmonogram raportów</div>
+      <div style="font-size:13px;font-weight:700;color:#323130">Harmonogram raportów</div>
       <span class="set-acc-arr" id="accSchedArr">▼</span>
     </div>
     <div class="set-acc-body" id="accSched">
@@ -3056,7 +3043,7 @@ function restoreData(input){
     </div>
   <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
     <div class="set-acc-hdr" onclick="setAcc('accLib')">
-      <div style="font-size:13px;font-weight:700;color:#323130">📚 Biblioteka słów</div>
+      <div style="font-size:13px;font-weight:700;color:#323130">Biblioteka słów</div>
       <span class="set-acc-arr" id="accLibArr">▼</span>
     </div>
     <div class="set-acc-body" id="accLib">
@@ -4423,7 +4410,7 @@ magRender = function() {
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#C8C6C4" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="4"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
         <input id="shopInp" placeholder="Numer, miasto lub nazwa..." oninput="shopAutoProc(this)" style="border:none;background:none;font-size:14px;font-family:inherit;outline:none;color:#323130;flex:1">
       </div>
-      <button id="shopGpsBtnSheet" onclick="shopGPS()" style="padding:0 12px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">📍 GPS</button>
+      <button id="shopGpsBtnSheet" onclick="shopGPS()" style="padding:0 12px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">GPS</button>
     </div>
     <div id="shopStatus" style="font-size:11px;color:#A19F9D;margin-bottom:8px;min-height:16px;text-align:center"></div>
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
@@ -4703,12 +4690,12 @@ function shopGPS() {
     _myLat = pos.coords.latitude;
     _myLon = pos.coords.longitude;
     if (btn) btn.textContent = '📍';
-    if (gpsBtn) gpsBtn.textContent = '📍 GPS';
+    if (gpsBtn) gpsBtn.textContent = 'GPS';
     if (status) status.textContent = 'Szukam sklepów w pobliżu...';
     shopFetchNearby(_myLat, _myLon, shopGetRadius());
   }, function(err) {
     if (btn) btn.textContent = '📍';
-    if (gpsBtn) gpsBtn.textContent = '📍 GPS';
+    if (gpsBtn) gpsBtn.textContent = 'GPS';
     if (status) status.textContent = 'Błąd GPS: ' + err.message;
     showToast('GPS: ' + err.message);
   }, {enableHighAccuracy: true, timeout: 12000});
@@ -5129,7 +5116,7 @@ function schedSave() {
   schedStart();
   var days = ['Niedziela','Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota'];
   var status = document.getElementById('schedStatus');
-  if (status) status.textContent = '✓ Zaplanowano: ' + days[_schedDay] + ' o ' + _schedTime;
+  if (status) status.textContent = 'Zaplanowano: ' + days[_schedDay] + ' o ' + _schedTime;
   showToast('Harmonogram zapisany');
 }
 
@@ -5191,7 +5178,7 @@ if (_schedDay !== null) {
     var status = document.getElementById('schedStatus');
     if (day) day.value = _schedDay;
     if (time) time.value = _schedTime;
-    if (status) status.textContent = '✓ Aktywny: ' + days[_schedDay] + ' o ' + _schedTime;
+    if (status) status.textContent = 'Aktywny: ' + days[_schedDay] + ' o ' + _schedTime;
     // Запрашиваем разрешение на уведомления
     schedRequestPermission();
   }, 500);
@@ -5332,7 +5319,7 @@ function emailSettingsSave() {
   _emailRecipients = raw.split('\n').map(function(s){return s.trim();}).filter(function(s){return s.indexOf('@')>0;});
   localStorage.setItem('rv_email_rec', JSON.stringify(_emailRecipients));
   var status = document.getElementById('emailStatus');
-  if (status) status.textContent = '✓ Zapisano ' + _emailRecipients.length + ' adresów';
+  if (status) status.textContent = 'Zapisano ' + _emailRecipients.length + ' adresów';
   showToast('Adresy zapisane: ' + _emailRecipients.length);
 }
 
