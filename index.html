@@ -518,7 +518,7 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
   </div>
   <div class="mod-body" id="body2">
   <div class="mod-srch"><input id="ms-def" type="search" placeholder="Szukaj usterki..." oninput="modSrch('def',this.value)" autocomplete="off" autocorrect="off" spellcheck="false"><button class="mod-srch-mic" onclick="modSrchMic('def')" ontouchend="event.preventDefault();modSrchMic('def')"><svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/></svg></button></div>
-    <div style="display:flex;justify-content:flex-end;padding:6px 10px 0"><button onclick="aiSuggestDef()" style="background:rgba(0,122,122,.08);border:1px solid rgba(0,122,122,.2);border-radius:8px;color:#007A7A;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;margin-right:4px">&#10024; AI</button><button onclick="toggleEditMode('def')" id="editBtn-def" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
+    <div style="display:flex;justify-content:flex-end;padding:6px 10px 0"><button onclick="toggleEditMode('def')" id="editBtn-def" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
     <div class="ilist" id="lst-def"></div>
     <div style="padding:4px 10px 8px;display:flex;gap:6px;align-items:center">
       <input id="defQuickAdd" placeholder="+ Dodaj własną usterkę..." style="flex:1;background:rgba(118,118,128,.09);border:none;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;color:#1C1C1E" onkeydown="if(event.key==='Enter')addDefQuick()">
@@ -541,7 +541,7 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
   <div class="mod-body" id="body3">
   <div class="mod-srch"><input id="ms-sol" type="search" placeholder="Szukaj dzialania..." oninput="modSrch('sol',this.value)" autocomplete="off" autocorrect="off" spellcheck="false"><button class="mod-srch-mic" onclick="modSrchMic('sol')" ontouchend="event.preventDefault();modSrchMic('sol')"><svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/></svg></button></div>
     <div class="sol-ban" id="solBan"></div>
-    <div style="display:flex;justify-content:flex-end;padding:4px 10px 0"><button onclick="aiSuggestSol()" style="background:rgba(0,122,122,.08);border:1px solid rgba(0,122,122,.2);border-radius:8px;color:#007A7A;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;margin-right:4px">&#10024; AI</button><button onclick="toggleEditMode('sol')" id="editBtn-sol" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
+    <div style="display:flex;justify-content:flex-end;padding:4px 10px 0"><button onclick="toggleEditMode('sol')" id="editBtn-sol" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
     <div class="ilist" id="lst-sol"></div>
     <div style="padding:4px 10px 8px;display:flex;gap:6px;align-items:center">
       <input id="solQuickAdd" placeholder="+ Dodaj wlasne dzialanie..." style="flex:1;background:rgba(118,118,128,.09);border:none;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;color:#1C1C1E" onkeydown="if(event.key==='Enter')addSolQuick()">
@@ -1252,7 +1252,54 @@ function _timeStr(t){
   return s;
 }
 var entries=[];
-var SEL={el:[],def:[],sol:[],kon:[],mode:""};
+var SEL={el:[],def:[],sol:[],kon:[
+{cat:"Przeglad",pl:"Przeglad okresowy",ru:"Плановое ТО"}
+,{cat:"Przeglad",pl:"Przeglad gwarancyjny",ru:"Гарантийное ТО"}
+,{cat:"Przeglad",pl:"Przeglad techniczny (ogolny)",ru:"Общий техосмотр"}
+,{cat:"Czyszczenie",pl:"Czyszczenie ogolne maszyny",ru:"Общая чистка машины"}
+,{cat:"Czyszczenie",pl:"Czyszczenie skanera / kamery",ru:"Чистка сканера/камеры"}
+,{cat:"Czyszczenie",pl:"Czyszczenie wlotu butelek",ru:"Чистка входа бутылок"}
+,{cat:"Czyszczenie",pl:"Czyszczenie kompaktora",ru:"Чистка компактора"}
+,{cat:"Czyszczenie",pl:"Czyszczenie sortownika",ru:"Чистка сортировщика"}
+,{cat:"Czyszczenie",pl:"Czyszczenie czujnikow",ru:"Чистка датчиков"}
+,{cat:"Czyszczenie",pl:"Czyszczenie drukarki",ru:"Чистка принтера"}
+,{cat:"Czyszczenie",pl:"Czyszczenie pojemnikow",ru:"Чистка корзин"}
+,{cat:"Czyszczenie",pl:"Czyszczenie filtra powietrza",ru:"Чистка воздушного фильтра"}
+,{cat:"Naprawa",pl:"Naprawa / wymiana czesci",ru:"Ремонт / замена деталей"}
+,{cat:"Naprawa",pl:"Naprawa mechaniczna",ru:"Механический ремонт"}
+,{cat:"Naprawa",pl:"Naprawa elektroniczna",ru:"Электронный ремонт"}
+,{cat:"Naprawa",pl:"Wymiana pasa / lancucha",ru:"Замена ремня / цепи"}
+,{cat:"Naprawa",pl:"Wymiana czujnika",ru:"Замена датчика"}
+,{cat:"Naprawa",pl:"Wymiana silnika",ru:"Замена мотора"}
+,{cat:"Naprawa",pl:"Wymiana plyty elektronicznej",ru:"Замена электронной платы"}
+,{cat:"Naprawa",pl:"Wymiana drukarki / glowicy",ru:"Замена принтера / головки"}
+,{cat:"Naprawa",pl:"Wymiana papieru w drukarce",ru:"Замена бумаги в принтере"}
+,{cat:"Naprawa",pl:"Wymiana bezpiecznika",ru:"Замена предохранителя"}
+,{cat:"Naprawa",pl:"Wymiana zasilacza",ru:"Замена блока питания"}
+,{cat:"Kalibracja",pl:"Kalibracja kamery",ru:"Калибровка камеры"}
+,{cat:"Kalibracja",pl:"Kalibracja czujnikow",ru:"Калибровка датчиков"}
+,{cat:"Kalibracja",pl:"Regulacja podajnika",ru:"Регулировка подачи"}
+,{cat:"Kalibracja",pl:"Regulacja kompaktora",ru:"Регулировка компактора"}
+,{cat:"Kalibracja",pl:"Regulacja sortownika",ru:"Регулировка сортировщика"}
+,{cat:"Oprogramowanie",pl:"Aktualizacja oprogramowania (firmware)",ru:"Обновление прошивки"}
+,{cat:"Oprogramowanie",pl:"Aktualizacja bazy kodow EAN",ru:"Обновление базы EAN"}
+,{cat:"Oprogramowanie",pl:"Restart maszyny",ru:"Перезагрузка машины"}
+,{cat:"Oprogramowanie",pl:"Reset ustawien",ru:"Сброс настроек"}
+,{cat:"Oprogramowanie",pl:"Konfiguracja sieci",ru:"Настройка сети"}
+,{cat:"Oprogramowanie",pl:"Diagnostyka bledow (logi)",ru:"Диагностика ошибок (логи)"}
+,{cat:"Oprogramowanie",pl:"Test funkcjonalny",ru:"Функциональный тест"}
+,{cat:"Instalacja",pl:"Instalacja maszyny",ru:"Установка машины"}
+,{cat:"Instalacja",pl:"Podlaczenie do sieci LAN",ru:"Подключение к LAN"}
+,{cat:"Instalacja",pl:"Konfiguracja poczatkowa",ru:"Начальная конфигурация"}
+,{cat:"Instalacja",pl:"Szkolenie personelu sklepu",ru:"Обучение персонала магазина"}
+,{cat:"Interwencja",pl:"Usuwanie zaciecia",ru:"Устранение заклинивания"}
+,{cat:"Interwencja",pl:"Usuwanie zablokowanej butelki",ru:"Извлечение застрявшей бутылки"}
+,{cat:"Interwencja",pl:"Oproznienie pojemnika",ru:"Опустошение корзины"}
+,{cat:"Interwencja",pl:"Uzupelnienie papieru",ru:"Заправка бумаги"}
+,{cat:"Interwencja",pl:"Wznowienie pracy po awarii",ru:"Восстановление после аварии"}
+,{cat:"Interwencja",pl:"Kontrola stanu maszyny",ru:"Контроль состояния машины"}
+,{cat:"Interwencja",pl:"Sprawdzenie polaczenia sieciowego",ru:"Проверка сетевого подключения"}
+],mode:""};
 var custom=ls("rv_c",{el:[],def:[],sol:[],kon:[]});
 if(!custom._hidden)custom._hidden={};
 var mOpen=[false,false,false];
@@ -1688,7 +1735,54 @@ function _commitEntry(){
   if(!SEL.el.length&&!SEL.kon.length)return;
   entries.push({el:SEL.el[0]||"",def:SEL.def.slice(),kon:SEL.kon.slice(),sol:SEL.sol.slice(),mode:SEL.mode||curMode,ts:Date.now()});
   ss("rv_e",entries);
-  SEL={el:[],def:[],sol:[],kon:[],mode:""};
+  SEL={el:[],def:[],sol:[],kon:[
+{cat:"Przeglad",pl:"Przeglad okresowy",ru:"Плановое ТО"}
+,{cat:"Przeglad",pl:"Przeglad gwarancyjny",ru:"Гарантийное ТО"}
+,{cat:"Przeglad",pl:"Przeglad techniczny (ogolny)",ru:"Общий техосмотр"}
+,{cat:"Czyszczenie",pl:"Czyszczenie ogolne maszyny",ru:"Общая чистка машины"}
+,{cat:"Czyszczenie",pl:"Czyszczenie skanera / kamery",ru:"Чистка сканера/камеры"}
+,{cat:"Czyszczenie",pl:"Czyszczenie wlotu butelek",ru:"Чистка входа бутылок"}
+,{cat:"Czyszczenie",pl:"Czyszczenie kompaktora",ru:"Чистка компактора"}
+,{cat:"Czyszczenie",pl:"Czyszczenie sortownika",ru:"Чистка сортировщика"}
+,{cat:"Czyszczenie",pl:"Czyszczenie czujnikow",ru:"Чистка датчиков"}
+,{cat:"Czyszczenie",pl:"Czyszczenie drukarki",ru:"Чистка принтера"}
+,{cat:"Czyszczenie",pl:"Czyszczenie pojemnikow",ru:"Чистка корзин"}
+,{cat:"Czyszczenie",pl:"Czyszczenie filtra powietrza",ru:"Чистка воздушного фильтра"}
+,{cat:"Naprawa",pl:"Naprawa / wymiana czesci",ru:"Ремонт / замена деталей"}
+,{cat:"Naprawa",pl:"Naprawa mechaniczna",ru:"Механический ремонт"}
+,{cat:"Naprawa",pl:"Naprawa elektroniczna",ru:"Электронный ремонт"}
+,{cat:"Naprawa",pl:"Wymiana pasa / lancucha",ru:"Замена ремня / цепи"}
+,{cat:"Naprawa",pl:"Wymiana czujnika",ru:"Замена датчика"}
+,{cat:"Naprawa",pl:"Wymiana silnika",ru:"Замена мотора"}
+,{cat:"Naprawa",pl:"Wymiana plyty elektronicznej",ru:"Замена электронной платы"}
+,{cat:"Naprawa",pl:"Wymiana drukarki / glowicy",ru:"Замена принтера / головки"}
+,{cat:"Naprawa",pl:"Wymiana papieru w drukarce",ru:"Замена бумаги в принтере"}
+,{cat:"Naprawa",pl:"Wymiana bezpiecznika",ru:"Замена предохранителя"}
+,{cat:"Naprawa",pl:"Wymiana zasilacza",ru:"Замена блока питания"}
+,{cat:"Kalibracja",pl:"Kalibracja kamery",ru:"Калибровка камеры"}
+,{cat:"Kalibracja",pl:"Kalibracja czujnikow",ru:"Калибровка датчиков"}
+,{cat:"Kalibracja",pl:"Regulacja podajnika",ru:"Регулировка подачи"}
+,{cat:"Kalibracja",pl:"Regulacja kompaktora",ru:"Регулировка компактора"}
+,{cat:"Kalibracja",pl:"Regulacja sortownika",ru:"Регулировка сортировщика"}
+,{cat:"Oprogramowanie",pl:"Aktualizacja oprogramowania (firmware)",ru:"Обновление прошивки"}
+,{cat:"Oprogramowanie",pl:"Aktualizacja bazy kodow EAN",ru:"Обновление базы EAN"}
+,{cat:"Oprogramowanie",pl:"Restart maszyny",ru:"Перезагрузка машины"}
+,{cat:"Oprogramowanie",pl:"Reset ustawien",ru:"Сброс настроек"}
+,{cat:"Oprogramowanie",pl:"Konfiguracja sieci",ru:"Настройка сети"}
+,{cat:"Oprogramowanie",pl:"Diagnostyka bledow (logi)",ru:"Диагностика ошибок (логи)"}
+,{cat:"Oprogramowanie",pl:"Test funkcjonalny",ru:"Функциональный тест"}
+,{cat:"Instalacja",pl:"Instalacja maszyny",ru:"Установка машины"}
+,{cat:"Instalacja",pl:"Podlaczenie do sieci LAN",ru:"Подключение к LAN"}
+,{cat:"Instalacja",pl:"Konfiguracja poczatkowa",ru:"Начальная конфигурация"}
+,{cat:"Instalacja",pl:"Szkolenie personelu sklepu",ru:"Обучение персонала магазина"}
+,{cat:"Interwencja",pl:"Usuwanie zaciecia",ru:"Устранение заклинивания"}
+,{cat:"Interwencja",pl:"Usuwanie zablokowanej butelki",ru:"Извлечение застрявшей бутылки"}
+,{cat:"Interwencja",pl:"Oproznienie pojemnika",ru:"Опустошение корзины"}
+,{cat:"Interwencja",pl:"Uzupelnienie papieru",ru:"Заправка бумаги"}
+,{cat:"Interwencja",pl:"Wznowienie pracy po awarii",ru:"Восстановление после аварии"}
+,{cat:"Interwencja",pl:"Kontrola stanu maszyny",ru:"Контроль состояния машины"}
+,{cat:"Interwencja",pl:"Sprawdzenie polaczenia sieciowego",ru:"Проверка сетевого подключения"}
+],mode:""};
   lastDefCat="";
   mOpenS=false;
   var bS=document.getElementById("bodyS");if(bS)bS.className="mod-body";
@@ -2587,7 +2681,54 @@ function loadTmpl(i){
   if(!t)return;
   entries=JSON.parse(JSON.stringify(t.entries));
   ss("rv_e",entries);
-  SEL={el:[],def:[],sol:[],kon:[],mode:""};
+  SEL={el:[],def:[],sol:[],kon:[
+{cat:"Przeglad",pl:"Przeglad okresowy",ru:"Плановое ТО"}
+,{cat:"Przeglad",pl:"Przeglad gwarancyjny",ru:"Гарантийное ТО"}
+,{cat:"Przeglad",pl:"Przeglad techniczny (ogolny)",ru:"Общий техосмотр"}
+,{cat:"Czyszczenie",pl:"Czyszczenie ogolne maszyny",ru:"Общая чистка машины"}
+,{cat:"Czyszczenie",pl:"Czyszczenie skanera / kamery",ru:"Чистка сканера/камеры"}
+,{cat:"Czyszczenie",pl:"Czyszczenie wlotu butelek",ru:"Чистка входа бутылок"}
+,{cat:"Czyszczenie",pl:"Czyszczenie kompaktora",ru:"Чистка компактора"}
+,{cat:"Czyszczenie",pl:"Czyszczenie sortownika",ru:"Чистка сортировщика"}
+,{cat:"Czyszczenie",pl:"Czyszczenie czujnikow",ru:"Чистка датчиков"}
+,{cat:"Czyszczenie",pl:"Czyszczenie drukarki",ru:"Чистка принтера"}
+,{cat:"Czyszczenie",pl:"Czyszczenie pojemnikow",ru:"Чистка корзин"}
+,{cat:"Czyszczenie",pl:"Czyszczenie filtra powietrza",ru:"Чистка воздушного фильтра"}
+,{cat:"Naprawa",pl:"Naprawa / wymiana czesci",ru:"Ремонт / замена деталей"}
+,{cat:"Naprawa",pl:"Naprawa mechaniczna",ru:"Механический ремонт"}
+,{cat:"Naprawa",pl:"Naprawa elektroniczna",ru:"Электронный ремонт"}
+,{cat:"Naprawa",pl:"Wymiana pasa / lancucha",ru:"Замена ремня / цепи"}
+,{cat:"Naprawa",pl:"Wymiana czujnika",ru:"Замена датчика"}
+,{cat:"Naprawa",pl:"Wymiana silnika",ru:"Замена мотора"}
+,{cat:"Naprawa",pl:"Wymiana plyty elektronicznej",ru:"Замена электронной платы"}
+,{cat:"Naprawa",pl:"Wymiana drukarki / glowicy",ru:"Замена принтера / головки"}
+,{cat:"Naprawa",pl:"Wymiana papieru w drukarce",ru:"Замена бумаги в принтере"}
+,{cat:"Naprawa",pl:"Wymiana bezpiecznika",ru:"Замена предохранителя"}
+,{cat:"Naprawa",pl:"Wymiana zasilacza",ru:"Замена блока питания"}
+,{cat:"Kalibracja",pl:"Kalibracja kamery",ru:"Калибровка камеры"}
+,{cat:"Kalibracja",pl:"Kalibracja czujnikow",ru:"Калибровка датчиков"}
+,{cat:"Kalibracja",pl:"Regulacja podajnika",ru:"Регулировка подачи"}
+,{cat:"Kalibracja",pl:"Regulacja kompaktora",ru:"Регулировка компактора"}
+,{cat:"Kalibracja",pl:"Regulacja sortownika",ru:"Регулировка сортировщика"}
+,{cat:"Oprogramowanie",pl:"Aktualizacja oprogramowania (firmware)",ru:"Обновление прошивки"}
+,{cat:"Oprogramowanie",pl:"Aktualizacja bazy kodow EAN",ru:"Обновление базы EAN"}
+,{cat:"Oprogramowanie",pl:"Restart maszyny",ru:"Перезагрузка машины"}
+,{cat:"Oprogramowanie",pl:"Reset ustawien",ru:"Сброс настроек"}
+,{cat:"Oprogramowanie",pl:"Konfiguracja sieci",ru:"Настройка сети"}
+,{cat:"Oprogramowanie",pl:"Diagnostyka bledow (logi)",ru:"Диагностика ошибок (логи)"}
+,{cat:"Oprogramowanie",pl:"Test funkcjonalny",ru:"Функциональный тест"}
+,{cat:"Instalacja",pl:"Instalacja maszyny",ru:"Установка машины"}
+,{cat:"Instalacja",pl:"Podlaczenie do sieci LAN",ru:"Подключение к LAN"}
+,{cat:"Instalacja",pl:"Konfiguracja poczatkowa",ru:"Начальная конфигурация"}
+,{cat:"Instalacja",pl:"Szkolenie personelu sklepu",ru:"Обучение персонала магазина"}
+,{cat:"Interwencja",pl:"Usuwanie zaciecia",ru:"Устранение заклинивания"}
+,{cat:"Interwencja",pl:"Usuwanie zablokowanej butelki",ru:"Извлечение застрявшей бутылки"}
+,{cat:"Interwencja",pl:"Oproznienie pojemnika",ru:"Опустошение корзины"}
+,{cat:"Interwencja",pl:"Uzupelnienie papieru",ru:"Заправка бумаги"}
+,{cat:"Interwencja",pl:"Wznowienie pracy po awarii",ru:"Восстановление после аварии"}
+,{cat:"Interwencja",pl:"Kontrola stanu maszyny",ru:"Контроль состояния машины"}
+,{cat:"Interwencja",pl:"Sprawdzenie polaczenia sieciowego",ru:"Проверка сетевого подключения"}
+],mode:""};
   [0,1,2].forEach(function(j){mOpen[j]=false;_applyMod(j);});
   [["val1","Wybierz element"],["val2","Wybierz usterke"],["val3","Asystent zaproponuje rozwiazania"]].forEach(function(p){var e=document.getElementById(p[0]);if(e){e.textContent=p[1];e.className="mod-val";}});
   // Restore style if saved with template
@@ -2619,7 +2760,101 @@ function renderTmplList(){
 
 function openCust(col){custTarget=col;var t={el:"wlasny element",def:"wlasna usterke",sol:"wlasne dzialanie",kon:"wlasny przeglad"};document.getElementById("custTitle").textContent="Dodaj "+t[col];document.getElementById("custPl").value="";var _cr=document.getElementById("custRu");if(_cr)_cr.value="";openSh("shCust");}
 function saveCust(){var pl=document.getElementById("custPl").value.trim();if(!pl)return;var cr2=document.getElementById("custRu");var ru=cr2?cr2.value.trim():"";if(!custom[custTarget])custom[custTarget]=[];custom[custTarget].push({pl:pl,ru:ru});ss("rv_c",custom);closeOv("shCust");renderList(custTarget);renderList("sol");showToast("&#10003; Dodano");}
-function doReset(){entries=[];custParts=[];selKonG=[];selKonS=[];timeG={od:"00:00",do:"00:00",_set:false};timeS={od:"00:00",do:"00:00",_set:false};custom={el:[],def:[],sol:[],kon:[]};selPartsG={};selPartsS={};partQtyG={};partQtyS={};["rv_e","rv_cp","rv_c","rv_mode","rv_sp","rv_pq","rv_spG","rv_spS","rv_pqG","rv_pqS"].forEach(function(k){localStorage.removeItem(k);});SEL={el:[],def:[],sol:[],kon:[],mode:""};editMode={el:false,def:false,sol:false,kon:false};mOpenS=false;custom={el:[],def:[],sol:[],kon:[],_hidden:{}};lastDefCat="";[0,1,2].forEach(function(i){mOpen[i]=false;_applyMod(i);});[["val1","Wybierz element"],["val2","Wybierz usterke"],["valS","Aktywnosci serwisowe"],["val3","Wybierz lub dodaj dzialanie"]].forEach(function(p){var e=document.getElementById(p[0]);if(e){e.textContent=p[1];e.className="mod-val";}});partsOpen=false;var _pb=document.getElementById("partsBody");if(_pb)_pb.className="parts-body";var _pa=document.getElementById("partsArr");if(_pa)_pa.style.transform="none";var ed=document.getElementById("repEdit");if(ed){ed.removeAttribute("data-ue");}renderList("el");renderList("def");renderList("kon");renderList("sol");renderParts();renderSummary();curMode="G";var tGr=document.getElementById("tglG"),tSr=document.getElementById("tglNG"),twr=document.getElementById("tglWrap");if(tGr)tGr.className="tgl g on";if(tSr)tSr.className="tgl s";var twr2=document.getElementById("tglWrap");if(twr2)twr2.className="tgl-wrap";var tagR=document.getElementById("partsModeTag");if(tagR){tagR.innerHTML='<span style="width:6px;height:6px;border-radius:50%;background:#34C759;display:inline-block;flex-shrink:0"></span>Gwar.';tagR.style.background="rgba(52,199,89,.1)";tagR.style.color="#34C759";tagR.style.borderColor="rgba(52,199,89,.25)";}_syncTimeInputs();showToast("&#8635; Zresetowano");}
+function doReset(){entries=[];custParts=[];selKonG=[];selKonS=[];timeG={od:"00:00",do:"00:00",_set:false};timeS={od:"00:00",do:"00:00",_set:false};custom={el:[],def:[],sol:[],kon:[]};selPartsG={};selPartsS={};partQtyG={};partQtyS={};["rv_e","rv_cp","rv_c","rv_mode","rv_sp","rv_pq","rv_spG","rv_spS","rv_pqG","rv_pqS"].forEach(function(k){localStorage.removeItem(k);});SEL={el:[],def:[],sol:[],kon:[
+{cat:"Przeglad",pl:"Przeglad okresowy",ru:"Плановое ТО"}
+,{cat:"Przeglad",pl:"Przeglad gwarancyjny",ru:"Гарантийное ТО"}
+,{cat:"Przeglad",pl:"Przeglad techniczny (ogolny)",ru:"Общий техосмотр"}
+,{cat:"Czyszczenie",pl:"Czyszczenie ogolne maszyny",ru:"Общая чистка машины"}
+,{cat:"Czyszczenie",pl:"Czyszczenie skanera / kamery",ru:"Чистка сканера/камеры"}
+,{cat:"Czyszczenie",pl:"Czyszczenie wlotu butelek",ru:"Чистка входа бутылок"}
+,{cat:"Czyszczenie",pl:"Czyszczenie kompaktora",ru:"Чистка компактора"}
+,{cat:"Czyszczenie",pl:"Czyszczenie sortownika",ru:"Чистка сортировщика"}
+,{cat:"Czyszczenie",pl:"Czyszczenie czujnikow",ru:"Чистка датчиков"}
+,{cat:"Czyszczenie",pl:"Czyszczenie drukarki",ru:"Чистка принтера"}
+,{cat:"Czyszczenie",pl:"Czyszczenie pojemnikow",ru:"Чистка корзин"}
+,{cat:"Czyszczenie",pl:"Czyszczenie filtra powietrza",ru:"Чистка воздушного фильтра"}
+,{cat:"Naprawa",pl:"Naprawa / wymiana czesci",ru:"Ремонт / замена деталей"}
+,{cat:"Naprawa",pl:"Naprawa mechaniczna",ru:"Механический ремонт"}
+,{cat:"Naprawa",pl:"Naprawa elektroniczna",ru:"Электронный ремонт"}
+,{cat:"Naprawa",pl:"Wymiana pasa / lancucha",ru:"Замена ремня / цепи"}
+,{cat:"Naprawa",pl:"Wymiana czujnika",ru:"Замена датчика"}
+,{cat:"Naprawa",pl:"Wymiana silnika",ru:"Замена мотора"}
+,{cat:"Naprawa",pl:"Wymiana plyty elektronicznej",ru:"Замена электронной платы"}
+,{cat:"Naprawa",pl:"Wymiana drukarki / glowicy",ru:"Замена принтера / головки"}
+,{cat:"Naprawa",pl:"Wymiana papieru w drukarce",ru:"Замена бумаги в принтере"}
+,{cat:"Naprawa",pl:"Wymiana bezpiecznika",ru:"Замена предохранителя"}
+,{cat:"Naprawa",pl:"Wymiana zasilacza",ru:"Замена блока питания"}
+,{cat:"Kalibracja",pl:"Kalibracja kamery",ru:"Калибровка камеры"}
+,{cat:"Kalibracja",pl:"Kalibracja czujnikow",ru:"Калибровка датчиков"}
+,{cat:"Kalibracja",pl:"Regulacja podajnika",ru:"Регулировка подачи"}
+,{cat:"Kalibracja",pl:"Regulacja kompaktora",ru:"Регулировка компактора"}
+,{cat:"Kalibracja",pl:"Regulacja sortownika",ru:"Регулировка сортировщика"}
+,{cat:"Oprogramowanie",pl:"Aktualizacja oprogramowania (firmware)",ru:"Обновление прошивки"}
+,{cat:"Oprogramowanie",pl:"Aktualizacja bazy kodow EAN",ru:"Обновление базы EAN"}
+,{cat:"Oprogramowanie",pl:"Restart maszyny",ru:"Перезагрузка машины"}
+,{cat:"Oprogramowanie",pl:"Reset ustawien",ru:"Сброс настроек"}
+,{cat:"Oprogramowanie",pl:"Konfiguracja sieci",ru:"Настройка сети"}
+,{cat:"Oprogramowanie",pl:"Diagnostyka bledow (logi)",ru:"Диагностика ошибок (логи)"}
+,{cat:"Oprogramowanie",pl:"Test funkcjonalny",ru:"Функциональный тест"}
+,{cat:"Instalacja",pl:"Instalacja maszyny",ru:"Установка машины"}
+,{cat:"Instalacja",pl:"Podlaczenie do sieci LAN",ru:"Подключение к LAN"}
+,{cat:"Instalacja",pl:"Konfiguracja poczatkowa",ru:"Начальная конфигурация"}
+,{cat:"Instalacja",pl:"Szkolenie personelu sklepu",ru:"Обучение персонала магазина"}
+,{cat:"Interwencja",pl:"Usuwanie zaciecia",ru:"Устранение заклинивания"}
+,{cat:"Interwencja",pl:"Usuwanie zablokowanej butelki",ru:"Извлечение застрявшей бутылки"}
+,{cat:"Interwencja",pl:"Oproznienie pojemnika",ru:"Опустошение корзины"}
+,{cat:"Interwencja",pl:"Uzupelnienie papieru",ru:"Заправка бумаги"}
+,{cat:"Interwencja",pl:"Wznowienie pracy po awarii",ru:"Восстановление после аварии"}
+,{cat:"Interwencja",pl:"Kontrola stanu maszyny",ru:"Контроль состояния машины"}
+,{cat:"Interwencja",pl:"Sprawdzenie polaczenia sieciowego",ru:"Проверка сетевого подключения"}
+],mode:""};editMode={el:false,def:false,sol:false,kon:false};mOpenS=false;custom={el:[],def:[],sol:[],kon:[
+{cat:"Przeglad",pl:"Przeglad okresowy",ru:"Плановое ТО"}
+,{cat:"Przeglad",pl:"Przeglad gwarancyjny",ru:"Гарантийное ТО"}
+,{cat:"Przeglad",pl:"Przeglad techniczny (ogolny)",ru:"Общий техосмотр"}
+,{cat:"Czyszczenie",pl:"Czyszczenie ogolne maszyny",ru:"Общая чистка машины"}
+,{cat:"Czyszczenie",pl:"Czyszczenie skanera / kamery",ru:"Чистка сканера/камеры"}
+,{cat:"Czyszczenie",pl:"Czyszczenie wlotu butelek",ru:"Чистка входа бутылок"}
+,{cat:"Czyszczenie",pl:"Czyszczenie kompaktora",ru:"Чистка компактора"}
+,{cat:"Czyszczenie",pl:"Czyszczenie sortownika",ru:"Чистка сортировщика"}
+,{cat:"Czyszczenie",pl:"Czyszczenie czujnikow",ru:"Чистка датчиков"}
+,{cat:"Czyszczenie",pl:"Czyszczenie drukarki",ru:"Чистка принтера"}
+,{cat:"Czyszczenie",pl:"Czyszczenie pojemnikow",ru:"Чистка корзин"}
+,{cat:"Czyszczenie",pl:"Czyszczenie filtra powietrza",ru:"Чистка воздушного фильтра"}
+,{cat:"Naprawa",pl:"Naprawa / wymiana czesci",ru:"Ремонт / замена деталей"}
+,{cat:"Naprawa",pl:"Naprawa mechaniczna",ru:"Механический ремонт"}
+,{cat:"Naprawa",pl:"Naprawa elektroniczna",ru:"Электронный ремонт"}
+,{cat:"Naprawa",pl:"Wymiana pasa / lancucha",ru:"Замена ремня / цепи"}
+,{cat:"Naprawa",pl:"Wymiana czujnika",ru:"Замена датчика"}
+,{cat:"Naprawa",pl:"Wymiana silnika",ru:"Замена мотора"}
+,{cat:"Naprawa",pl:"Wymiana plyty elektronicznej",ru:"Замена электронной платы"}
+,{cat:"Naprawa",pl:"Wymiana drukarki / glowicy",ru:"Замена принтера / головки"}
+,{cat:"Naprawa",pl:"Wymiana papieru w drukarce",ru:"Замена бумаги в принтере"}
+,{cat:"Naprawa",pl:"Wymiana bezpiecznika",ru:"Замена предохранителя"}
+,{cat:"Naprawa",pl:"Wymiana zasilacza",ru:"Замена блока питания"}
+,{cat:"Kalibracja",pl:"Kalibracja kamery",ru:"Калибровка камеры"}
+,{cat:"Kalibracja",pl:"Kalibracja czujnikow",ru:"Калибровка датчиков"}
+,{cat:"Kalibracja",pl:"Regulacja podajnika",ru:"Регулировка подачи"}
+,{cat:"Kalibracja",pl:"Regulacja kompaktora",ru:"Регулировка компактора"}
+,{cat:"Kalibracja",pl:"Regulacja sortownika",ru:"Регулировка сортировщика"}
+,{cat:"Oprogramowanie",pl:"Aktualizacja oprogramowania (firmware)",ru:"Обновление прошивки"}
+,{cat:"Oprogramowanie",pl:"Aktualizacja bazy kodow EAN",ru:"Обновление базы EAN"}
+,{cat:"Oprogramowanie",pl:"Restart maszyny",ru:"Перезагрузка машины"}
+,{cat:"Oprogramowanie",pl:"Reset ustawien",ru:"Сброс настроек"}
+,{cat:"Oprogramowanie",pl:"Konfiguracja sieci",ru:"Настройка сети"}
+,{cat:"Oprogramowanie",pl:"Diagnostyka bledow (logi)",ru:"Диагностика ошибок (логи)"}
+,{cat:"Oprogramowanie",pl:"Test funkcjonalny",ru:"Функциональный тест"}
+,{cat:"Instalacja",pl:"Instalacja maszyny",ru:"Установка машины"}
+,{cat:"Instalacja",pl:"Podlaczenie do sieci LAN",ru:"Подключение к LAN"}
+,{cat:"Instalacja",pl:"Konfiguracja poczatkowa",ru:"Начальная конфигурация"}
+,{cat:"Instalacja",pl:"Szkolenie personelu sklepu",ru:"Обучение персонала магазина"}
+,{cat:"Interwencja",pl:"Usuwanie zaciecia",ru:"Устранение заклинивания"}
+,{cat:"Interwencja",pl:"Usuwanie zablokowanej butelki",ru:"Извлечение застрявшей бутылки"}
+,{cat:"Interwencja",pl:"Oproznienie pojemnika",ru:"Опустошение корзины"}
+,{cat:"Interwencja",pl:"Uzupelnienie papieru",ru:"Заправка бумаги"}
+,{cat:"Interwencja",pl:"Wznowienie pracy po awarii",ru:"Восстановление после аварии"}
+,{cat:"Interwencja",pl:"Kontrola stanu maszyny",ru:"Контроль состояния машины"}
+,{cat:"Interwencja",pl:"Sprawdzenie polaczenia sieciowego",ru:"Проверка сетевого подключения"}
+],_hidden:{}};lastDefCat="";[0,1,2].forEach(function(i){mOpen[i]=false;_applyMod(i);});[["val1","Wybierz element"],["val2","Wybierz usterke"],["valS","Aktywnosci serwisowe"],["val3","Wybierz lub dodaj dzialanie"]].forEach(function(p){var e=document.getElementById(p[0]);if(e){e.textContent=p[1];e.className="mod-val";}});partsOpen=false;var _pb=document.getElementById("partsBody");if(_pb)_pb.className="parts-body";var _pa=document.getElementById("partsArr");if(_pa)_pa.style.transform="none";var ed=document.getElementById("repEdit");if(ed){ed.removeAttribute("data-ue");}renderList("el");renderList("def");renderList("kon");renderList("sol");renderParts();renderSummary();curMode="G";var tGr=document.getElementById("tglG"),tSr=document.getElementById("tglNG"),twr=document.getElementById("tglWrap");if(tGr)tGr.className="tgl g on";if(tSr)tSr.className="tgl s";var twr2=document.getElementById("tglWrap");if(twr2)twr2.className="tgl-wrap";var tagR=document.getElementById("partsModeTag");if(tagR){tagR.innerHTML='<span style="width:6px;height:6px;border-radius:50%;background:#34C759;display:inline-block;flex-shrink:0"></span>Gwar.';tagR.style.background="rgba(52,199,89,.1)";tagR.style.color="#34C759";tagR.style.borderColor="rgba(52,199,89,.25)";}_syncTimeInputs();showToast("&#8635; Zresetowano");}
 function _buildAIExp(){
   var eG=entries.filter(function(e){return e.mode==="G";});
   var eS=entries.filter(function(e){return e.mode==="S";});
@@ -2728,7 +2963,54 @@ function runDiagnostics(){
   if(!Array.isArray(entries)){fix("entries",function(){entries=[];});}
 
   chk("SEL: poprawna struktura",SEL&&Array.isArray(SEL.el)&&Array.isArray(SEL.def)&&Array.isArray(SEL.sol)&&Array.isArray(SEL.kon));
-  if(!SEL||!Array.isArray(SEL.el)){fix("SEL reset",function(){SEL={el:[],def:[],sol:[],kon:[],mode:""};});}
+  if(!SEL||!Array.isArray(SEL.el)){fix("SEL reset",function(){SEL={el:[],def:[],sol:[],kon:[
+{cat:"Przeglad",pl:"Przeglad okresowy",ru:"Плановое ТО"}
+,{cat:"Przeglad",pl:"Przeglad gwarancyjny",ru:"Гарантийное ТО"}
+,{cat:"Przeglad",pl:"Przeglad techniczny (ogolny)",ru:"Общий техосмотр"}
+,{cat:"Czyszczenie",pl:"Czyszczenie ogolne maszyny",ru:"Общая чистка машины"}
+,{cat:"Czyszczenie",pl:"Czyszczenie skanera / kamery",ru:"Чистка сканера/камеры"}
+,{cat:"Czyszczenie",pl:"Czyszczenie wlotu butelek",ru:"Чистка входа бутылок"}
+,{cat:"Czyszczenie",pl:"Czyszczenie kompaktora",ru:"Чистка компактора"}
+,{cat:"Czyszczenie",pl:"Czyszczenie sortownika",ru:"Чистка сортировщика"}
+,{cat:"Czyszczenie",pl:"Czyszczenie czujnikow",ru:"Чистка датчиков"}
+,{cat:"Czyszczenie",pl:"Czyszczenie drukarki",ru:"Чистка принтера"}
+,{cat:"Czyszczenie",pl:"Czyszczenie pojemnikow",ru:"Чистка корзин"}
+,{cat:"Czyszczenie",pl:"Czyszczenie filtra powietrza",ru:"Чистка воздушного фильтра"}
+,{cat:"Naprawa",pl:"Naprawa / wymiana czesci",ru:"Ремонт / замена деталей"}
+,{cat:"Naprawa",pl:"Naprawa mechaniczna",ru:"Механический ремонт"}
+,{cat:"Naprawa",pl:"Naprawa elektroniczna",ru:"Электронный ремонт"}
+,{cat:"Naprawa",pl:"Wymiana pasa / lancucha",ru:"Замена ремня / цепи"}
+,{cat:"Naprawa",pl:"Wymiana czujnika",ru:"Замена датчика"}
+,{cat:"Naprawa",pl:"Wymiana silnika",ru:"Замена мотора"}
+,{cat:"Naprawa",pl:"Wymiana plyty elektronicznej",ru:"Замена электронной платы"}
+,{cat:"Naprawa",pl:"Wymiana drukarki / glowicy",ru:"Замена принтера / головки"}
+,{cat:"Naprawa",pl:"Wymiana papieru w drukarce",ru:"Замена бумаги в принтере"}
+,{cat:"Naprawa",pl:"Wymiana bezpiecznika",ru:"Замена предохранителя"}
+,{cat:"Naprawa",pl:"Wymiana zasilacza",ru:"Замена блока питания"}
+,{cat:"Kalibracja",pl:"Kalibracja kamery",ru:"Калибровка камеры"}
+,{cat:"Kalibracja",pl:"Kalibracja czujnikow",ru:"Калибровка датчиков"}
+,{cat:"Kalibracja",pl:"Regulacja podajnika",ru:"Регулировка подачи"}
+,{cat:"Kalibracja",pl:"Regulacja kompaktora",ru:"Регулировка компактора"}
+,{cat:"Kalibracja",pl:"Regulacja sortownika",ru:"Регулировка сортировщика"}
+,{cat:"Oprogramowanie",pl:"Aktualizacja oprogramowania (firmware)",ru:"Обновление прошивки"}
+,{cat:"Oprogramowanie",pl:"Aktualizacja bazy kodow EAN",ru:"Обновление базы EAN"}
+,{cat:"Oprogramowanie",pl:"Restart maszyny",ru:"Перезагрузка машины"}
+,{cat:"Oprogramowanie",pl:"Reset ustawien",ru:"Сброс настроек"}
+,{cat:"Oprogramowanie",pl:"Konfiguracja sieci",ru:"Настройка сети"}
+,{cat:"Oprogramowanie",pl:"Diagnostyka bledow (logi)",ru:"Диагностика ошибок (логи)"}
+,{cat:"Oprogramowanie",pl:"Test funkcjonalny",ru:"Функциональный тест"}
+,{cat:"Instalacja",pl:"Instalacja maszyny",ru:"Установка машины"}
+,{cat:"Instalacja",pl:"Podlaczenie do sieci LAN",ru:"Подключение к LAN"}
+,{cat:"Instalacja",pl:"Konfiguracja poczatkowa",ru:"Начальная конфигурация"}
+,{cat:"Instalacja",pl:"Szkolenie personelu sklepu",ru:"Обучение персонала магазина"}
+,{cat:"Interwencja",pl:"Usuwanie zaciecia",ru:"Устранение заклинивания"}
+,{cat:"Interwencja",pl:"Usuwanie zablokowanej butelki",ru:"Извлечение застрявшей бутылки"}
+,{cat:"Interwencja",pl:"Oproznienie pojemnika",ru:"Опустошение корзины"}
+,{cat:"Interwencja",pl:"Uzupelnienie papieru",ru:"Заправка бумаги"}
+,{cat:"Interwencja",pl:"Wznowienie pracy po awarii",ru:"Восстановление после аварии"}
+,{cat:"Interwencja",pl:"Kontrola stanu maszyny",ru:"Контроль состояния машины"}
+,{cat:"Interwencja",pl:"Sprawdzenie polaczenia sieciowego",ru:"Проверка сетевого подключения"}
+],mode:""};});}
 
   chk("repTmpls: tablica",Array.isArray(repTmpls));
   if(!Array.isArray(repTmpls)){fix("repTmpls",function(){repTmpls=[];ss("rv_rt",[]);});}
@@ -2740,7 +3022,54 @@ function runDiagnostics(){
   if(!Array.isArray(custParts)){fix("custParts",function(){custParts=[];ss("rv_cp",[]);});}
 
   chk("custom: poprawny obiekt",custom&&Array.isArray(custom.el)&&Array.isArray(custom.def)&&Array.isArray(custom.sol)&&Array.isArray(custom.kon));
-  if(!custom||!Array.isArray(custom.el)){fix("custom reset",function(){custom={el:[],def:[],sol:[],kon:[],_hidden:{}};ss("rv_c",custom);});}
+  if(!custom||!Array.isArray(custom.el)){fix("custom reset",function(){custom={el:[],def:[],sol:[],kon:[
+{cat:"Przeglad",pl:"Przeglad okresowy",ru:"Плановое ТО"}
+,{cat:"Przeglad",pl:"Przeglad gwarancyjny",ru:"Гарантийное ТО"}
+,{cat:"Przeglad",pl:"Przeglad techniczny (ogolny)",ru:"Общий техосмотр"}
+,{cat:"Czyszczenie",pl:"Czyszczenie ogolne maszyny",ru:"Общая чистка машины"}
+,{cat:"Czyszczenie",pl:"Czyszczenie skanera / kamery",ru:"Чистка сканера/камеры"}
+,{cat:"Czyszczenie",pl:"Czyszczenie wlotu butelek",ru:"Чистка входа бутылок"}
+,{cat:"Czyszczenie",pl:"Czyszczenie kompaktora",ru:"Чистка компактора"}
+,{cat:"Czyszczenie",pl:"Czyszczenie sortownika",ru:"Чистка сортировщика"}
+,{cat:"Czyszczenie",pl:"Czyszczenie czujnikow",ru:"Чистка датчиков"}
+,{cat:"Czyszczenie",pl:"Czyszczenie drukarki",ru:"Чистка принтера"}
+,{cat:"Czyszczenie",pl:"Czyszczenie pojemnikow",ru:"Чистка корзин"}
+,{cat:"Czyszczenie",pl:"Czyszczenie filtra powietrza",ru:"Чистка воздушного фильтра"}
+,{cat:"Naprawa",pl:"Naprawa / wymiana czesci",ru:"Ремонт / замена деталей"}
+,{cat:"Naprawa",pl:"Naprawa mechaniczna",ru:"Механический ремонт"}
+,{cat:"Naprawa",pl:"Naprawa elektroniczna",ru:"Электронный ремонт"}
+,{cat:"Naprawa",pl:"Wymiana pasa / lancucha",ru:"Замена ремня / цепи"}
+,{cat:"Naprawa",pl:"Wymiana czujnika",ru:"Замена датчика"}
+,{cat:"Naprawa",pl:"Wymiana silnika",ru:"Замена мотора"}
+,{cat:"Naprawa",pl:"Wymiana plyty elektronicznej",ru:"Замена электронной платы"}
+,{cat:"Naprawa",pl:"Wymiana drukarki / glowicy",ru:"Замена принтера / головки"}
+,{cat:"Naprawa",pl:"Wymiana papieru w drukarce",ru:"Замена бумаги в принтере"}
+,{cat:"Naprawa",pl:"Wymiana bezpiecznika",ru:"Замена предохранителя"}
+,{cat:"Naprawa",pl:"Wymiana zasilacza",ru:"Замена блока питания"}
+,{cat:"Kalibracja",pl:"Kalibracja kamery",ru:"Калибровка камеры"}
+,{cat:"Kalibracja",pl:"Kalibracja czujnikow",ru:"Калибровка датчиков"}
+,{cat:"Kalibracja",pl:"Regulacja podajnika",ru:"Регулировка подачи"}
+,{cat:"Kalibracja",pl:"Regulacja kompaktora",ru:"Регулировка компактора"}
+,{cat:"Kalibracja",pl:"Regulacja sortownika",ru:"Регулировка сортировщика"}
+,{cat:"Oprogramowanie",pl:"Aktualizacja oprogramowania (firmware)",ru:"Обновление прошивки"}
+,{cat:"Oprogramowanie",pl:"Aktualizacja bazy kodow EAN",ru:"Обновление базы EAN"}
+,{cat:"Oprogramowanie",pl:"Restart maszyny",ru:"Перезагрузка машины"}
+,{cat:"Oprogramowanie",pl:"Reset ustawien",ru:"Сброс настроек"}
+,{cat:"Oprogramowanie",pl:"Konfiguracja sieci",ru:"Настройка сети"}
+,{cat:"Oprogramowanie",pl:"Diagnostyka bledow (logi)",ru:"Диагностика ошибок (логи)"}
+,{cat:"Oprogramowanie",pl:"Test funkcjonalny",ru:"Функциональный тест"}
+,{cat:"Instalacja",pl:"Instalacja maszyny",ru:"Установка машины"}
+,{cat:"Instalacja",pl:"Podlaczenie do sieci LAN",ru:"Подключение к LAN"}
+,{cat:"Instalacja",pl:"Konfiguracja poczatkowa",ru:"Начальная конфигурация"}
+,{cat:"Instalacja",pl:"Szkolenie personelu sklepu",ru:"Обучение персонала магазина"}
+,{cat:"Interwencja",pl:"Usuwanie zaciecia",ru:"Устранение заклинивания"}
+,{cat:"Interwencja",pl:"Usuwanie zablokowanej butelki",ru:"Извлечение застрявшей бутылки"}
+,{cat:"Interwencja",pl:"Oproznienie pojemnika",ru:"Опустошение корзины"}
+,{cat:"Interwencja",pl:"Uzupelnienie papieru",ru:"Заправка бумаги"}
+,{cat:"Interwencja",pl:"Wznowienie pracy po awarii",ru:"Восстановление после аварии"}
+,{cat:"Interwencja",pl:"Kontrola stanu maszyny",ru:"Контроль состояния машины"}
+,{cat:"Interwencja",pl:"Sprawdzenie polaczenia sieciowego",ru:"Проверка сетевого подключения"}
+],_hidden:{}};ss("rv_c",custom);});}
 
   // 3. rstStyle — poprawna wartość
   var validStyles=["biz","tec","kls","kmp","prot"];
