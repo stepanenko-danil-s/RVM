@@ -512,7 +512,7 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
   </div>
   <div class="mod-body" id="body2">
   <div class="mod-srch"><input id="ms-def" type="search" placeholder="Szukaj usterki..." oninput="modSrch('def',this.value)" autocomplete="off" autocorrect="off" spellcheck="false"><button class="mod-srch-mic" onclick="modSrchMic('def')" ontouchend="event.preventDefault();modSrchMic('def')"><svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/></svg></button></div>
-    <div style="display:flex;justify-content:flex-end;padding:6px 10px 0"><button onclick="aiSuggestDef()" style="background:rgba(0,122,122,.08);border:1px solid rgba(0,122,122,.2);border-radius:8px;color:#007A7A;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;margin-right:4px">&#10024; AI</button><button onclick="toggleEditMode('def')" id="editBtn-def" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
+    <div style="display:flex;justify-content:flex-end;padding:6px 10px 0"><button onclick="aiSuggestDef()" style="background:rgba(0,122,122,.08);border:1px solid rgba(0,122,122,.2);border-radius:8px;color:#007A7A;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;margin-right:4px">AI</button><button onclick="toggleEditMode('def')" id="editBtn-def" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
     <div class="ilist" id="lst-def"></div>
     <div style="padding:4px 10px 8px;display:flex;gap:6px;align-items:center">
       <input id="defQuickAdd" placeholder="+ Dodaj własną usterkę..." style="flex:1;background:rgba(118,118,128,.09);border:none;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;color:#1C1C1E" onkeydown="if(event.key==='Enter')addDefQuick()">
@@ -535,7 +535,7 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
   <div class="mod-body" id="body3">
   <div class="mod-srch"><input id="ms-sol" type="search" placeholder="Szukaj dzialania..." oninput="modSrch('sol',this.value)" autocomplete="off" autocorrect="off" spellcheck="false"><button class="mod-srch-mic" onclick="modSrchMic('sol')" ontouchend="event.preventDefault();modSrchMic('sol')"><svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/></svg></button></div>
     <div class="sol-ban" id="solBan"></div>
-    <div style="display:flex;justify-content:flex-end;padding:4px 10px 0"><button onclick="aiSuggestSol()" style="background:rgba(0,122,122,.08);border:1px solid rgba(0,122,122,.2);border-radius:8px;color:#007A7A;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;margin-right:4px">&#10024; AI</button><button onclick="toggleEditMode('sol')" id="editBtn-sol" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
+    <div style="display:flex;justify-content:flex-end;padding:4px 10px 0"><button onclick="aiSuggestSol()" style="background:rgba(0,122,122,.08);border:1px solid rgba(0,122,122,.2);border-radius:8px;color:#007A7A;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;margin-right:4px">AI</button><button onclick="toggleEditMode('sol')" id="editBtn-sol" style="background:none;border:none;color:rgba(60,60,67,.35);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1" title="Tryb edycji">&#215;</button></div>
     <div class="ilist" id="lst-sol"></div>
     <div style="padding:4px 10px 8px;display:flex;gap:6px;align-items:center">
       <input id="solQuickAdd" placeholder="+ Dodaj wlasne dzialanie..." style="flex:1;background:rgba(118,118,128,.09);border:none;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;color:#1C1C1E" onkeydown="if(event.key==='Enter')addSolQuick()">
@@ -658,7 +658,7 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
 
     <div id="repPhotos" style="display:none"><div style="padding:8px 14px 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D">Zdjęcia</div><div style="display:flex;gap:6px;overflow-x:auto;padding:0 14px 10px;-webkit-overflow-scrolling:touch" id="repPhotosList"></div></div>
     <div class="rep-btns" style="flex-wrap:wrap;gap:8px">
-      <button class="ai-btn" onclick="openAIPanel()" style="flex:1;min-width:60px">&#10024; AI</button>
+      <button class="ai-btn" onclick="openAIPanel()" style="flex:1;min-width:60px">AI</button>
       <button onclick="openSh('shPhotos')" style="flex:1;min-width:60px;padding:13px;background:#F5F5F7;border:1px solid #EDEBE9;border-radius:13px;font-size:13px;font-weight:700;color:#605E5C;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="2.5" width="13" height="10" rx="2"/><circle cx="7.5" cy="7.5" r="2.2"/><path d="M4.5 2.5l1.2-2h3.6l1.2 2"/></svg>Zdjecia<span id="photoBadge" style="display:none;background:#007A7A;color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:9px;line-height:17px;text-align:center;padding:0 3px;margin-left:3px">0</span></button>
       <button class="copy-btn" id="copyBtn" onclick="doCopy()" style="flex:2;min-width:100px">Kopiuj</button>
     </div>
@@ -866,7 +866,7 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
   <div class="sh" style="max-height:92vh;display:flex;flex-direction:column;padding-bottom:20px">
     <div class="sh-bar"></div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-shrink:0">
-      <div style="font-size:17px;font-weight:800">&#10024; AI</div>
+      <div style="font-size:17px;font-weight:800">AI</div>
       <button onclick="closeOv('shAI');resetAI()" style="background:none;border:none;color:rgba(60,60,67,.4);font-size:13px;font-weight:600;cursor:pointer">Zamknij</button>
     </div>
 
@@ -888,7 +888,7 @@ body.theme-5 .send-btn { background:#34C759; border-radius:10px; }
     <textarea id="aiQuestion" placeholder="Opcjonalnie: dodaj pytanie lub polecenie..." style="flex-shrink:0;background:rgba(118,118,128,.1);border:none;border-radius:13px;padding:11px 13px;font-size:14px;font-family:inherit;outline:none;resize:none;color:#1C1C1E;height:60px;max-height:100px;margin-bottom:10px" oninput="this.style.height='60px';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
 
     <button onclick="openInClaude()" style="background:linear-gradient(135deg,#004E52,#007A7A);border:none;border-radius:14px;color:#fff;font-size:15px;font-weight:700;padding:14px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:8px">
-      &#10024; Otworz w Claude.ai
+      Otworz w Claude.ai
     </button>
     <div style="font-size:11px;color:rgba(60,60,67,.35);text-align:center;margin-top:7px;flex-shrink:0">Raport pojawi sie w nowej karcie &bull; historia nie zapisuje sie tutaj</div>
   </div>
@@ -2129,7 +2129,7 @@ function _fmtRepHTML(){
     var dur=_timeDuration(t);
     var durB=dur?'<span id="dur'+sfx+'" style="font-size:10px;font-weight:700;color:'+dc+';background:'+bgc+';padding:2px 6px;border-radius:5px;margin-left:4px;vertical-align:middle">'+dur+'</span>':'<span id="dur'+sfx+'"></span>';
     var timeBlock='<span style="float:right">'+odPill+arr+doPill+durB+'</span>';
-    var label=isG?"&#9989; Gwarancyjny":"&#128374; Nie gwarancyjny";
+    var label=isG?"GWARANCYJNY":"NIE GWARANCYJNY";
     if(style==="tec")return '<div style="font-family:monospace;font-size:11px;font-weight:700;color:'+color+';padding:4px 0;margin-top:4px">'+timeBlock+'=== '+(isG?"GWARANCYJNY":"NIE GWARANCYJNY")+' ===</div>';
     if(style==="pro")return '<div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(60,60,67,.4);margin:10px 0 6px">'+timeBlock+(isG?"Naprawy gwarancyjne":"Naprawy niegwarancyjne")+'</div>';
     if(style==="eml")return '<div style="border-top:2px solid '+(isG?"#34C759":"#007A7A")+';padding-top:8px;margin:12px 0 8px;font-size:12px;font-weight:700;color:'+color+';text-transform:uppercase;letter-spacing:.08em">'+timeBlock+(isG?"— Naprawy gwarancyjne —":"— Naprawy niegwarancyjne —")+'</div>';
