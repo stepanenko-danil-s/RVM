@@ -916,6 +916,7 @@ body.theme-2 .tgl.on { background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.15); co
     <div id="diagResult" style="display:none;margin-top:8px;padding:10px 12px;background:#F7F9FC;border:1px solid #E0E3EA;border-radius:10px;font-size:12px;line-height:1.7"></div>
 
     <button class="sh-btn teal" id="aiExpBtn" onclick="genAIExp()">Eksport dla AI</button>
+    <button onclick="backupToClipboard()" style="width:100%;padding:12px;background:#007AFF;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px">Kopiuj info do odtworzenia</button>
     <textarea id="aiExpCode" readonly onclick="this.select()" style="width:100%;height:160px;background:rgba(0,0,0,.04);border:.5px solid rgba(60,60,67,.15);border-radius:12px;padding:10px;font-size:10px;font-family:monospace;outline:none;resize:none;margin-bottom:12px;color:#1C1C1E" placeholder="Kliknij Eksport dla AI"></textarea>
     <div style="height:1px;background:rgba(60,60,67,.1);margin-bottom:12px"></div>
     <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0 12px">
@@ -5435,6 +5436,8 @@ function setTheme(n) {
   showToast('Motyw ' + n + ' zastosowany');
 }
 
+
+function backupToClipboard(){var info=["=== RVM Raport Backup ===","URL: https://stepanenko-danil-s.github.io/RVM","Repo: stepanenko-danil-s/RVM","Token: [twoj_nowy_token_z_github.com/settings/tokens]","Commit stabilny: 223b9c8","","Powiedz AI:","Przywroc index.html w repo stepanenko-danil-s/RVM do commita 223b9c8 token [TWOJ_TOKEN]"].join("\n");if(navigator.clipboard){navigator.clipboard.writeText(info).then(function(){showToast("Skopiowano!");});}else{var t=document.createElement("textarea");t.value=info;document.body.appendChild(t);t.select();document.execCommand("copy");document.body.removeChild(t);showToast("Skopiowano!");}}
 function loadTheme() {
   try {
     var saved = parseInt(localStorage.getItem('rv_theme') || '1');
