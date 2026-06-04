@@ -1168,7 +1168,19 @@ function _timeStr(t){
   if(dur)s+=" ("+dur+")";
   return s;
 }
-var entries=[];
+var entries=(function(){
+  // Clean corrupted kon data from localStorage on every load
+  var saved=ls("rv_e",[]);
+  if(!saved.length) return [];
+  return saved.map(function(e){
+    if(e&&e.kon&&Array.isArray(e.kon)){
+      e.kon=e.kon.map(function(k){
+        return (k&&typeof k==="object") ? (k.pl||"") : k;
+      }).filter(Boolean);
+    }
+    return e;
+  }).filter(function(e){ return e&&typeof e==="object"; });
+})();
 var SEL={el:[],def:[],sol:[],kon:[
 {cat:"Przeglad",pl:"Przeglad okresowy",ru:"Плановое ТО"}
 ,{cat:"Przeglad",pl:"Przeglad gwarancyjny",ru:"Гарантийное ТО"}
