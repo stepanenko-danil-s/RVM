@@ -2039,6 +2039,11 @@ function renderSection(arr,sp){
 var konG2=[],konS2=[];
 eG.forEach(function(e){_arr(e.kon).forEach(function(k){if(konG2.indexOf(k)<0)konG2.push(k);});});
 eS.forEach(function(e){_arr(e.kon).forEach(function(k){if(konS2.indexOf(k)<0)konS2.push(k);});});
+// Include live (current) kon items
+var _liveKonG=curMode==="G"?SEL.kon:selKonG;
+var _liveKonS=curMode==="S"?SEL.kon:selKonS;
+_liveKonG.forEach(function(k){if(konG2.indexOf(k)<0)konG2.push(k);});
+_liveKonS.forEach(function(k){if(konS2.indexOf(k)<0)konS2.push(k);});
 if(eG.length||konG2.length||spG.length){
   lines.push("GWARANCYJNY");lines.push(SEP);
   renderSection(eG,spG);
