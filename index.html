@@ -1220,7 +1220,7 @@ var partQtyG={};
 var partQtyS={};
 var repTmpls=ls("rv_rt",[]);
 var rstStyle=ls("rv_rst","biz");
-var myStyles=ls("rv_mys",[]);
+var myStyles=(function(){var v=parseInt(localStorage.getItem("rv_mys_v")||"0");if(v<1){localStorage.removeItem("rv_mys");localStorage.setItem("rv_mys_v","1");return [];}return ls("rv_mys",[]);})();
 var lastDefCat="";
 var editMode={el:false,def:false,sol:false,kon:false};
 
