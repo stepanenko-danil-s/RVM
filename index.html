@@ -2049,14 +2049,6 @@ if(eS.length||konS2.length||spS.length){
   renderSection(eS,spS);
   if(konS2.length){lines.push("Serwis:");konS2.forEach(function(k){lines.push("  \u2022 "+k);});lines.push("");}
 }
-// Collect all kon items
-var allKon2=[];
-allEntries.forEach(function(e){_arr(e.kon).forEach(function(k){if(allKon2.indexOf(k)<0)allKon2.push(k);});});
-if(allKon2.length){
-  lines.push("SERWIS");lines.push(SEP);
-  allKon2.forEach(function(k){lines.push("  • "+k);});
-  lines.push("");
-}
 return lines.join("\n");
 }
 
