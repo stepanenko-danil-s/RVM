@@ -2039,11 +2039,11 @@ function renderSection(arr,sp){
 var konG2=[],konS2=[];
 eG.forEach(function(e){_arr(e.kon).forEach(function(k){if(konG2.indexOf(k)<0)konG2.push(k);});});
 eS.forEach(function(e){_arr(e.kon).forEach(function(k){if(konS2.indexOf(k)<0)konS2.push(k);});});
-// Include live (current) kon items
+// Include live (current) kon items - sanitize objects
 var _liveKonG=curMode==="G"?SEL.kon:selKonG;
 var _liveKonS=curMode==="S"?SEL.kon:selKonS;
-_liveKonG.forEach(function(k){if(konG2.indexOf(k)<0)konG2.push(k);});
-_liveKonS.forEach(function(k){if(konS2.indexOf(k)<0)konS2.push(k);});
+_liveKonG.forEach(function(k){var v=k&&typeof k==="object"?k.pl||"":k;if(v&&konG2.indexOf(v)<0)konG2.push(v);});
+_liveKonS.forEach(function(k){var v=k&&typeof k==="object"?k.pl||"":k;if(v&&konS2.indexOf(v)<0)konS2.push(v);});
 if(eG.length||konG2.length||spG.length){
   lines.push("GWARANCYJNY");lines.push(SEP);
   renderSection(eG,spG);
@@ -2647,6 +2647,9 @@ _syncTimeInputs();
       }
       return e;
     });
+    selKonG=selKonG.map(function(k){return k&&typeof k==="object"?k.pl||"":k;}).filter(Boolean);
+    selKonS=selKonS.map(function(k){return k&&typeof k==="object"?k.pl||"":k;}).filter(Boolean);
+    ss("rv_e",entries);
   }
 })();
 _updateFlowState();
