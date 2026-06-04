@@ -638,7 +638,6 @@ body.theme-2 .tgl.on { background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.15); co
 
     <div style="padding:10px 14px 0">
       <div style="padding:6px 14px 2px;display:flex;align-items:center;gap:7px">
-        <button onclick="timeMic(curMode)" ontouchend="event.preventDefault();timeMic(curMode)" style="display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:20px;border:1px solid rgba(60,60,67,.15);background:#fff;color:#555;font-size:12px;font-weight:600;cursor:pointer"><svg width="13" height="13" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/></svg>Czas</button>
         <button id="tmplIconBtn" onclick="openSh('shTmplList')" style="display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:20px;border:1px solid rgba(0,122,122,.22);background:rgba(0,122,122,.06);color:#007A7A;font-size:12px;font-weight:600;cursor:pointer;position:relative;transition:background .15s">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0"><rect x="1" y="1" width="12" height="9" rx="2" stroke="currentColor" stroke-width="1.4"/><rect x="3" y="3.5" width="5" height="1.2" rx=".6" fill="currentColor" opacity=".5"/><rect x="3" y="5.8" width="8" height="1.2" rx=".6" fill="currentColor" opacity=".35"/><path d="M4 11.5h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M7 10v2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           Szablony
@@ -2123,7 +2122,7 @@ function _fmtRepHTML(){
     var doPill='<span style="'+pill+'">'+_mkHSel("doH_"+sfx,sfx,"doH",doH,odH_n).replace('<select ','<select style="'+SS+'" ')+colon+_mkMSel("doM_"+sfx,sfx,"doM",doM,odH_n,doH_n,odM_n).replace('<select ','<select style="'+SS+'" ')+'</span>';
     var dur=_timeDuration(t);
     var durB=dur?'<span id="dur'+sfx+'" style="font-size:10px;font-weight:700;color:'+dc+';background:'+bgc+';padding:2px 6px;border-radius:5px;margin-left:4px;vertical-align:middle">'+dur+'</span>':'<span id="dur'+sfx+'"></span>';
-    var micBtn='<button onclick="timeMic(\''+sfx+'\')" ontouchend="event.preventDefault();timeMic(\''+sfx+'\')" style="background:none;border:none;padding:0 0 0 6px;cursor:pointer;vertical-align:middle;color:'+color+';opacity:.7"><svg width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/></svg></button>';
+    var micBtn='<button data-sfx="'+sfx+'" onclick="timeMic(this.getAttribute(\"data-sfx\"))" ontouchend="event.preventDefault();timeMic(this.getAttribute(\"data-sfx\"))" style="background:none;border:none;padding:2px 4px;cursor:pointer;vertical-align:middle;color:'+color+'"><svg width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/></svg></button>';opacity:.7"><svg width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/></svg></button>';
 var timeBlock='<span style="float:right">'+odPill+arr+doPill+durB+micBtn+'</span>';
     var label=isG?"GWARANCYJNY":"NIE GWARANCYJNY";
     if(style==="tec")return '<div style="font-family:monospace;font-size:11px;font-weight:700;color:'+color+';padding:4px 0;margin-top:4px">'+timeBlock+'=== '+(isG?"GWARANCYJNY":"NIE GWARANCYJNY")+' ===</div>';
@@ -5440,30 +5439,48 @@ function setTheme(n) {
 
 // Voice time input
 function timeMic(sfx) {
-  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) { showToast('Mikrofon niedostepny'); return; }
+  var SR = window.webkitSpeechRecognition || window.SpeechRecognition;
+  if (!SR) {
+    // Fallback: show input dialog
+    var val = prompt('Wpisz czas: od HH:MM do HH:MM', '17:15 do 17:30');
+    if (val) parseTimeInput(sfx, val);
+    return;
+  }
   var rec = new SR();
   rec.lang = 'pl-PL';
   rec.interimResults = false;
-  showToast('Powiedz czas np. 17:15 do 17:30');
+  rec.maxAlternatives = 1;
+  showToast('Powiedz: 17 15 do 17 30');
   rec.onresult = function(e) {
     var txt = e.results[0][0].transcript.trim();
-    // Parse time from speech: "17:15 do 17:30" or "17 15 do 17 30"
-    var nums = txt.replace(/:/g,' ').replace(/do|od|z|przez/gi,' ').trim().split(/\s+/).filter(function(x){return /^\d+$/.test(x);});
-    if (nums.length >= 4) {
-      var odH=nums[0], odM=nums[1], doH=nums[2], doM=nums[3];
-      setTimeVal(sfx, 'odH', odH.length===1?'0'+odH:odH);
-      setTimeVal(sfx, 'odM', odM.length===1?'0'+odM:odM);
-      setTimeVal(sfx, 'doH', doH.length===1?'0'+doH:doH);
-      setTimeVal(sfx, 'doM', doM.length===1?'0'+doM:doM);
-      renderSummary();
-      showToast('Czas: '+odH+':'+odM+' - '+doH+':'+doM);
-    } else {
-      showToast('Nie rozpoznano: '+txt);
-    }
+    parseTimeInput(sfx, txt);
   };
-  rec.onerror = function() { showToast('Blad mikrofonu'); };
-  try { rec.start(); } catch(e2) { showToast('Blad mikrofonu'); }
+  rec.onerror = function(e) {
+    showToast('Blad: ' + (e.error||'mikrofon'));
+  };
+  try { rec.start(); } catch(e2) {
+    var val = prompt('Wpisz czas: od HH:MM do HH:MM', '17:15 do 17:30');
+    if (val) parseTimeInput(sfx, val);
+  }
+}
+
+function parseTimeInput(sfx, txt) {
+  var nums = txt.replace(/[:\.]/g,' ').replace(/do|od|z|przez|az/gi,' ').replace(/\s+/g,' ').trim().split(' ').filter(function(x){return /^\d+$/.test(x);});
+  if (nums.length >= 4) {
+    var odH=('0'+nums[0]).slice(-2), odM=('0'+nums[1]).slice(-2);
+    var doH=('0'+nums[2]).slice(-2), doM=('0'+nums[3]).slice(-2);
+    setTimeVal(sfx,'odH',odH); setTimeVal(sfx,'odM',odM);
+    setTimeVal(sfx,'doH',doH); setTimeVal(sfx,'doM',doM);
+    renderSummary();
+    showToast(odH+':'+odM+' → '+doH+':'+doM);
+  } else if (nums.length >= 2) {
+    var odH=('0'+nums[0]).slice(-2), odM=('0'+nums[1]).slice(-2);
+    setTimeVal(sfx,'odH',odH); setTimeVal(sfx,'odM',odM);
+    renderSummary();
+    showToast('Od: '+odH+':'+odM);
+  } else {
+    showToast('Nie rozpoznano: '+txt);
+  }
 }
 
 function setTimeVal(sfx, part, val) {
