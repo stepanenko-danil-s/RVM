@@ -2837,7 +2837,7 @@ function runDiagnostics(){
 ],_hidden:{}};ss("rv_c",custom);});}
 
   // 3. rstStyle — poprawna wartość
-  var validStyles=["biz","tec","kls","kmp","prot"];
+  var validStyles=["kls","biz","tec","kmp","prot","frm","tel"];
   var isMys=/^mys\d+$/.test(rstStyle);
   var validMys=isMys&&myStyles[parseInt(rstStyle.replace("mys",""))]!==undefined;
   chk("rstStyle: \""+rstStyle+"\" — "+( (validStyles.indexOf(rstStyle)>=0||validMys)?"OK":"NIEZNANY"),validStyles.indexOf(rstStyle)>=0||validMys);
