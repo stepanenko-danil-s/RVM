@@ -2495,7 +2495,7 @@ function _offlineAI(msg){
 }
 function saveTmpl(){
   var name=(document.getElementById("tmplName")||{}).value||"";
-  name=name.trim();if(!name)return;
+  name=name.trim();if(!name){showToast("Wpisz nazwe w pole Nazwa");var n=document.getElementById("tmplName");if(n){n.style.border="1.5px solid #E53935";n.focus();}return;}
   var doTmpl=document.getElementById("chkTmpl").checked;
   var doStyle=document.getElementById("chkStyle").checked;
   if(!doTmpl&&!doStyle){showToast("Zaznacz co zapisać");return;}
