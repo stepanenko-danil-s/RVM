@@ -2020,65 +2020,40 @@ function _fmtRep(){
   (curMode==="G"?SEL.kon:selKonG).forEach(function(k){var v=k&&typeof k==="object"?k.pl||"":k;if(v&&konG.indexOf(v)<0)konG.push(v);});
   (curMode==="S"?SEL.kon:selKonS).forEach(function(k){var v=k&&typeof k==="object"?k.pl||"":k;if(v&&konS.indexOf(v)<0)konS.push(v);});
 
+  var SEP="========================================";
+  var sep2="----------------------------------------";
+
   function tFmt(t){
     if(!t||(!t.od&&!t.do))return "";
     var dur=_timeDuration(t);
-    return (t.od||"--:--")+" > "+(t.do||"--:--")+(dur?" ("+dur+")":"");
+    var od=t.od||"--:--"; var d=t.do||"--:--";
+    return od+" - "+d+(dur?"  ("+dur+")":"");
   }
 
   var lines=[];
-  var st=rstStyle||"kls";
 
-  // STYL 1 (kls,tec,C,A) - klasyczny z kreskami
-  // STYL 2 (biz,kmp,prot,frm,tel,B,D,E,F,G) - delovoy z ramka
-  var isStyl2=(st==="biz"||st==="kmp"||st==="prot"||st==="frm"||st==="tel");
-
-  function sec(isG, ents, kon, sp){
+  function sec(isG,ents,kon,sp){
     var label=isG?"GWARANCYJNY":"NIE GWARANCYJNY";
     var t=tFmt(isG?timeG:timeS);
-
-    if(isStyl2){
-      // Styl 2 - delovoy
-      lines.push(""); 
-      lines.push("*** "+label+(t?" | "+t:"")+" ***");
-      lines.push("---------------------------------------------");
-      ents.forEach(function(e,i){
-        if(!e.el)return;
-        lines.push(">> "+e.el);
-        _arr(e.def).forEach(function(d){lines.push("   !! "+d);});
-        _arr(e.sol).forEach(function(s){lines.push("   >> "+s);});
-        lines.push("");
-      });
-      if(kon.length){
-        lines.push("-- Serwis:");
-        kon.forEach(function(k){lines.push("   :: "+k);});
-      }
-      if(sp.length){
-        lines.push("-- Czesci:");
-        sp.forEach(function(p){lines.push("   :: "+p);});
-      }
-      lines.push("---------------------------------------------");
-    } else {
-      // Styl 1 - klasyczny
+    lines.push(SEP);
+    lines.push(label+(t?"  |  "+t:""));
+    lines.push(SEP);
+    ents.forEach(function(e,i){
+      if(!e.el)return;
+      var df=_arr(e.def), sl=_arr(e.sol);
+      lines.push("["+( i+1)+"] "+e.el);
+      df.forEach(function(d){lines.push("    Usterka : "+d);});
+      sl.forEach(function(s){lines.push("    Naprawa : "+s);});
       lines.push("");
-      lines.push("=== "+label+(t?"  "+t:"")+" ===");
-      lines.push("-------------------------------------------");
-      ents.forEach(function(e,i){
-        if(!e.el)return;
-        lines.push("["+(i+1)+"] "+e.el);
-        _arr(e.def).forEach(function(d){lines.push("    > "+d);});
-        _arr(e.sol).forEach(function(s){lines.push("    + "+s);});
-        lines.push("");
-      });
-      if(kon.length){
-        lines.push("Serwis:");
-        kon.forEach(function(k){lines.push("  * "+k);});
-      }
-      if(sp.length){
-        lines.push("Czesci:");
-        sp.forEach(function(p){lines.push("  * "+p);});
-      }
+    });
+    if(kon.length){
+      var konLine="Serwis      : "+kon.join(", ");
+      lines.push(konLine);
     }
+    if(sp.length){
+      lines.push("Czesci      : "+sp.join(", "));
+    }
+    lines.push(SEP);
     lines.push("");
   }
 
