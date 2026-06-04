@@ -5292,13 +5292,30 @@ function _applyMsFilter(col) {
   var q = _msFilter[col] || '';
   var el = document.getElementById('lst-' + col);
   if (!el) return;
+
+  if (!q) {
+    // No filter - show everything including group headers
+    el.querySelectorAll('.li, .igrp').forEach(function(item) {
+      item.style.display = '';
+    });
+    var nr = el.querySelector('.ms-nr');
+    if (nr) nr.style.display = 'none';
+    return;
+  }
+
+  // With filter - hide group headers, show only matching items flat
+  el.querySelectorAll('.igrp').forEach(function(grp) {
+    grp.style.display = 'none';
+  });
+
   var items = el.querySelectorAll('.li');
   var found = 0;
   items.forEach(function(item) {
-    var show = !q || (item.textContent||'').toLowerCase().indexOf(q) >= 0;
+    var show = (item.textContent||'').toLowerCase().indexOf(q) >= 0;
     item.style.display = show ? '' : 'none';
     if (show) found++;
   });
+
   var nr = el.querySelector('.ms-nr');
   if (!nr) {
     nr = document.createElement('div');
