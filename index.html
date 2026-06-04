@@ -2641,6 +2641,18 @@ setMode(curMode);
 setRst(rstStyle);
 initDark();
 _syncTimeInputs();
+// Auto-clean corrupted kon data from localStorage
+(function(){
+  var saved=ls("rv_e",[]);
+  if(saved.length){
+    entries=saved.map(function(e){
+      if(e&&e.kon&&Array.isArray(e.kon)){
+        e.kon=e.kon.map(function(k){return(k&&typeof k==="object")?k.pl||"":k;}).filter(Boolean);
+      }
+      return e;
+    });
+  }
+})();
 renderList("el");renderList("def");renderList("kon");renderList("sol");renderParts();renderSummary();renderTmplList();renderMyStylesList();
 var _ids=["serwisBlock","mod1block","defFlowWrap","hdr1","hdr2","hdr3","body2","body3"];
 _ids.forEach(function(id){var el=document.getElementById(id);if(el){el.style.opacity="";el.style.pointerEvents="";}});
