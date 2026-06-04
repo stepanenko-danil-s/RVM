@@ -5277,8 +5277,15 @@ function modSrch(col, val) {
   _msFilter[col] = val.trim().toLowerCase();
   var bodyMap = {el:0, def:1, sol:2};
   var i = bodyMap[col];
-  if (i !== undefined && !mOpen[i]) openMod(i);
-  renderList(col);
+  if (i !== undefined) {
+    if (!mOpen[i]) {
+      openMod(i);
+      // Wait for DOM to update then render
+      setTimeout(function(){ renderList(col); }, 50);
+    } else {
+      renderList(col);
+    }
+  }
 }
 
 var _origRL = renderList;
