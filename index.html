@@ -2637,6 +2637,15 @@ setMode(curMode);
 setRst(rstStyle);
 initDark();
 _syncTimeInputs();
+// Force clear ALL corrupted data - v4
+(function(){
+  var v=parseInt(localStorage.getItem("rv_fix_v")||"0");
+  if(v<4){
+    ["rv_e","rv_c","rv_cp","rv_sp","rv_pq","rv_spG","rv_spS","rv_pqG","rv_pqS"].forEach(function(k){localStorage.removeItem(k);});
+    localStorage.setItem("rv_fix_v","4");
+  }
+})();
+
 // Auto-clean corrupted kon data from localStorage
 (function(){
   var saved=ls("rv_e",[]);
