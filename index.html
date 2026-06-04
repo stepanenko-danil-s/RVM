@@ -5292,7 +5292,7 @@ function _applyMsFilter(col) {
   var q = _msFilter[col] || '';
   var el = document.getElementById('lst-' + col);
   if (!el) return;
-  var items = el.querySelectorAll('.iitem');
+  var items = el.querySelectorAll('.li');
   var found = 0;
   items.forEach(function(item) {
     var show = !q || (item.textContent||'').toLowerCase().indexOf(q) >= 0;
