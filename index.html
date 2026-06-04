@@ -2004,110 +2004,88 @@ function delMyStyle(){
   renderMyStylesList();showToast("Usunięto");
 }
 function _fmtRep(){
-var live=_liveEntry();
-var allEntries=live?entries.concat([live]):entries;
-if(!allEntries.length)return "";
-var eG=allEntries.filter(function(e){return e.mode==="G";});
-var eS=allEntries.filter(function(e){return e.mode==="S";});
-var spG=getSelPartsArrFor("G");
-var spS=getSelPartsArrFor("S");
+  _commitEntry();
+  var live=_liveEntry();
+  var all=live?entries.concat([live]):entries;
+  if(!all.length)return "";
 
-var konG=[],konS=[];
-eG.forEach(function(e){_arr(e.kon).forEach(function(k){var v=k&&typeof k==="object"?k.pl||"":k;if(v&&konG.indexOf(v)<0)konG.push(v);});});
-eS.forEach(function(e){_arr(e.kon).forEach(function(k){var v=k&&typeof k==="object"?k.pl||"":k;if(v&&konS.indexOf(v)<0)konS.push(v);});});
-var liveKonG=curMode==="G"?SEL.kon:selKonG;
-var liveKonS=curMode==="S"?SEL.kon:selKonS;
-liveKonG.forEach(function(k){var v=k&&typeof k==="object"?k.pl||"":k;if(v&&konG.indexOf(v)<0)konG.push(v);});
-liveKonS.forEach(function(k){var v=k&&typeof k==="object"?k.pl||"":k;if(v&&konS.indexOf(v)<0)konS.push(v);});
+  var eG=all.filter(function(e){return e.mode==="G";});
+  var eS=all.filter(function(e){return e.mode==="S";});
+  var spG=getSelPartsArrFor("G");
+  var spS=getSelPartsArrFor("S");
 
-var tG=_timeFmt(timeG); var tS=_timeFmt(timeS);
-var dG=_timeDuration(timeG); var dS=_timeDuration(timeS);
+  var konG=[],konS=[];
+  eG.forEach(function(e){_arr(e.kon).forEach(function(k){var v=k&&typeof k==="object"?k.pl||"":k;if(v&&konG.indexOf(v)<0)konG.push(v);});});
+  eS.forEach(function(e){_arr(e.kon).forEach(function(k){var v=k&&typeof k==="object"?k.pl||"":k;if(v&&konS.indexOf(v)<0)konS.push(v);});});
+  (curMode==="G"?SEL.kon:selKonG).forEach(function(k){var v=k&&typeof k==="object"?k.pl||"":k;if(v&&konG.indexOf(v)<0)konG.push(v);});
+  (curMode==="S"?SEL.kon:selKonS).forEach(function(k){var v=k&&typeof k==="object"?k.pl||"":k;if(v&&konS.indexOf(v)<0)konS.push(v);});
 
-function _timeFmt(t){
-  if(!t||(!t.od&&!t.do))return "";
-  var od=t.od||"--:--"; var d=t.do||"--:--";
-  return od+" \u2192 "+d+(t&&_timeDuration(t)?" ["+_timeDuration(t)+"]":"");
-}
-
-var lines=[];
-var st=rstStyle;
-
-// Style configs
-var S={
-  A:{secG:"=== GWARANCYJNY ===",secNG:"=== NIE GWARANCYJNY ===",sep:"\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",elPfx:"\u25b6 ",defPfx:"  \u26a0 ",solPfx:"  \u2714 ",konHdr:"SERWIS:",konPfx:"  \u2022 ",partHdr:"Cz\u0119\u015bci:",partPfx:"  \u2022 "},
-  B:{secG:"GWARANCYJNY",secNG:"NIE GWARANCYJNY",sep:"\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501",elPfx:"Element:  ",defPfx:"Usterka:  ",solPfx:"Naprawa:  ",konHdr:"Serwis:",konPfx:"  \u2022 ",partHdr:"Cz\u0119\u015bci:",partPfx:"  \u2022 "},
-  C:{secG:"\u258cGWARANCYJNY",secNG:"\u258cNIE GWARANCYJNY",sep:"",elPfx:"\u2502 \u25cf ",defPfx:"\u2502   \u21b3 ",solPfx:"\u2502   \u2714 ",konHdr:"\u2502 SERWIS:",konPfx:"\u2502   \u2022 ",partHdr:"\u2502 Cz\u0119\u015bci:",partPfx:"\u2502   \u2022 "},
-  D:{secG:"[G] NAPRAWA GWARANCYJNA",secNG:"[NG] NAPRAWA POZA GWARANCJA",sep:"\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",elPfx:"  \u2116 ",defPfx:"       \u26a0 ",solPfx:"       \u2192 ",konHdr:"  SERWIS AKTYWNOSCI:",konPfx:"       \u25cb ",partHdr:"  Cz\u0119\u015bci:",partPfx:"       \u25cb "},
-  E:{secG:"\u25b6\u25b6 GWARANCYJNY \u25c4\u25c4",secNG:"\u25b6\u25b6 NIE GWARANCYJNY \u25c4\u25c4",sep:"",elPfx:"\u250c\u2500 ",defPfx:"\u2502  \u26a1 ",solPfx:"\u2514\u2500 \u2714 ",konHdr:"\u250c\u2500 SERWIS",konPfx:"\u251c\u2500 \u25cb ",partHdr:"\u250c\u2500 Cz\u0119\u015bci",partPfx:"\u251c\u2500 \u25cb "},
-  F:{secG:"\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510",secNG:"\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510",sep:"\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524",elPfx:"\u2502  ",defPfx:"\u2502    ! ",solPfx:"\u2502    + ",konHdr:"\u2502  SERWIS",konPfx:"\u2502    * ",partHdr:"\u2502  Cz\u0119\u015bci",partPfx:"\u2502    * "},
-  G:{secG:"=[ GWARANCYJNY ]=",secNG:"=[ NIE GWARANCYJNY ]=",sep:"",elPfx:">> ",defPfx:"   !! ",solPfx:"   OK ",konHdr:"-- SERWIS --",konPfx:"   :: ",partHdr:"-- Cz\u0119\u015bci --",partPfx:"   :: "}
-};
-
-// Map style keys
-var styleMap={kls:"A",biz:"B",tec:"C",kmp:"D",prot:"E",frm:"F",tel:"G"};
-var sKey=styleMap[st]||"B";
-// Check if myStyle
-if(st&&st.indexOf("mys")===0){
-  var mi=parseInt(st.replace("mys",""));
-  if(!isNaN(mi)&&myStyles[mi]&&myStyles[mi].styleKey)sKey=myStyles[mi].styleKey;
-}
-var cfg=S[sKey]||S.B;
-
-function renderSec(isG,entries,kon,sp){
-  var secLabel=isG?cfg.secG:cfg.secNG;
-  var tFmt=isG?tG:tS;
-  var timeStr=tFmt?" "+tFmt:"";
-  if(sKey==="F"){
-    lines.push(secLabel);
-    lines.push("\u2502  "+(isG?"GWARANCYJNY":"NIE GWARANCYJNY")+timeStr);
-    lines.push(cfg.sep);
-  } else if(sKey==="D"){
-    lines.push("\u25a0 RAPORT SERWISOWY \u25a0"+timeStr);
-    lines.push("\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501");
-    lines.push(secLabel);
-    if(cfg.sep)lines.push(cfg.sep);
-  } else {
-    lines.push(secLabel+timeStr);
-    if(cfg.sep)lines.push(cfg.sep);
+  function tFmt(t){
+    if(!t||(!t.od&&!t.do))return "";
+    var dur=_timeDuration(t);
+    return (t.od||"--:--")+" > "+(t.do||"--:--")+(dur?" ("+dur+")":"");
   }
 
-  entries.forEach(function(e,i){
-    if(!e.el)return;
-    var df=_arr(e.def),sl=_arr(e.sol);
-    if(sKey==="B"){
-      lines.push("");
-      lines.push(cfg.elPfx+e.el);
-      df.forEach(function(d){lines.push(cfg.defPfx+d);});
-      sl.forEach(function(s){lines.push(cfg.solPfx+s);});
-    } else if(sKey==="F"){
-      lines.push(cfg.elPfx+e.el);
-      df.forEach(function(d){lines.push(cfg.defPfx+d);});
-      sl.forEach(function(s){lines.push(cfg.solPfx+s);});
+  var lines=[];
+  var st=rstStyle||"kls";
+
+  // STYL 1 (kls,tec,C,A) - klasyczny z kreskami
+  // STYL 2 (biz,kmp,prot,frm,tel,B,D,E,F,G) - delovoy z ramka
+  var isStyl2=(st==="biz"||st==="kmp"||st==="prot"||st==="frm"||st==="tel");
+
+  function sec(isG, ents, kon, sp){
+    var label=isG?"GWARANCYJNY":"NIE GWARANCYJNY";
+    var t=tFmt(isG?timeG:timeS);
+
+    if(isStyl2){
+      // Styl 2 - delovoy
+      lines.push(""); 
+      lines.push("*** "+label+(t?" | "+t:"")+" ***");
+      lines.push("---------------------------------------------");
+      ents.forEach(function(e,i){
+        if(!e.el)return;
+        lines.push(">> "+e.el);
+        _arr(e.def).forEach(function(d){lines.push("   !! "+d);});
+        _arr(e.sol).forEach(function(s){lines.push("   >> "+s);});
+        lines.push("");
+      });
+      if(kon.length){
+        lines.push("-- Serwis:");
+        kon.forEach(function(k){lines.push("   :: "+k);});
+      }
+      if(sp.length){
+        lines.push("-- Czesci:");
+        sp.forEach(function(p){lines.push("   :: "+p);});
+      }
+      lines.push("---------------------------------------------");
     } else {
-      lines.push(cfg.elPfx+(i+1)+". "+e.el);
-      df.forEach(function(d){lines.push(cfg.defPfx+d);});
-      sl.forEach(function(s){lines.push(cfg.solPfx+s);});
+      // Styl 1 - klasyczny
+      lines.push("");
+      lines.push("=== "+label+(t?"  "+t:"")+" ===");
+      lines.push("-------------------------------------------");
+      ents.forEach(function(e,i){
+        if(!e.el)return;
+        lines.push("["+(i+1)+"] "+e.el);
+        _arr(e.def).forEach(function(d){lines.push("    > "+d);});
+        _arr(e.sol).forEach(function(s){lines.push("    + "+s);});
+        lines.push("");
+      });
+      if(kon.length){
+        lines.push("Serwis:");
+        kon.forEach(function(k){lines.push("  * "+k);});
+      }
+      if(sp.length){
+        lines.push("Czesci:");
+        sp.forEach(function(p){lines.push("  * "+p);});
+      }
     }
-  });
-
-  if(kon.length){
     lines.push("");
-    lines.push(cfg.konHdr);
-    kon.forEach(function(k){lines.push(cfg.konPfx+k);});
   }
-  if(sp.length){
-    lines.push("");
-    lines.push(cfg.partHdr);
-    sp.forEach(function(p){lines.push(cfg.partPfx+p);});
-  }
-  if(sKey==="F")lines.push("\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518");
-  lines.push("");
-}
 
-if(eG.length||konG.length||spG.length) renderSec(true,eG,konG,spG);
-if(eS.length||konS.length||spS.length) renderSec(false,eS,konS,spS);
+  if(eG.length||konG.length||spG.length) sec(true,eG,konG,spG);
+  if(eS.length||konS.length||spS.length) sec(false,eS,konS,spS);
 
-return lines.join("\n");
+  return lines.join("\n").trim();
 }
 
 function _mkHSel(id,sfx,part,val,minH){
@@ -2361,27 +2339,10 @@ function renderSummary(){
 function doCopy(){
   _commitEntry();
   var txt=_fmtRep();
-  var html='<!DOCTYPE html><html><body style="font-family:-apple-system,sans-serif;font-size:14px;line-height:1.75;color:#1C1C1E">'+_fmtRepHTML()+'';
   var btn=document.getElementById("copyBtn");
   function ok(){btn.className="copy-btn ok";setTimeout(function(){btn.className="copy-btn";},1800);}
-  // Try ClipboardItem (works on HTTPS - Chrome, Edge, Safari 16.4+)
-  if(navigator.clipboard&&window.ClipboardItem){
-    var item=new ClipboardItem({
-      "text/html":new Blob([html],{type:"text/html"}),
-      "text/plain":new Blob([txt],{type:"text/plain"})
-    });
-    navigator.clipboard.write([item]).then(ok).catch(function(){
-      // Fallback: select visible repEdit and execCommand
-      var edit=document.getElementById("repEdit");
-      edit.focus();
-      var sel=window.getSelection();
-      var range=document.createRange();
-      range.selectNodeContents(edit);
-      sel.removeAllRanges();
-      sel.addRange(range);
-      try{document.execCommand("copy");ok();}catch(e){_fb(txt);ok();}
-      sel.removeAllRanges();
-    });
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(txt).then(ok).catch(function(){_fb(txt);ok();});
   } else {
     _fb(txt);ok();
   }
