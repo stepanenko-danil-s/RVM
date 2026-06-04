@@ -94,6 +94,9 @@ button{cursor:pointer}
 
 .tool-btn{display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:12px;border:1px solid rgba(60,60,67,.15);background:#F2F2F7;font-size:12px;font-weight:600;color:#1C1C1E;cursor:pointer;white-space:nowrap}
 .rep-edit{min-height:110px;padding:12px 14px;font-size:13px;line-height:1.75;color:#1C1C1E;outline:none;border-bottom:1.5px solid rgba(60,60,67,.06);word-break:break-word;overflow-wrap:break-word;white-space:pre-wrap}
+.rst-tec .rep-edit{font-family:"Courier New",monospace !important;font-size:12px !important;background:#f4f8f4 !important;color:#1a3a1a !important}
+.rst-biz .rep-edit{font-family:Georgia,serif !important;font-size:14px !important;color:#1a1a2e !important;line-height:1.9 !important}
+.rst-kmp .rep-edit{font-size:12px !important;color:#323130 !important}
 .rep-edit:empty:before{content:attr(data-ph);color:rgba(60,60,67,.3)}
 .rep-btns{display:flex;gap:8px;padding:11px 14px}
 .ai-btn{flex:1;padding:13px;background:#007A7A;color:#fff;border:none;border-radius:13px;font-size:14px;font-weight:800}
@@ -1854,6 +1857,9 @@ function setRst(s){
   if(lbl[s]&&lE)lE.textContent=lbl[s];
   else if(lE){var idx=parseInt(s.replace("mys",""));if(!isNaN(idx)&&myStyles[idx])lE.textContent=myStyles[idx].name||"Własny "+(idx+1);else lE.textContent="Biznesowy";}
   var ed=document.getElementById("repEdit");if(ed)ed.removeAttribute("data-ue");
+  // Apply style class to rep-wrap
+  var rw=document.getElementById("repWrap")||document.querySelector(".rep-wrap");
+  if(rw){["rst-biz","rst-tec","rst-kls","rst-kmp","rst-prot"].forEach(function(c){rw.classList.remove(c);});rw.classList.add("rst-"+s);}
   renderSummary();closeOv("shRst");
 }
 function renderMyStylesList(){
