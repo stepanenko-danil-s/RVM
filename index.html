@@ -956,77 +956,7 @@ function openSh(id){var el=document.getElementById(id);if(el){el.style.display="
 function closeOv(id){var el=document.getElementById(id);if(el){el.classList.remove("open");setTimeout(function(){el.style.display="none";},300);}}
 function _applyMod(i){var n=i+1;var hdr=document.getElementById("hdr"+n),body=document.getElementById("body"+n),bdg=document.getElementById("bdg"+n),arr=document.getElementById("arr"+n);var has=(i===0&&SEL.el.length)||(i===1&&(SEL.def.length||SEL.kon.length))||(i===2&&SEL.sol.length);var open=mOpen[i];if(body)body.className="mod-body"+(open?" open":"");if(arr)arr.className="mod-arr"+(open?" open":"");if(hdr)hdr.className="mod-hdr"+(open?" active":has?" done":" idle");if(bdg){bdg.className="badge"+(open?" active":has?" done":" idle");}}
 function _updateFlowState(){var s1=document.getElementById("serwisBlock"),m1=document.getElementById("mod1block"),df=document.getElementById("defFlowWrap");if(s1)s1.style.display="block";if(m1)m1.style.display="block";if(df)df.style.display="block";}
-function setMode(m){var changing=(curMode!==m);if(changing){if(SEL.el.length)_commitEntry();if(curMode==="G")selKonG=SEL.kon.slice();else selKonS=SEL.kon.slice();if(m==="G"){timeG={od:"",do:""};}else{timeS={od:"",do:""};}var restoredKon=(m==="G"?selKonG:selKonS);SEL={el:[
-,{cat:"Mechanika wlotu",pl:"Szczotka czyszczaca wlotu",ru:"Щётка очистки входа"}
-,{cat:"Mechanika wlotu",pl:"Rolka prowadzaca",ru:"Направляющий ролик"}
-,{cat:"Mechanika wlotu",pl:"Pas podajnika wlotu",ru:"Лента подачи входа"}
-,{cat:"Mechanika wlotu",pl:"Silnik podajnika wlotu",ru:"Мотор подачи"}
-,{cat:"Mechanika wlotu",pl:"Czujnik zatrzymania (fotokomurka stopu)",ru:"Датчик остановки"}
-,{cat:"Mechanika wlotu",pl:"Prowadnica butelek",ru:"Направляющая бутылок"}
-,{cat:"Identyfikacja",pl:"Oswietlenie / Lampa UV",ru:"Освещение / УФ лампа"}
-,{cat:"Identyfikacja",pl:"Czujnik ksztaltu (Shape sensor)",ru:"Датчик формы"}
-,{cat:"Identyfikacja",pl:"Kamera ARC",ru:"Камера ARC"}
-,{cat:"Identyfikacja",pl:"Skaner 2DH",ru:"Сканер 2DH"}
-,{cat:"Identyfikacja",pl:"Czytnik kart MK2",ru:"Считыватель MK2"}
-,{cat:"Elektronika",pl:"Plyta kontrolna PCBA",ru:"Плата PCBA"}
-,{cat:"Elektronika",pl:"Przekaznik bezpieczenstwa OMRON G9SB",ru:"Реле безопасности OMRON"}
-,{cat:"Elektronika",pl:"Zasilacz 24V",ru:"Блок питания 24В"}
-,{cat:"Elektronika",pl:"Czujnik indukcyjny M8",ru:"Датчик индуктивный M8"}
-,{cat:"Elektronika",pl:"Czujnik indukcyjny M12",ru:"Датчик индуктивный M12"}
-,{cat:"Elektronika",pl:"Kabel plaski (ribbon cable)",ru:"Плоский кабель"}
-,{cat:"Elektronika",pl:"Przetwornica napiec",ru:"Преобразователь напряжения"}
-,{cat:"Elektronika",pl:"Wentylator chlodzacy",ru:"Вентилятор охлаждения"}
-,{cat:"Elektronika",pl:"Termistor / czujnik temperatury",ru:"Датчик температуры"}
-,{cat:"Kompaktory",pl:"Kompaktor MIX (lewy)",ru:"Компактор MIX левый"}
-,{cat:"Kompaktory",pl:"Kompaktor MIX (prawy)",ru:"Компактор MIX правый"}
-,{cat:"Kompaktory",pl:"Kompaktor MIX eXtend",ru:"Компактор MIX eXtend"}
-,{cat:"Kompaktory",pl:"Lancuch PET (dlugi)",ru:"Цепь PET длинная"}
-,{cat:"Kompaktory",pl:"Lancuch PET (krotki)",ru:"Цепь PET короткая"}
-,{cat:"Kompaktory",pl:"Pas kompaktora / przenosnika",ru:"Ремень компактора"}
-,{cat:"Kompaktory",pl:"Silnik 24V (pas/przeslona)",ru:"Мотор 24В (ремень/заслонка)"}
-,{cat:"Kompaktory",pl:"Czujnik pelnego kompaktora",ru:"Датчик заполнения компактора"}
-,{cat:"Kompaktory",pl:"Zawor obrotowy (przeslona)",ru:"Поворотный клапан (заслонка)"}
-,{cat:"Kompaktory",pl:"Uszczelnienie kompaktora",ru:"Уплотнение компактора"}
-,{cat:"ProLine i Sortowanie",pl:"Sorter MIX lewy",ru:"Сортировщик MIX левый"}
-,{cat:"ProLine i Sortowanie",pl:"Sorter MIX prawy",ru:"Сортировщик MIX правый"}
-,{cat:"ProLine i Sortowanie",pl:"Silnik sortownika",ru:"Мотор сортировщика"}
-,{cat:"ProLine i Sortowanie",pl:"Pas sortownika",ru:"Ремень сортировщика"}
-,{cat:"ProLine i Sortowanie",pl:"Czujnik pozycji sortownika",ru:"Датчик позиции сортировщика"}
-,{cat:"ProLine i Sortowanie",pl:"Przycisk startu ProLine",ru:"Кнопка старта ProLine"}
-,{cat:"ProLine i Sortowanie",pl:"Czujnik obecnosci butelki",ru:"Датчик наличия бутылки"}
-,{cat:"Pojemniki",pl:"Pojemnik szklany (BIN)",ru:"Корзина стекло (BIN)"}
-,{cat:"Pojemniki",pl:"SoftDrop (szklany)",ru:"SoftDrop (стекло)"}
-,{cat:"Pojemniki",pl:"Czujnik wagowy",ru:"Весовой датчик"}
-,{cat:"Pojemniki",pl:"Wykrywacz metalu",ru:"Металлодетектор"}
-,{cat:"Pojemniki",pl:"Wykrywacz plastiku",ru:"Детектор пластика"}
-,{cat:"Zasilanie",pl:"Wylagcznik glowny",ru:"Главный выключатель"}
-,{cat:"Zasilanie",pl:"Listwa zaciskowa",ru:"Клеммная колодка"}
-,{cat:"Zasilanie",pl:"Filtr sieciowy EMC",ru:"Фильтр EMC"}
-,{cat:"Zasilanie",pl:"Transformator",ru:"Трансформатор"}
-,{cat:"Zasilanie",pl:"Bezpiecznik 3A",ru:"Предохранитель 3А"}
-,{cat:"Zasilanie",pl:"Bezpiecznik 10A",ru:"Предохранитель 10А"}
-,{cat:"Zasilanie",pl:"Wylagcznik bezpieczenstwa tylny",ru:"Выключатель безопасности задний"}
-,{cat:"Druk i Karta",pl:"Glowica drukujaca Epson",ru:"Печатающая головка Epson"}
-,{cat:"Druk i Karta",pl:"Noz drukarki (cutter)",ru:"Нож принтера"}
-,{cat:"Druk i Karta",pl:"Czujnik braku papieru",ru:"Датчик отсутствия бумаги"}
-,{cat:"Komunikacja",pl:"Modul WiFi",ru:"Модуль WiFi"}
-,{cat:"Komunikacja",pl:"Modul 4G/LTE",ru:"Модуль 4G/LTE"}
-,{cat:"Komunikacja",pl:"Switch sieciowy",ru:"Сетевой свитч"}
-,{cat:"Obudowa",pl:"Drzwi frontowe",ru:"Передняя дверца"}
-,{cat:"Obudowa",pl:"Drzwi tylne",ru:"Задняя дверца"}
-,{cat:"Obudowa",pl:"Drzwi boczne",ru:"Боковая дверца"}
-,{cat:"Obudowa",pl:"Zamek drzwi",ru:"Замок дверцы"}
-,{cat:"Obudowa",pl:"Klucz trojkatny",ru:"Треугольный ключ"}
-,{cat:"Obudowa",pl:"Klucz magnetyczny",ru:"Магнитный ключ"}
-,{cat:"Obudowa",pl:"Uszczelka drzwi",ru:"Уплотнитель дверцы"}
-,{cat:"Obudowa",pl:"Zawiasy drzwi",ru:"Петли дверцы"}
-,{cat:"Obudowa",pl:"Nozki regulowane",ru:"Регулируемые ножки"}
-,{cat:"Oprogramowanie",pl:"Oprogramowanie RVM (firmware)",ru:"Прошивка RVM"}
-,{cat:"Oprogramowanie",pl:"Baza kodow kreskowych",ru:"База штрих-кодов"}
-,{cat:"Oprogramowanie",pl:"Konfiguracja sieci",ru:"Конфигурация сети"}
-,{cat:"Oprogramowanie",pl:"Logi systemowe",ru:"Системные логи"}
-,{cat:"Oprogramowanie",pl:"Kalibracja kamery",ru:"Калибровка камеры"}],def:[],sol:[],kon:restoredKon.slice(),mode:""};lastDefCat="";mOpenS=false;var bS=document.getElementById("bodyS");if(bS)bS.className="mod-body";var aS=document.getElementById("arrS");if(aS)aS.className="mod-arr";var hS=document.getElementById("hdrS");if(hS)hS.className="mod-hdr"+(restoredKon&&restoredKon.length?" done":" idle");var dS2=document.getElementById("bdgS");if(dS2){dS2.style.background=restoredKon&&restoredKon.length?"rgba(52,199,89,.1)":"rgba(0,122,122,.12)";dS2.style.color=restoredKon&&restoredKon.length?"#34C759":"#007A7A";};[0,1,2].forEach(function(i){mOpen[i]=false;_applyMod(i);});var e1=document.getElementById("val1");if(e1){e1.textContent="Wybierz element";e1.className="mod-val";}var e2=document.getElementById("val2");if(e2){e2.textContent="Wybierz usterke";e2.className="mod-val";}var e3=document.getElementById("val3");if(e3){e3.textContent="Wybierz lub dodaj dzialanie";e3.className="mod-val";}renderList("el");renderList("def");renderList("kon");renderList("sol");_updV("kon");}curMode=m;ss("rv_mode",m);var g=m==="G";var tG=document.getElementById("tglG"),tS=document.getElementById("tglNG"),tw=document.getElementById("tglWrap");if(tG)tG.className="tgl g"+(g?" on":"");if(tS)tS.className="tgl s"+(!g?" on":"");if(tw)tw.className="tgl-wrap"+(g?"":" s");var tag=document.getElementById("partsModeTag");if(tag){tag.innerHTML=g?'<span style="width:6px;height:6px;border-radius:50%;background:#34C759;display:inline-block"></span>Gwar.':'<span style="width:6px;height:6px;border-radius:50%;background:#007A7A;display:inline-block"></span>Nie gwar.';tag.style.background=g?"rgba(52,199,89,.1)":"rgba(0,122,122,.1)";tag.style.color=g?"#34C759":"#007A7A";}partsOpen=false;var _pb=document.getElementById("partsBody");if(_pb)_pb.className="parts-body";var _pa=document.getElementById("partsArr");if(_pa)_pa.style.transform="none";renderParts();_syncTimeInputs();renderSummary();}
-function getRelCats(){var defs=SEL.def.concat(SEL.kon);if(!defs.length)return null;var cats=[];defs.forEach(function(d){var it=(D.def.concat(D.kon)).find(function(x){return x.pl===d;});if(it&&it.cat&&cats.indexOf(it.cat)<0)cats.push(it.cat);});if(!cats.length)return null;var solCats=[];cats.forEach(function(c){if(window.CATMAP&&CATMAP[c])CATMAP[c].forEach(function(s){if(solCats.indexOf(s)<0)solCats.push(s);});});return solCats.length?solCats:null;}
+function setMode(m){var changing=(curMode!==m);if(changing){if(SEL.el.length)_commitEntry();if(curMode==="G")selKonG=SEL.kon.slice();else selKonS=SEL.kon.slice();if(m==="G"){timeG={od:"",do:""};}else{timeS={od:"",do:""};}var restoredKon=(m==="G"?selKonG:selKonS);SEL={el:[function getRelCats(){var defs=SEL.def.concat(SEL.kon);if(!defs.length)return null;var cats=[];defs.forEach(function(d){var it=(D.def.concat(D.kon)).find(function(x){return x.pl===d;});if(it&&it.cat&&cats.indexOf(it.cat)<0)cats.push(it.cat);});if(!cats.length)return null;var solCats=[];cats.forEach(function(c){if(window.CATMAP&&CATMAP[c])CATMAP[c].forEach(function(s){if(solCats.indexOf(s)<0)solCats.push(s);});});return solCats.length?solCats:null;}
 var _savedSel=null;
 function fmt(cmd){var ed=document.getElementById("repEdit");if(!ed)return;if(_savedSel){var sel=window.getSelection();sel.removeAllRanges();sel.addRange(_savedSel);_savedSel=null;}document.execCommand(cmd,false,null);ed.setAttribute("data-ue","1");}
 function fmtColor(color){var ed=document.getElementById("repEdit");if(!ed)return;if(_savedSel){var sel=window.getSelection();sel.removeAllRanges();sel.addRange(_savedSel);_savedSel=null;}document.execCommand("foreColor",false,color);ed.setAttribute("data-ue","1");}
