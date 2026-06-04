@@ -2971,15 +2971,7 @@ function accOpen(id) {
   var open = body.classList.contains('open');
   body.classList.toggle('open', !open);
   if (arr) arr.style.transform = open ? '' : 'rotate(180deg)';
-  if (!open && id === 'manual') {
-    var mi = document.getElementById('manualInner');
-    var fw = document.getElementById('flowWrap');
-    if (mi && fw && !mi.contains(fw)) {
-      // Добавляем кнопку микрофона над модулями
-
-      fw.style.display = '';
-      mi.appendChild(fw);
-    }
+  if (id === 'parts') {
     renderList('el'); renderList('def'); renderList('kon'); renderList('sol');
     renderSummary();
   }
