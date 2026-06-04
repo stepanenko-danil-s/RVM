@@ -600,9 +600,13 @@ body.theme-2 .tgl.on { background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.15); co
             <span id="rstArrow" style="font-size:9px;color:rgba(60,60,67,.4)">&#9660;</span>
           </button>
           <div id="rstDrop" style="display:none;position:absolute;right:0;top:calc(100% + 4px);background:#fff;border:1.5px solid #CDD2DB;border-radius:11px;min-width:160px;overflow:hidden;z-index:200;box-shadow:0 4px 16px rgba(0,0,0,.12)">
-            <div onclick="pickRst('kls')" class="rst-drop-item" data-rst="kls" style="padding:9px 14px;font-size:12px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">&#9670; Klasyczny</div>
-            <div onclick="pickRst('biz')" class="rst-drop-item" data-rst="biz" style="padding:9px 14px;font-size:12px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">Biznesowy</div>
-            <div onclick="pickRst('tec')" class="rst-drop-item" data-rst="tec" style="padding:9px 14px;font-size:12px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">Techniczny</div>
+            <div onclick="pickRst('kls')" class="rst-drop-item" data-rst="kls" style="padding:9px 14px;font-size:12px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">A ─ Klasyczny</div>
+            <div onclick="pickRst('biz')" class="rst-drop-item" data-rst="biz" style="padding:9px 14px;font-size:12px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">B ━ Delovoy</div>
+            <div onclick="pickRst('tec')" class="rst-drop-item" data-rst="tec" style="padding:9px 14px;font-size:12px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">C ▌ Pionowy</div>
+            <div onclick="pickRst('kmp')" class="rst-drop-item" data-rst="kmp" style="padding:9px 14px;font-size:12px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">D ■ Korporacyjny</div>
+            <div onclick="pickRst('prot')" class="rst-drop-item" data-rst="prot" style="padding:9px 14px;font-size:12px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">E ▶▶ Strzalkowy</div>
+            <div onclick="pickRst('frm')" class="rst-drop-item" data-rst="frm" style="padding:9px 14px;font-size:12px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">F ┌┐ Ramkowy</div>
+            <div onclick="pickRst('tel')" class="rst-drop-item" data-rst="tel" style="padding:9px 14px;font-size:12px;font-weight:600;color:#080814;cursor:pointer">G =[ Telegraf</div>
             <div onclick="pickRst('kmp')" class="rst-drop-item" data-rst="kmp" style="padding:9px 14px;font-size:12px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">&#9638; Tabelaryczny</div>
             <div onclick="pickRst('prot')" class="rst-drop-item" data-rst="prot" style="padding:9px 14px;font-size:12px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">&#9644; Blokowy</div>
             <div id="myStylesDropList" style="border-top:1px solid #E8EAF0"></div>
@@ -1854,7 +1858,7 @@ function setRst(s){
   rstStyle=s;ss("rv_rst",s);
   ["biz","tec","kls","kmp","prot"].forEach(function(x){var el=document.getElementById("ro-"+x);if(el)el.className="rst-opt"+(x===s?" on":"");});
   renderMyStylesList();
-  var lbl={biz:"Biznesowy",tec:"Techniczny",kls:"• Klasyczny",kmp:"▦ Tabelaryczny",prot:"▬ Blokowy"};
+  var lbl={kls:"A ─ Klasyczny",biz:"B ━ Delovoy",tec:"C ▌ Pionowy",kmp:"D ■ Korporacyjny",prot:"E ▶ Strzalkowy",frm:"F ┌┐ Ramkowy",tel:"G =[ Telegraf"};
   var lE=document.getElementById("rstLbl");
   if(lbl[s]&&lE)lE.textContent=lbl[s];
   else if(lE){var idx=parseInt(s.replace("mys",""));if(!isNaN(idx)&&myStyles[idx])lE.textContent=myStyles[idx].name||"Własny "+(idx+1);else lE.textContent="Biznesowy";}
@@ -2006,55 +2010,102 @@ var eG=allEntries.filter(function(e){return e.mode==="G";});
 var eS=allEntries.filter(function(e){return e.mode==="S";});
 var spG=getSelPartsArrFor("G");
 var spS=getSelPartsArrFor("S");
-var SEP="\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500";
+
+var konG=[],konS=[];
+eG.forEach(function(e){_arr(e.kon).forEach(function(k){var v=k&&typeof k==="object"?k.pl||"":k;if(v&&konG.indexOf(v)<0)konG.push(v);});});
+eS.forEach(function(e){_arr(e.kon).forEach(function(k){var v=k&&typeof k==="object"?k.pl||"":k;if(v&&konS.indexOf(v)<0)konS.push(v);});});
+var liveKonG=curMode==="G"?SEL.kon:selKonG;
+var liveKonS=curMode==="S"?SEL.kon:selKonS;
+liveKonG.forEach(function(k){var v=k&&typeof k==="object"?k.pl||"":k;if(v&&konG.indexOf(v)<0)konG.push(v);});
+liveKonS.forEach(function(k){var v=k&&typeof k==="object"?k.pl||"":k;if(v&&konS.indexOf(v)<0)konS.push(v);});
+
+var tG=_timeFmt(timeG); var tS=_timeFmt(timeS);
+var dG=_timeDuration(timeG); var dS=_timeDuration(timeS);
+
+function _timeFmt(t){
+  if(!t||(!t.od&&!t.do))return "";
+  var od=t.od||"--:--"; var d=t.do||"--:--";
+  return od+" \u2192 "+d+(t&&_timeDuration(t)?" ["+_timeDuration(t)+"]":"");
+}
+
 var lines=[];
+var st=rstStyle;
 
-function pad(s,n){s=String(s);while(s.length<n)s+=" ";return s;}
+// Style configs
+var S={
+  A:{secG:"=== GWARANCYJNY ===",secNG:"=== NIE GWARANCYJNY ===",sep:"\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",elPfx:"\u25b6 ",defPfx:"  \u26a0 ",solPfx:"  \u2714 ",konHdr:"SERWIS:",konPfx:"  \u2022 ",partHdr:"Cz\u0119\u015bci:",partPfx:"  \u2022 "},
+  B:{secG:"GWARANCYJNY",secNG:"NIE GWARANCYJNY",sep:"\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501",elPfx:"Element:  ",defPfx:"Usterka:  ",solPfx:"Naprawa:  ",konHdr:"Serwis:",konPfx:"  \u2022 ",partHdr:"Cz\u0119\u015bci:",partPfx:"  \u2022 "},
+  C:{secG:"\u258cGWARANCYJNY",secNG:"\u258cNIE GWARANCYJNY",sep:"",elPfx:"\u2502 \u25cf ",defPfx:"\u2502   \u21b3 ",solPfx:"\u2502   \u2714 ",konHdr:"\u2502 SERWIS:",konPfx:"\u2502   \u2022 ",partHdr:"\u2502 Cz\u0119\u015bci:",partPfx:"\u2502   \u2022 "},
+  D:{secG:"[G] NAPRAWA GWARANCYJNA",secNG:"[NG] NAPRAWA POZA GWARANCJA",sep:"\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",elPfx:"  \u2116 ",defPfx:"       \u26a0 ",solPfx:"       \u2192 ",konHdr:"  SERWIS AKTYWNOSCI:",konPfx:"       \u25cb ",partHdr:"  Cz\u0119\u015bci:",partPfx:"       \u25cb "},
+  E:{secG:"\u25b6\u25b6 GWARANCYJNY \u25c4\u25c4",secNG:"\u25b6\u25b6 NIE GWARANCYJNY \u25c4\u25c4",sep:"",elPfx:"\u250c\u2500 ",defPfx:"\u2502  \u26a1 ",solPfx:"\u2514\u2500 \u2714 ",konHdr:"\u250c\u2500 SERWIS",konPfx:"\u251c\u2500 \u25cb ",partHdr:"\u250c\u2500 Cz\u0119\u015bci",partPfx:"\u251c\u2500 \u25cb "},
+  F:{secG:"\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510",secNG:"\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510",sep:"\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524",elPfx:"\u2502  ",defPfx:"\u2502    ! ",solPfx:"\u2502    + ",konHdr:"\u2502  SERWIS",konPfx:"\u2502    * ",partHdr:"\u2502  Cz\u0119\u015bci",partPfx:"\u2502    * "},
+  G:{secG:"=[ GWARANCYJNY ]=",secNG:"=[ NIE GWARANCYJNY ]=",sep:"",elPfx:">> ",defPfx:"   !! ",solPfx:"   OK ",konHdr:"-- SERWIS --",konPfx:"   :: ",partHdr:"-- Cz\u0119\u015bci --",partPfx:"   :: "}
+};
 
-function renderSection(arr,sp){
-  arr.forEach(function(e,i){if(!e.el)return;
-    var df=_arr(e.def),sl=_arr(e.sol);
-    if(rstStyle==="tec"){
-      var m=eG.indexOf(e)>=0?"G":"S";
-      lines.push("["+m+(i+1)+"] "+e.el);
-      df.forEach(function(d){lines.push("      DEF \u203a "+d);});
-      sl.forEach(function(d){lines.push("      SOL \u203a "+d);});
-    }else if(rstStyle==="kls"){
-      lines.push("\u2022 "+e.el);
-      df.forEach(function(d){lines.push("  \u21b3 "+d);});
-      sl.forEach(function(d){lines.push("  \u2713 "+d);});
-    }else{
-      lines.push((i+1)+". "+e.el);
-      if(df.length){lines.push("  Usterka:");df.forEach(function(d){lines.push("    \u2022 "+d);});}
-      if(sl.length){lines.push("  Wykonano:");sl.forEach(function(d){lines.push("    \u2022 "+d);});}
-    }
-    lines.push("");
-  });
-  if(sp.length){
-    lines.push("Części zamienne:");
-    sp.forEach(function(p){lines.push("  \u2022 "+p);});
-    lines.push("");
+// Map style keys
+var styleMap={kls:"A",biz:"B",tec:"C",kmp:"D",prot:"E",frm:"F",tel:"G"};
+var sKey=styleMap[st]||"B";
+// Check if myStyle
+if(st&&st.indexOf("mys")===0){
+  var mi=parseInt(st.replace("mys",""));
+  if(!isNaN(mi)&&myStyles[mi]&&myStyles[mi].styleKey)sKey=myStyles[mi].styleKey;
+}
+var cfg=S[sKey]||S.B;
+
+function renderSec(isG,entries,kon,sp){
+  var secLabel=isG?cfg.secG:cfg.secNG;
+  var tFmt=isG?tG:tS;
+  var timeStr=tFmt?" "+tFmt:"";
+  if(sKey==="F"){
+    lines.push(secLabel);
+    lines.push("\u2502  "+(isG?"GWARANCYJNY":"NIE GWARANCYJNY")+timeStr);
+    lines.push(cfg.sep);
+  } else if(sKey==="D"){
+    lines.push("\u25a0 RAPORT SERWISOWY \u25a0"+timeStr);
+    lines.push("\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501");
+    lines.push(secLabel);
+    if(cfg.sep)lines.push(cfg.sep);
+  } else {
+    lines.push(secLabel+timeStr);
+    if(cfg.sep)lines.push(cfg.sep);
   }
+
+  entries.forEach(function(e,i){
+    if(!e.el)return;
+    var df=_arr(e.def),sl=_arr(e.sol);
+    if(sKey==="B"){
+      lines.push("");
+      lines.push(cfg.elPfx+e.el);
+      df.forEach(function(d){lines.push(cfg.defPfx+d);});
+      sl.forEach(function(s){lines.push(cfg.solPfx+s);});
+    } else if(sKey==="F"){
+      lines.push(cfg.elPfx+e.el);
+      df.forEach(function(d){lines.push(cfg.defPfx+d);});
+      sl.forEach(function(s){lines.push(cfg.solPfx+s);});
+    } else {
+      lines.push(cfg.elPfx+(i+1)+". "+e.el);
+      df.forEach(function(d){lines.push(cfg.defPfx+d);});
+      sl.forEach(function(s){lines.push(cfg.solPfx+s);});
+    }
+  });
+
+  if(kon.length){
+    lines.push("");
+    lines.push(cfg.konHdr);
+    kon.forEach(function(k){lines.push(cfg.konPfx+k);});
+  }
+  if(sp.length){
+    lines.push("");
+    lines.push(cfg.partHdr);
+    sp.forEach(function(p){lines.push(cfg.partPfx+p);});
+  }
+  if(sKey==="F")lines.push("\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518");
+  lines.push("");
 }
 
-var konG2=[],konS2=[];
-eG.forEach(function(e){_arr(e.kon).forEach(function(k){if(konG2.indexOf(k)<0)konG2.push(k);});});
-eS.forEach(function(e){_arr(e.kon).forEach(function(k){if(konS2.indexOf(k)<0)konS2.push(k);});});
-// Include live (current) kon items - sanitize objects
-var _liveKonG=curMode==="G"?SEL.kon:selKonG;
-var _liveKonS=curMode==="S"?SEL.kon:selKonS;
-_liveKonG.forEach(function(k){var v=k&&typeof k==="object"?k.pl||"":k;if(v&&konG2.indexOf(v)<0)konG2.push(v);});
-_liveKonS.forEach(function(k){var v=k&&typeof k==="object"?k.pl||"":k;if(v&&konS2.indexOf(v)<0)konS2.push(v);});
-if(eG.length||konG2.length||spG.length){
-  lines.push("GWARANCYJNY");lines.push(SEP);
-  renderSection(eG,spG);
-  if(konG2.length){lines.push("Serwis:");konG2.forEach(function(k){lines.push("  \u2022 "+k);});lines.push("");}
-}
-if(eS.length||konS2.length||spS.length){
-  lines.push("NIE GWARANCYJNY");lines.push(SEP);
-  renderSection(eS,spS);
-  if(konS2.length){lines.push("Serwis:");konS2.forEach(function(k){lines.push("  \u2022 "+k);});lines.push("");}
-}
+if(eG.length||konG.length||spG.length) renderSec(true,eG,konG,spG);
+if(eS.length||konS.length||spS.length) renderSec(false,eS,konS,spS);
+
 return lines.join("\n");
 }
 
