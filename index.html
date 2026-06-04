@@ -5438,6 +5438,16 @@ function loadTheme() {
 
 loadTheme();
 
+// Touch feedback for all buttons
+document.addEventListener('touchstart', function(e){
+  var btn = e.target.closest('button');
+  if(btn){ btn.style.opacity='0.6'; btn.style.transform='scale(0.96)'; }
+}, {passive:true});
+document.addEventListener('touchend', function(e){
+  var btn = e.target.closest('button');
+  if(btn){ setTimeout(function(){ btn.style.opacity=''; btn.style.transform=''; }, 150); }
+}, {passive:true});
+
 
 function shopSaveNum() {
   var inp = document.getElementById('shopNumInp');
