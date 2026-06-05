@@ -4668,7 +4668,8 @@ function doCopy(){
 // ===== STYLE PICKER =====
 function toggleStylePicker(){
   var p=document.getElementById('stylePicker');
-  p.style.display=p.style.display==='none'?'block':'none';
+  var hidden=p.style.display===''||p.style.display==='none';
+  p.style.display=hidden?'block':'none';
 }
 function pickStyle(s){
   rstStyle=s;
