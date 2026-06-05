@@ -107,7 +107,7 @@ button{cursor:pointer}
 .toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:rgba(22,22,24,.92);color:#fff;padding:10px 20px;border-radius:24px;font-size:13px;font-weight:600;z-index:200;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1}
 /* OV + SH */
-.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(8px)}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(8px)}
 .sh{background:#fff;border-radius:22px 22px 0 0;padding:18px 18px 36px;width:100%;max-width:430px;max-height:88vh;overflow-y:auto}
 .sh-bar{width:40px;height:4px;background:rgba(60,60,67,.14);border-radius:2px;margin:0 auto 16px}
 .sh-title{font-size:17px;font-weight:800;margin-bottom:14px}
@@ -547,7 +547,7 @@ body.theme-2 .tgl.on { background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.15); co
       <div style="font-size:12px;color:rgba(20,20,50,.45);margin-top:2px" id="partsVal">Dotknij aby wybra&#263;</div>
     </div>
     <div style="font-size:16px;color:rgba(60,60,67,.22);transition:transform .2s" id="partsArr">&#8250;</div>
-    <button onclick="event.stopPropagation();openSh('shParts')" style="display:none">+ Dodaj</button>
+    <button onclick="event.stopPropagation();openSh('shParts')" style="background:none;border:none;color:#007A7A;font-size:12px;font-weight:600;padding:4px 8px;cursor:pointer">+ Dodaj</button>
   </div>
   <div class="ptab-row"><button onclick="ptab('c')" id="ptb-c" class="on">Części</button><button onclick="ptab('m')" id="ptb-m">Magazyn</button></div>
   <div id="ptb-c-body"><div class="parts-body" id="partsBody">
@@ -560,7 +560,7 @@ body.theme-2 .tgl.on { background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.15); co
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="1" width="4" height="4" rx="0.5"/><rect x="9" y="1" width="4" height="4" rx="0.5"/><rect x="1" y="9" width="4" height="4" rx="0.5"/><line x1="9" y1="9" x2="9" y2="9.01"/><line x1="11" y1="9" x2="13" y2="9"/><line x1="9" y1="11" x2="9" y2="13"/><line x1="11" y1="11" x2="13" y2="13"/><line x1="11" y1="9" x2="11" y2="11"/></svg>
         Skanuj QR
       </button>
-      <button onclick="magAddNew()" style="display:none;flex:1;padding:9px 6px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;-webkit-tap-highlight-color:transparent">
+      <button onclick="magAddNew()" style="flex:1;padding:9px 6px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;-webkit-tap-highlight-color:transparent">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
         Dodaj część
       </button>
@@ -849,7 +849,7 @@ function ls(k,d){try{var v=localStorage.getItem(k);return v!==null?JSON.parse(v)
 function ss(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 function showToast(msg){var t=document.getElementById("toast");if(!t)return;t.innerHTML=msg;t.className="toast show";clearTimeout(t._to);t._to=setTimeout(function(){t.className="toast";},2200);}
-function openSh(id){var el=document.getElementById(id);if(el){el.style.display="flex";}}
+function openSh(id){var el=document.getElementById(id);if(el){el.style.display="flex";setTimeout(function(){el.classList.add("open");},10);}}
 function closeOv(id){var el=document.getElementById(id);if(el){el.classList.remove("open");setTimeout(function(){el.style.display="none";},300);}}
 function _applyMod(i){var n=i+1;var hdr=document.getElementById("hdr"+n),body=document.getElementById("body"+n),bdg=document.getElementById("bdg"+n),arr=document.getElementById("arr"+n);var has=(i===0&&SEL.el.length)||(i===1&&(SEL.def.length||SEL.kon.length))||(i===2&&SEL.sol.length);var open=mOpen[i];if(body)body.className="mod-body"+(open?" open":"");if(arr)arr.className="mod-arr"+(open?" open":"");if(hdr)hdr.className="mod-hdr"+(open?" active":has?" done":" idle");if(bdg){bdg.className="badge"+(open?" active":has?" done":" idle");}}
 function _updateFlowState(){
