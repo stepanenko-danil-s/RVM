@@ -14,7 +14,7 @@ button:active{opacity:.7;transform:scale(.97)}
 
 /* NAV */
 .nav{position:sticky;top:0;z-index:100;background:#007AFF;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.nav-title{color:#fff;font-size:17px;font-weight:700;letter-spacing:-.3px}
+.nav-title{color:#fff;font-size:17px;font-weight:800;letter-spacing:-.3px}
 .nav-btn{background:rgba(255,255,255,.15);border:none;border-radius:9px;width:34px;height:34px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
 
 /* SHOP BAR */
@@ -31,10 +31,10 @@ button:active{opacity:.7;transform:scale(.97)}
 
 /* MODULES */
 .page{padding:0 12px 120px}
-.mod{background:#fff;border-radius:12px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.08);overflow:hidden}
+.mod{background:#fff;border-radius:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.1);overflow:hidden;border:.5px solid rgba(0,0,0,.06)}
 .mod-hdr{display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer}
-.badge{width:30px;height:30px;border-radius:50%;background:#E5E5EA;color:#8E8E93;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.badge.done{background:rgba(0,122,122,.12);color:#007A7A}
+.badge{width:32px;height:32px;border-radius:50%;background:#D1D1D6;color:#3C3C43;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.badge.done{background:#007A7A;color:#fff}
 .badge.active{background:#007AFF;color:#fff}
 .mod-info{flex:1;min-width:0}
 .mod-ttl{font-size:14px;font-weight:700;color:#1C1C1E}
@@ -102,7 +102,7 @@ button:active{opacity:.7;transform:scale(.97)}
 .time-sel{background:#fff;border:1px solid #E5E5EA;border-radius:8px;padding:6px;font-size:15px;font-weight:700;color:#007A7A;font-family:monospace;cursor:pointer;-webkit-appearance:auto}
 
 /* SECTION LABEL */
-.sec-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#8E8E93;padding:16px 0 6px}
+.sec-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6B6B6B;padding:16px 0 6px}
 
 /* ALERT BANNER */
 .alert-banner{background:#FF3B30;border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;cursor:pointer}
@@ -178,11 +178,7 @@ button:active{opacity:.7;transform:scale(.97)}
       <div class="sh-title">Ustawienia</div>
       <button onclick="closeSettings()" style="background:rgba(118,118,128,.15);border:none;width:30px;height:30px;border-radius:50%;font-size:18px;cursor:pointer">&#215;</button>
     </div>
-    <div class="sh-sec">Motyw</div>
-    <div class="sh-btn-row">
-      <button class="sh-theme-btn on" id="thBtn1" onclick="setTheme(1)">iOS</button>
-      <button class="sh-theme-btn" id="thBtn2" onclick="setTheme(2)">Fluent</button>
-    </div>
+
     <div class="sh-sec">E-mail (zamowienia czesci)</div>
     <input class="sh-inp" id="setTo" type="email" placeholder="odbiorca@firma.pl" oninput="saveSetting('rv_email_to',this.value)">
     <input class="sh-inp" id="setSig" type="text" placeholder="Podpis: Daniel Stepanenko" oninput="saveSetting('rv_email_sig',this.value)">
