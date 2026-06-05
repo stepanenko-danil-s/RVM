@@ -2,9 +2,6 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -17,7 +14,7 @@ button:active{opacity:.7;transform:scale(.97)}
 
 /* NAV */
 .nav{position:sticky;top:0;z-index:100;background:#007AFF;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.nav-title{color:#fff;font-size:17px;font-weight:800;letter-spacing:-.3px}
+.nav-title{color:#fff;font-size:17px;font-weight:700;letter-spacing:-.3px}
 .nav-btn{background:rgba(255,255,255,.15);border:none;border-radius:9px;width:34px;height:34px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
 
 /* SHOP BAR */
@@ -34,10 +31,10 @@ button:active{opacity:.7;transform:scale(.97)}
 
 /* MODULES */
 .page{padding:0 12px 120px}
-.mod{background:#fff;border-radius:12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.1);overflow:hidden;border:.5px solid rgba(0,0,0,.06)}
+.mod{background:#fff;border-radius:12px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.08);overflow:hidden}
 .mod-hdr{display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer}
-.badge{width:32px;height:32px;border-radius:50%;background:#D1D1D6;color:#3C3C43;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.badge.done{background:#007A7A;color:#fff}
+.badge{width:30px;height:30px;border-radius:50%;background:#E5E5EA;color:#8E8E93;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.badge.done{background:rgba(0,122,122,.12);color:#007A7A}
 .badge.active{background:#007AFF;color:#fff}
 .mod-info{flex:1;min-width:0}
 .mod-ttl{font-size:14px;font-weight:700;color:#1C1C1E}
@@ -105,7 +102,7 @@ button:active{opacity:.7;transform:scale(.97)}
 .time-sel{background:#fff;border:1px solid #E5E5EA;border-radius:8px;padding:6px;font-size:15px;font-weight:700;color:#007A7A;font-family:monospace;cursor:pointer;-webkit-appearance:auto}
 
 /* SECTION LABEL */
-.sec-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6B6B6B;padding:16px 0 6px}
+.sec-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#8E8E93;padding:16px 0 6px}
 
 /* ALERT BANNER */
 .alert-banner{background:#FF3B30;border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;cursor:pointer}
@@ -133,7 +130,7 @@ button:active{opacity:.7;transform:scale(.97)}
 .mag-tab.on{background:#fff;color:#1C1C1E;box-shadow:0 1px 3px rgba(0,0,0,.1)}
 
 /* SETTINGS OVERLAY */
-.settings-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99999;display:none;align-items:flex-end;justify-content:center}
+.settings-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:none;align-items:flex-end;justify-content:center}
 .settings-ov.open{display:flex}
 .settings-sheet{background:#fff;border-radius:22px 22px 0 0;padding:20px 18px 44px;width:100%;max-width:430px;max-height:90vh;overflow-y:auto}
 .sh-bar{width:36px;height:4px;background:#E5E5EA;border-radius:2px;margin:0 auto 16px}
@@ -169,19 +166,31 @@ button:active{opacity:.7;transform:scale(.97)}
 .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8888;display:none;align-items:flex-end;justify-content:center}
 .modal-ov.open{display:flex}
 .modal-sheet{background:#fff;border-radius:22px 22px 0 0;padding:20px 18px 40px;width:100%;max-width:430px;max-height:80vh;overflow-y:auto}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9000;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
+.ov.open{display:flex}
+.sh{background:#fff;border-radius:20px 20px 0 0;padding:18px 18px 36px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 -6px 30px rgba(0,0,0,.18)}
+.set-acc-hdr{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:6px 0}
+.set-acc-body{display:none;padding-top:8px}
+.set-acc-body.open{display:block}
+.set-acc-arr{transition:transform .2s;display:inline-block}
+.set-acc-arr.open{transform:rotate(180deg)}
 </style>
 </head>
 <body>
 
 <!-- SETTINGS OVERLAY -->
-<div class="settings-ov" id="settingsOv" onclick="if(event.target===this){this.style.display='none';}">
+<div class="settings-ov" id="settingsOv" onclick="if(event.target===this)closeSettings()">
   <div class="settings-sheet">
     <div class="sh-bar"></div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
       <div class="sh-title">Ustawienia</div>
       <button onclick="closeSettings()" style="background:rgba(118,118,128,.15);border:none;width:30px;height:30px;border-radius:50%;font-size:18px;cursor:pointer">&#215;</button>
     </div>
-
+    <div class="sh-sec">Motyw</div>
+    <div class="sh-btn-row">
+      <button class="sh-theme-btn on" id="thBtn1" onclick="setTheme(1)">iOS</button>
+      <button class="sh-theme-btn" id="thBtn2" onclick="setTheme(2)">Fluent</button>
+    </div>
     <div class="sh-sec">E-mail (zamowienia czesci)</div>
     <input class="sh-inp" id="setTo" type="email" placeholder="odbiorca@firma.pl" oninput="saveSetting('rv_email_to',this.value)">
     <input class="sh-inp" id="setSig" type="text" placeholder="Podpis: Daniel Stepanenko" oninput="saveSetting('rv_email_sig',this.value)">
@@ -991,24 +1000,10 @@ function closeMod(i){
   mOpen[i]=false;
   _applyMod(i);
 }
-function toggleMod(id){
-  var body=document.getElementById(id==='S'?'bodyS':'body'+id);
-  var arr=document.getElementById(id==='S'?'arrS':'arr'+id);
-  var isOpen=body&&body.classList.contains('open');
-  ['S',1,2,3].forEach(function(x){
-    var b=document.getElementById(x==='S'?'bodyS':'body'+x);
-    var a=document.getElementById(x==='S'?'arrS':'arr'+x);
-    if(b)b.classList.remove('open');
-    if(a)a.classList.remove('open');
-  });
-  if(!isOpen&&body){
-    body.classList.add('open');
-    if(arr)arr.classList.add('open');
-    if(id==='S')renderList('kon');
-    else if(id===1)renderList('el');
-    else if(id===2)renderList('def');
-    else if(id===3)renderList('sol');
-  }
+function toggleMod(i){
+  if(mOpen[i]){mOpen[i]=false;_applyMod(i);}
+  else{openMod(i);if(i===1){renderList("def");renderList("kon");}if(i===2)renderList("sol");}
+  _updateFlowState();
 }
 function toggleModS(){
   if(mOpenS){
@@ -1914,48 +1909,7 @@ function genExp(){
   },null,2);
 }
 function copyExp(){document.getElementById("expCode").select();document.execCommand("copy");showToast("&#128203; Skopiowano");}
-setMode(curMode);
-setRst(rstStyle);
-initDark();
-_syncTimeInputs();
-// Force clear ALL corrupted data - v4
-(function(){
-  var v=parseInt(localStorage.getItem("rv_fix_v")||"0");
-  if(v<4){
-    ["rv_e","rv_c","rv_cp","rv_sp","rv_pq","rv_spG","rv_spS","rv_pqG","rv_pqS"].forEach(function(k){localStorage.removeItem(k);});
-    localStorage.setItem("rv_fix_v","4");
-  }
-})();
-
-// Auto-clean corrupted kon data from localStorage
-(function(){
-  var saved=ls("rv_e",[]);
-  if(saved.length){
-    entries=saved.map(function(e){
-      if(e&&e.kon&&Array.isArray(e.kon)){
-        e.kon=e.kon.map(function(k){return(k&&typeof k==="object")?k.pl||"":k;}).filter(Boolean);
-      }
-      return e;
-    });
-    selKonG=selKonG.map(function(k){return k&&typeof k==="object"?k.pl||"":k;}).filter(Boolean);
-    selKonS=selKonS.map(function(k){return k&&typeof k==="object"?k.pl||"":k;}).filter(Boolean);
-    ss("rv_e",entries);
-  }
-})();
-_updateFlowState();
-renderList("el");renderList("def");renderList("kon");renderList("sol");renderParts();renderSummary();renderTmplList();renderMyStylesList();
-var _ids=["serwisBlock","mod1block","defFlowWrap","hdr1","hdr2","hdr3","body2","body3"];
-_ids.forEach(function(id){var el=document.getElementById(id);if(el){el.style.opacity="";el.style.pointerEvents="";}});
-// Явно закрываем панель запчастей при загрузке
-partsOpen=false;
-document.getElementById("partsBody").className="parts-body";
-document.getElementById("partsArr").style.transform="none";
-document.getElementById("repEdit").addEventListener("input",function(){this.setAttribute("data-ue","1");});
-
-
-
-
-
+/* premature/duplicate init removed: real init runs in the INIT APP IIFE (block 8); theme + repEdit listener + parts reset handled in the restore layer below. */
 
 function aiSuggestDef(){
   var el=SEL.el[0]||"brak elementu";
@@ -1967,13 +1921,7 @@ function aiSuggestSol(){
   var p="Jestes ekspertem serwisu RVM. Element: '"+el+"'. Usterki: "+(df.length?df.join(", "):"brak")+". Podaj 5 dzialan serwisowych. Tylko lista po polsku.";
   window.open("https://claude.ai/new?q="+encodeURIComponent(p),"_blank");
 }
-var _ids=["serwisBlock","mod1block","defFlowWrap","hdr1","hdr2","hdr3","body2","body3"];
-_ids.forEach(function(id){var el=document.getElementById(id);if(el){el.style.opacity="";el.style.pointerEvents="";}});
-// Явно закрываем панель запчастей при загрузке
-partsOpen=false;
-document.getElementById("partsBody").className="parts-body";
-document.getElementById("partsArr").style.transform="none";
-document.getElementById("repEdit").addEventListener("input",function(){this.setAttribute("data-ue","1");});
+/* duplicate init block removed (see restore layer) */
 
 function toggleDark(){
   var dark=document.body.classList.toggle('dark');
@@ -2147,5 +2095,3014 @@ function restoreData(input){
   input.value="";
 }</script>
 
+<div style="display:flex;flex-direction:column;gap:0;width:100%">
+  <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
+    <div class="set-acc-hdr" onclick="setAcc('accEmail')">
+      <div style="font-size:13px;font-weight:700;color:#323130">Ustawienia e-mail</div>
+      <span class="set-acc-arr" id="accEmailArr">▼</span>
+    </div>
+    <div class="set-acc-body" id="accEmail">
+    <div style="font-size:11px;color:#A19F9D;margin-bottom:8px">Adresy odbiorców (jeden na linię)</div>
+    <textarea id="emailRecipients" placeholder="np.&#10;ksiegowosc@firma.com&#10;kierownik@firma.com" rows="3" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;font-family:inherit;outline:none;resize:none;color:#323130;margin-bottom:8px"></textarea>
+    <button onclick="emailSettingsSave()" style="width:100%;padding:11px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Zapisz adresy</button>
+    <div id="emailStatus" style="font-size:12px;color:#A19F9D;margin-top:6px;text-align:center"></div>
+  </div>
+
+    </div>
+  <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
+    <div class="set-acc-hdr" onclick="setAcc('accSched')">
+      <div style="font-size:13px;font-weight:700;color:#323130">Harmonogram raportów</div>
+      <span class="set-acc-arr" id="accSchedArr">▼</span>
+    </div>
+    <div class="set-acc-body" id="accSched">
+    <div style="font-size:11px;color:#A19F9D;margin-bottom:10px">Powiadomienie w wybranym dniu i godzinie</div>
+    <div style="margin-bottom:8px">
+      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;display:block;margin-bottom:4px">Dzień tygodnia</span>
+      <select id="schedDay" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:8px">
+        <option value="1">Poniedziałek</option>
+        <option value="2">Wtorek</option>
+        <option value="3">Środa</option>
+        <option value="4">Czwartek</option>
+        <option value="5">Piątek</option>
+        <option value="6">Sobota</option>
+        <option value="0">Niedziela</option>
+      </select>
+      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;display:block;margin-bottom:4px">Godzina</span>
+      <input type="time" id="schedTime" value="08:00" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:10px">
+      <button onclick="schedSave()" style="width:100%;padding:12px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Zapisz harmonogram</button>
+    </div>
+    <div id="schedStatus" style="font-size:12px;color:#A19F9D;margin-top:8px;text-align:center"></div>
+  </div>
+
+    </div>
+  <div style="border-top:1px solid #EDEBE9;margin-top:16px;padding-top:16px">
+    <div class="set-acc-hdr" onclick="setAcc('accLib')">
+      <div style="font-size:13px;font-weight:700;color:#323130">Biblioteka słów</div>
+      <span class="set-acc-arr" id="accLibArr">▼</span>
+    </div>
+    <div class="set-acc-body" id="accLib">
+    <div style="margin-bottom:8px">
+      <select id="libCol" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:8px">
+        <option value="el">Element urządzenia</option>
+        <option value="def">Usterka / problem</option>
+        <option value="sol">Co zrobiono</option>
+        <option value="kon">Typ serwisu</option>
+      </select>
+      <input id="libPl" placeholder="Nazwa po polsku (wymagane)" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:6px">
+      <input id="libRu" placeholder="Название по-русски (необязательно)" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:10px">
+      <button onclick="libAdd()" style="width:100%;padding:12px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Dodaj do biblioteki</button>
+    </div>
+    <div id="libList" style="max-height:150px;overflow-y:auto;font-size:12px;color:#605E5C"></div>
+  </div>
+  </div>
+
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="ov" id="shVoice" style="display:none" onclick="if(event.target===this)closeOv('shVoice')">
+  <div class="sh" style="max-height:92vh;overflow-y:auto">
+    <div class="sh-bar"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div id="vs_title" style="font-size:18px;font-weight:800;color:#107C10">Gwarancyjny</div>
+      <button onclick="closeOv('shVoice')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C;display:flex;align-items:center;justify-content:center">x</button>
+    </div>
+    <div id="vs_modeLabel" style="font-size:11px;color:#A19F9D;margin-bottom:10px"></div>
+    <textarea id="vs_inp" placeholder="Opisz co zrobiles..." style="width:100%;min-height:90px;background:#F5F5F7;border:1.5px solid rgba(0,120,212,.2);border-radius:10px;padding:12px 14px;font-size:14px;font-family:inherit;outline:none;resize:none;color:#323130;line-height:1.6;margin-bottom:8px" oninput="vsAutoProc(this)"></textarea>
+    <div style="font-size:11px;color:#A19F9D;margin-bottom:12px">Uzyj mikrofonu iPhone — po polsku lub rosyjsku.</div>
+    <div id="vs_prev" style="display:none;margin-bottom:10px"></div>
+    <button onclick="vsSearch()" style="width:100%;padding:11px;background:#F5F5F7;border:1px solid #EDEBE9;border-radius:10px;font-size:13px;font-weight:600;color:#0078D4;cursor:pointer;margin-bottom:8px;font-family:inherit">Szukaj w bibliotece</button>
+    <button onclick="vsAdd()" style="width:100%;padding:13px;background:#0078D4;border:none;border-radius:10px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;margin-bottom:8px;font-family:inherit">Dodaj do raportu</button>
+    <button class="sh-btn lt" onclick="closeOv('shVoice')">Anuluj</button>
+  </div>
+</div>
+
+<div class="ov" id="shMagPart" style="display:none" onclick="if(event.target===this)closeOv('shMagPart')">
+  <div class="sh" style="max-height:92vh;overflow-y:auto">
+    <div class="sh-bar"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div><div style="font-size:16px;font-weight:800;color:#323130;line-height:1.2" id="msh_name">-</div><div style="font-size:11px;color:#A19F9D;font-family:monospace;margin-top:3px" id="msh_code"></div></div>
+      <button onclick="closeOv('shMagPart')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">x</button>
+    </div>
+    <div id="msh_photo" style="width:100%;aspect-ratio:4/3;background:#F5F5F7;border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-bottom:14px"></div>
+    <div style="background:#F5F5F7;border-radius:12px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
+      <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A19F9D;margin-bottom:2px">Stan</div><div style="font-size:11px;font-weight:600" id="msh_status"></div></div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <button onclick="mshAdj(-1)" style="width:36px;height:36px;border-radius:10px;border:1px solid #EDEBE9;background:#fff;font-size:22px;font-weight:300;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#323130;line-height:1;font-family:inherit">-</button>
+        <span onclick="mshQtyEdit()" style="font-size:26px;font-weight:800;min-width:44px;text-align:center;color:#0078D4;cursor:pointer;border-bottom:2px solid #0078D4;padding-bottom:2px" id="msh_qty">0</span>
+        <button onclick="mshAdj(1)" style="width:36px;height:36px;border-radius:10px;border:1px solid #EDEBE9;background:#fff;font-size:22px;font-weight:300;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#323130;line-height:1;font-family:inherit">+</button>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 4px;margin-bottom:10px">
+      <span style="font-size:13px;color:#605E5C">Minimum (alarm)</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button onclick="mshAdjMin(-1)" style="width:26px;height:26px;border-radius:7px;border:1px solid #EDEBE9;background:#F5F5F7;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit">-</button>
+        <span style="font-size:14px;font-weight:700;min-width:22px;text-align:center;color:#323130" id="msh_min">1</span>
+        <button onclick="mshAdjMin(1)" style="width:26px;height:26px;border-radius:7px;border:1px solid #EDEBE9;background:#F5F5F7;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit">+</button>
+      </div>
+    </div>
+    <button onclick="mshUse()" style="width:100%;padding:13px;background:#0078D4;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px;font-family:inherit">Uzyj w raporcie (-1)</button>
+    <button onclick="mshCam()" style="width:100%;padding:12px;background:#F5F5F7;border:1px dashed #EDEBE9;border-radius:12px;font-size:13px;font-weight:600;color:#605E5C;cursor:pointer;font-family:inherit">Zrob zdjecie czesci</button>
+    <button class="sh-btn lt" onclick="closeOv('shMagPart')" style="margin-top:8px">Zamknij</button>
+  </div>
+</div>
+
+
+
+<div class="ov" id="shPhotos" style="display:none" onclick="if(event.target===this)closeOv('shPhotos')">
+  <div class="sh" style="max-height:92vh;overflow-y:auto">
+    <div class="sh-bar"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-size:18px;font-weight:800;color:#1C1C1E">Zdjecia zadania</div>
+      <button onclick="closeOv('shPhotos')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C;display:flex;align-items:center;justify-content:center">x</button>
+    </div>
+    <div class="photo-grid" id="photoGrid" style="margin-bottom:10px">
+      <div class="photo-add" onclick="photoTrigger()"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#A19F9D" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="4" width="19" height="15" rx="3"/><circle cx="11" cy="11.5" r="3.5"/><path d="M7 4l1.5-2.5h5L15 4"/></svg><span>Dodaj</span></div>
+    </div>
+    <input type="file" id="photoCamInp" accept="image/*" capture="environment" multiple style="display:none" onchange="photoHandle(this)">
+    <button onclick="photoClear()" style="width:100%;padding:10px;background:rgba(255,59,48,.07);border:1px solid rgba(255,59,48,.2);border-radius:12px;font-size:12px;font-weight:600;color:#FF3B30;cursor:pointer;font-family:inherit;margin-bottom:8px">Usun wszystkie</button>
+    <button onclick="closeOv('shPhotos')" style="width:100%;padding:12px;background:#F5F5F7;border:none;border-radius:12px;font-size:13px;font-weight:600;color:#605E5C;cursor:pointer;font-family:inherit">Zamknij</button>
+  </div>
+</div>
+
+<script>
+// tglMUpdate - нужна раньше setMode
+function tglMUpdate(m) {}
+
+// accOpen - аккордеон
+function accOpen(id) {
+  var body = document.getElementById('accBody-' + id);
+  var arr = document.getElementById('accArr-' + id);
+  if (!body) return;
+  var open = body.classList.contains('open');
+  body.classList.toggle('open', !open);
+  if (arr) arr.style.transform = open ? '' : 'rotate(180deg)';
+  if (!open && id === 'manual') {
+    var mi = document.getElementById('manualInner');
+    var fw = document.getElementById('flowWrap');
+    if (mi && fw && !mi.contains(fw)) {
+      // Добавляем кнопку микрофона над модулями
+
+      fw.style.display = '';
+      mi.appendChild(fw);
+    }
+    renderList('el'); renderList('def'); renderList('kon'); renderList('sol');
+    renderSummary();
+  }
+  if (!open && id === 'parts') {
+    var pi = document.getElementById('partsInner');
+    var ps = document.getElementById('partsSection');
+    if (pi && ps && !pi.contains(ps)) {
+      ps.style.display = '';
+      pi.appendChild(ps);
+    }
+    renderParts();
+  }
+}
+
+// ptab - вкладки Части/Magazyn
+function ptab(t) {
+  ['c','m'].forEach(function(x) {
+    var b = document.getElementById('ptb-'+x+'-body');
+    var btn = document.getElementById('ptb-'+x);
+    if (b) b.style.display = x===t ? 'block' : 'none';
+    if (btn) btn.classList.toggle('on', x===t);
+  });
+  if (t==='m') { if(!_magData)_magData=magLoad(); setTimeout(magRender,50); }
+}
+
+// Voice
+var _vsMode='G', _vsAI=true, _vsMatches=null, _vsMulti=[], _vsTimer=null;
+
+function vsSetMode(m) {
+  _vsAI = (m==='ai');
+  var ai=document.getElementById('seg_ai'), off=document.getElementById('seg_off');
+  if(ai){ai.style.background=_vsAI?'#1C1C1E':'#EBEBF0';ai.style.color=_vsAI?'#fff':'#AEAEB2';ai.style.boxShadow=_vsAI?'0 1px 4px rgba(0,0,0,.2)':'none';}
+  if(off){off.style.background=!_vsAI?'#1C1C1E':'#EBEBF0';off.style.color=!_vsAI?'#fff':'#AEAEB2';off.style.boxShadow=!_vsAI?'0 1px 4px rgba(0,0,0,.2)':'none';}
+}
+
+function vsOpen(mode) {
+  _vsMode = mode;
+  var t=document.getElementById('vs_title'), s=document.getElementById('vs_modeLabel');
+  if(t){t.textContent=mode==='G'?'Gwarancyjny':'Nie gwarancyjny';t.style.color=mode==='G'?'#107C10':'#0078D4';}
+  if(s)s.textContent=_vsAI?'AI online':'Offline';
+  var g=document.getElementById('mainTglG'), ng=document.getElementById('mainTglS');
+  if(g){g.style.background=mode==='G'?'#fff':'transparent';g.style.color=mode==='G'?'#1C1C1E':'#C7C7CC';g.style.boxShadow=mode==='G'?'0 2px 8px rgba(0,0,0,.12)':'none';}
+  if(ng){ng.style.background=mode==='S'?'#fff':'transparent';ng.style.color=mode==='S'?'#1C1C1E':'#C7C7CC';ng.style.boxShadow=mode==='S'?'0 2px 8px rgba(0,0,0,.12)':'none';}
+  var inp=document.getElementById('vs_inp'); if(inp)inp.value='';
+  var prev=document.getElementById('vs_prev'); if(prev){prev.style.display='none';prev.innerHTML='';prev._ai=null;}
+  _vsMatches=null; _vsMulti=[];
+  openSh('shVoice');
+  setTimeout(function(){var i=document.getElementById('vs_inp');if(i)i.focus();},400);
+}
+
+function vsAutoProc(el){clearTimeout(_vsTimer);if(el.value.length>4)_vsTimer=setTimeout(vsSearch,900);if(!el.value.trim()){var p=document.getElementById('vs_prev');if(p){p.style.display='none';p.innerHTML='';}}};
+
+function vsNorm(s){return(s||'').toLowerCase().replace(/ą/g,'a').replace(/ę/g,'e').replace(/ó/g,'o').replace(/ś/g,'s').replace(/ź/g,'z').replace(/ż/g,'z').replace(/ć/g,'c').replace(/ń/g,'n').replace(/ł/g,'l').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();}
+
+function vsFindTop(text,col,n){var norm=vsNorm(text),words=norm.split(' ').filter(function(w){return w.length>2;});var all=(D[col]||[]).concat(custom[col]||[]),res=[];all.forEach(function(item){var pl=vsNorm(item.pl),ru=vsNorm(item.ru||''),sc=0;if(norm.indexOf(pl)>=0)sc+=10;if(ru&&norm.indexOf(ru)>=0)sc+=10;pl.split(' ').filter(function(w){return w.length>2;}).forEach(function(w){if(norm.indexOf(w)>=0)sc+=3;});ru.split(' ').filter(function(w){return w.length>2;}).forEach(function(w){if(norm.indexOf(w)>=0)sc+=3;});words.forEach(function(w){if(pl.indexOf(w)>=0)sc+=2;if(ru&&ru.indexOf(w)>=0)sc+=2;});if(sc>0)res.push({item:item,sc:sc});});return res.sort(function(a,b){return b.sc-a.sc;}).slice(0,n||1);}
+
+function vsSearch(){var text=(document.getElementById('vs_inp')||{}).value||'';text=text.trim();if(!text)return;_vsMatches={};_vsMulti=[];if(_vsAI){vsSearchAI(text);}else{vsSearchOffline(text);}}
+
+function vsSearchOffline(text){var elT=vsFindTop(text,'el',5),defT=vsFindTop(text,'def',1),solT=vsFindTop(text,'sol',1),konT=vsFindTop(text,'kon',1);var norm=vsNorm(text),words=norm.split(' ').filter(function(w){return w.length>2;});var pR=[];WH.concat(custParts).forEach(function(p,i){var pn=vsNorm(p.n+' '+p.k);var sc=0;pn.split(' ').filter(function(w){return w.length>2;}).forEach(function(w){if(norm.indexOf(w)>=0)sc++;});words.forEach(function(w){if(pn.indexOf(w)>=0)sc++;});if(sc>=2)pR.push({idx:i,part:p,sc:sc});});pR.sort(function(a,b){return b.sc-a.sc;});if(defT.length)_vsMatches.def=defT[0];if(solT.length)_vsMatches.sol=solT[0];if(konT.length)_vsMatches.kon=konT[0];if(pR.length)_vsMatches.part=pR[0];var prev=document.getElementById('vs_prev');if(!prev)return;var h='';if(!elT.length&&!defT.length&&!solT.length){prev.innerHTML='<div style="padding:10px;text-align:center;font-size:13px;color:#A19F9D">Nie rozpoznano</div>';prev.style.display='block';return;}if(elT.length>1){h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#A19F9D;margin-bottom:6px">Wybierz element:</div>';elT.forEach(function(c){var sel=_vsMulti.some(function(m){return m.type==='el'&&m.val===c.item.pl;});h+='<div data-tp="el" data-vl="'+esc(c.item.pl)+'" onclick="vsToggle(this)" style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;background:'+(sel?'rgba(16,124,16,.07)':'#FAFAFA')+';border:1.5px solid '+(sel?'#107C10':'#EDEBE9')+';margin-bottom:5px;cursor:pointer"><div style="width:18px;height:18px;border-radius:50%;border:2px solid '+(sel?'#107C10':'#C8C6C4')+';background:'+(sel?'#107C10':'transparent')+';flex-shrink:0;display:flex;align-items:center;justify-content:center">'+(sel?'<div style="width:7px;height:7px;border-radius:50%;background:#fff"></div>':'')+'</div><div style="font-size:13px;font-weight:500;color:#323130">'+esc(c.item.pl)+'</div></div>';});}else if(elT.length===1){_vsMatches.el=elT[0];h+='<div class="ai-row"><div class="ai-row-type el">Element</div><div class="ai-row-val">'+esc(elT[0].item.pl)+'</div></div>';}if(defT.length)h+='<div class="ai-row" style="margin-top:4px"><div class="ai-row-type def">Usterka</div><div class="ai-row-val">'+esc(defT[0].item.pl)+'</div></div>';if(solT.length)h+='<div class="ai-row" style="margin-top:4px"><div class="ai-row-type sol">Wykonano</div><div class="ai-row-val">'+esc(solT[0].item.pl)+'</div></div>';if(konT.length)h+='<div class="ai-row" style="margin-top:4px"><div class="ai-row-type kon">Serwis</div><div class="ai-row-val">'+esc(konT[0].item.pl)+'</div></div>';if(pR.length)h+='<div class="ai-row" style="margin-top:4px"><div class="ai-row-type part">Czesc</div><div class="ai-row-val">'+esc(pR[0].part.n)+'</div></div>';prev.innerHTML=h;prev.style.display='block';}
+
+function vsToggle(el){var type=el.getAttribute('data-tp'),val=el.getAttribute('data-vl'),idx=_vsMulti.findIndex(function(m){return m.type===type&&m.val===val;});if(idx>=0){_vsMulti.splice(idx,1);el.style.background='#FAFAFA';el.style.borderColor='#EDEBE9';var dot=el.querySelector('div');if(dot){dot.style.borderColor='#C8C6C4';dot.style.background='transparent';dot.innerHTML='';}}else{_vsMulti.push({type:type,val:val});el.style.background='rgba(16,124,16,.07)';el.style.borderColor='#107C10';var dot=el.querySelector('div');if(dot){dot.style.borderColor='#107C10';dot.style.background='#107C10';dot.innerHTML='<div style="width:7px;height:7px;border-radius:50%;background:#fff"></div>';}}}
+
+function vsSearchAI(text) {
+  var prev = document.getElementById('vs_prev');
+  if (!prev) return;
+  prev.innerHTML = '<div style="padding:16px;text-align:center;font-size:13px;color:#A19F9D">Analizuję...</div>';
+  prev.style.display = 'block';
+
+  var elSample = D.el.slice(0, 15).map(function(x){return x.pl;}).join(', ');
+  var defSample = D.def.slice(0, 8).map(function(x){return x.pl;}).join(', ');
+  var solSample = D.sol.slice(0, 8).map(function(x){return x.pl;}).join(', ');
+  var partSample = WH.slice(0, 10).map(function(x){return x.n;}).join(', ');
+
+  var prompt = 'Jestes asystentem serwisanta automatow RVM (skupujacych butelki). '
+    + 'Przeanalizuj opis serwisowy i wyodrebnij WSZYSTKIE wymienione elementy i usterki.\n\n'
+    + 'WAZNE:\n'
+    + '- Jesli wymieniono kilka sztuk tego samego elementu, podaj ilosc w polu qty\n'
+    + '- Jesli element nie dzialal, wypelnij pole def\n'
+    + '- Jesli cos zostalo zrobione (wymieniono, sprawdzono itp), wypelnij pole sol\n'
+    + '- Dopasuj nazwy do katalogu jesli mozliwe\n\n'
+    + 'Przykladowe elementy: ' + elSample + '\n'
+    + 'Przykladowe usterki: ' + defSample + '\n'
+    + 'Przykladowe wykonano: ' + solSample + '\n'
+    + 'Przykladowe czesci: ' + partSample + '\n\n'
+    + 'Odpowiedz TYLKO jako JSON array, bez komentarzy:\n'
+    + '[{"el":"nazwa elementu","def":"usterka lub null","sol":"co zrobiono lub null","qty":1,"part":"nazwa czesci lub null"}]\n\n'
+    + 'Opis serwisanta: ' + text;
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 600,
+      messages: [{role: 'user', content: prompt}]
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    var txt = (data.content || []).map(function(c){return c.text||'';}).join('');
+    var clean = txt.replace(/```json|```/g,'').trim();
+    try {
+      var parsed = JSON.parse(clean);
+      if (!Array.isArray(parsed)) parsed = [parsed];
+      vsShowAI(parsed, prev);
+    } catch(e) {
+      vsSearchOffline(text);
+    }
+  })
+  .catch(function() { vsSearchOffline(text); });
+}
+
+function vsShowAI(items, prev) {
+  _vsMulti = items.map(function(p, i) { return {ai: p, i: i, sel: true}; });
+
+  var h = '';
+  if (items.length > 1) {
+    h += '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;margin-bottom:10px">Znaleziono ' + items.length + ' — odznacz niepotrzebne:</div>';
+  }
+
+  items.forEach(function(p, i) {
+    // Матчим с библиотекой
+    var elF = p.el ? (D.el.find(function(x){return vsNorm(x.pl).indexOf(vsNorm(p.el))>=0||vsNorm(p.el).indexOf(vsNorm(x.pl))>=0;}) || {pl: p.el}) : null;
+    var defF = p.def ? (D.def.find(function(x){return vsNorm(x.pl).indexOf(vsNorm(p.def))>=0||vsNorm(p.def).indexOf(vsNorm(x.pl))>=0;}) || {pl: p.def}) : null;
+    var solF = p.sol ? (D.sol.find(function(x){return vsNorm(x.pl).indexOf(vsNorm(p.sol))>=0||vsNorm(p.sol).indexOf(vsNorm(x.pl))>=0;}) || {pl: p.sol}) : null;
+    var partF = p.part ? (WH.concat(custParts).find(function(x){return vsNorm(x.n).indexOf(vsNorm(p.part))>=0||vsNorm(p.part).indexOf(vsNorm(x.n))>=0;})) : null;
+    var qty = parseInt(p.qty) || 1;
+
+    h += '<div id="aicard_' + i + '" onclick="vsToggleAI(' + i + ',this)" style="border:1.5px solid #107C10;border-radius:12px;padding:11px 13px;margin-bottom:8px;cursor:pointer;background:rgba(16,124,16,.04);transition:all .15s">';
+
+    // Заголовок с чекбоксом
+    h += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">';
+    h += '<div id="aidot_' + i + '" style="width:20px;height:20px;border-radius:50%;border:2px solid #107C10;background:#107C10;flex-shrink:0;display:flex;align-items:center;justify-content:center">';
+    h += '<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><polyline points="1.5,5 4,7.5 8.5,2"/></svg></div>';
+    h += '<div style="flex:1">';
+    if (elF) h += '<div style="font-size:14px;font-weight:700;color:#323130">' + esc(elF.pl) + '</div>';
+    if (qty > 1) h += '<div style="font-size:11px;color:#0078D4;font-weight:600;margin-top:1px">× ' + qty + ' szt.</div>';
+    h += '</div></div>';
+
+    // Детали
+    if (defF) h += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px"><div style="width:6px;height:6px;border-radius:50%;background:#D83B01;flex-shrink:0"></div><div style="font-size:12px;color:#D83B01">' + esc(defF.pl) + '</div></div>';
+    if (solF) h += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px"><div style="width:6px;height:6px;border-radius:50%;background:#0078D4;flex-shrink:0"></div><div style="font-size:12px;color:#0078D4">' + esc(solF.pl) + '</div></div>';
+    if (partF) h += '<div style="display:flex;align-items:center;gap:6px"><div style="width:6px;height:6px;border-radius:50%;background:#986F0B;flex-shrink:0"></div><div style="font-size:11px;color:#986F0B">' + esc(partF.n) + '</div></div>';
+
+    h += '</div>';
+  });
+
+  prev.innerHTML = h;
+  prev.style.display = 'block';
+  prev._ai = items;
+}
+
+function vsToggleAI(idx, el) {
+  _vsMulti[idx].sel = !_vsMulti[idx].sel;
+  var s = _vsMulti[idx].sel;
+  el.style.borderColor = s ? '#107C10' : '#EDEBE9';
+  el.style.background = s ? 'rgba(16,124,16,.04)' : '#FAFAFA';
+  var dot = document.getElementById('aidot_' + idx);
+  if (dot) {
+    dot.style.borderColor = s ? '#107C10' : '#C8C6C4';
+    dot.style.background = s ? '#107C10' : 'transparent';
+    dot.innerHTML = s
+      ? '<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><polyline points="1.5,5 4,7.5 8.5,2"/></svg>'
+      : '';
+  }
+}
+
+
+function vsAdd(){var text=(document.getElementById('vs_inp')||{}).value||'';text=text.trim();var prev=document.getElementById('vs_prev');var added=0;if(_vsAI&&prev&&prev._ai&&_vsMulti.length){_vsMulti.forEach(function(m){if(!m.sel||!m.ai)return;var p=m.ai;var elF=p.el?(D.el.find(function(x){return vsNorm(x.pl).indexOf(vsNorm(p.el))>=0||vsNorm(p.el).indexOf(vsNorm(x.pl))>=0;})||{pl:p.el}):null;var defF=p.def?(D.def.find(function(x){return vsNorm(x.pl).indexOf(vsNorm(p.def))>=0||vsNorm(p.def).indexOf(vsNorm(x.pl))>=0;})||{pl:p.def}):null;var solF=p.sol?(D.sol.find(function(x){return vsNorm(x.pl).indexOf(vsNorm(p.sol))>=0||vsNorm(p.sol).indexOf(vsNorm(x.pl))>=0;})||{pl:p.sol}):null;if(_vsMode!==curMode)setMode(_vsMode);if(elF){var v=elF.pl;if(SEL.el.length>0&&SEL.el[0]!==v)_commitEntry();if(SEL.el.indexOf(v)<0)SEL.el.push(v);SEL.mode=_vsMode;_updV('el');renderList('el');renderList('def');renderList('sol');}if(defF){var v=defF.pl;if(SEL.def.indexOf(v)<0)SEL.def.push(v);_updV('def');renderList('def');renderList('sol');}if(solF){var v=solF.pl;if(SEL.sol.indexOf(v)<0)SEL.sol.push(v);_updV('sol');renderList('sol');}
+      // Добавляем часть с учётом qty
+      if(partF){var pidx=WH.concat(custParts).findIndex(function(c){return c.n===partF.n;});if(pidx>=0){var sp2=curMode==='G'?selPartsG:selPartsS;var pq2=curMode==='G'?partQtyG:partQtyS;sp2['p'+pidx]=true;pq2['p'+pidx]=(pq2['p'+pidx]||0)+(qty||1);ss('rv_sp'+curMode,sp2);ss('rv_pq'+curMode,pq2);renderParts();}}
+      vsLogAdd(text,{el:elF?{item:elF}:null,def:defF?{item:defF}:null,sol:solF?{item:solF}:null,kon:null,part:partF?{part:partF}:null},qty);added++;});}else{var elV=_vsMulti.filter(function(m){return m.type==='el';}).map(function(m){return m.val;});if(!elV.length&&_vsMatches&&_vsMatches.el)elV=[_vsMatches.el.item.pl];if(_vsMode!==curMode)setMode(_vsMode);elV.forEach(function(v){if(SEL.el.length>0&&SEL.el[0]!==v)_commitEntry();if(SEL.el.indexOf(v)<0)SEL.el.push(v);SEL.mode=_vsMode;_updV('el');renderList('el');renderList('def');renderList('sol');});if(_vsMatches){if(_vsMatches.def){var v=_vsMatches.def.item.pl;if(SEL.def.indexOf(v)<0)SEL.def.push(v);_updV('def');renderList('def');renderList('sol');}if(_vsMatches.sol){var v=_vsMatches.sol.item.pl;if(SEL.sol.indexOf(v)<0)SEL.sol.push(v);_updV('sol');renderList('sol');}if(_vsMatches.kon){var v=_vsMatches.kon.item.pl;if(SEL.kon.indexOf(v)<0)SEL.kon.push(v);_updV('kon');renderList('kon');}if(_vsMatches.part){var idx=_vsMatches.part.idx;var sp=curMode==='G'?selPartsG:selPartsS;var pq=curMode==='G'?partQtyG:partQtyS;sp['p'+idx]=true;pq['p'+idx]=(pq['p'+idx]||0)+1;ss('rv_sp'+curMode,sp);ss('rv_pq'+curMode,pq);renderParts();}}vsLogAdd(text,_vsMatches||{});added++;}if(!added){showToast('Nie zaznaczono');return;}renderSummary();closeOv('shVoice');var i=document.getElementById('vs_inp');if(i)i.value='';if(prev){prev.style.display='none';prev.innerHTML='';prev._ai=null;}_vsMatches=null;_vsMulti=[];showToast('Dodano do raportu');}
+
+function vsLogAdd(text,matches,qty){var feed=document.getElementById('chatFeed');var empty=document.getElementById('chatEmpty');if(!feed)return;if(empty)empty.style.display='none';var isg=_vsMode==='G';var wrap=document.createElement('div');var h='<div class="chat-bubble-u '+(isg?'':'ng')+'"><div class="chat-bubble-u-mode '+(isg?'':'ng')+'">'+(isg?'G':'NG')+'</div><div class="chat-bubble-u-text">'+esc(text)+'</div></div><div class="chat-bubble-ai">';if(matches&&matches.el)h+='<div class="ai-row"><div class="ai-row-type el">Element</div><div class="ai-row-val">'+esc(matches.el.item.pl)+(qty&&qty>1?' <b>×'+qty+'</b>':'')+'</div></div>';if(matches&&matches.def)h+='<div class="ai-row"><div class="ai-row-type def">Usterka</div><div class="ai-row-val">'+esc(matches.def.item.pl)+'</div></div>';if(matches&&matches.sol)h+='<div class="ai-row"><div class="ai-row-type sol">Wykonano</div><div class="ai-row-val">'+esc(matches.sol.item.pl)+'</div></div>';if(matches&&matches.part)h+='<div class="ai-row"><div class="ai-row-type part">Czesc</div><div class="ai-row-val">'+esc(matches.part.part.n)+'</div></div>';h+='</div>';wrap.innerHTML=h;feed.appendChild(wrap);feed.scrollTop=feed.scrollHeight;}
+
+// Photos
+var _photos=[];
+function photoBadgeUpdate(){var b=document.getElementById('photoBadge');if(!b)return;b.style.display=_photos.length?'inline-block':'none';b.textContent=_photos.length;}
+function photoHandle(input){var files=Array.from(input.files||[]);if(!files.length)return;var count=0;files.forEach(function(file){var r=new FileReader();r.onload=function(e){_photos.push(e.target.result);count++;if(count===files.length){photoRender();repPhotosRender();photoBadgeUpdate();showToast('Dodano '+files.length+' zdj.');}};r.readAsDataURL(file);});input.value='';}
+function photoRender(){var grid=document.getElementById('photoGrid');if(!grid)return;var h=_photos.map(function(src,i){return'<div class="photo-thumb"><img src="'+src+'" loading="lazy"><button class="photo-del" onclick="photoDel('+i+')">x</button></div>';}).join('');h+='<div class="photo-add" onclick="photoTrigger()"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#A19F9D" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="4" width="19" height="15" rx="3"/><circle cx="11" cy="11.5" r="3.5"/><path d="M7 4l1.5-2.5h5L15 4"/></svg><span>Dodaj</span></div>';grid.innerHTML=h;}
+function photoTrigger(){var i=document.getElementById('photoCamInp');if(i)i.click();}
+function photoDel(i){_photos.splice(i,1);photoRender();repPhotosRender();photoBadgeUpdate();}
+function photoClear(){_photos=[];photoRender();repPhotosRender();photoBadgeUpdate();showToast('Usunieto');}
+function repPhotosRender(){var wrap=document.getElementById('repPhotos');var list=document.getElementById('repPhotosList');if(!wrap||!list)return;wrap.style.display=_photos.length?'block':'none';list.innerHTML=_photos.map(function(src){return'<div class="rep-thumb"><img src="'+src+'" loading="lazy"></div>';}).join('');}
+
+// Paragon
+var _parPhoto=null;
+function openPAFlow() {
+  window.open('https://make.powerautomate.com/environments/Default-e389f581-ff8f-4f41-96a3-2ffaaee9fba8/flows/5c9e4e2c-811e-4551-8ef1-c8cf34c8656a', '_blank');
+}
+function toggleParSheet(){var sh=document.getElementById('shParagon');if(!sh)return;sh.style.display='flex';setTimeout(function(){sh.classList.add('open');},10);var d=document.getElementById('par_data');if(d&&!d.value)d.value=new Date().toISOString().slice(0,10);}
+function closeParSheet(){var sh=document.getElementById('shParagon');if(!sh)return;sh.classList.remove('open');setTimeout(function(){sh.style.display='none';},300);}
+function parPhoto(){var i=document.getElementById('parCamInp');if(i)i.click();}
+function parPhotoHandle(input){
+  var file=input.files[0];if(!file)return;
+  var r=new FileReader();
+  r.onload=function(e){
+    _parPhoto=e.target.result;
+    var w=document.getElementById('parPhotoWrap');
+    if(w)w.innerHTML='<img src="'+_parPhoto+'" style="width:100%;height:100%;object-fit:cover;border-radius:10px">';
+    showToast('Analizuję paragon...');
+    parOCR(_parPhoto);
+  };
+  r.readAsDataURL(file);input.value='';
+}
+
+function parOCR(base64img) {
+  // Извлекаем base64 данные без префикса
+  var imgData = base64img.split(',')[1];
+  var mediaType = base64img.split(';')[0].split(':')[1];
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 300,
+      messages: [{
+        role: 'user',
+        content: [
+          {type:'image', source:{type:'base64', media_type:mediaType, data:imgData}},
+          {type:'text', text:'Przeanalizuj ten paragon/fakture i wyodrebnij dane. Odpowiedz TYLKO jako JSON: {"co":"co kupiono (krotko)","kwota":"kwota z waluta","nr":"numer faktury lub paragonu lub null","data":"data w formacie YYYY-MM-DD lub null"}. Jesli nie widac jakiegos pola - wpisz null.'}
+        ]
+      }]
+    })
+  })
+  .then(function(r){return r.json();})
+  .then(function(data){
+    // Проверяем ошибку API
+    if (data.error) {
+      console.error('API error:', data.error);
+      showToast('Blad API: ' + (data.error.message||'sprawdz klucz'));
+      return;
+    }
+    var txt=(data.content||[]).map(function(c){return c.text||'';}).join('');
+        var clean=txt.replace(/```json|```/g,'').trim();
+    try {
+      var p=JSON.parse(clean);
+      var co=document.getElementById('par_co');
+      var kw=document.getElementById('par_kwota');
+      var nr=document.getElementById('par_nr');
+      var dt=document.getElementById('par_data');
+      if(co&&p.co)co.value=p.co;
+      if(kw&&p.kwota)kw.value=p.kwota.replace(/[^0-9.,]/g,'');
+      if(nr&&p.nr)nr.value=p.nr;
+      if(dt&&p.data)dt.value=p.data;
+      showToast('Paragon odczytany!');
+    } catch(e){
+      showToast('Wypelnij pola recznie');
+    }
+  })
+  .catch(function(err){
+    console.error('OCR error:', err);
+    showToast('Blad polaczenia — wypelnij recznie');
+  });
+}
+function parSend(){var co=(document.getElementById('par_co')||{}).value||'';var kw=(document.getElementById('par_kwota')||{}).value||'';var nr=(document.getElementById('par_nr')||{}).value||'';var dt=(document.getElementById('par_data')||{}).value||'';if(!co&&!kw&&!nr){showToast('Wypelnij pola');return;}var subj='Faktura/Paragon '+(nr||dt||new Date().toLocaleDateString('pl-PL'));var lines=['Faktura/Paragon',''];if(co)lines.push('Co kupiono: '+co);if(kw)lines.push('Kwota: '+kw+' zl');if(nr)lines.push('Nr faktury: '+nr);if(dt)lines.push('Data: '+new Date(dt).toLocaleDateString('pl-PL'));lines.push('','Wyslano z RVM Raport');window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(lines.join(String.fromCharCode(10)));setTimeout(function(){['par_co','par_kwota','par_nr','par_data'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});_parPhoto=null;var w=document.getElementById('parPhotoWrap');if(w)w.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:6px;color:#A19F9D"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#A19F9D" stroke-width="1.4" stroke-linecap="round"><rect x="2" y="5" width="24" height="18" rx="3"/><circle cx="14" cy="14" r="5"/><path d="M8.5 5l2-3h7l2 3"/></svg><span style="font-size:13px;font-weight:600">Zrob zdjecie paragonu</span></div>';showToast('Wyslano');},500);}
+
+// Magazyn
+var MAG_PARTS=[{id:1,n:"Adapter v4 - 3D - PETG",k:"AD-3D-V4-PETG",cat:"Elektronika"},{id:2,n:"Adapter złączka RJ45 IP67",k:"AD-RJ45-6-WP",cat:"Komunikacja"},{id:3,n:"Czujnik indukcyjny M8",k:"10018133",cat:"Czujniki"},{id:4,n:"Czujnik indukcyjny M12",k:"10018137",cat:"Czujniki"},{id:5,n:"Czytnik kart lojalnościowych",k:"10019143",cat:"Druk i Karta"},{id:6,n:"Czytnik kart Mk2",k:"10030391",cat:"Druk i Karta"},{id:7,n:"Drukarka Epson",k:"700236",cat:"Druk i Karta"},{id:8,n:"Fotokomórka rozruchowa",k:"1076486",cat:"Czujniki"},{id:9,n:"Interfejs Epson",k:"700237",cat:"Druk i Karta"},{id:10,n:"Kabel USB A-B 1.8m",k:"CB-USB-A-B-180",cat:"Komunikacja"},{id:11,n:"Kamera ARC EMC",k:"10017938",cat:"Identyfikacja"},{id:12,n:"Klapa obrotowa X2",k:"10017132",cat:"Mechanika"},{id:13,n:"Klapa obrotowa X3",k:"10017436",cat:"Mechanika"},{id:14,n:"Klucz magnetyczny",k:"380346",cat:"Narzędzia"},{id:15,n:"Klucz trójkątny",k:"1073890",cat:"Narzędzia"},{id:16,n:"Łańcuch długi PET",k:"850-34-PET",cat:"Napęd"},{id:17,n:"Łańcuch krótki PET",k:"625-25-PET",cat:"Napęd"},{id:18,n:"Wyłącznik magnetyczny",k:"10012515",cat:"Elektryczne"},{id:19,n:"Odbłyśnik E39-R42",k:"10011291",cat:"Identyfikacja"},{id:20,n:"Pas podajnika",k:"10017568",cat:"Napęd"},{id:21,n:"Pas przenośnika Proline",k:"10014234",cat:"Napęd"},{id:22,n:"Pas tylny Proline",k:"10016947",cat:"Napęd"},{id:23,n:"Pasek klinowy eXtend",k:"10029936",cat:"Napęd"},{id:24,n:"Pasek klinowy 8mm",k:"700351",cat:"Napęd"},{id:25,n:"PCBA wykrywacz metalu",k:"10014821S",cat:"Elektronika"},{id:26,n:"Płyta kontrolna PCBA",k:"10026751S",cat:"Elektronika"},{id:27,n:"Płyta sortera I/O 2",k:"10011255",cat:"Elektronika"},{id:28,n:"Podajnik Assy RVM",k:"10012664",cat:"Mechanika"},{id:29,n:"Pojemnik kosz 800x600",k:"800600B",cat:"Pojemniki"},{id:30,n:"Silnik 24V 40rpm",k:"1075738",cat:"Silniki"},{id:31,n:"Silnik pasa Bosch",k:"10010946",cat:"Silniki"},{id:32,n:"Silnik przenośnika",k:"10027202",cat:"Silniki"},{id:33,n:"Silnik przesłony HL2",k:"10011181",cat:"Silniki"},{id:34,n:"Sorter MIX Lewy",k:"10026513",cat:"Sortowanie"},{id:35,n:"Sorter MIX eXtend",k:"10024703",cat:"Sortowanie"},{id:36,n:"Sorter MIX Prawy",k:"10014853",cat:"Sortowanie"},{id:37,n:"Wlot kurtyna",k:"10030988",cat:"Mechanika"},{id:38,n:"Wlot stożek",k:"10030965",cat:"Mechanika"},{id:39,n:"Wyłącznik bezpieczeństwa",k:"380345",cat:"Elektryczne"},{id:40,n:"Wyłącznik GMK AB",k:"1074820",cat:"Elektryczne"},{id:41,n:"Zamek trójkątny",k:"1073494",cat:"Mechanika"},{id:42,n:"Zasilacz 24V 13.4A",k:"10026911",cat:"Elektryczne"},{id:43,n:"Żarówka 24-30V",k:"3393399",cat:"Elektryczne"},
+{id:44,n:"Falownik 1.5kW 230V",k:"700357",cat:"Elektryczne"},
+{id:45,n:"Filtr falownika 1.5kW",k:"700358",cat:"Elektryczne"},
+{id:46,n:"Bezpiecznik 10A SLOW",k:"1076553",cat:"Elektryczne"},
+{id:47,n:"Bezpiecznik 3A 32V",k:"10020877",cat:"Elektryczne"},
+{id:48,n:"Przekaźnik bezpieczeństwa",k:"10011281",cat:"Elektryczne"},
+{id:49,n:"Ekran dotykowy 10.4",k:"10011588",cat:"Elektronika"},
+{id:50,n:"Kamera KS-2S543",k:"10026645",cat:"Elektronika"},
+{id:51,n:"SDrop Lewy 1-fazowy",k:"10025300",cat:"Mechanika"},
+{id:52,n:"SDrop Prawy 1-fazowy",k:"10025304",cat:"Mechanika"},
+{id:53,n:"Sprężyna gazowa",k:"10022366",cat:"Mechanika"}];
+var _magData=null,_magFilter='',_magOpenId=null;
+function magLoad(){try{var v=localStorage.getItem('rv_mag2');if(v)return JSON.parse(v);}catch(e){}var d={};MAG_PARTS.forEach(function(p){d[p.id]={qty:0,min:1,photo:null};});return d;}
+function magSave(){try{localStorage.setItem('rv_mag2',JSON.stringify(_magData));}catch(e){}}
+function magGet(id){if(!_magData[id])_magData[id]={qty:0,min:1,photo:null};return _magData[id];}
+function magSt(id){var d=magGet(id);if(d.qty<=0)return'empty';if(d.qty<=d.min)return'warn';return'ok';}
+function magSearch(q){_magFilter=q.toLowerCase().trim();magRender();}
+function magRender(){if(!_magData)_magData=magLoad();var grid=document.getElementById('magGrid');if(!grid)return;var parts=MAG_PARTS;if(_magFilter)parts=parts.filter(function(p){return p.n.toLowerCase().indexOf(_magFilter)>=0||p.k.toLowerCase().indexOf(_magFilter)>=0;});parts=parts.slice().sort(function(a,b){var ord={empty:0,warn:1,ok:2};var sa=ord[magSt(a.id)],sb=ord[magSt(b.id)];if(sa!==sb)return sa-sb;return a.cat.localeCompare(b.cat);});var warn=0,empty=0;MAG_PARTS.forEach(function(p){var s=magSt(p.id);if(s==='empty')empty++;else if(s==='warn')warn++;});var e1=document.getElementById('mst1');if(e1)e1.textContent=MAG_PARTS.length;var e2=document.getElementById('mst2');if(e2)e2.textContent=warn;var e3=document.getElementById('mst3');if(e3)e3.textContent=empty;if(!parts.length){grid.innerHTML='<div style="grid-column:1/-1;padding:20px;text-align:center;font-size:13px;color:#A19F9D">Brak wynikow</div>';return;}var h='',lastCat='';parts.forEach(function(p){var d=magGet(p.id),st=magSt(p.id);if(!_magFilter&&p.cat!==lastCat){h+='<div style="grid-column:1/-1;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A19F9D;padding:6px 2px 2px">'+esc(p.cat)+'</div>';lastCat=p.cat;}h+='<div class="mag-card">';h+='<div class="mag-bar" style="background:'+(st==='ok'?'#34C759':st==='warn'?'#FF9500':'#FF3B30')+'"></div>';h+='<div class="mag-photo" onclick="magMinus('+p.id+')" style="cursor:pointer">';if(d.photo){h+='<img src="'+d.photo+'" loading="lazy">';}else{h+='<svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="#C8C6C4" stroke-width="1.3" stroke-linecap="round"><rect x="2" y="5" width="22" height="16" rx="3"/><circle cx="13" cy="13" r="4"/><path d="M8 5l1.5-3h7L18 5"/></svg>';}h+='<div style="position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;font-weight:800;padding:2px 7px;border-radius:7px">'+Math.max(0,d.qty)+'</div>';h+='<button data-mid="'+p.id+'" onclick="event.stopPropagation();magOpenCamById(this)" style="position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(0,0,0,.45);border:none;border-radius:6px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="1.3" stroke-linecap="round"><rect x="1" y="2.5" width="10" height="8" rx="1.5"/><circle cx="6" cy="6.5" r="1.8"/><path d="M3.5 2.5l1-2h3l1 2"/></svg></button>';h+='</div>';h+='<div style="padding:6px 8px 8px;cursor:pointer" onclick="magOpenSheet('+p.id+')"><div style="font-size:11px;font-weight:600;color:#323130;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">'+esc(p.n)+'</div><div style="font-size:9px;color:#A19F9D;font-family:monospace;margin-top:1px">'+esc(p.k)+'</div></div></div>';});grid.innerHTML=h;}
+function magMinus(id){
+  if(!_magData)_magData=magLoad();
+  var d=magGet(id);
+  if(d.qty<=0){showToast('Stan = 0');return;}
+  d.qty--;
+  magSave();
+  var p=(magGetAll?magGetAll():MAG_PARTS).find(function(x){return x.id===id;});
+  magHistoryAdd(p, 1);
+  magRender();
+  showToast('-1 · '+(p?p.n.split(' ').slice(0,3).join(' '):''));
+}
+function magOpenCamById(btn){_magOpenId=parseInt(btn.getAttribute('data-mid'));var inp=document.getElementById('magCamInp');if(inp)inp.click();}
+function magOpenSheet(id){if(!_magData)_magData=magLoad();_magOpenId=id;var p=MAG_PARTS.find(function(x){return x.id===id;});var d=magGet(id);var st=magSt(id);if(!p)return;var nm=document.getElementById('msh_name');if(nm)nm.textContent=p.n;var cd=document.getElementById('msh_code');if(cd)cd.textContent=p.k;var qt=document.getElementById('msh_qty');if(qt)qt.textContent=d.qty;var mn=document.getElementById('msh_min');if(mn)mn.textContent=d.min;var stEl=document.getElementById('msh_status');if(stEl){stEl.textContent=st==='empty'?'Brak':st==='warn'?'Niski stan':'OK';stEl.style.color=st==='empty'?'#FF3B30':st==='warn'?'#FF9500':'#34C759';}var ph=document.getElementById('msh_photo');if(ph){if(d.photo){ph.innerHTML='<img src="'+d.photo+'" style="width:100%;height:100%;object-fit:cover">';}else{ph.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:6px;color:#C8C6C4"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#C8C6C4" stroke-width="1.4" stroke-linecap="round"><rect x="3" y="7" width="30" height="22" rx="4"/><circle cx="18" cy="18" r="6"/><path d="M10 7l2.5-4h11l2.5 4"/></svg><span style="font-size:12px">Brak zdjecia</span></div>';}}openSh('shMagPart');}
+function mshQtyEdit() {
+  if (_magOpenId === null) return;
+  var item = magGet(_magOpenId);
+  var val = prompt('Wpisz ilość na stanie:', item.qty);
+  if (val === null) return;
+  var num = parseInt(val);
+  if (isNaN(num) || num < 0) { showToast('Nieprawidłowa liczba'); return; }
+  item.qty = num;
+  magSave();
+  var el = document.getElementById('msh_qty');
+  if (el) el.textContent = num;
+  var st = magSt(_magOpenId);
+  var stEl = document.getElementById('msh_status');
+  if (stEl) {
+    stEl.textContent = st==='empty'?'Brak':st==='warn'?'Niski stan':'OK';
+    stEl.style.color = st==='empty'?'#FF3B30':st==='warn'?'#FF9500':'#34C759';
+  }
+  magRender();
+  showToast('Stan: ' + num);
+}
+function mshAdj(d){if(_magOpenId===null)return;var item=magGet(_magOpenId);item.qty=Math.max(0,item.qty+d);magSave();var el=document.getElementById('msh_qty');if(el)el.textContent=item.qty;var st=magSt(_magOpenId);var stEl=document.getElementById('msh_status');if(stEl){stEl.textContent=st==='empty'?'Brak':st==='warn'?'Niski stan':'OK';stEl.style.color=st==='empty'?'#FF3B30':st==='warn'?'#FF9500':'#34C759';}magRender();}
+function mshAdjMin(d){if(_magOpenId===null)return;var item=magGet(_magOpenId);item.min=Math.max(0,(item.min||1)+d);magSave();var el=document.getElementById('msh_min');if(el)el.textContent=item.min;magRender();}
+function mshUse(){if(_magOpenId===null)return;var p=MAG_PARTS.find(function(x){return x.id===_magOpenId;});var d=magGet(_magOpenId);if(!p)return;if(d.qty>0){d.qty--;magSave();}var idx=WH.findIndex(function(c){return c.k===p.k;});if(idx<0){var ci=custParts.findIndex(function(c){return c.k===p.k;});if(ci<0){custParts.push({n:p.n,k:p.k,qty:1});ss('rv_cp',custParts);}idx=WH.length+custParts.findIndex(function(c){return c.k===p.k;});}if(idx>=0){var sp=curMode==='G'?selPartsG:selPartsS;var pq=curMode==='G'?partQtyG:partQtyS;sp['p'+idx]=true;pq['p'+idx]=(pq['p'+idx]||0)+1;ss('rv_sp'+curMode,sp);ss('rv_pq'+curMode,pq);}magHistoryAdd(p, 1);closeOv('shMagPart');renderParts();renderSummary();showToast('Dodano do raportu · stan: '+d.qty);}
+function mshCam(){var inp=document.getElementById('magCamInp');if(inp)inp.click();}
+function mshPhoto(input){var file=input.files[0];if(!file||_magOpenId===null)return;var r=new FileReader();r.onload=function(e){var d=magGet(_magOpenId);d.photo=e.target.result;magSave();var ph=document.getElementById('msh_photo');if(ph)ph.innerHTML='<img src="'+d.photo+'" style="width:100%;height:100%;object-fit:cover">';magRender();showToast('Zdjecie zapisane');};r.readAsDataURL(file);input.value='';}
+
+</script>
+
+<div class="ov" id="shModMic" style="display:none" onclick="if(event.target===this)closeOv('shModMic')">
+  <div class="sh" style="max-height:85vh;overflow-y:auto">
+    <div class="sh-bar"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div id="micShTitle" style="font-size:16px;font-weight:800;color:#0078D4">Dyktuj</div>
+      <button onclick="closeOv('shModMic')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">×</button>
+    </div>
+
+    <textarea id="micShInp" placeholder="Mów lub pisz..." style="width:100%;min-height:70px;background:#F5F5F7;border:1.5px solid rgba(0,120,212,.2);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;outline:none;resize:none;color:#323130;line-height:1.5;margin-bottom:8px" oninput="micShAutoProc(this)"></textarea>
+    <div style="font-size:11px;color:#A19F9D;margin-bottom:10px">Użyj mikrofonu iPhone na klawiaturze</div>
+
+
+    <button onclick="micShAdd()" style="width:100%;padding:12px;background:#0078D4;border:none;border-radius:10px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;margin-bottom:8px;font-family:inherit">Dodaj</button>
+    <button onclick="closeOv('shModMic')" class="sh-btn lt">Anuluj</button>
+  </div>
+</div>
+
+<script>
+
+var _micCol = 'el';
+var _micTimer = null;
+var _micItems = null;
+
+function libAdd() {
+  var col = document.getElementById('libCol').value;
+  var pl = (document.getElementById('libPl').value||'').trim();
+  var ru = (document.getElementById('libRu').value||'').trim();
+  if (!pl) { showToast('Wpisz nazwę po polsku'); return; }
+
+  // Добавляем в custom
+  if (!custom[col]) custom[col] = [];
+  // Проверяем дубль
+  var exists = custom[col].some(function(x){return x.pl.toLowerCase()===pl.toLowerCase();});
+  if (exists) { showToast('Już istnieje'); return; }
+  custom[col].push({pl: pl, ru: ru || pl});
+  ss('rv_custom', custom);
+
+  // Очищаем поля
+  document.getElementById('libPl').value = '';
+  document.getElementById('libRu').value = '';
+
+  // Обновляем список
+  libRender();
+  showToast('Dodano: ' + pl);
+}
+
+function libRender() {
+  var list = document.getElementById('libList');
+  if (!list) return;
+  var cols = {el:'Element', def:'Usterka', sol:'Wykonano', kon:'Serwis'};
+  var h = '';
+  var hasAny = false;
+  Object.keys(cols).forEach(function(col) {
+    var items = custom[col] || [];
+    items.forEach(function(item, i) {
+      hasAny = true;
+      h += '<div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:0.5px solid #F3F2F1">';
+      h += '<span style="font-size:9px;font-weight:700;color:#fff;background:#0078D4;padding:2px 5px;border-radius:4px">'+cols[col]+'</span>';
+      h += '<span style="flex:1">'+esc(item.pl)+'</span>';
+      var delBtn = document.createElement('button');
+      delBtn.textContent = '×';
+      delBtn.style.cssText = 'background:none;border:none;color:#FF3B30;font-size:14px;cursor:pointer;padding:0;line-height:1';
+      h += '<button data-col="'+col+'" data-idx="'+i+'" onclick="libDelByData(this)" style="background:none;border:none;color:#FF3B30;font-size:14px;cursor:pointer;padding:0;line-height:1">×</button>';
+      h += '</div>';
+    });
+  });
+  list.innerHTML = hasAny ? h : '<div style="color:#A19F9D;padding:4px 0">Biblioteka jest pusta</div>';
+}
+
+function libDelByData(btn) {
+  var col = btn.getAttribute('data-col');
+  var idx = parseInt(btn.getAttribute('data-idx'));
+  libDel(col, idx);
+}
+function libDel(col, idx) {
+  if (!custom[col]) return;
+  custom[col].splice(idx, 1);
+  ss('rv_custom', custom);
+  libRender();
+}
+
+function modMic(col) {
+  _micCol = col;
+  var titles = {el:'Element', def:'Usterka', sol:'Co zrobiono', kon:'Serwis'};
+  var t = document.getElementById('micShTitle');
+  if (t) t.textContent = titles[col] || col;
+  var m = document.getElementById('micShMode');
+  if (m) m.textContent = _vsAI ? 'AI online' : 'Offline';
+  var inp = document.getElementById('micShInp'); if (inp) inp.value = '';
+  var prev = document.getElementById('micShPrev'); if (prev) { prev.style.display='none'; prev.innerHTML=''; }
+  _micItems = null;
+  openSh('shModMic');
+  setTimeout(function(){var i=document.getElementById('micShInp');if(i)i.focus();},400);
+}
+
+function micShAutoProc(el) {
+  clearTimeout(_micTimer);
+  if (el.value.length > 3) _micTimer = setTimeout(micShSearch, 800);
+}
+
+function micShSearch() {
+  var text = (document.getElementById('micShInp')||{}).value||'';
+  text = text.trim(); if (!text) return;
+  var prev = document.getElementById('micShPrev'); if (!prev) return;
+  prev.innerHTML = '<div style="padding:10px;text-align:center;font-size:13px;color:#A19F9D">Strukturyzuję...</div>';
+  prev.style.display = 'block';
+  
+  // Таймаут 5 секунд - если AI не ответил берём текст как есть
+  var _done = false;
+  var _timeout = setTimeout(function() {
+    if (!_done) { _done = true; micShShowResults([{pl: text}]); }
+  }, 5000);
+
+  var colNames = {el:'element urzadzenia RVM (automat skupu butelek)', def:'usterka lub problem techniczny', sol:'co zostalo zrobione przez serwisanta', kon:'typ serwisu'};
+  var sample = (D[_micCol]||[]).slice(0,12).map(function(x){return x.pl;}).join(', ');
+
+  var prompt = 'Jestes asystentem serwisanta RVM. Kategoria: ' + colNames[_micCol] + '.\n'
+    + 'Przyklady z katalogu: ' + sample + '.\n'
+    + 'Przeanalizuj opis i podaj 1-3 opcje jako JSON array: [{"pl":"krotki techniczny tekst po polsku"}]\n'
+    + 'Jesli opis niejasny - wybierz najblizsze z katalogu.\n'
+    + 'Opis: ' + text;
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({model: 'claude-sonnet-4-20250514', max_tokens: 150, messages: [{role: 'user', content: prompt}]})
+  })
+  .then(function(r){return r.json();})
+  .then(function(data){
+    if (_done) return;
+    _done = true;
+    clearTimeout(_timeout);
+    var txt=(data.content||[]).map(function(c){return c.text||'';}).join('');
+    var clean=txt.replace(/```json|```/g,'').trim();
+    try {
+      var parsed=JSON.parse(clean);
+      if(!Array.isArray(parsed))parsed=[parsed];
+      micShShowResults(parsed.map(function(p){return {pl:p.pl||p};}));
+    } catch(e){ micShShowResults([{pl:text}]); }
+  })
+  .catch(function(){
+    if (_done) return;
+    _done = true;
+    clearTimeout(_timeout);
+    micShShowResults([{pl:text}]);
+  });
+}
+
+function micShSearchAI(text) {
+  var prev = document.getElementById('micShPrev'); if (!prev) return;
+  prev.innerHTML = '<div style="padding:10px;text-align:center;font-size:13px;color:#A19F9D">Analizuję...</div>';
+  prev.style.display = 'block';
+
+  var colNames = {el:'element urzadzenia RVM', def:'usterka lub problem techniczny', sol:'co zostalo zrobione (akcja serwisanta)', kon:'typ serwisu'};
+  var sample = (D[_micCol]||[]).slice(0,15).map(function(x){return x.pl;}).join(', ');
+
+  var prompt = 'Jestes asystentem serwisanta automatow RVM. Kategoria: ' + colNames[_micCol] + '.\n'
+    + 'Przyklady z katalogu: ' + sample + '.\n'
+    + 'Zadanie: przeanalizuj opis i podaj 1-3 najlepsze opcje.\n'
+    + 'Jesli opis jest zrozumialy - ustrukturyzuj go krotko po polsku.\n'
+    + 'Jesli opis jest niejasny lub losowy - wybierz najblizsze pasujace pozycje z katalogu powyzej.\n'
+    + 'Odpowiedz TYLKO jako JSON array: [{"pl":"tekst opcji"}]\n'
+    + 'Opis: ' + text;
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({model: 'claude-sonnet-4-20250514', max_tokens: 200, messages: [{role: 'user', content: prompt}]})
+  })
+  .then(function(r){return r.json();})
+  .then(function(data){
+    var txt=(data.content||[]).map(function(c){return c.text||'';}).join('');
+    var clean=txt.replace(/```json|```/g,'').trim();
+    try {
+      var parsed=JSON.parse(clean);
+      if(!Array.isArray(parsed))parsed=[parsed];
+      micShShowResults(parsed.map(function(p){return {pl:p.pl||p};}));
+    } catch(e){
+      // Если AI не ответил - берём из библиотеки офлайн
+      micShSearchOff(text);
+    }
+  })
+  .catch(function(){ micShSearchOff(text); });
+}
+
+function micShShowResults(items) {
+  var prev = document.getElementById('micShPrev'); if (!prev) return;
+  _micItems = items;
+
+  var h = '<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#A19F9D;margin-bottom:8px">Wybierz lub edytuj:</div>';
+  
+  items.forEach(function(item, i) {
+    h += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">';
+    // Тег с текстом
+    h += '<div id="mstag_'+i+'" onclick="micShPick('+i+')" style="flex:1;padding:9px 12px;background:#EAF4FB;border:1.5px solid #0078D4;border-radius:9px;font-size:13px;font-weight:500;color:#0078D4;cursor:pointer;-webkit-tap-highlight-color:transparent">'+esc(item.pl)+'</div>';
+    // Кнопка редактирования
+    h += '<button onclick="micShEdit('+i+')" style="width:32px;height:32px;background:#F5F5F7;border:0.5px solid #EDEBE9;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;-webkit-tap-highlight-color:transparent">';
+    h += '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#605E5C" stroke-width="1.5" stroke-linecap="round"><path d="M10 2l2 2-7 7H3v-2l7-7z"/></svg></button>';
+    // Крестик удалить
+    h += '<button onclick="micShRemove('+i+')" style="width:32px;height:32px;background:#FFF0F0;border:0.5px solid rgba(255,59,48,.2);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;-webkit-tap-highlight-color:transparent">';
+    h += '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#FF3B30" stroke-width="1.8" stroke-linecap="round"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg></button>';
+    h += '</div>';
+  });
+
+  prev.innerHTML = h;
+  prev.style.display = 'block';
+}
+
+function micShEdit(i) {
+  if (!_micItems || !_micItems[i]) return;
+  var tag = document.getElementById('mstag_'+i);
+  if (!tag) return;
+  var oldVal = _micItems[i].pl;
+  var inp = document.createElement('input');
+  inp.id = 'msinp_'+i;
+  inp.value = oldVal;
+  inp.style.cssText = 'flex:1;padding:9px 12px;background:#fff;border:1.5px solid #0078D4;border-radius:9px;font-size:13px;font-family:inherit;outline:none;color:#323130;min-width:0';
+  inp.setAttribute('data-idx', i);
+  inp.addEventListener('blur', function(){micShSaveEdit(i,this);});
+  inp.addEventListener('keydown', function(e){if(e.key==='Enter')this.blur();});
+  tag.parentNode.replaceChild(inp, tag);
+  setTimeout(function(){inp.focus();inp.select();},50);
+}
+
+function micShSaveEdit(i, inp) {
+  var val = inp.value.trim();
+  if (!val) return;
+  _micItems[i].pl = val;
+  // Заменяем input обратно на тег
+  inp.outerHTML = '<div id="mstag_'+i+'" onclick="micShPick('+i+')" style="flex:1;padding:9px 12px;background:#EAF4FB;border:1.5px solid #0078D4;border-radius:9px;font-size:13px;font-weight:500;color:#0078D4;cursor:pointer">'+esc(val)+'</div>';
+}
+
+function micShRemove(i) {
+  if (!_micItems) return;
+  _micItems.splice(i, 1);
+  if (_micItems.length === 0) {
+    var prev = document.getElementById('micShPrev');
+    if (prev) { prev.style.display='none'; prev.innerHTML=''; }
+  } else {
+    micShShowResults(_micItems);
+  }
+}
+
+function micShPick(i) {
+  if (!_micItems || !_micItems[i]) return;
+  var val = _micItems[i].pl;
+  micShApply(val);
+}
+
+function micShAdd() {
+  var inp = document.getElementById('micShInp');
+  var text = inp ? inp.value.trim() : '';
+  if (!text) { showToast('Wpisz lub powiedz'); return; }
+  micShApply(text);
+}
+
+function micShApply(val) {
+  // Добавляем в нужную колонку
+  if (SEL[_micCol] && SEL[_micCol].indexOf(val) < 0) {
+    SEL[_micCol].push(val);
+    _updV(_micCol);
+    renderList(_micCol);
+    if (_micCol === 'el') { renderList('def'); renderList('sol'); }
+    if (_micCol === 'def') { renderList('sol'); }
+    renderSummary();
+  }
+  closeOv('shModMic');
+  showToast('Dodano: ' + val);
+}
+
+function setModeG() {
+  setMode('G');
+  var g=document.getElementById('mainTglG'),ng=document.getElementById('mainTglS');
+  if(g){g.style.background='#fff';g.style.color='#1C1C1E';g.style.boxShadow='0 2px 8px rgba(0,0,0,.12)';}
+  if(ng){ng.style.background='transparent';ng.style.color='#C7C7CC';ng.style.boxShadow='none';}
+  
+}
+function setModeNG() {
+  setMode('S');
+  var g=document.getElementById('mainTglG'),ng=document.getElementById('mainTglS');
+  if(g){g.style.background='transparent';g.style.color='#C7C7CC';g.style.boxShadow='none';}
+  if(ng){ng.style.background='#fff';ng.style.color='#1C1C1E';ng.style.boxShadow='0 2px 8px rgba(0,0,0,.12)';}
+  
+}
+
+
+
+</script>
+
+<div class="ov" id="shMainMic" style="display:none" onclick="if(event.target===this)closeOv('shMainMic')">
+  <div class="sh" style="max-height:92vh;overflow-y:auto">
+    <div class="sh-bar"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="font-size:17px;font-weight:800;color:#0078D4">Dyktuj opis</div>
+      <button onclick="closeOv('shMainMic')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">×</button>
+    </div>
+    <div style="font-size:11px;color:#A19F9D;margin-bottom:10px">Opisz element, usterkę i co zrobiono — jednym zdaniem</div>
+    <textarea id="mainMicInp" placeholder="Np: czujnik startu nie dziala wymieniono nowy&#10;Np: пассик порвался замінили новий" style="width:100%;min-height:80px;background:#F5F5F7;border:1.5px solid rgba(0,120,212,.2);border-radius:10px;padding:11px 13px;font-size:14px;font-family:inherit;outline:none;resize:none;color:#323130;line-height:1.6;margin-bottom:8px" oninput="mainMicAutoProc(this)"></textarea>
+    <div style="font-size:11px;color:#A19F9D;margin-bottom:12px">Użyj mikrofonu iPhone na klawiaturze</div>
+    <div id="mainMicPrev" style="display:none;margin-bottom:10px"></div>
+    <button onclick="mainMicSearch()" style="width:100%;padding:10px;background:#F5F5F7;border:1px solid #EDEBE9;border-radius:10px;font-size:13px;font-weight:600;color:#0078D4;cursor:pointer;margin-bottom:8px;font-family:inherit">Szukaj w bibliotece</button>
+    <button onclick="mainMicAdd()" style="width:100%;padding:13px;background:#0078D4;border:none;border-radius:12px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;margin-bottom:8px;font-family:inherit">Dodaj do raportu</button>
+    <button onclick="closeOv('shMainMic')" class="sh-btn lt">Anuluj</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// ГЛАВНЫЙ МИКРОФОН - офлайн алгоритм
+// ============================================================
+function mainMicOpen() {
+  var inp = document.getElementById('mainMicInp');
+  if (inp) inp.value = '';
+  var prev = document.getElementById('mainMicPrev');
+  if (prev) { prev.style.display='none'; prev.innerHTML=''; }
+  openSh('shMainMic');
+  setTimeout(function(){var i=document.getElementById('mainMicInp');if(i)i.focus();},400);
+}
+
+var _mainMicTimer = null;
+
+function mainMicAutoProc(el) {
+  clearTimeout(_mainMicTimer);
+  if (el.value.length > 4) _mainMicTimer = setTimeout(mainMicSearch, 800);
+}
+
+function mainMicNorm(s) {
+  return (s||'').toLowerCase()
+    .replace(/ą/g,'a').replace(/ę/g,'e').replace(/ó/g,'o')
+    .replace(/ś/g,'s').replace(/ź/g,'z').replace(/ż/g,'z')
+    .replace(/ć/g,'c').replace(/ń/g,'n').replace(/ł/g,'l')
+    .replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+}
+
+// Словарь русских синонимов → польские слова для поиска
+var RU_SYN = {
+  // Из переводов eXtend/X/XD
+  'kompressor':'kompaktor', 'компактор':'kompaktor', 'компрессор':'kompaktor',
+  'skaner zablokowany':'skaner kodow zablokowany',
+  'kamera zablokowana':'obraz zablokowany',
+  'клапа':'klapa', 'клапан':'klapa', 'заслонка':'klapa',
+  'obwod bezpieczenstwa':'obwod bezpieczenstwa',
+  'obwód':'obwod', 'предохранитель':'bezpiecznik',
+  'сортер заблокирован':'sorter zablokowany',
+  'принтер офлайн':'drukarka offline',
+  'нет бумаги':'brak papieru',
+  'автомат':'automat', 'машина':'maszyna',
+  'авария':'awaria', 'аварийный стоп':'zatrzymanie awaryjne',
+  'чистка':'czyszczenie', 'техническое обслуживание':'przeglad',
+  'обновление':'aktualizacja', 'перезагрузка':'reset',
+  'база данных':'baza danych', 'штрихкод':'kod kreskowy',
+  'не распознан':'blad rozpoznania', 'ошибка':'blad',
+
+  // Детали
+  'датчик':'czujnik', 'чуйник':'czujnik', 'сенсор':'czujnik',
+  'фотоэлемент':'fotokomurka', 'фотодатчик':'fotokomurka',
+  'ремень':'pas', 'пассик':'pasek', 'пас':'pas',
+  'цепь':'lancuch', 'цепочка':'lancuch',
+  'двигатель':'silnik', 'мотор':'silnik', 'движок':'silnik',
+  'шестерня':'kolo', 'звёздочка':'kolo',
+  'плата':'plyta', 'контроллер':'plyta',
+  'принтер':'drukarka', 'считыватель':'czytnik', 'ридер':'czytnik',
+  'камера':'kamera', 'сканер':'skaner',
+  'заслонка':'klapa', 'клапан':'klapa',
+  'сортер':'sorter', 'сортировщик':'sorter',
+  'компрессор':'zgniatarka', 'зжималка':'zgniatarka',
+  'выключатель':'wylacznik', 'кнопка':'przycisk',
+  'реле':'przekaznik', 'предохранитель':'bezpiecznik',
+  'блок питания':'zasilacz', 'бп':'zasilacz', 'источник':'zasilacz',
+  'частотник':'falownik', 'инвертор':'falownik',
+  'конвейер':'przenosnik', 'транспортёр':'przenosnik',
+  'подающий':'podajnik', 'подача':'podajnik',
+  'замок':'zamek', 'ключ':'klucz',
+  'лампочка':'zarowka', 'лампа':'zarowka',
+  'контейнер':'pojemnik', 'корзина':'pojemnik', 'кош':'pojemnik',
+  'экран':'ekran', 'дисплей':'ekran',
+  'роутер':'router', 'модем':'modem',
+  'кабель':'kabel', 'провод':'kabel', 'шнур':'kabel',
+  'адаптер':'adapter', 'переходник':'adapter',
+  'пружина':'sprezyna', 'амортизатор':'amortyzator',
+  'дверь':'drzwi', 'дверца':'drzwi',
+  'подшипник':'lozysko', 'вал':'wal',
+  // Действия
+  'заменил':'wymieniono', 'заменили':'wymieniono', 'поменял':'wymieniono', 'замінили':'wymieniono',
+  'почистил':'wyczyszczono', 'очистил':'wyczyszczono', 'почищено':'wyczyszczono',
+  'проверил':'sprawdzono', 'проверили':'sprawdzono',
+  'отрегулировал':'wyregulowano', 'отрегулировали':'wyregulowano', 'регулировал':'wyregulowano',
+  'законтрил':'zabezpieczono', 'подтянул':'dokrecono', 'затянул':'dokrecono', 'подкрутил':'dokrecono',
+  'смазал':'nasmarowano', 'смазали':'nasmarowano',
+  'установил':'zamontowano', 'поставил':'zamontowano', 'вставил':'zamontowano',
+  'снял':'zdemontowano', 'демонтировал':'zdemontowano',
+  'отремонтировал':'naprawiono', 'починил':'naprawiono',
+  'откалибровал':'skalibrowano', 'настроил':'skonfigurowano',
+  'перезагрузил':'zresetowano', 'сбросил':'zresetowano',
+  // Проблемы
+  'не работает':'nie dziala', 'сломался':'uszkodzony', 'неисправен':'niesprawny',
+  'порвался':'zerwany', 'порван':'zerwany',
+  'заклинило':'zablokowany', 'застрял':'zablokowany',
+  'не крутится':'nie obraca', 'не вращается':'nie obraca',
+  'грязный':'zabrudzony', 'загрязнён':'zabrudzony',
+  'износился':'zuzyty', 'изношен':'zuzyty',
+  'нет сигнала':'brak sygnalu', 'нет связи':'brak polaczenia',
+  'перегрев':'przegrzanie', 'перегрелся':'przegrzanie',
+  'слабый':'slaby', 'треснул':'pekniecie', 'погнутый':'pogiety',
+  // Типы сервиса
+  'гарантия':'gwarancja', 'гарантийный':'gwarancyjny',
+  'техобслуживание':'przeglad', 'осмотр':'przeglad', 'то':'przeglad',
+  'плановый':'planowy', 'аварийный':'awaryjna',
+};
+var MAG_PARTS=[{id:1,n:"Adapter v4 - 3D - PETG",k:"AD-3D-V4-PETG",cat:"Elektronika"},{id:2,n:"Adapter złączka RJ45 IP67",k:"AD-RJ45-6-WP",cat:"Komunikacja"},{id:3,n:"Czujnik indukcyjny M8",k:"10018133",cat:"Czujniki"},{id:4,n:"Czujnik indukcyjny M12",k:"10018137",cat:"Czujniki"},{id:5,n:"Czytnik kart lojalnościowych",k:"10019143",cat:"Druk i Karta"},{id:6,n:"Czytnik kart Mk2",k:"10030391",cat:"Druk i Karta"},{id:7,n:"Drukarka Epson",k:"700236",cat:"Druk i Karta"},{id:8,n:"Fotokomórka rozruchowa",k:"1076486",cat:"Czujniki"},{id:9,n:"Interfejs Epson",k:"700237",cat:"Druk i Karta"},{id:10,n:"Kabel USB A-B 1.8m",k:"CB-USB-A-B-180",cat:"Komunikacja"},{id:11,n:"Kamera ARC EMC",k:"10017938",cat:"Identyfikacja"},{id:12,n:"Klapa obrotowa X2",k:"10017132",cat:"Mechanika"},{id:13,n:"Klapa obrotowa X3",k:"10017436",cat:"Mechanika"},{id:14,n:"Klucz magnetyczny",k:"380346",cat:"Narzędzia"},{id:15,n:"Klucz trójkątny",k:"1073890",cat:"Narzędzia"},{id:16,n:"Łańcuch długi PET",k:"850-34-PET",cat:"Napęd"},{id:17,n:"Łańcuch krótki PET",k:"625-25-PET",cat:"Napęd"},{id:18,n:"Wyłącznik magnetyczny",k:"10012515",cat:"Elektryczne"},{id:19,n:"Odbłyśnik E39-R42",k:"10011291",cat:"Identyfikacja"},{id:20,n:"Pas podajnika",k:"10017568",cat:"Napęd"},{id:21,n:"Pas przenośnika Proline",k:"10014234",cat:"Napęd"},{id:22,n:"Pas tylny Proline",k:"10016947",cat:"Napęd"},{id:23,n:"Pasek klinowy eXtend",k:"10029936",cat:"Napęd"},{id:24,n:"Pasek klinowy 8mm",k:"700351",cat:"Napęd"},{id:25,n:"PCBA wykrywacz metalu",k:"10014821S",cat:"Elektronika"},{id:26,n:"Płyta kontrolna PCBA",k:"10026751S",cat:"Elektronika"},{id:27,n:"Płyta sortera I/O 2",k:"10011255",cat:"Elektronika"},{id:28,n:"Podajnik Assy RVM",k:"10012664",cat:"Mechanika"},{id:29,n:"Pojemnik kosz 800x600",k:"800600B",cat:"Pojemniki"},{id:30,n:"Silnik 24V 40rpm",k:"1075738",cat:"Silniki"},{id:31,n:"Silnik pasa Bosch",k:"10010946",cat:"Silniki"},{id:32,n:"Silnik przenośnika",k:"10027202",cat:"Silniki"},{id:33,n:"Silnik przesłony HL2",k:"10011181",cat:"Silniki"},{id:34,n:"Sorter MIX Lewy",k:"10026513",cat:"Sortowanie"},{id:35,n:"Sorter MIX eXtend",k:"10024703",cat:"Sortowanie"},{id:36,n:"Sorter MIX Prawy",k:"10014853",cat:"Sortowanie"},{id:37,n:"Wlot kurtyna",k:"10030988",cat:"Mechanika"},{id:38,n:"Wlot stożek",k:"10030965",cat:"Mechanika"},{id:39,n:"Wyłącznik bezpieczeństwa",k:"380345",cat:"Elektryczne"},{id:40,n:"Wyłącznik GMK AB",k:"1074820",cat:"Elektryczne"},{id:41,n:"Zamek trójkątny",k:"1073494",cat:"Mechanika"},{id:42,n:"Zasilacz 24V 13.4A",k:"10026911",cat:"Elektryczne"},{id:43,n:"Żarówka 24-30V",k:"3393399",cat:"Elektryczne"},
+{id:44,n:"Falownik 1.5kW 230V",k:"700357",cat:"Elektryczne"},
+{id:45,n:"Filtr falownika 1.5kW",k:"700358",cat:"Elektryczne"},
+{id:46,n:"Bezpiecznik 10A SLOW",k:"1076553",cat:"Elektryczne"},
+{id:47,n:"Bezpiecznik 3A 32V",k:"10020877",cat:"Elektryczne"},
+{id:48,n:"Przekaźnik bezpieczeństwa",k:"10011281",cat:"Elektryczne"},
+{id:49,n:"Ekran dotykowy 10.4",k:"10011588",cat:"Elektronika"},
+{id:50,n:"Kamera KS-2S543",k:"10026645",cat:"Elektronika"},
+{id:51,n:"SDrop Lewy 1-fazowy",k:"10025300",cat:"Mechanika"},
+{id:52,n:"SDrop Prawy 1-fazowy",k:"10025304",cat:"Mechanika"},
+{id:53,n:"Sprężyna gazowa",k:"10022366",cat:"Mechanika"}];
+var _magData=null,_magFilter='',_magOpenId=null;
+function magLoad(){try{var v=localStorage.getItem('rv_mag2');if(v)return JSON.parse(v);}catch(e){}var d={};MAG_PARTS.forEach(function(p){d[p.id]={qty:0,min:1,photo:null};});return d;}
+function magSave(){try{localStorage.setItem('rv_mag2',JSON.stringify(_magData));}catch(e){}}
+function magGet(id){if(!_magData[id])_magData[id]={qty:0,min:1,photo:null};return _magData[id];}
+function magSt(id){var d=magGet(id);if(d.qty<=0)return'empty';if(d.qty<=d.min)return'warn';return'ok';}
+function magSearch(q){_magFilter=q.toLowerCase().trim();magRender();}
+function magRender(){if(!_magData)_magData=magLoad();var grid=document.getElementById('magGrid');if(!grid)return;var parts=MAG_PARTS;if(_magFilter)parts=parts.filter(function(p){return p.n.toLowerCase().indexOf(_magFilter)>=0||p.k.toLowerCase().indexOf(_magFilter)>=0;});parts=parts.slice().sort(function(a,b){var ord={empty:0,warn:1,ok:2};var sa=ord[magSt(a.id)],sb=ord[magSt(b.id)];if(sa!==sb)return sa-sb;return a.cat.localeCompare(b.cat);});var warn=0,empty=0;MAG_PARTS.forEach(function(p){var s=magSt(p.id);if(s==='empty')empty++;else if(s==='warn')warn++;});var e1=document.getElementById('mst1');if(e1)e1.textContent=MAG_PARTS.length;var e2=document.getElementById('mst2');if(e2)e2.textContent=warn;var e3=document.getElementById('mst3');if(e3)e3.textContent=empty;if(!parts.length){grid.innerHTML='<div style="grid-column:1/-1;padding:20px;text-align:center;font-size:13px;color:#A19F9D">Brak wynikow</div>';return;}var h='',lastCat='';parts.forEach(function(p){var d=magGet(p.id),st=magSt(p.id);if(!_magFilter&&p.cat!==lastCat){h+='<div style="grid-column:1/-1;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A19F9D;padding:6px 2px 2px">'+esc(p.cat)+'</div>';lastCat=p.cat;}h+='<div class="mag-card">';h+='<div class="mag-bar" style="background:'+(st==='ok'?'#34C759':st==='warn'?'#FF9500':'#FF3B30')+'"></div>';h+='<div class="mag-photo" onclick="magMinus('+p.id+')" style="cursor:pointer">';if(d.photo){h+='<img src="'+d.photo+'" loading="lazy">';}else{h+='<svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="#C8C6C4" stroke-width="1.3" stroke-linecap="round"><rect x="2" y="5" width="22" height="16" rx="3"/><circle cx="13" cy="13" r="4"/><path d="M8 5l1.5-3h7L18 5"/></svg>';}h+='<div style="position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;font-weight:800;padding:2px 7px;border-radius:7px">'+Math.max(0,d.qty)+'</div>';h+='<button data-mid="'+p.id+'" onclick="event.stopPropagation();magOpenCamById(this)" style="position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(0,0,0,.45);border:none;border-radius:6px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="1.3" stroke-linecap="round"><rect x="1" y="2.5" width="10" height="8" rx="1.5"/><circle cx="6" cy="6.5" r="1.8"/><path d="M3.5 2.5l1-2h3l1 2"/></svg></button>';h+='</div>';h+='<div style="padding:6px 8px 8px;cursor:pointer" onclick="magOpenSheet('+p.id+')"><div style="font-size:11px;font-weight:600;color:#323130;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">'+esc(p.n)+'</div><div style="font-size:9px;color:#A19F9D;font-family:monospace;margin-top:1px">'+esc(p.k)+'</div></div></div>';});grid.innerHTML=h;}
+function magMinus(id){
+  if(!_magData)_magData=magLoad();
+  var d=magGet(id);
+  if(d.qty<=0){showToast('Stan = 0');return;}
+  d.qty--;
+  magSave();
+  var p=(magGetAll?magGetAll():MAG_PARTS).find(function(x){return x.id===id;});
+  magHistoryAdd(p, 1);
+  magRender();
+  showToast('-1 · '+(p?p.n.split(' ').slice(0,3).join(' '):''));
+}
+function magOpenCamById(btn){_magOpenId=parseInt(btn.getAttribute('data-mid'));var inp=document.getElementById('magCamInp');if(inp)inp.click();}
+function magOpenSheet(id){if(!_magData)_magData=magLoad();_magOpenId=id;var p=MAG_PARTS.find(function(x){return x.id===id;});var d=magGet(id);var st=magSt(id);if(!p)return;var nm=document.getElementById('msh_name');if(nm)nm.textContent=p.n;var cd=document.getElementById('msh_code');if(cd)cd.textContent=p.k;var qt=document.getElementById('msh_qty');if(qt)qt.textContent=d.qty;var mn=document.getElementById('msh_min');if(mn)mn.textContent=d.min;var stEl=document.getElementById('msh_status');if(stEl){stEl.textContent=st==='empty'?'Brak':st==='warn'?'Niski stan':'OK';stEl.style.color=st==='empty'?'#FF3B30':st==='warn'?'#FF9500':'#34C759';}var ph=document.getElementById('msh_photo');if(ph){if(d.photo){ph.innerHTML='<img src="'+d.photo+'" style="width:100%;height:100%;object-fit:cover">';}else{ph.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:6px;color:#C8C6C4"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#C8C6C4" stroke-width="1.4" stroke-linecap="round"><rect x="3" y="7" width="30" height="22" rx="4"/><circle cx="18" cy="18" r="6"/><path d="M10 7l2.5-4h11l2.5 4"/></svg><span style="font-size:12px">Brak zdjecia</span></div>';}}openSh('shMagPart');}
+function mshQtyEdit() {
+  if (_magOpenId === null) return;
+  var item = magGet(_magOpenId);
+  var val = prompt('Wpisz ilość na stanie:', item.qty);
+  if (val === null) return;
+  var num = parseInt(val);
+  if (isNaN(num) || num < 0) { showToast('Nieprawidłowa liczba'); return; }
+  item.qty = num;
+  magSave();
+  var el = document.getElementById('msh_qty');
+  if (el) el.textContent = num;
+  var st = magSt(_magOpenId);
+  var stEl = document.getElementById('msh_status');
+  if (stEl) {
+    stEl.textContent = st==='empty'?'Brak':st==='warn'?'Niski stan':'OK';
+    stEl.style.color = st==='empty'?'#FF3B30':st==='warn'?'#FF9500':'#34C759';
+  }
+  magRender();
+  showToast('Stan: ' + num);
+}
+function mshAdj(d){if(_magOpenId===null)return;var item=magGet(_magOpenId);item.qty=Math.max(0,item.qty+d);magSave();var el=document.getElementById('msh_qty');if(el)el.textContent=item.qty;var st=magSt(_magOpenId);var stEl=document.getElementById('msh_status');if(stEl){stEl.textContent=st==='empty'?'Brak':st==='warn'?'Niski stan':'OK';stEl.style.color=st==='empty'?'#FF3B30':st==='warn'?'#FF9500':'#34C759';}magRender();}
+function mshAdjMin(d){if(_magOpenId===null)return;var item=magGet(_magOpenId);item.min=Math.max(0,(item.min||1)+d);magSave();var el=document.getElementById('msh_min');if(el)el.textContent=item.min;magRender();}
+function mshUse(){if(_magOpenId===null)return;var p=MAG_PARTS.find(function(x){return x.id===_magOpenId;});var d=magGet(_magOpenId);if(!p)return;if(d.qty>0){d.qty--;magSave();}var idx=WH.findIndex(function(c){return c.k===p.k;});if(idx<0){var ci=custParts.findIndex(function(c){return c.k===p.k;});if(ci<0){custParts.push({n:p.n,k:p.k,qty:1});ss('rv_cp',custParts);}idx=WH.length+custParts.findIndex(function(c){return c.k===p.k;});}if(idx>=0){var sp=curMode==='G'?selPartsG:selPartsS;var pq=curMode==='G'?partQtyG:partQtyS;sp['p'+idx]=true;pq['p'+idx]=(pq['p'+idx]||0)+1;ss('rv_sp'+curMode,sp);ss('rv_pq'+curMode,pq);}magHistoryAdd(p, 1);closeOv('shMagPart');renderParts();renderSummary();showToast('Dodano do raportu · stan: '+d.qty);}
+function mshCam(){var inp=document.getElementById('magCamInp');if(inp)inp.click();}
+function mshPhoto(input){var file=input.files[0];if(!file||_magOpenId===null)return;var r=new FileReader();r.onload=function(e){var d=magGet(_magOpenId);d.photo=e.target.result;magSave();var ph=document.getElementById('msh_photo');if(ph)ph.innerHTML='<img src="'+d.photo+'" style="width:100%;height:100%;object-fit:cover">';magRender();showToast('Zdjecie zapisane');};r.readAsDataURL(file);input.value='';}
+
+</script>
+
+<div class="ov" id="shModMic" style="display:none" onclick="if(event.target===this)closeOv('shModMic')">
+  <div class="sh" style="max-height:85vh;overflow-y:auto">
+    <div class="sh-bar"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div id="micShTitle" style="font-size:16px;font-weight:800;color:#0078D4">Dyktuj</div>
+      <button onclick="closeOv('shModMic')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">×</button>
+    </div>
+
+    <textarea id="micShInp" placeholder="Mów lub pisz..." style="width:100%;min-height:70px;background:#F5F5F7;border:1.5px solid rgba(0,120,212,.2);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;outline:none;resize:none;color:#323130;line-height:1.5;margin-bottom:8px" oninput="micShAutoProc(this)"></textarea>
+    <div style="font-size:11px;color:#A19F9D;margin-bottom:10px">Użyj mikrofonu iPhone na klawiaturze</div>
+
+
+    <button onclick="micShAdd()" style="width:100%;padding:12px;background:#0078D4;border:none;border-radius:10px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;margin-bottom:8px;font-family:inherit">Dodaj</button>
+    <button onclick="closeOv('shModMic')" class="sh-btn lt">Anuluj</button>
+  </div>
+</div>
+
+<script>
+
+var _micCol = 'el';
+var _micTimer = null;
+var _micItems = null;
+
+function libAdd() {
+  var col = document.getElementById('libCol').value;
+  var pl = (document.getElementById('libPl').value||'').trim();
+  var ru = (document.getElementById('libRu').value||'').trim();
+  if (!pl) { showToast('Wpisz nazwę po polsku'); return; }
+
+  // Добавляем в custom
+  if (!custom[col]) custom[col] = [];
+  // Проверяем дубль
+  var exists = custom[col].some(function(x){return x.pl.toLowerCase()===pl.toLowerCase();});
+  if (exists) { showToast('Już istnieje'); return; }
+  custom[col].push({pl: pl, ru: ru || pl});
+  ss('rv_custom', custom);
+
+  // Очищаем поля
+  document.getElementById('libPl').value = '';
+  document.getElementById('libRu').value = '';
+
+  // Обновляем список
+  libRender();
+  showToast('Dodano: ' + pl);
+}
+
+function libRender() {
+  var list = document.getElementById('libList');
+  if (!list) return;
+  var cols = {el:'Element', def:'Usterka', sol:'Wykonano', kon:'Serwis'};
+  var h = '';
+  var hasAny = false;
+  Object.keys(cols).forEach(function(col) {
+    var items = custom[col] || [];
+    items.forEach(function(item, i) {
+      hasAny = true;
+      h += '<div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:0.5px solid #F3F2F1">';
+      h += '<span style="font-size:9px;font-weight:700;color:#fff;background:#0078D4;padding:2px 5px;border-radius:4px">'+cols[col]+'</span>';
+      h += '<span style="flex:1">'+esc(item.pl)+'</span>';
+      var delBtn = document.createElement('button');
+      delBtn.textContent = '×';
+      delBtn.style.cssText = 'background:none;border:none;color:#FF3B30;font-size:14px;cursor:pointer;padding:0;line-height:1';
+      h += '<button data-col="'+col+'" data-idx="'+i+'" onclick="libDelByData(this)" style="background:none;border:none;color:#FF3B30;font-size:14px;cursor:pointer;padding:0;line-height:1">×</button>';
+      h += '</div>';
+    });
+  });
+  list.innerHTML = hasAny ? h : '<div style="color:#A19F9D;padding:4px 0">Biblioteka jest pusta</div>';
+}
+
+function libDelByData(btn) {
+  var col = btn.getAttribute('data-col');
+  var idx = parseInt(btn.getAttribute('data-idx'));
+  libDel(col, idx);
+}
+function libDel(col, idx) {
+  if (!custom[col]) return;
+  custom[col].splice(idx, 1);
+  ss('rv_custom', custom);
+  libRender();
+}
+
+function modMic(col) {
+  _micCol = col;
+  var titles = {el:'Element', def:'Usterka', sol:'Co zrobiono', kon:'Serwis'};
+  var t = document.getElementById('micShTitle');
+  if (t) t.textContent = titles[col] || col;
+  var m = document.getElementById('micShMode');
+  if (m) m.textContent = _vsAI ? 'AI online' : 'Offline';
+  var inp = document.getElementById('micShInp'); if (inp) inp.value = '';
+  var prev = document.getElementById('micShPrev'); if (prev) { prev.style.display='none'; prev.innerHTML=''; }
+  _micItems = null;
+  openSh('shModMic');
+  setTimeout(function(){var i=document.getElementById('micShInp');if(i)i.focus();},400);
+}
+
+function micShAutoProc(el) {
+  clearTimeout(_micTimer);
+  if (el.value.length > 3) _micTimer = setTimeout(micShSearch, 800);
+}
+
+function micShSearch() {
+  var text = (document.getElementById('micShInp')||{}).value||'';
+  text = text.trim(); if (!text) return;
+  var prev = document.getElementById('micShPrev'); if (!prev) return;
+  prev.innerHTML = '<div style="padding:10px;text-align:center;font-size:13px;color:#A19F9D">Strukturyzuję...</div>';
+  prev.style.display = 'block';
+  
+  // Таймаут 5 секунд - если AI не ответил берём текст как есть
+  var _done = false;
+  var _timeout = setTimeout(function() {
+    if (!_done) { _done = true; micShShowResults([{pl: text}]); }
+  }, 5000);
+
+  var colNames = {el:'element urzadzenia RVM (automat skupu butelek)', def:'usterka lub problem techniczny', sol:'co zostalo zrobione przez serwisanta', kon:'typ serwisu'};
+  var sample = (D[_micCol]||[]).slice(0,12).map(function(x){return x.pl;}).join(', ');
+
+  var prompt = 'Jestes asystentem serwisanta RVM. Kategoria: ' + colNames[_micCol] + '.\n'
+    + 'Przyklady z katalogu: ' + sample + '.\n'
+    + 'Przeanalizuj opis i podaj 1-3 opcje jako JSON array: [{"pl":"krotki techniczny tekst po polsku"}]\n'
+    + 'Jesli opis niejasny - wybierz najblizsze z katalogu.\n'
+    + 'Opis: ' + text;
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({model: 'claude-sonnet-4-20250514', max_tokens: 150, messages: [{role: 'user', content: prompt}]})
+  })
+  .then(function(r){return r.json();})
+  .then(function(data){
+    if (_done) return;
+    _done = true;
+    clearTimeout(_timeout);
+    var txt=(data.content||[]).map(function(c){return c.text||'';}).join('');
+    var clean=txt.replace(/```json|```/g,'').trim();
+    try {
+      var parsed=JSON.parse(clean);
+      if(!Array.isArray(parsed))parsed=[parsed];
+      micShShowResults(parsed.map(function(p){return {pl:p.pl||p};}));
+    } catch(e){ micShShowResults([{pl:text}]); }
+  })
+  .catch(function(){
+    if (_done) return;
+    _done = true;
+    clearTimeout(_timeout);
+    micShShowResults([{pl:text}]);
+  });
+}
+
+function micShSearchAI(text) {
+  var prev = document.getElementById('micShPrev'); if (!prev) return;
+  prev.innerHTML = '<div style="padding:10px;text-align:center;font-size:13px;color:#A19F9D">Analizuję...</div>';
+  prev.style.display = 'block';
+
+  var colNames = {el:'element urzadzenia RVM', def:'usterka lub problem techniczny', sol:'co zostalo zrobione (akcja serwisanta)', kon:'typ serwisu'};
+  var sample = (D[_micCol]||[]).slice(0,15).map(function(x){return x.pl;}).join(', ');
+
+  var prompt = 'Jestes asystentem serwisanta automatow RVM. Kategoria: ' + colNames[_micCol] + '.\n'
+    + 'Przyklady z katalogu: ' + sample + '.\n'
+    + 'Zadanie: przeanalizuj opis i podaj 1-3 najlepsze opcje.\n'
+    + 'Jesli opis jest zrozumialy - ustrukturyzuj go krotko po polsku.\n'
+    + 'Jesli opis jest niejasny lub losowy - wybierz najblizsze pasujace pozycje z katalogu powyzej.\n'
+    + 'Odpowiedz TYLKO jako JSON array: [{"pl":"tekst opcji"}]\n'
+    + 'Opis: ' + text;
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({model: 'claude-sonnet-4-20250514', max_tokens: 200, messages: [{role: 'user', content: prompt}]})
+  })
+  .then(function(r){return r.json();})
+  .then(function(data){
+    var txt=(data.content||[]).map(function(c){return c.text||'';}).join('');
+    var clean=txt.replace(/```json|```/g,'').trim();
+    try {
+      var parsed=JSON.parse(clean);
+      if(!Array.isArray(parsed))parsed=[parsed];
+      micShShowResults(parsed.map(function(p){return {pl:p.pl||p};}));
+    } catch(e){
+      // Если AI не ответил - берём из библиотеки офлайн
+      micShSearchOff(text);
+    }
+  })
+  .catch(function(){ micShSearchOff(text); });
+}
+
+function micShShowResults(items) {
+  var prev = document.getElementById('micShPrev'); if (!prev) return;
+  _micItems = items;
+
+  var h = '<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#A19F9D;margin-bottom:8px">Wybierz lub edytuj:</div>';
+  
+  items.forEach(function(item, i) {
+    h += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">';
+    // Тег с текстом
+    h += '<div id="mstag_'+i+'" onclick="micShPick('+i+')" style="flex:1;padding:9px 12px;background:#EAF4FB;border:1.5px solid #0078D4;border-radius:9px;font-size:13px;font-weight:500;color:#0078D4;cursor:pointer;-webkit-tap-highlight-color:transparent">'+esc(item.pl)+'</div>';
+    // Кнопка редактирования
+    h += '<button onclick="micShEdit('+i+')" style="width:32px;height:32px;background:#F5F5F7;border:0.5px solid #EDEBE9;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;-webkit-tap-highlight-color:transparent">';
+    h += '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#605E5C" stroke-width="1.5" stroke-linecap="round"><path d="M10 2l2 2-7 7H3v-2l7-7z"/></svg></button>';
+    // Крестик удалить
+    h += '<button onclick="micShRemove('+i+')" style="width:32px;height:32px;background:#FFF0F0;border:0.5px solid rgba(255,59,48,.2);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;-webkit-tap-highlight-color:transparent">';
+    h += '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#FF3B30" stroke-width="1.8" stroke-linecap="round"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg></button>';
+    h += '</div>';
+  });
+
+  prev.innerHTML = h;
+  prev.style.display = 'block';
+}
+
+function micShEdit(i) {
+  if (!_micItems || !_micItems[i]) return;
+  var tag = document.getElementById('mstag_'+i);
+  if (!tag) return;
+  var oldVal = _micItems[i].pl;
+  var inp = document.createElement('input');
+  inp.id = 'msinp_'+i;
+  inp.value = oldVal;
+  inp.style.cssText = 'flex:1;padding:9px 12px;background:#fff;border:1.5px solid #0078D4;border-radius:9px;font-size:13px;font-family:inherit;outline:none;color:#323130;min-width:0';
+  inp.setAttribute('data-idx', i);
+  inp.addEventListener('blur', function(){micShSaveEdit(i,this);});
+  inp.addEventListener('keydown', function(e){if(e.key==='Enter')this.blur();});
+  tag.parentNode.replaceChild(inp, tag);
+  setTimeout(function(){inp.focus();inp.select();},50);
+}
+
+function micShSaveEdit(i, inp) {
+  var val = inp.value.trim();
+  if (!val) return;
+  _micItems[i].pl = val;
+  // Заменяем input обратно на тег
+  inp.outerHTML = '<div id="mstag_'+i+'" onclick="micShPick('+i+')" style="flex:1;padding:9px 12px;background:#EAF4FB;border:1.5px solid #0078D4;border-radius:9px;font-size:13px;font-weight:500;color:#0078D4;cursor:pointer">'+esc(val)+'</div>';
+}
+
+function micShRemove(i) {
+  if (!_micItems) return;
+  _micItems.splice(i, 1);
+  if (_micItems.length === 0) {
+    var prev = document.getElementById('micShPrev');
+    if (prev) { prev.style.display='none'; prev.innerHTML=''; }
+  } else {
+    micShShowResults(_micItems);
+  }
+}
+
+function micShPick(i) {
+  if (!_micItems || !_micItems[i]) return;
+  var val = _micItems[i].pl;
+  micShApply(val);
+}
+
+function micShAdd() {
+  var inp = document.getElementById('micShInp');
+  var text = inp ? inp.value.trim() : '';
+  if (!text) { showToast('Wpisz lub powiedz'); return; }
+  micShApply(text);
+}
+
+function micShApply(val) {
+  // Добавляем в нужную колонку
+  if (SEL[_micCol] && SEL[_micCol].indexOf(val) < 0) {
+    SEL[_micCol].push(val);
+    _updV(_micCol);
+    renderList(_micCol);
+    if (_micCol === 'el') { renderList('def'); renderList('sol'); }
+    if (_micCol === 'def') { renderList('sol'); }
+    renderSummary();
+  }
+  closeOv('shModMic');
+  showToast('Dodano: ' + val);
+}
+
+function setModeG() {
+  setMode('G');
+  var g=document.getElementById('mainTglG'),ng=document.getElementById('mainTglS');
+  if(g){g.style.background='#fff';g.style.color='#1C1C1E';g.style.boxShadow='0 2px 8px rgba(0,0,0,.12)';}
+  if(ng){ng.style.background='transparent';ng.style.color='#C7C7CC';ng.style.boxShadow='none';}
+  
+}
+function setModeNG() {
+  setMode('S');
+  var g=document.getElementById('mainTglG'),ng=document.getElementById('mainTglS');
+  if(g){g.style.background='transparent';g.style.color='#C7C7CC';g.style.boxShadow='none';}
+  if(ng){ng.style.background='#fff';ng.style.color='#1C1C1E';ng.style.boxShadow='0 2px 8px rgba(0,0,0,.12)';}
+  
+}
+
+
+
+</script>
+
+<div class="ov" id="shMainMic" style="display:none" onclick="if(event.target===this)closeOv('shMainMic')">
+  <div class="sh" style="max-height:92vh;overflow-y:auto">
+    <div class="sh-bar"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="font-size:17px;font-weight:800;color:#0078D4">Dyktuj opis</div>
+      <button onclick="closeOv('shMainMic')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">×</button>
+    </div>
+    <div style="font-size:11px;color:#A19F9D;margin-bottom:10px">Opisz element, usterkę i co zrobiono — jednym zdaniem</div>
+    <textarea id="mainMicInp" placeholder="Np: czujnik startu nie dziala wymieniono nowy&#10;Np: пассик порвался замінили новий" style="width:100%;min-height:80px;background:#F5F5F7;border:1.5px solid rgba(0,120,212,.2);border-radius:10px;padding:11px 13px;font-size:14px;font-family:inherit;outline:none;resize:none;color:#323130;line-height:1.6;margin-bottom:8px" oninput="mainMicAutoProc(this)"></textarea>
+    <div style="font-size:11px;color:#A19F9D;margin-bottom:12px">Użyj mikrofonu iPhone na klawiaturze</div>
+    <div id="mainMicPrev" style="display:none;margin-bottom:10px"></div>
+    <button onclick="mainMicSearch()" style="width:100%;padding:10px;background:#F5F5F7;border:1px solid #EDEBE9;border-radius:10px;font-size:13px;font-weight:600;color:#0078D4;cursor:pointer;margin-bottom:8px;font-family:inherit">Szukaj w bibliotece</button>
+    <button onclick="mainMicAdd()" style="width:100%;padding:13px;background:#0078D4;border:none;border-radius:12px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;margin-bottom:8px;font-family:inherit">Dodaj do raportu</button>
+    <button onclick="closeOv('shMainMic')" class="sh-btn lt">Anuluj</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// ГЛАВНЫЙ МИКРОФОН - офлайн алгоритм
+// ============================================================
+function mainMicOpen() {
+  var inp = document.getElementById('mainMicInp');
+  if (inp) inp.value = '';
+  var prev = document.getElementById('mainMicPrev');
+  if (prev) { prev.style.display='none'; prev.innerHTML=''; }
+  openSh('shMainMic');
+  setTimeout(function(){var i=document.getElementById('mainMicInp');if(i)i.focus();},400);
+}
+
+var _mainMicTimer = null;
+
+function mainMicAutoProc(el) {
+  clearTimeout(_mainMicTimer);
+  if (el.value.length > 4) _mainMicTimer = setTimeout(mainMicSearch, 800);
+}
+
+function mainMicNorm(s) {
+  return (s||'').toLowerCase()
+    .replace(/ą/g,'a').replace(/ę/g,'e').replace(/ó/g,'o')
+    .replace(/ś/g,'s').replace(/ź/g,'z').replace(/ż/g,'z')
+    .replace(/ć/g,'c').replace(/ń/g,'n').replace(/ł/g,'l')
+    .replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+}
+
+// Словарь русских синонимов → польские слова для поиска
+var RU_SYN = {
+  // Из переводов eXtend/X/XD
+  'kompressor':'kompaktor', 'компактор':'kompaktor', 'компрессор':'kompaktor',
+  'skaner zablokowany':'skaner kodow zablokowany',
+  'kamera zablokowana':'obraz zablokowany',
+  'клапа':'klapa', 'клапан':'klapa', 'заслонка':'klapa',
+  'obwod bezpieczenstwa':'obwod bezpieczenstwa',
+  'obwód':'obwod', 'предохранитель':'bezpiecznik',
+  'сортер заблокирован':'sorter zablokowany',
+  'принтер офлайн':'drukarka offline',
+  'нет бумаги':'brak papieru',
+  'автомат':'automat', 'машина':'maszyna',
+  'авария':'awaria', 'аварийный стоп':'zatrzymanie awaryjne',
+  'чистка':'czyszczenie', 'техническое обслуживание':'przeglad',
+  'обновление':'aktualizacja', 'перезагрузка':'reset',
+  'база данных':'baza danych', 'штрихкод':'kod kreskowy',
+  'не распознан':'blad rozpoznania', 'ошибка':'blad',
+
+  // Детали
+  'датчик':'czujnik', 'чуйник':'czujnik', 'сенсор':'czujnik',
+  'фотоэлемент':'fotokomurka', 'фотодатчик':'fotokomurka',
+  'ремень':'pas', 'пассик':'pasek', 'пас':'pas',
+  'цепь':'lancuch', 'цепочка':'lancuch',
+  'двигатель':'silnik', 'мотор':'silnik', 'движок':'silnik',
+  'шестерня':'kolo', 'звёздочка':'kolo',
+  'плата':'plyta', 'контроллер':'plyta',
+  'принтер':'drukarka', 'считыватель':'czytnik', 'ридер':'czytnik',
+  'камера':'kamera', 'сканер':'skaner',
+  'заслонка':'klapa', 'клапан':'klapa',
+  'сортер':'sorter', 'сортировщик':'sorter',
+  'компрессор':'zgniatarka', 'зжималка':'zgniatarka',
+  'выключатель':'wylacznik', 'кнопка':'przycisk',
+  'реле':'przekaznik', 'предохранитель':'bezpiecznik',
+  'блок питания':'zasilacz', 'бп':'zasilacz', 'источник':'zasilacz',
+  'частотник':'falownik', 'инвертор':'falownik',
+  'конвейер':'przenosnik', 'транспортёр':'przenosnik',
+  'подающий':'podajnik', 'подача':'podajnik',
+  'замок':'zamek', 'ключ':'klucz',
+  'лампочка':'zarowka', 'лампа':'zarowka',
+  'контейнер':'pojemnik', 'корзина':'pojemnik', 'кош':'pojemnik',
+  'экран':'ekran', 'дисплей':'ekran',
+  'роутер':'router', 'модем':'modem',
+  'кабель':'kabel', 'провод':'kabel', 'шнур':'kabel',
+  'адаптер':'adapter', 'переходник':'adapter',
+  'пружина':'sprezyna', 'амортизатор':'amortyzator',
+  'дверь':'drzwi', 'дверца':'drzwi',
+  'подшипник':'lozysko', 'вал':'wal',
+  // Действия
+  'заменил':'wymieniono', 'заменили':'wymieniono', 'поменял':'wymieniono', 'замінили':'wymieniono',
+  'почистил':'wyczyszczono', 'очистил':'wyczyszczono', 'почищено':'wyczyszczono',
+  'проверил':'sprawdzono', 'проверили':'sprawdzono',
+  'отрегулировал':'wyregulowano', 'отрегулировали':'wyregulowano', 'регулировал':'wyregulowano',
+  'законтрил':'zabezpieczono', 'подтянул':'dokrecono', 'затянул':'dokrecono', 'подкрутил':'dokrecono',
+  'смазал':'nasmarowano', 'смазали':'nasmarowano',
+  'установил':'zamontowano', 'поставил':'zamontowano', 'вставил':'zamontowano',
+  'снял':'zdemontowano', 'демонтировал':'zdemontowano',
+  'отремонтировал':'naprawiono', 'починил':'naprawiono',
+  'откалибровал':'skalibrowano', 'настроил':'skonfigurowano',
+  'перезагрузил':'zresetowano', 'сбросил':'zresetowano',
+  // Проблемы
+  'не работает':'nie dziala', 'сломался':'uszkodzony', 'неисправен':'niesprawny',
+  'порвался':'zerwany', 'порван':'zerwany',
+  'заклинило':'zablokowany', 'застрял':'zablokowany',
+  'не крутится':'nie obraca', 'не вращается':'nie obraca',
+  'грязный':'zabrudzony', 'загрязнён':'zabrudzony',
+  'износился':'zuzyty', 'изношен':'zuzyty',
+  'нет сигнала':'brak sygnalu', 'нет связи':'brak polaczenia',
+  'перегрев':'przegrzanie', 'перегрелся':'przegrzanie',
+  'слабый':'slaby', 'треснул':'pekniecie', 'погнутый':'pogiety',
+  // Типы сервиса
+  'гарантия':'gwarancja', 'гарантийный':'gwarancyjny',
+  'техобслуживание':'przeglad', 'осмотр':'przeglad', 'то':'przeglad',
+  'плановый':'planowy', 'аварийный':'awaryjna',
+};
+
+function mainMicTranslate(text) {
+  var t = text.toLowerCase();
+  Object.keys(RU_SYN).forEach(function(ru) {
+    t = t.replace(new RegExp(ru, 'g'), RU_SYN[ru]);
+  });
+  return t;
+}
+
+function mainMicScore(text, item) {
+  var norm = mainMicNorm(text);
+  var pl = mainMicNorm(item.pl);
+  var ru = mainMicNorm(item.ru||'');
+  var sc = 0;
+  if (norm.indexOf(pl) >= 0) sc += 12;
+  if (ru && norm.indexOf(ru) >= 0) sc += 12;
+  var words = norm.split(' ').filter(function(w){return w.length>2;});
+  pl.split(' ').filter(function(w){return w.length>2;}).forEach(function(w){
+    if (norm.indexOf(w) >= 0) sc += 4;
+    words.forEach(function(ww){if(ww.indexOf(w)>=0||w.indexOf(ww)>=0)sc+=2;});
+  });
+  if (ru) ru.split(' ').filter(function(w){return w.length>2;}).forEach(function(w){
+    if (norm.indexOf(w) >= 0) sc += 4;
+    words.forEach(function(ww){if(ww.indexOf(w)>=0||w.indexOf(ww)>=0)sc+=2;});
+  });
+  return sc;
+}
+
+function mainMicSearch() {
+  var text = (document.getElementById('mainMicInp')||{}).value||'';
+  text = text.trim(); if (!text) return;
+
+  var prev = document.getElementById('mainMicPrev'); if (!prev) return;
+  // Переводим русские слова в польские для лучшего поиска
+  var translated = mainMicTranslate(text);
+  var norm = mainMicNorm(translated);
+
+  // Ищем лучшее совпадение для каждой категории
+  var bestEl = null, bestDef = null, bestSol = null, bestKon = null;
+  var scoreEl = 0, scoreDef = 0, scoreSol = 0, scoreKon = 0;
+
+  // Element
+  var allEl = (D.el||[]).concat(custom.el||[]);
+  allEl.forEach(function(item) {
+    var sc = mainMicScore(text, item);
+    if (sc > scoreEl) { scoreEl = sc; bestEl = item; }
+  });
+
+  // Usterka
+  var allDef = (D.def||[]).concat(custom.def||[]);
+  allDef.forEach(function(item) {
+    var sc = mainMicScore(text, item);
+    if (sc > scoreDef) { scoreDef = sc; bestDef = item; }
+  });
+
+  // Co zrobiono
+  var allSol = (D.sol||[]).concat(custom.sol||[]);
+  allSol.forEach(function(item) {
+    var sc = mainMicScore(text, item);
+    if (sc > scoreSol) { scoreSol = sc; bestSol = item; }
+  });
+
+  // Serwis
+  var allKon = (D.kon||[]).concat(custom.kon||[]);
+  allKon.forEach(function(item) {
+    var sc = mainMicScore(text, item);
+    if (sc > scoreKon) { scoreKon = sc; bestKon = item; }
+  });
+
+  // Также ищем части
+  var bestPart = null, scorePart = 0;
+  WH.concat(custParts).forEach(function(p, i) {
+    var pn = mainMicNorm(p.n + ' ' + p.k);
+    var sc = 0;
+    norm.split(' ').filter(function(w){return w.length>2;}).forEach(function(w){
+      if (pn.indexOf(w) >= 0) sc += 3;
+    });
+    if (sc > scorePart) { scorePart = sc; bestPart = {p:p, idx:i}; }
+  });
+
+  // Показываем результаты
+  var h = '';
+  var hasAny = false;
+
+  if (bestEl && scoreEl > 3) {
+    hasAny = true;
+    h += '<div class="mmr-row"><div class="mmr-badge el">Element</div>';
+    h += '<div class="mmr-val" id="mmr_el" onclick="mmrPick(\'el\',this)">'+esc(bestEl.pl)+'</div>';
+    h += '<button onclick="mmrEdit(\'el\')" class="mmr-edit"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 2l2 2-7 7H3v-2l7-7z"/></svg></button>';
+    h += '<button onclick="mmrSkip(\'el\')" class="mmr-skip"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/></svg></button>';
+    h += '</div>';
+  }
+  if (bestDef && scoreDef > 3) {
+    hasAny = true;
+    h += '<div class="mmr-row"><div class="mmr-badge def">Usterka</div>';
+    h += '<div class="mmr-val" id="mmr_def" onclick="mmrPick(\'def\',this)">'+esc(bestDef.pl)+'</div>';
+    h += '<button onclick="mmrEdit(\'def\')" class="mmr-edit"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 2l2 2-7 7H3v-2l7-7z"/></svg></button>';
+    h += '<button onclick="mmrSkip(\'def\')" class="mmr-skip"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/></svg></button>';
+    h += '</div>';
+  }
+  if (bestSol && scoreSol > 3) {
+    hasAny = true;
+    h += '<div class="mmr-row"><div class="mmr-badge sol">Wykonano</div>';
+    h += '<div class="mmr-val" id="mmr_sol" onclick="mmrPick(\'sol\',this)">'+esc(bestSol.pl)+'</div>';
+    h += '<button onclick="mmrEdit(\'sol\')" class="mmr-edit"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 2l2 2-7 7H3v-2l7-7z"/></svg></button>';
+    h += '<button onclick="mmrSkip(\'sol\')" class="mmr-skip"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/></svg></button>';
+    h += '</div>';
+  }
+  if (bestPart && scorePart >= 3) {
+    hasAny = true;
+    h += '<div class="mmr-row"><div class="mmr-badge part">Część</div>';
+    h += '<div class="mmr-val" id="mmr_part" onclick="mmrPick(\'part\',this)" data-idx="'+bestPart.idx+'">'+esc(bestPart.p.n)+'</div>';
+    h += '<button onclick="mmrSkip(\'part\')" class="mmr-skip"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/></svg></button>';
+    h += '</div>';
+  }
+
+  if (!hasAny) {
+    h = '<div style="padding:10px;text-align:center;font-size:13px;color:#A19F9D">Nie rozpoznano — spróbuj opisać inaczej</div>';
+  }
+
+  prev.innerHTML = h;
+  prev.style.display = 'block';
+
+  // Сохраняем найденное
+  window._mmrData = {
+    el: (bestEl && scoreEl > 3) ? bestEl : null,
+    def: (bestDef && scoreDef > 3) ? bestDef : null,
+    sol: (bestSol && scoreSol > 3) ? bestSol : null,
+    kon: (bestKon && scoreKon > 3) ? bestKon : null,
+    part: (bestPart && scorePart >= 3) ? bestPart : null
+  };
+}
+
+function mmrPick(col, el) {
+  el.style.background = '#107C10';
+  el.style.color = '#fff';
+  el.style.borderColor = '#107C10';
+}
+
+function mmrSkip(col) {
+  var row = document.getElementById('mmr_'+col);
+  if (row) row.closest('.mmr-row').style.opacity = '0.3';
+  if (window._mmrData) window._mmrData[col] = null;
+}
+
+function mmrEdit(col) {
+  var val = document.getElementById('mmr_'+col);
+  if (!val) return;
+  var oldText = val.textContent;
+  var inp = document.createElement('input');
+  inp.value = oldText;
+  inp.style.cssText = 'flex:1;padding:6px 10px;background:#fff;border:1.5px solid #0078D4;border-radius:8px;font-size:13px;font-family:inherit;outline:none;color:#323130;min-width:0';
+  inp.addEventListener('blur', function() {
+    var newVal = inp.value.trim() || oldText;
+    if (window._mmrData && window._mmrData[col]) window._mmrData[col].pl = newVal;
+    val.textContent = newVal;
+    val.parentNode.replaceChild(val, inp);
+  });
+  inp.addEventListener('keydown', function(e){if(e.key==='Enter')this.blur();});
+  val.parentNode.replaceChild(inp, val);
+  setTimeout(function(){inp.focus();inp.select();},50);
+}
+
+function mainMicAdd() {
+  var d = window._mmrData || {};
+  var added = false;
+
+  if (d.el) { var v=d.el.pl; if(SEL.el.indexOf(v)<0)SEL.el.push(v); _updV('el'); renderList('el'); added=true; }
+  if (d.def) { var v=d.def.pl; if(SEL.def.indexOf(v)<0)SEL.def.push(v); _updV('def'); renderList('def'); added=true; }
+  if (d.sol) { var v=d.sol.pl; if(SEL.sol.indexOf(v)<0)SEL.sol.push(v); _updV('sol'); renderList('sol'); added=true; }
+  if (d.kon) { var v=d.kon.pl; if(SEL.kon.indexOf(v)<0)SEL.kon.push(v); _updV('kon'); renderList('kon'); added=true; }
+  if (d.part) {
+    var idx=d.part.idx;
+    var sp=curMode==='G'?selPartsG:selPartsS;
+    var pq=curMode==='G'?partQtyG:partQtyS;
+    sp['p'+idx]=true; pq['p'+idx]=(pq['p'+idx]||0)+1;
+    ss('rv_sp'+curMode,sp); ss('rv_pq'+curMode,pq);
+    renderParts(); added=true;
+  }
+
+  if (!added) { showToast('Nic nie zaznaczono'); return; }
+  renderSummary();
+  closeOv('shMainMic');
+  showToast('Dodano do raportu');
+}
+
+</script>
+<script>
+
+// ============================================================
+// СИНОНИМЫ - пользовательские
+// ============================================================
+function synLoad() {
+  try { var v = localStorage.getItem('rv_syn'); if(v) return JSON.parse(v); } catch(e) {}
+  return {};
+}
+function synSave(d) { try { localStorage.setItem('rv_syn', JSON.stringify(d)); } catch(e) {} }
+
+function synRender() {
+  var list = document.getElementById('synList'); if (!list) return;
+  var d = synLoad();
+  var keys = Object.keys(d);
+  if (!keys.length) {
+    list.innerHTML = '<div style="font-size:12px;color:#A19F9D;padding:6px 0">Brak własnych synonimów</div>';
+    return;
+  }
+  var h = '';
+  keys.forEach(function(ru) {
+    h += '<div style="display:flex;align-items:center;gap:6px;padding:6px 8px;background:#F5F5F7;border-radius:7px;margin-bottom:4px">';
+    h += '<span style="flex:1;font-size:12px;color:#323130"><b>' + esc(ru) + '</b> → ' + esc(d[ru]) + '</span>';
+    h += '<button data-ru="'+esc(ru)+'" onclick="synDelByData(this)" style="background:none;border:none;color:#FF3B30;font-size:16px;cursor:pointer;padding:0 4px;line-height:1">×</button>';
+    h += '</div>';
+  });
+  list.innerHTML = h;
+}
+
+function synAdd() {
+  var ru = (document.getElementById('synRu')||{}).value||'';
+  var pl = (document.getElementById('synPl')||{}).value||'';
+  ru = ru.trim().toLowerCase();
+  pl = pl.trim().toLowerCase();
+  if (!ru || !pl) { showToast('Wypelnij oba pola'); return; }
+  var d = synLoad();
+  d[ru] = pl;
+  synSave(d);
+  // Добавляем в RU_SYN
+  RU_SYN[ru] = pl;
+  document.getElementById('synRu').value = '';
+  document.getElementById('synPl').value = '';
+  synRender();
+  showToast('Dodano: ' + ru + ' → ' + pl);
+}
+
+function synDelByData(btn) {
+  synDel(btn.getAttribute('data-ru'));
+}
+function synDel(ru) {
+  var d = synLoad();
+  delete d[ru];
+  delete RU_SYN[ru];
+  synSave(d);
+  synRender();
+}
+
+// Загружаем пользовательские синонимы при старте
+(function() {
+  var d = synLoad();
+  Object.keys(d).forEach(function(ru) { RU_SYN[ru] = d[ru]; });
+})();
+
+// Рендерим список когда открываются настройки
+var _origOpenSh = (typeof openSh==='function')?openSh:null;
+openSh = function(id) {
+  if(_origOpenSh)_origOpenSh(id);
+  if (id === 'shSet') setTimeout(synRender, 100);
+};
+
+</script>
+
+<div class="ov" id="shMagScan" style="display:none" onclick="if(event.target===this){magStopCamera();closeOv('shMagScan')}">
+  <div class="sh" style="max-height:85vh;overflow-y:auto">
+    <div class="sh-bar"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-size:17px;font-weight:800;color:#0078D4">Skanuj QR</div>
+      <button onclick="magStopCamera();closeOv('shMagScan')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">×</button>
+    </div>
+    <div style="position:relative;width:100%;border-radius:12px;overflow:hidden;background:#000;margin-bottom:12px">
+      <video id="magScanVideo" playsinline style="width:100%;display:block"></video>
+      <canvas id="magScanCanvas" style="display:none"></canvas>
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60%;aspect-ratio:1;border:2px solid rgba(255,255,255,.6);border-radius:8px;pointer-events:none"></div>
+    </div>
+    <div style="text-align:center;font-size:12px;color:#A19F9D;margin-bottom:12px">Nakieruj kamerę na kod QR na naklejce</div>
+    <button onclick="magStopCamera();closeOv('shMagScan')" class="sh-btn lt">Anuluj</button>
+  </div>
+</div>
+
+<div class="ov" id="shMagAdd" style="display:none" onclick="if(event.target===this)closeOv('shMagAdd')">
+  <div class="sh" style="max-height:85vh;overflow-y:auto">
+    <div class="sh-bar"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="font-size:17px;font-weight:800;color:#34C759">Nowa część</div>
+      <button onclick="closeOv('shMagAdd')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">×</button>
+    </div>
+    <div style="margin-bottom:8px"><span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;display:block;margin-bottom:4px">Nazwa</span>
+      <input id="magNewName" placeholder="Np. Silnik 24V 80rpm" style="width:100%;padding:11px 13px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130">
+    </div>
+    <div style="margin-bottom:8px"><span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;display:block;margin-bottom:4px">Kod części</span>
+      <input id="magNewCode" placeholder="Np. 10018200" style="width:100%;padding:11px 13px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130">
+    </div>
+    <div style="margin-bottom:14px"><span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;display:block;margin-bottom:4px">Kategoria</span>
+      <input id="magNewCat" placeholder="Np. Silniki" style="width:100%;padding:11px 13px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130">
+    </div>
+    <button onclick="magAddSave()" style="width:100%;padding:13px;background:#34C759;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px">Dodaj do magazynu</button>
+    <button onclick="closeOv('shMagAdd')" class="sh-btn lt">Anuluj</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// MAGAZYN - новые функции: QR, добавление, печать
+// ============================================================
+
+// --- QR СКАНЕР ---
+function magScanQR() {
+  openSh('shMagScan');
+  setTimeout(function() { magStartCamera(); }, 400);
+}
+
+var _magScanStream = null;
+var _magScanAnimFrame = null;
+var _magScanDone = false;
+
+function magStartCamera() {
+  var video = document.getElementById('magScanVideo');
+  if (!video) return;
+  _magScanDone = false;
+
+  navigator.mediaDevices.getUserMedia({
+    video: {facingMode: {ideal: 'environment'}, width: {ideal: 1280}, height: {ideal: 720}}
+  })
+  .then(function(stream) {
+    _magScanStream = stream;
+    video.srcObject = stream;
+    video.setAttribute('playsinline', true);
+    video.play();
+    video.addEventListener('loadedmetadata', function() {
+      magScanLoop();
+    });
+  })
+  .catch(function(err) {
+    showToast('Brak dostepu do kamery: ' + err.message);
+    closeOv('shMagScan');
+  });
+}
+
+function magScanLoop() {
+  var video = document.getElementById('magScanVideo');
+  var canvas = document.getElementById('magScanCanvas');
+  if (!video || !canvas || _magScanDone) return;
+
+  // Попробуем BarcodeDetector (встроен в Safari iOS 16+)
+  if ('BarcodeDetector' in window) {
+    var bd = new BarcodeDetector({formats: ['qr_code', 'code_128', 'code_39', 'ean_13', 'ean_8']});
+    function detectLoop() {
+      if (_magScanDone || !_magScanStream) return;
+      bd.detect(video).then(function(codes) {
+        if (codes && codes.length > 0) {
+          magScanFound(codes[0].rawValue);
+        } else {
+          _magScanAnimFrame = requestAnimationFrame(detectLoop);
+        }
+      }).catch(function() {
+        _magScanAnimFrame = requestAnimationFrame(detectLoop);
+      });
+    }
+    _magScanAnimFrame = requestAnimationFrame(detectLoop);
+    return;
+  }
+
+  // Запасной вариант — jsQR
+  var ctx = canvas.getContext('2d');
+  function tick() {
+    if (_magScanDone || !_magScanStream) return;
+    if (video.readyState >= 2 && video.videoWidth > 0) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0);
+      try {
+        var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        if (typeof jsQR !== 'undefined') {
+          var code = jsQR(imgData.data, imgData.width, imgData.height, {inversionAttempts: 'dontInvert'});
+          if (code && code.data) {
+            magScanFound(code.data);
+            return;
+          }
+        }
+      } catch(e) {}
+    }
+    _magScanAnimFrame = requestAnimationFrame(tick);
+  }
+  _magScanAnimFrame = requestAnimationFrame(tick);
+}
+
+function magStopCamera() {
+  _magScanDone = true;
+  if (_magScanAnimFrame) { cancelAnimationFrame(_magScanAnimFrame); _magScanAnimFrame = null; }
+  if (_magScanStream) {
+    _magScanStream.getTracks().forEach(function(t) { t.stop(); });
+    _magScanStream = null;
+  }
+}
+
+function magScanFound(code) {
+  _magScanDone = true;
+  magStopCamera();
+
+  // Вибрация (iPhone поддерживает)
+  if (navigator.vibrate) navigator.vibrate(100);
+
+  closeOv('shMagScan');
+
+  if (!_magData) _magData = magLoad();
+  var all = magGetAll();
+  var found = all.find(function(p) {
+    return p.k && (p.k.toLowerCase() === code.toLowerCase() || p.k === code);
+  });
+
+  if (found) {
+    showToast('✓ ' + found.n.split(' ').slice(0,3).join(' '));
+    setTimeout(function() { magOpenSheet(found.id); }, 400);
+  } else {
+    showToast('Nie znaleziono: ' + code);
+  }
+}
+
+// --- DODAJ NOWĄ CZĘŚĆ ---
+var _magCustParts = [];
+
+function magLoadCust() {
+  try { _magCustParts = JSON.parse(localStorage.getItem('rv_mag_cust') || '[]'); } catch(e) { _magCustParts = []; }
+}
+
+function magSaveCust() {
+  try { localStorage.setItem('rv_mag_cust', JSON.stringify(_magCustParts)); } catch(e) {}
+}
+
+function magAddNew() {
+  var inp_n = document.getElementById('magNewName');
+  var inp_k = document.getElementById('magNewCode');
+  var inp_c = document.getElementById('magNewCat');
+  if (inp_n) inp_n.value = '';
+  if (inp_k) inp_k.value = '';
+  if (inp_c) inp_c.value = '';
+  openSh('shMagAdd');
+  setTimeout(function() { if (inp_n) inp_n.focus(); }, 400);
+}
+
+function magAddSave() {
+  var n = (document.getElementById('magNewName').value || '').trim();
+  var k = (document.getElementById('magNewCode').value || '').trim();
+  var cat = (document.getElementById('magNewCat').value || 'Inne').trim();
+  if (!n || !k) { showToast('Wpisz nazwe i kod'); return; }
+
+  if (!_magCustParts) magLoadCust();
+
+  // Проверим дубль
+  var allParts = MAG_PARTS.concat(_magCustParts);
+  if (allParts.find(function(p) { return p.k.toLowerCase() === k.toLowerCase(); })) {
+    showToast('Taki kod juz istnieje'); return;
+  }
+
+  var newId = 1000 + _magCustParts.length + 1;
+  var newPart = {id: newId, n: n, k: k, cat: cat};
+  _magCustParts.push(newPart);
+  magSaveCust();
+
+  if (!_magData) _magData = magLoad();
+  _magData[newId] = {qty: 0, min: 1, photo: null};
+  magSave();
+
+  closeOv('shMagAdd');
+  magRender();
+  showToast('Dodano: ' + n);
+}
+
+// Обновим MAG_PARTS чтобы включал кастомные
+function magGetAll() {
+  if (!_magCustParts) magLoadCust();
+  return MAG_PARTS.concat(_magCustParts);
+}
+
+// --- ПЕЧАТЬ QR ---
+function magPrintQR() {
+  var allParts = magGetAll();
+  if (!_magData) _magData = magLoad();
+
+  // Строим HTML страницу для печати
+  var css = '*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;background:#fff}.page{width:210mm;padding:8mm;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:36mm;gap:2mm}.sticker{border:1px solid #ccc;display:flex;overflow:hidden;border-radius:3px}.stripe{width:5mm;background:#007A7A;flex-shrink:0}.info{flex:1;padding:3mm 2mm;display:flex;flex-direction:column;justify-content:center;gap:2mm}.nm{font-size:9pt;font-weight:700;color:#111;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.cd{font-size:8pt;color:#555;font-family:monospace}.qrbox{width:34mm;height:36mm;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:2mm}.qrbox canvas,.qrbox img{width:30mm!important;height:30mm!important}';
+  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script><style>'+css+'</style></head><body><div class="page">';
+
+  allParts.forEach(function(p) {
+    html += '<div class="sticker">'
+      + '<div class="stripe"></div>'
+      + '<div class="info"><div class="nm">' + p.n + '</div><div class="cd">' + p.k + '</div></div>'
+      + '<div class="qrbox" id="qr_' + p.id + '"></div>'
+      + '</div>';
+  });
+
+  html += '<button onclick="window.close()" style="position:fixed;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:none;background:#333;color:#fff;font-size:20px;cursor:pointer;z-index:999;display:flex;align-items:center;justify-content:center">&#215;</button></div>'
+    + '<scr' + 'ipt>window.onload=function(){var parts='+JSON.stringify(allParts)+';parts.forEach(function(p){var el=document.getElementById("qr_"+p.id);if(el){try{new QRCode(el,{text:p.k,width:114,height:114,colorDark:"#000",colorLight:"#fff",correctLevel:QRCode.CorrectLevel.L});}catch(e){}}});setTimeout(function(){window.print();},1000);};' + '<' + '/script>';
+
+  var w = window.open('', '_blank');
+  if (w) { w.document.write(html); w.document.close(); }
+  else { showToast('Zezwol na popup w przegladarce'); }
+}
+
+// Инициализация кастомных деталей
+magLoadCust();
+
+// Патч magRender чтобы использовал magGetAll
+var _origMagRender = magRender;
+magRender = function() {
+  // Добавляем кастомные детали в MAG_PARTS временно
+  var origLen = MAG_PARTS.length;
+  if (_magCustParts && _magCustParts.length) {
+    _magCustParts.forEach(function(p) {
+      if (!MAG_PARTS.find(function(x){return x.id===p.id;})) {
+        MAG_PARTS.push(p);
+      }
+    });
+  }
+  _origMagRender();
+};
+
+</script>
+
+<div class="ov" id="shShop" style="display:none" onclick="if(event.target===this)closeOv('shShop')">
+  <div class="sh" style="max-height:92vh;overflow-y:auto">
+    <div class="sh-bar"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="font-size:17px;font-weight:800;color:#323130">Wybierz sklep</div>
+      <button onclick="closeOv('shShop')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">×</button>
+    </div>
+    <div style="display:flex;gap:6px;margin-bottom:6px">
+      <div style="flex:1;display:flex;align-items:center;gap:8px;background:#F5F5F7;border-radius:10px;padding:8px 12px">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#C8C6C4" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="4"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
+        <input id="shopInp" placeholder="Numer, miasto lub nazwa..." oninput="shopAutoProc(this)" style="border:none;background:none;font-size:14px;font-family:inherit;outline:none;color:#323130;flex:1">
+      </div>
+      <button id="shopGpsBtnSheet" onclick="shopGPS()" style="padding:0 12px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">GPS</button>
+    </div>
+    <div id="shopStatus" style="font-size:11px;color:#A19F9D;margin-bottom:8px;min-height:16px;text-align:center"></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <span style="font-size:11px;color:#A19F9D;white-space:nowrap">Radius:</span>
+      <input type="range" id="shopRadius" min="200" max="5000" step="100" value="800" oninput="shopRadiusUpdate(this.value)" onchange="shopRadiusChanged(this.value)" style="flex:1;accent-color:#0078D4">
+      <span id="shopRadiusVal" style="font-size:11px;font-weight:700;color:#0078D4;white-space:nowrap;min-width:45px">800 m</span>
+    </div>
+    <div style="font-size:11px;color:#A19F9D;margin-bottom:8px">Lub dodaj własny sklep:</div>
+    <div style="display:flex;gap:6px;margin-bottom:12px">
+      <input id="shopCustomInp" placeholder="Np. Bing Rzeszów, al. Piłsudskiego" style="flex:1;padding:9px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;font-family:inherit;outline:none;color:#323130">
+      <button onclick="shopPickCustom()" style="padding:0 12px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">OK</button>
+    </div>
+    <div id="shopResults" style="background:#fff;border-radius:10px;overflow:hidden;border:0.5px solid #EDEBE9;max-height:300px;overflow-y:auto"></div>
+    <button onclick="shopClear();closeOv('shShop')" style="width:100%;margin-top:10px;padding:10px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;color:#A19F9D;cursor:pointer;font-family:inherit">Wyczyść wybór</button>
+
+    <!-- Dodaj własny sklep do bazy -->
+    <div style="margin-top:12px;border-top:0.5px solid #EDEBE9;padding-top:12px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A19F9D;margin-bottom:8px">Nie ma w bazie? Dodaj:</div>
+      <div style="display:flex;gap:6px;margin-bottom:6px">
+        <input id="shopNewChain" placeholder="Sieć (np. Aldi)" style="flex:1;padding:9px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;font-family:inherit;outline:none;color:#323130">
+        <input id="shopNewId" placeholder="Nr" style="width:70px;padding:9px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;font-family:inherit;outline:none;color:#323130">
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:8px">
+        <input id="shopNewCity" placeholder="Miasto" style="flex:1;padding:9px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;font-family:inherit;outline:none;color:#323130">
+        <input id="shopNewAddr" placeholder="Ulica" style="flex:1;padding:9px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;font-family:inherit;outline:none;color:#323130">
+      </div>
+      <button onclick="shopAddToBase()" style="width:100%;padding:10px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">+ Dodaj do bazy i wybierz</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var SHOPS_DB = [
+  // Biedronka
+  {id:6886,chain:"Biedronka",city:"Adamów",addr:"SGO Polesie 4",zip:"21-412"},
+  {id:4425,chain:"Biedronka",city:"Annopol",addr:"ul. Radomska 28A",zip:"23-235"},
+  {id:3082,chain:"Biedronka",city:"Bełżyce",addr:"ul. Fabryczna 6",zip:"24-200"},
+  {id:1760,chain:"Biedronka",city:"Biała Podlaska",addr:"ul. Przechodnia 8",zip:"21-500"},
+  {id:1778,chain:"Biedronka",city:"Biała Podlaska",addr:"ul. Sidorska 2K",zip:"21-500"},
+  {id:2328,chain:"Biedronka",city:"Biała Podlaska",addr:"ul. Kąpielowa 3",zip:"21-500"},
+  {id:2379,chain:"Biedronka",city:"Biała Podlaska",addr:"ul. Anny Jagiellonki 1",zip:"21-500"},
+  {id:3524,chain:"Biedronka",city:"Biała Podlaska",addr:"ul. Orzechowa 2A",zip:"21-500"},
+  {id:3525,chain:"Biedronka",city:"Biała Podlaska",addr:"ul. Warszawska 34-38",zip:"21-500"},
+  {id:5649,chain:"Biedronka",city:"Biała Podlaska",addr:"ul. Sidorska 100",zip:"21-500"},
+  {id:5663,chain:"Biedronka",city:"Biała Podlaska",addr:"ul. Brzeska 27",zip:"21-500"},
+  {id:2525,chain:"Biedronka",city:"Biłgoraj",addr:"ul. Kościuszki 156",zip:"23-400"},
+  {id:3638,chain:"Biedronka",city:"Biłgoraj",addr:"ul. Włosiankarska 2",zip:"23-400"},
+  {id:1288,chain:"Biedronka",city:"Dębica",addr:"ul. Jana Pawła II 56",zip:"39-200"},
+  {id:3118,chain:"Biedronka",city:"Dębica",addr:"ul. Tuwima 4",zip:"39-200"},
+  {id:3644,chain:"Biedronka",city:"Dębica",addr:"ul. Nagawczyna 245F",zip:"39-200"},
+  {id:4711,chain:"Biedronka",city:"Dębica",addr:"ul. Kraszewskiego 59",zip:"39-200"},
+  {id:5885,chain:"Biedronka",city:"Dębica",addr:"ul. Poddęby 15",zip:"39-200"},
+  {id:6287,chain:"Biedronka",city:"Dębica",addr:"ul. Kościuszki",zip:"39-200"},
+  {id:1813,chain:"Biedronka",city:"Dęblin",addr:"ul. Rynek 4",zip:"08-530"},
+  {id:2856,chain:"Biedronka",city:"Dęblin",addr:"ul. Gen. J. Kowalskiego 9",zip:"08-530"},
+  {id:1363,chain:"Biedronka",city:"Chełm",addr:"ul. Wojsławicka 6",zip:"22-100"},
+  {id:2536,chain:"Biedronka",city:"Chełm",addr:"ul. Lwowska 79",zip:"22-100"},
+  {id:2718,chain:"Biedronka",city:"Chełm",addr:"ul. Kolejowa 85",zip:"22-100"},
+  {id:3193,chain:"Biedronka",city:"Chełm",addr:"ul. Lubelska 173",zip:"22-100"},
+  {id:3641,chain:"Biedronka",city:"Chełm",addr:"ul. Armii Krajowej 13",zip:"22-100"},
+  {id:3642,chain:"Biedronka",city:"Chełm",addr:"ul. Rejowiecka 120",zip:"22-100"},
+  {id:4632,chain:"Biedronka",city:"Chełm",addr:"ul. Siedlecka 4",zip:"22-100"},
+  {id:7345,chain:"Biedronka",city:"Chełm",addr:"ul. Rejowiecka 179B",zip:"22-100"},
+  {id:2979,chain:"Biedronka",city:"Hrubieszów",addr:"ul. Kolejowa 43",zip:"22-500"},
+  {id:6529,chain:"Biedronka",city:"Hrubieszów",addr:"ul. Piłsudskiego 57",zip:"22-500"},
+  {id:1359,chain:"Biedronka",city:"Janów Lubelski",addr:"ul. Zamoyskiego 26",zip:"23-300"},
+  {id:4050,chain:"Biedronka",city:"Janów Lubelski",addr:"ul. Sienkiewicza 46",zip:"23-300"},
+  {id:6078,chain:"Biedronka",city:"Janów Lubelski",addr:"ul. Lubelska 2",zip:"23-300"},
+  {id:1472,chain:"Biedronka",city:"Jarosław",addr:"ul. Krakowska 32",zip:"37-500"},
+  {id:3023,chain:"Biedronka",city:"Jarosław",addr:"ul. Zamkowa 3D",zip:"37-500"},
+  {id:4430,chain:"Biedronka",city:"Jarosław",addr:"ul. Pełkińska 63",zip:"37-500"},
+  {id:6101,chain:"Biedronka",city:"Jarosław",addr:"ul. Pruchnicka",zip:"37-500"},
+  {id:3075,chain:"Biedronka",city:"Jasło",addr:"ul. Kazimierza Wielkiego 23",zip:"38-200"},
+  {id:3076,chain:"Biedronka",city:"Jasło",addr:"ul. Rafineryjna 4E",zip:"38-200"},
+  {id:3080,chain:"Biedronka",city:"Jasło",addr:"ul. Szkolna 21",zip:"38-200"},
+  {id:5299,chain:"Biedronka",city:"Jasło",addr:"ul. Mickiewicza 108",zip:"38-200"},
+  {id:5368,chain:"Biedronka",city:"Jasło",addr:"ul. 3 Maja 32",zip:"38-200"},
+  {id:7398,chain:"Biedronka",city:"Jasło",addr:"ul. Przemysłowa",zip:"38-200"},
+  {id:3318,chain:"Biedronka",city:"Kolbuszowa",addr:"ul. Obrońców pokoju 1",zip:"36-100"},
+  {id:4010,chain:"Biedronka",city:"Kolbuszowa",addr:"ul. Ks. Ruczki 1A",zip:"36-100"},
+  {id:6589,chain:"Biedronka",city:"Kolbuszowa",addr:"ul. Tarnobrzeska 25",zip:"36-100"},
+  {id:2315,chain:"Biedronka",city:"Krasnystaw",addr:"ul. PCK 7",zip:"22-300"},
+  {id:2691,chain:"Biedronka",city:"Krasnystaw",addr:"ul. Nieczaja 2",zip:"22-300"},
+  {id:4416,chain:"Biedronka",city:"Krasnystaw",addr:"ul. Zakręcie 2F",zip:"22-300"},
+  {id:1238,chain:"Biedronka",city:"Kraśnik",addr:"al. Tysiąclecia 9",zip:"23-200"},
+  {id:2580,chain:"Biedronka",city:"Kraśnik",addr:"ul. Niepodległości 16",zip:"23-200"},
+  {id:3648,chain:"Biedronka",city:"Kraśnik",addr:"ul. Urzędowska 472",zip:"23-200"},
+  {id:4111,chain:"Biedronka",city:"Kraśnik",addr:"ul. Chopina 10",zip:"23-200"},
+  {id:1799,chain:"Biedronka",city:"Krosno",addr:"ul. Bohaterów Westerplatte 20B",zip:"38-400"},
+  {id:2042,chain:"Biedronka",city:"Krosno",addr:"ul. Podkarpacka 3B",zip:"38-400"},
+  {id:3107,chain:"Biedronka",city:"Krosno",addr:"ul. Grodzka 12-16",zip:"38-400"},
+  {id:4268,chain:"Biedronka",city:"Krosno",addr:"ul. Naftowa 6",zip:"38-400"},
+  {id:6590,chain:"Biedronka",city:"Krosno",addr:"ul. Bieszczadzka",zip:"38-400"},
+  {id:1729,chain:"Biedronka",city:"Leżajsk",addr:"ul. Mickiewicza 80",zip:"37-300"},
+  {id:3061,chain:"Biedronka",city:"Leżajsk",addr:"ul. Sanowa 40A",zip:"37-300"},
+  {id:1599,chain:"Biedronka",city:"Lubaczów",addr:"ul. Mickiewicza 103",zip:"37-600"},
+  {id:4918,chain:"Biedronka",city:"Lubaczów",addr:"ul. Płk. Dąbka 2D",zip:"37-600"},
+  {id:1551,chain:"Biedronka",city:"Lubartów",addr:"al. Tysiąclecia 2",zip:"21-100"},
+  {id:2309,chain:"Biedronka",city:"Lubartów",addr:"ul. Lubelska 98-100",zip:"21-100"},
+  {id:3365,chain:"Biedronka",city:"Lubartów",addr:"ul. Gen. Kleberga 2",zip:"21-100"},
+  {id:1836,chain:"Biedronka",city:"Lublin",addr:"ul. Hetmańska 2",zip:"20-234"},
+  {id:2314,chain:"Biedronka",city:"Lublin",addr:"ul. Jana Sawy 1A",zip:"20-632"},
+  {id:2967,chain:"Biedronka",city:"Lublin",addr:"ul. Ruciana 4",zip:"20-537"},
+  {id:3714,chain:"Biedronka",city:"Lublin",addr:"ul. Diamentowa 19I-H",zip:"20-471"},
+  {id:3819,chain:"Biedronka",city:"Lublin",addr:"ul. Woronieckiego 12",zip:"20-492"},
+  {id:4417,chain:"Biedronka",city:"Lublin",addr:"ul. Jana Pawła II 23",zip:"20-001"},
+  {id:4879,chain:"Biedronka",city:"Lublin",addr:"ul. Bursztynowa 39",zip:"20-576"},
+  {id:4908,chain:"Biedronka",city:"Lublin",addr:"ul. Zemborzycka 78-80",zip:"20-450"},
+  {id:1164,chain:"Biedronka",city:"Lublin",addr:"ul. Górska 11",zip:"20-863"},
+  {id:1364,chain:"Biedronka",city:"Lublin",addr:"ul. Nałęczowska 24",zip:"20-701"},
+  {id:1667,chain:"Biedronka",city:"Lublin",addr:"ul. Sapiehy 2",zip:"20-095"},
+  {id:2540,chain:"Biedronka",city:"Lublin",addr:"ul. Lwowska 12F",zip:"20-128"},
+  {id:3651,chain:"Biedronka",city:"Lublin",addr:"ul. Magnoliowa 1",zip:"20-143"},
+  {id:3775,chain:"Biedronka",city:"Lublin",addr:"ul. Sławinkowska 49B",zip:"20-810"},
+  {id:4619,chain:"Biedronka",city:"Lublin",addr:"ul. Abramowicka 10A",zip:"20-442"},
+  {id:4942,chain:"Biedronka",city:"Lublin",addr:"ul. Główna 1-3",zip:"20-829"},
+  {id:6126,chain:"Biedronka",city:"Lublin",addr:"Unii Lubelskiej 2",zip:"20-108"},
+  {id:1827,chain:"Biedronka",city:"Lublin",addr:"ul. Zamojska 26",zip:"20-105"},
+  {id:2016,chain:"Biedronka",city:"Lublin",addr:"ul. Wolska 8a",zip:"20-410"},
+  {id:3024,chain:"Biedronka",city:"Lublin",addr:"ul. Pogodna 48",zip:"20-337"},
+  {id:3414,chain:"Biedronka",city:"Lublin",addr:"ul. Choiny 1",zip:"20-816"},
+  {id:4342,chain:"Biedronka",city:"Lublin",addr:"ul. Hutnicza 1A",zip:"20-218"},
+  {id:4878,chain:"Biedronka",city:"Lublin",addr:"ul. Mełgiewska 4A",zip:"20-234"},
+  {id:4927,chain:"Biedronka",city:"Lublin",addr:"ul. Krzemionki 3",zip:"20-309"},
+  {id:5292,chain:"Biedronka",city:"Lublin",addr:"ul. Lotnicza 5",zip:"20-322"},
+  {id:6099,chain:"Biedronka",city:"Lublin",addr:"ul. Prusa",zip:"20-064"},
+  {id:2085,chain:"Biedronka",city:"Łańcut",addr:"ul. Podzwierzyniec 39",zip:"37-100"},
+  {id:2378,chain:"Biedronka",city:"Łańcut",addr:"ul. Mickiewicza 10",zip:"37-100"},
+  {id:2777,chain:"Biedronka",city:"Łańcut",addr:"ul. Piłsudskiego 64",zip:"37-100"},
+  {id:2013,chain:"Biedronka",city:"Łęczna",addr:"ul. Szkolna 8",zip:"21-010"},
+  {id:6033,chain:"Biedronka",city:"Łęczna",addr:"ul. Wacława Jawoszka 2a",zip:"21-010"},
+  {id:1678,chain:"Biedronka",city:"Łuków",addr:"ul. Międzyrzecka 72B",zip:"21-400"},
+  {id:3425,chain:"Biedronka",city:"Łuków",addr:"ul. Sienkiewicza 1",zip:"21-400"},
+  {id:7156,chain:"Biedronka",city:"Łuków",addr:"Al. Ryszarda Kaczorowskiego 4",zip:"21-400"},
+  {id:1243,chain:"Biedronka",city:"Mielec",addr:"ul. Drzewieckiego 1",zip:"39-300"},
+  {id:1284,chain:"Biedronka",city:"Mielec",addr:"ul. Warneńczyka 11",zip:"39-300"},
+  {id:2572,chain:"Biedronka",city:"Mielec",addr:"ul. Sandomierska 6",zip:"39-300"},
+  {id:3005,chain:"Biedronka",city:"Mielec",addr:"ul. Piaskowa 2",zip:"39-300"},
+  {id:3798,chain:"Biedronka",city:"Mielec",addr:"al. Niepodległości 13",zip:"39-300"},
+  {id:5884,chain:"Biedronka",city:"Mielec",addr:"ul. Jagiellończyka 29",zip:"39-300"},
+  {id:7135,chain:"Biedronka",city:"Mielec",addr:"ul. Rzochowska 57",zip:"39-300"},
+  {id:1426,chain:"Biedronka",city:"Międzyrzec Podlaski",addr:"ul. Brzeska 31",zip:"21-560"},
+  {id:2882,chain:"Biedronka",city:"Międzyrzec Podlaski",addr:"ul. Partyzantów 6B",zip:"21-560"},
+  {id:5209,chain:"Biedronka",city:"Międzyrzec Podlaski",addr:"ul. Warszawska 36",zip:"21-560"},
+  {id:1767,chain:"Biedronka",city:"Nisko",addr:"ul. Kwiatkowskiego 1D",zip:"37-400"},
+  {id:3654,chain:"Biedronka",city:"Nisko",addr:"ul. Sandomierska 13",zip:"37-400"},
+  {id:1509,chain:"Biedronka",city:"Nowa Dęba",addr:"ul. Jasna 3",zip:"39-460"},
+  {id:1839,chain:"Biedronka",city:"Opole Lubelskie",addr:"ul. Lubelska 32",zip:"24-300"},
+  {id:4941,chain:"Biedronka",city:"Opole Lubelskie",addr:"ul. Fabryczna 38C",zip:"24-300"},
+  {id:1757,chain:"Biedronka",city:"Parczew",addr:"ul. Wojska Polskiego 2",zip:"21-200"},
+  {id:3048,chain:"Biedronka",city:"Parczew",addr:"ul. Jana Pawła II 92",zip:"21-200"},
+  {id:2454,chain:"Biedronka",city:"Pilzno",addr:"ul. Bujnowskiego 3",zip:"39-220"},
+  {id:2246,chain:"Biedronka",city:"Poniatowa",addr:"ul. 1 Maja 7C",zip:"24-320"},
+  {id:2094,chain:"Biedronka",city:"Przemyśl",addr:"ul. Mickiewicza 28",zip:"37-700"},
+  {id:2946,chain:"Biedronka",city:"Przemyśl",addr:"ul. Focha 2A",zip:"37-700"},
+  {id:3006,chain:"Biedronka",city:"Przemyśl",addr:"ul. 3 Maja 19",zip:"37-700"},
+  {id:4348,chain:"Biedronka",city:"Przemyśl",addr:"ul. Łukasińskiego 9",zip:"37-700"},
+  {id:1209,chain:"Biedronka",city:"Przeworsk",addr:"ul. Ignacego Krasickiego 4",zip:"37-200"},
+  {id:2701,chain:"Biedronka",city:"Przeworsk",addr:"ul. Łańcucka 7",zip:"37-200"},
+  {id:1793,chain:"Biedronka",city:"Puławy",addr:"ul. Piłsudskiego 15",zip:"24-100"},
+  {id:2497,chain:"Biedronka",city:"Puławy",addr:"ul. Piaskowa 47",zip:"24-100"},
+  {id:4038,chain:"Biedronka",city:"Puławy",addr:"ul. Gen. Filedorfa Nila 12",zip:"24-100"},
+  {id:4909,chain:"Biedronka",city:"Puławy",addr:"ul. Włostowicka 154",zip:"24-100"},
+  {id:2984,chain:"Biedronka",city:"Radzyń Podlaski",addr:"ul. Warszawska 66",zip:"21-300"},
+  {id:2057,chain:"Biedronka",city:"Ropczyce",addr:"ul. Konarskiego 1-7",zip:"39-100"},
+  {id:3953,chain:"Biedronka",city:"Ropczyce",addr:"ul. Witosa 1C",zip:"39-100"},
+  {id:6528,chain:"Biedronka",city:"Ropczyce",addr:"ul. Grunwaldzka 41",zip:"39-100"},
+  {id:2804,chain:"Biedronka",city:"Rudnik nad Sanem",addr:"ul. Sanowa 11",zip:"37-420"},
+  {id:1698,chain:"Biedronka",city:"Ryki",addr:"ul. Stary Rynek 1/5",zip:"08-500"},
+  {id:4631,chain:"Biedronka",city:"Ryki",addr:"ul. Żytnia 10",zip:"08-500"},
+  {id:1067,chain:"Biedronka",city:"Rzeszów",addr:"ul. Zygmuntowska 8",zip:"35-030"},
+  {id:1421,chain:"Biedronka",city:"Rzeszów",addr:"ul. Rejtana 51",zip:"35-320"},
+  {id:2089,chain:"Biedronka",city:"Rzeszów",addr:"ul. Hetmańska 56",zip:"35-078"},
+  {id:2501,chain:"Biedronka",city:"Rzeszów",addr:"ul. Piłsudskiego 34",zip:"35-002"},
+  {id:3091,chain:"Biedronka",city:"Rzeszów",addr:"ul. Kwiatkowskiego 2A",zip:"35-311"},
+  {id:4349,chain:"Biedronka",city:"Rzeszów",addr:"ul. Witolda 8",zip:"35-302"},
+  {id:4600,chain:"Biedronka",city:"Rzeszów",addr:"ul. Podkarpacka 8A",zip:"35-082"},
+  {id:4957,chain:"Biedronka",city:"Rzeszów",addr:"ul. Strażacka 27E",zip:"35-312"},
+  {id:5369,chain:"Biedronka",city:"Rzeszów",addr:"ul. Lubelska 65",zip:"35-233"},
+  {id:5528,chain:"Biedronka",city:"Rzeszów",addr:"ul. Słowackiego",zip:"35-065"},
+  {id:1404,chain:"Biedronka",city:"Rzeszów",addr:"ul. Ofiar Katynia 15",zip:"35-959"},
+  {id:1517,chain:"Biedronka",city:"Rzeszów",addr:"ul. Siemieńskiego 14",zip:"35-234"},
+  {id:1931,chain:"Biedronka",city:"Rzeszów",addr:"ul. Okulickiego 6",zip:"35-600"},
+  {id:3081,chain:"Biedronka",city:"Rzeszów",addr:"ul. Przemysłowa 3",zip:"35-105"},
+  {id:3198,chain:"Biedronka",city:"Rzeszów",addr:"ul. Obrońców Poczty Gdańskiej 30",zip:"35-509"},
+  {id:3325,chain:"Biedronka",city:"Rzeszów",addr:"ul. Warszawska 29",zip:"35-205"},
+  {id:3880,chain:"Biedronka",city:"Rzeszów",addr:"ul. Leska 2",zip:"35-017"},
+  {id:6050,chain:"Biedronka",city:"Rzeszów",addr:"ul. Pułkownika Iranka-Osmeckiego 25",zip:"35-506"},
+  {id:6102,chain:"Biedronka",city:"Rzeszów",addr:"ul. Stołajowskiego 6",zip:"35-120"},
+  {id:6201,chain:"Biedronka",city:"Rzeszów",addr:"ul. Budziwojska 465",zip:"35-317"},
+  {id:5499,chain:"Biedronka",city:"Rzeszów",addr:"ul. Reymonta 3",zip:"35-210"},
+  {id:1880,chain:"Biedronka",city:"Sanok",addr:"ul. Krakowska 194",zip:"38-500"},
+  {id:2017,chain:"Biedronka",city:"Sanok",addr:"ul. Lipińskiego 17",zip:"38-500"},
+  {id:2791,chain:"Biedronka",city:"Sanok",addr:"ul. Przemyska 24",zip:"38-500"},
+  {id:3663,chain:"Biedronka",city:"Sanok",addr:"ul. Krakowska 2",zip:"38-500"},
+  {id:2656,chain:"Biedronka",city:"Sędziszów Małopolski",addr:"ul. Wesoła 12A",zip:"39-120"},
+  {id:4964,chain:"Biedronka",city:"Sędziszów Małopolski",addr:"ul. Jana Pawła II 54a",zip:"39-120"},
+  {id:1478,chain:"Biedronka",city:"Stalowa Wola",addr:"ul. Jana Pawła II 3",zip:"37-450"},
+  {id:1885,chain:"Biedronka",city:"Stalowa Wola",addr:"ul. Rozwadowska 37A",zip:"37-450"},
+  {id:2131,chain:"Biedronka",city:"Stalowa Wola",addr:"ul. Gen. Okulickiego 140",zip:"37-467"},
+  {id:4145,chain:"Biedronka",city:"Stalowa Wola",addr:"ul. Okulickiego 2",zip:"37-450"},
+  {id:6106,chain:"Biedronka",city:"Stalowa Wola",addr:"ul. Staszica 3D",zip:"37-450"},
+  {id:1324,chain:"Biedronka",city:"Świdnik",addr:"ul. Kosynierów 2",zip:"21-040"},
+  {id:2563,chain:"Biedronka",city:"Świdnik",addr:"ul. Wyszyńskiego 22",zip:"21-040"},
+  {id:3667,chain:"Biedronka",city:"Świdnik",addr:"ul. Skarżyńskiego 1",zip:"21-040"},
+  {id:7178,chain:"Biedronka",city:"Świdnik",addr:"ul. Piasecka",zip:"21-040"},
+  {id:1311,chain:"Biedronka",city:"Tarnobrzeg",addr:"pl. Bartosza Głowackiego 46",zip:"39-400"},
+  {id:2519,chain:"Biedronka",city:"Tarnobrzeg",addr:"ul. Kopernika 15",zip:"39-405"},
+  {id:3668,chain:"Biedronka",city:"Tarnobrzeg",addr:"ul. Kwiatkowskiego 1",zip:"39-400"},
+  {id:3864,chain:"Biedronka",city:"Tarnobrzeg",addr:"ul. Jachowicza 12",zip:"39-400"},
+  {id:5670,chain:"Biedronka",city:"Tarnobrzeg",addr:"ul. Warszawska 2",zip:"39-400"},
+  {id:6113,chain:"Biedronka",city:"Tarnobrzeg",addr:"ul. Mickiewicza 40",zip:"39-400"},
+  {id:6200,chain:"Biedronka",city:"Tarnobrzeg",addr:"ul. Zwierzyniecka 15A",zip:"39-400"},
+  {id:6468,chain:"Biedronka",city:"Tarnobrzeg",addr:"ul. Sikorskiego 2B",zip:"39-400"},
+  {id:2306,chain:"Biedronka",city:"Terespol",addr:"ul. Wojska Polskiego 81/83",zip:"21-550"},
+  {id:1595,chain:"Biedronka",city:"Tomaszów Lubelski",addr:"ul. Jana Pawła II 21",zip:"22-600"},
+  {id:2810,chain:"Biedronka",city:"Tomaszów Lubelski",addr:"ul. Lwowska 126A",zip:"22-600"},
+  {id:4444,chain:"Biedronka",city:"Tomaszów Lubelski",addr:"ul. Łaszczowiecka 1B",zip:"22-600"},
+  {id:2894,chain:"Biedronka",city:"Ustrzyki Dolne",addr:"ul. 29 Listopada 38A",zip:"38-700"},
+  {id:4661,chain:"Biedronka",city:"Ustrzyki Dolne",addr:"ul. PCK 19",zip:"38-700"},
+  {id:1168,chain:"Biedronka",city:"Włodawa",addr:"ul. Korolowska 2",zip:"22-200"},
+  {id:4560,chain:"Biedronka",city:"Włodawa",addr:"ul. Lubelska 50",zip:"22-200"},
+  {id:1101,chain:"Zamość",city:"Zamość",addr:"ul. Zamoyskiego 6",zip:"22-400"},
+  {id:2316,chain:"Biedronka",city:"Zamość",addr:"ul. Wierzbowa 3",zip:"22-400"},
+  {id:3673,chain:"Biedronka",city:"Zamość",addr:"ul. Lwowska 35",zip:"22-400"},
+  {id:3674,chain:"Biedronka",city:"Zamość",addr:"ul. Wyszyńskiego 26",zip:"22-400"},
+  {id:6330,chain:"Biedronka",city:"Zamość",addr:"ul. Legionów",zip:"22-400"},
+  {id:3672,chain:"Biedronka",city:"Zamość",addr:"ul. Lubelska 40",zip:"22-400"},
+  {id:3829,chain:"Biedronka",city:"Zamość",addr:"ul. Lipska 40A",zip:"22-400"},
+  {id:4077,chain:"Biedronka",city:"Zamość",addr:"ul. Dzieci Zamojszczyzny 2",zip:"22-400"},
+  {id:5184,chain:"Biedronka",city:"Zamość",addr:"ul. Sadowa 8",zip:"22-400"},
+  {id:3857,chain:"Biedronka",city:"Żołynia",addr:"ul. Mickiewicza 1B",zip:"37-110"},
+  {id:6180,chain:"Biedronka",city:"Żurawica",addr:"ul. 3 Maja 4",zip:"37-710"},
+];
+
+// ===== CORE STATE =====
+var curMode='G';
+var entries=[];
+var selKonG=[],selKonS=[];
+var timeG={od:'',do:''},timeS={od:'',do:''};
+var mOpen={S:false,1:false,2:false,3:false};
+var SEL={el:'',def:[],sol:[],kon:[]};
+var custParts={};
+var repTmpls=[];
+var rstStyle='tech';
+var partsOpen=false;
+var _magData=null;
+var _magFilter='';
+var _mshId=null;
+var shopVal='';
+
+function ls(k,d){try{var v=localStorage.getItem(k);return v!==null?JSON.parse(v):d;}catch(e){return d;}}
+function ss(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function saveSetting(k,v){localStorage.setItem(k,v);}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function _arr(x){return Array.isArray(x)?x:(x?[x]:[]);}
+
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2000);
+}
+
+// ===== INIT =====
+function initSelects(){
+  ['odH_G','doH_G','odH_S','doH_S'].forEach(function(id){
+    var s=document.getElementById(id);if(!s)return;
+    for(var i=0;i<24;i++){var o=document.createElement('option');o.value=o.textContent=('0'+i).slice(-2);s.appendChild(o);}
+  });
+  ['odM_G','doM_G','odM_S','doM_S'].forEach(function(id){
+    var s=document.getElementById(id);if(!s)return;
+    for(var i=0;i<60;i+=5){var o=document.createElement('option');o.value=o.textContent=('0'+i).slice(-2);s.appendChild(o);}
+  });
+}
+
+function loadState(){
+  entries=(ls('rv_e',[])).map(function(e){
+    if(e&&e.kon&&Array.isArray(e.kon)){
+      e.kon=e.kon.map(function(k){return k&&typeof k==='object'?k.pl||'':k;}).filter(Boolean);
+    }
+    return e;
+  }).filter(function(e){return e&&typeof e==='object';});
+  selKonG=(ls('rv_skg',[])).map(function(k){return k&&typeof k==='object'?k.pl||'':k;}).filter(Boolean);
+  selKonS=(ls('rv_sks',[])).map(function(k){return k&&typeof k==='object'?k.pl||'':k;}).filter(Boolean);
+  timeG=ls('rv_tG',{od:'',do:''});
+  timeS=ls('rv_tS',{od:'',do:''});
+  repTmpls=ls('rv_rt',[]);
+  rstStyle=ls('rv_rst','tech');
+  custParts=ls('rv_cp',{});
+  shopVal=ls('rv_shop','');
+  if(shopVal){var si=document.getElementById('shopInp');if(si)si.value=shopVal;}
+}
+
+function syncTimeInputs(){
+  ['G','S'].forEach(function(sfx){
+    var t=sfx==='G'?timeG:timeS;
+    if(!t)return;
+    var parts=(t.od||'').split(':');
+    var partsD=(t.do||'').split(':');
+    var oh=document.getElementById('odH_'+sfx);
+    var om=document.getElementById('odM_'+sfx);
+    var dh=document.getElementById('doH_'+sfx);
+    var dm=document.getElementById('doM_'+sfx);
+    if(oh&&parts[0])oh.value=parts[0];
+    if(om&&parts[1])om.value=('0'+Math.round(parseInt(parts[1]||0)/5)*5).slice(-2);
+    if(dh&&partsD[0])dh.value=partsD[0];
+    if(dm&&partsD[1])dm.value=('0'+Math.round(parseInt(partsD[1]||0)/5)*5).slice(-2);
+    updateDuration(sfx);
+  });
+}
+
+function saveTime(sfx){
+  var t=sfx==='G'?timeG:timeS;
+  var oh=document.getElementById('odH_'+sfx);
+  var om=document.getElementById('odM_'+sfx);
+  var dh=document.getElementById('doH_'+sfx);
+  var dm=document.getElementById('doM_'+sfx);
+  t.od=(oh?oh.value:'00')+':'+(om?om.value:'00');
+  t.do=(dh?dh.value:'00')+':'+(dm?dm.value:'00');
+  ss('rv_t'+sfx,t);
+  updateDuration(sfx);
+  renderSummary();
+}
+
+function updateDuration(sfx){
+  var t=sfx==='G'?timeG:timeS;
+  var el=document.getElementById('dur'+sfx);
+  if(!el||!t||!t.od||!t.do)return;
+  var a=t.od.split(':'),b=t.do.split(':');
+  var mins=(parseInt(b[0])*60+parseInt(b[1]))-(parseInt(a[0])*60+parseInt(a[1]));
+  if(mins<=0){el.textContent='';return;}
+  var h=Math.floor(mins/60),m=mins%60;
+  el.textContent=(h?h+'H ':'')+( m?m+'MIN':'');
+}
+
+// ===== TABS =====
+function goTab(t){
+  document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on');});
+  document.querySelectorAll('.bnav-btn').forEach(function(b){b.classList.remove('on');});
+  var pg=document.getElementById('pg'+t.charAt(0).toUpperCase()+t.slice(1));
+  var bn=document.getElementById('nav'+t.charAt(0).toUpperCase()+t.slice(1));
+  if(pg)pg.classList.add('on');
+  if(bn)bn.classList.add('on');
+  if(t==='mag'){if(!_magData)_magData=magLoad();setTimeout(magRender,50);}
+}
+
+// ===== SETTINGS =====
+function openSettings(){
+  var el=document.getElementById('settingsOv');
+  if(!el)return;
+  document.getElementById('setTo').value=localStorage.getItem('rv_email_to')||'';
+  document.getElementById('setSig').value=localStorage.getItem('rv_email_sig')||'';
+  updateThemeBtns();
+  el.classList.add('open');
+}
+function closeSettings(){
+  var el=document.getElementById('settingsOv');
+  if(el)el.classList.remove('open');
+}
+function setTheme(n){
+  localStorage.setItem('rv_theme',n);
+  updateThemeBtns();
+  showToast('Motyw zmieniony');
+}
+function updateThemeBtns(){
+  var t=parseInt(localStorage.getItem('rv_theme')||'1');
+  document.getElementById('thBtn1').classList.toggle('on',t===1);
+  document.getElementById('thBtn2').classList.toggle('on',t===2);
+}
+function runDiag(){
+  var out=document.getElementById('diagOut');
+  var lines=['Wpisy: '+entries.length,'Szablony: '+repTmpls.length,'MAG: '+(MAG_PARTS?MAG_PARTS.length:0),'localStorage: OK'];
+  out.textContent=lines.join('\n');out.style.display='block';
+}
+function doExport(){
+  var data={entries:entries,repTmpls:repTmpls,custParts:custParts,timeG:timeG,timeS:timeS};
+  document.getElementById('expOut').value=JSON.stringify(data,null,2);
+}
+var APP_STRUCTURE="{\"_meta\": {\"app\": \"RVM Raport v6.0\", \"url\": \"https://stepanenko-danil-s.github.io/RVM/\", \"repo\": \"stepanenko-danil-s/RVM\", \"commit\": \"430072a\"}, \"pages\": [\"Raport\", \"Magazyn\"], \"modules\": [\"Serwis(kon)\", \"Element(el)\", \"Niesnosnosc(def)\", \"Co_zrobiono(sol)\", \"Czesci\", \"Raport\"], \"state\": {\"curMode\": \"G|S\", \"entries\": \"[{el,def[],sol[],kon[],mode}]\", \"SEL\": \"{el,def[],sol[],kon[]}\", \"timeG_timeS\": \"{od,do}\", \"custParts\": \"{G:{id:qty}}\", \"repTmpls\": \"[]\", \"rstStyle\": \"tech|plain\", \"magData\": \"{id:{qty,min,photo}}\"}, \"localStorage\": {\"rv_e\": \"entries\", \"rv_skg\": \"selKonG\", \"rv_sks\": \"selKonS\", \"rv_tG\": \"timeG\", \"rv_tS\": \"timeS\", \"rv_cp\": \"custParts\", \"rv_rt\": \"repTmpls\", \"rv_rst\": \"rstStyle\", \"rv_mag2\": \"magData\", \"rv_mode\": \"curMode\", \"rv_email_to\": \"email\", \"rv_email_sig\": \"sig\", \"rv_theme\": \"1|2\"}, \"db\": {\"D.el\": \"190 elements\", \"D.def\": \"200 defects\", \"D.sol\": \"200 solutions\", \"D.kon\": \"34 activities\", \"MAG_PARTS\": \"53 parts {id,n,k,cat}\"}, \"functions\": {\"setMode\": \"switch G/NG commit entry\", \"commitEntry\": \"save SEL to entries\", \"togItem\": \"toggle selection\", \"buildReport\": \"plain text from entries\", \"doCopy\": \"copy to clipboard\", \"renderList\": \"render filtered list\", \"magRender\": \"render magazyn + alert\", \"sendOrderEmail\": \"mailto all low/empty\", \"openSettings\": \"show overlay\", \"genAI\": \"Anthropic API call\", \"timeMic\": \"voice time input\"}, \"overlays\": [\"settingsOv\", \"tmplModal\", \"aiModal\", \"magSheet\"], \"deploy\": \"curl raw.githubusercontent -> modify -> GET sha -> PUT API -> POST pages/builds\", \"rules\": \"Only edit last script block. Never remove shSet overlay. Validate JS before deploy.\"}";
+function copyStructure(){if(navigator.clipboard){navigator.clipboard.writeText(APP_STRUCTURE).then(function(){showToast("Struktura skopiowana!");});}else{var ta=document.getElementById("structOut");if(ta){ta.value=APP_STRUCTURE;ta.style.display="block";ta.select();}}}
+function doBackup(){
+  var info='URL: https://stepanenko-danil-s.github.io/RVM/\nRepo: stepanenko-danil-s/RVM\nCommit stabilny: 223b9c8\nAby przywrocic - powiedz AI:\nPrzywroc index.html w repo stepanenko-danil-s/RVM do commita 223b9c8';
+  navigator.clipboard?navigator.clipboard.writeText(info).then(function(){showToast('Skopiowano!');}):(showToast('Skopiowano!'));
+}
+
+// ===== MODE =====
+function setMode(m){
+  if(curMode===m)return;
+  if(SEL.el||SEL.def.length||SEL.sol.length||SEL.kon.length)commitEntry();
+  if(curMode==='G')selKonG=SEL.kon.slice();
+  else selKonS=SEL.kon.slice();
+  curMode=m;
+  SEL={el:'',def:[],sol:[],kon:(m==='G'?selKonG:selKonS).slice()};
+  ss('rv_mode',m);
+  var g=m==='G';
+  document.getElementById('tglG').classList.toggle('on',g);
+  document.getElementById('tglNG').classList.toggle('on',!g);
+  document.getElementById('timeG_row').style.display=g?'block':'none';
+  document.getElementById('timeS_row').style.display=g?'none':'block';
+  // Update parts tag
+  var tag=document.getElementById('partsModeTag');
+  if(tag){
+    tag.innerHTML='<span style="width:6px;height:6px;border-radius:50%;background:'+(g?'#34C759':'#007A7A')+';display:inline-block"></span>'+(g?'Gwar.':'Nie gwar.');
+    tag.style.background=g?'rgba(52,199,89,.1)':'rgba(0,122,122,.1)';
+    tag.style.color=g?'#34C759':'#007A7A';
+  }
+  // Clear search fields
+  document.querySelectorAll('.srch-row input').forEach(function(i){i.value='';});
+  clearFilters();
+  updateBadges();
+  renderSummary();
+}
+
+// ===== MODULES =====
+function toggleMod(id){
+  var body=document.getElementById(id==='S'?'bodyS':'body'+id);
+  var arr=document.getElementById(id==='S'?'arrS':'arr'+id);
+  var isOpen=body&&body.classList.contains('open');
+  // Close all
+  ['S',1,2,3].forEach(function(x){
+    var b=document.getElementById(x==='S'?'bodyS':'body'+x);
+    var a=document.getElementById(x==='S'?'arrS':'arr'+x);
+    if(b)b.classList.remove('open');
+    if(a)a.classList.remove('open');
+  });
+  if(!isOpen&&body){
+    body.classList.add('open');
+    if(arr)arr.classList.add('open');
+    if(id==='S')renderList('kon');
+    else if(id===1)renderList('el');
+    else if(id===2)renderList('def');
+    else if(id===3)renderList('sol');
+  }
+}
+
+// ===== LISTS =====
+var _filters={el:'',def:'',sol:'',kon:''};
+
+function filterList(col,q){
+  _filters[col]=(q||'').toLowerCase().trim();
+  renderList(col);
+}
+function clearFilters(){_filters={el:'',def:'',sol:'',kon:''};}
+
+function renderList(col){
+  var listId=col==='kon'?'lstKon':col==='el'?'lstEl':col==='def'?'lstDef':'lstSol';
+  var el=document.getElementById(listId);
+  if(!el)return;
+  var q=_filters[col]||'';
+  var items=D[col]||[];
+  // For sol, show suggested first
+  if(col==='sol'&&SEL.el){
+    var el2=D.el.find(function(x){return x.pl===SEL.el;});
+    // standard render
+  }
+  var h='',lastCat='';
+  var filtered=q?items.filter(function(it){return (it.pl+' '+(it.ru||'')).toLowerCase().indexOf(q)>=0;}):items;
+  filtered.forEach(function(it){
+    if(!q&&it.cat&&it.cat!==lastCat){
+      h+='<div class="cat-hdr">'+esc(it.cat)+'</div>';
+      lastCat=it.cat;
+    }
+    var on=false;
+    if(col==='el')on=SEL.el===it.pl;
+    else if(col==='kon')on=SEL.kon.indexOf(it.pl)>=0;
+    else if(col==='def')on=SEL.def.indexOf(it.pl)>=0;
+    else if(col==='sol')on=SEL.sol.indexOf(it.pl)>=0;
+    h+='<div class="li'+(on?' on':'')+'" onclick="togItem(\''+col+'\',\''+it.pl.replace(/'/g,"\\'")+'\')">';
+    h+='<div class="li-pl">'+esc(it.pl)+'</div>';
+    if(it.ru)h+='<div class="li-ru">'+esc(it.ru)+'</div>';
+    h+='</div>';
+  });
+  // Custom add for sol
+  if(col==='sol'){
+    h+='<div class="li-add" onclick="addCustomSol()">+ Dodaj wlasne</div>';
+  }
+  el.innerHTML=h;
+}
+
+function togItem(col,pl){
+  if(col==='el'){
+    if(SEL.el&&SEL.el!==pl)commitEntry();
+    SEL.el=(SEL.el===pl)?'':pl;
+  } else if(col==='kon'){
+    var i=SEL.kon.indexOf(pl);
+    if(i>=0)SEL.kon.splice(i,1);else SEL.kon.push(pl);
+  } else if(col==='def'){
+    var i=SEL.def.indexOf(pl);
+    if(i>=0)SEL.def.splice(i,1);else SEL.def.push(pl);
+  } else if(col==='sol'){
+    var i=SEL.sol.indexOf(pl);
+    if(i>=0)SEL.sol.splice(i,1);else SEL.sol.push(pl);
+  }
+  renderList(col);
+  updateBadges();
+  renderSummary();
+}
+
+function addCustomSol(){
+  var val=prompt('Wpisz dzialanie:');
+  if(!val||!val.trim())return;
+  SEL.sol.push(val.trim());
+  updateBadges();
+  renderSummary();
+}
+
+function commitEntry(){
+  if(!SEL.el&&!SEL.kon.length&&!SEL.def.length&&!SEL.sol.length)return;
+  entries.push({
+    el:SEL.el,def:SEL.def.slice(),sol:SEL.sol.slice(),
+    kon:SEL.kon.slice(),mode:curMode
+  });
+  ss('rv_e',entries);
+  SEL={el:'',def:[],sol:[],kon:SEL.kon.slice()};
+  renderList('el');renderList('def');renderList('sol');
+  updateBadges();
+}
+
+function updateBadges(){
+  var hasKon=SEL.kon.length>0||(entries.filter(function(e){return e.mode===curMode;}).some(function(e){return e.kon&&e.kon.length;}));
+  var bdgS=document.getElementById('bdgS');
+  if(bdgS){bdgS.className='badge'+(hasKon?' done':'');bdgS.textContent='S';}
+  var valS=document.getElementById('valS');
+  if(valS){
+    var allKon=SEL.kon.slice();
+    entries.filter(function(e){return e.mode===curMode;}).forEach(function(e){_arr(e.kon).forEach(function(k){if(allKon.indexOf(k)<0)allKon.push(k);});});
+    if(allKon.length){valS.textContent=allKon.slice(0,2).join(', ')+(allKon.length>2?'...':'');valS.className='mod-val has';}
+    else{valS.textContent='Aktywnosci serwisowe';valS.className='mod-val';}
+  }
+  var hasEl=SEL.el||(entries.filter(function(e){return e.mode===curMode;}).length>0);
+  var bdg1=document.getElementById('bdg1');
+  if(bdg1)bdg1.className='badge'+(hasEl?' done':'');
+  var val1=document.getElementById('val1');
+  if(val1){
+    var curE=entries.filter(function(e){return e.mode===curMode;}).map(function(e){return e.el;}).filter(Boolean);
+    if(SEL.el)curE.unshift(SEL.el);
+    if(curE.length){val1.textContent=[...new Set(curE)].slice(0,2).join(', ')+(curE.length>2?'...':'');val1.className='mod-val has';}
+    else{val1.textContent='Wybierz element';val1.className='mod-val';}
+  }
+}
+
+// ===== PARTS =====
+function toggleParts(){
+  partsOpen=!partsOpen;
+  var b=document.getElementById('partsBody');
+  var a=document.getElementById('partsArr');
+  if(b)b.classList.toggle('open',partsOpen);
+  if(a)a.style.transform=partsOpen?'rotate(180deg)':'';
+  if(partsOpen)renderParts();
+}
+
+function renderParts(){
+  var el=document.getElementById('partsInner');
+  if(!el)return;
+  if(!_magData)_magData=magLoad();
+  var h='';
+  var mode=curMode;
+  var cp=custParts[mode]||{};
+  MAG_PARTS.forEach(function(p){
+    var qty=cp[p.id]||0;
+    if(qty<=0)return;
+    h+='<div class="part-row"><div class="part-name">'+esc(p.n)+'</div>';
+    h+='<div class="part-qty">';
+    h+='<button class="qty-btn" onclick="adjPart(\''+p.id+'\',\''+mode+'\',-1)">−</button>';
+    h+='<span class="qty-num">'+qty+'</span>';
+    h+='<button class="qty-btn" onclick="adjPart(\''+p.id+'\',\''+mode+'\',1)">+</button>';
+    h+='</div></div>';
+  });
+  if(!h)h='<div style="font-size:13px;color:#8E8E93;padding:8px 0">Brak czesci. Wybierz w Magazynie.</div>';
+  el.innerHTML=h;
+}
+
+function adjPart(id,mode,d){
+  if(!custParts[mode])custParts[mode]={};
+  custParts[mode][id]=(custParts[mode][id]||0)+d;
+  if(custParts[mode][id]<0)custParts[mode][id]=0;
+  ss('rv_cp',custParts);
+  renderParts();
+  renderSummary();
+}
+
+// ===== REPORT =====
+function renderSummary(){
+  var edit=document.getElementById('repEdit');
+  if(!edit)return;
+  if(edit.getAttribute('data-editing')==='1')return;
+  var txt=buildReport();
+  if(!txt){edit.innerHTML='<span style="color:rgba(60,60,67,.3)">'+esc(edit.getAttribute('data-ph')||'')+'</span>';return;}
+  edit.innerHTML=txt.replace(/\n/g,'<br>');
+}
+
+function buildReport(){
+  if(SEL.el||SEL.def.length||SEL.sol.length||SEL.kon.length)commitEntry();
+  var eG=entries.filter(function(e){return e.mode==='G';});
+  var eS=entries.filter(function(e){return e.mode==='S';});
+  var konG=[],konS=[];
+  eG.forEach(function(e){_arr(e.kon).forEach(function(k){if(konG.indexOf(k)<0)konG.push(k);});});
+  eS.forEach(function(e){_arr(e.kon).forEach(function(k){if(konS.indexOf(k)<0)konS.push(k);});});
+  selKonG.forEach(function(k){if(konG.indexOf(k)<0)konG.push(k);});
+  selKonS.forEach(function(k){if(konS.indexOf(k)<0)konS.push(k);});
+  var spG=[],spS=[];
+  var cpG=custParts['G']||{},cpS=custParts['S']||{};
+  MAG_PARTS.forEach(function(p){if((cpG[p.id]||0)>0)spG.push(p.n+' x'+(cpG[p.id]));});
+  MAG_PARTS.forEach(function(p){if((cpS[p.id]||0)>0)spS.push(p.n+' x'+(cpS[p.id]));});
+  if(!eG.length&&!konG.length&&!spG.length&&!eS.length&&!konS.length&&!spS.length)return '';
+  var lines=[];
+  var tech=rstStyle==='tech';
+  function tFmt(t){if(!t||(!t.od&&!t.do))return '';var dur=calcDur(t);return (t.od||'--:--')+' - '+(t.do||'--:--')+(dur?' ('+dur+')':'');}
+  function calcDur(t){if(!t||!t.od||!t.do)return '';var a=t.od.split(':'),b=t.do.split(':');var m=(parseInt(b[0])*60+parseInt(b[1]))-(parseInt(a[0])*60+parseInt(a[1]));if(m<=0)return '';var h=Math.floor(m/60),r=m%60;return(h?h+'H ':'')+(r?r+'MIN':'');}
+  function sec(isG,ents,kon,sp){
+    var label=isG?'GWARANCYJNY':'NIE GWARANCYJNY';
+    var t=tFmt(isG?timeG:timeS);
+    if(tech){
+      lines.push('========================================');
+      lines.push(label+(t?'  |  '+t:''));
+      lines.push('========================================');
+      ents.forEach(function(e,i){
+        if(!e.el)return;
+        lines.push('['+(i+1)+'] '+e.el);
+        _arr(e.def).forEach(function(d){lines.push('    Usterka : '+d);});
+        _arr(e.sol).forEach(function(s){lines.push('    Naprawa : '+s);});
+        lines.push('');
+      });
+      if(kon.length)lines.push('Serwis      : '+kon.join(', '));
+      if(sp.length)lines.push('Czesci      : '+sp.join(', '));
+      lines.push('========================================');
+    } else {
+      lines.push(label+(t?'  '+t:''));
+      ents.forEach(function(e){
+        if(!e.el)return;
+        lines.push('  '+e.el);
+        _arr(e.def).forEach(function(d){lines.push('    Usterka: '+d);});
+        _arr(e.sol).forEach(function(s){lines.push('    Naprawa: '+s);});
+      });
+      if(kon.length)lines.push('  Serwis: '+kon.join(', '));
+      if(sp.length)lines.push('  Czesci: '+sp.join(', '));
+    }
+    lines.push('');
+  }
+  if(eG.length||konG.length||spG.length)sec(true,eG,konG,spG);
+  if(eS.length||konS.length||spS.length)sec(false,eS,konS,spS);
+  return lines.join('\n').trim();
+}
+
+function doCopy(){
+  if(SEL.el||SEL.def.length||SEL.sol.length||SEL.kon.length)commitEntry();
+  var txt=buildReport();
+  if(!txt){showToast('Brak danych do kopiowania');return;}
+  var btn=document.querySelector('.btn-copy');
+  function ok(){showToast('Skopiowano!');}
+  navigator.clipboard?navigator.clipboard.writeText(txt).then(ok):ok();
+}
+
+// ===== STYLE PICKER =====
+function toggleStylePicker(){
+  var p=document.getElementById('stylePicker');
+  var hidden=p.style.display===''||p.style.display==='none';
+  p.style.display=hidden?'block':'none';
+}
+function pickStyle(s){
+  rstStyle=s;
+  ss('rv_rst',s);
+  document.getElementById('styleLbl').textContent=s==='tech'?'Techniczny':'Prosty';
+  document.getElementById('stylePicker').style.display='none';
+  document.getElementById('sp-tech').style.background=s==='tech'?'rgba(0,122,255,.1)':'';
+  document.getElementById('sp-plain').style.background=s==='plain'?'rgba(0,122,255,.1)':'';
+  renderSummary();
+}
+
+// ===== TEMPLATES =====
+function openTmpl(){
+  var el=document.getElementById('tmplModal');
+  if(el)el.classList.add('open');
+  renderTmplList();
+}
+function closeTmpl(){
+  var el=document.getElementById('tmplModal');
+  if(el)el.classList.remove('open');
+}
+function saveTmpl(){
+  var name=prompt('Nazwa szablonu:');
+  if(!name||!name.trim())return;
+  if(SEL.el||SEL.def.length||SEL.sol.length||SEL.kon.length)commitEntry();
+  repTmpls.push({name:name.trim(),entries:JSON.parse(JSON.stringify(entries)),timeG:Object.assign({},timeG),timeS:Object.assign({},timeS)});
+  ss('rv_rt',repTmpls);
+  showToast('Zapisano: '+name.trim());
+  updateTmplCount();
+}
+function renderTmplList(){
+  var el=document.getElementById('tmplList');
+  if(!el)return;
+  if(!repTmpls.length){el.innerHTML='<div style="color:#8E8E93;font-size:13px;text-align:center;padding:20px">Brak szablonow</div>';return;}
+  var h='';
+  repTmpls.forEach(function(t,i){
+    h+='<div class="tmpl-item">';
+    h+='<div class="tmpl-name" onclick="loadTmpl('+i+')">'+esc(t.name)+'</div>';
+    h+='<button class="tmpl-del" onclick="delTmpl('+i+')">&#215;</button>';
+    h+='</div>';
+  });
+  el.innerHTML=h;
+}
+function loadTmpl(i){
+  var t=repTmpls[i];if(!t)return;
+  entries=JSON.parse(JSON.stringify(t.entries));
+  if(t.timeG)timeG=Object.assign({},t.timeG);
+  if(t.timeS)timeS=Object.assign({},t.timeS);
+  ss('rv_e',entries);
+  syncTimeInputs();
+  updateBadges();
+  renderSummary();
+  closeTmpl();
+  showToast('Wczytano: '+t.name);
+}
+function delTmpl(i){
+  repTmpls.splice(i,1);
+  ss('rv_rt',repTmpls);
+  renderTmplList();
+  updateTmplCount();
+}
+function updateTmplCount(){
+  var el=document.getElementById('tmplCount');
+  if(el)el.textContent=repTmpls.length;
+}
+
+// ===== AI =====
+function openAI(){document.getElementById('aiModal').classList.add('open');}
+function closeAI(){document.getElementById('aiModal').classList.remove('open');}
+async function genAI(){
+  var btn=document.querySelector('#aiModal button[onclick="genAI()"]');
+  if(btn){btn.textContent='Generuje...';btn.disabled=true;}
+  var rep=buildReport();
+  var extra=document.getElementById('aiExtra').value;
+  var prompt='Jestes doswiadczonym technikiem serwisowym RVM Systems (maszyny do zwrotu butelek RVM X2/X3/X10/X20/X30/X100/X200/ProLine w sklepach Biedronka). Na podstawie ponizszego raportu wygeneruj profesjonalny raport serwisowy po polsku.\n\nDANE:\n'+rep+(extra?'\n\nUWAGI: '+extra:'');
+  try{
+    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    var d=await r.json();
+    var txt=(d.content||[]).map(function(x){return x.text||'';}).join('');
+    var out=document.getElementById('aiOut');
+    out.textContent=txt;out.style.display='block';
+    document.getElementById('aiCopyBtn').style.display='block';
+  }catch(e){showToast('Blad AI: '+e.message);}
+  if(btn){btn.textContent='Generuj raport AI';btn.disabled=false;}
+}
+function copyAI(){
+  var txt=document.getElementById('aiOut').textContent;
+  navigator.clipboard?navigator.clipboard.writeText(txt).then(function(){showToast('Skopiowano!');closeAI();}):closeAI();
+}
+
+// ===== RESET =====
+function doReset(){
+  if(!confirm('Zresetowac wszystkie dane?'))return;
+  entries=[];selKonG=[];selKonS=[];
+  timeG={od:'',do:''};timeS={od:'',do:''};
+  SEL={el:'',def:[],sol:[],kon:[]};
+  custParts={};
+  ['rv_e','rv_skg','rv_sks','rv_tG','rv_tS','rv_cp'].forEach(function(k){localStorage.removeItem(k);});
+  syncTimeInputs();
+  updateBadges();
+  renderSummary();
+  renderParts();
+  showToast('Zresetowano');
+}
+
+// ===== SHOP =====
+function shopSearch(q){
+  shopVal=q;ss('rv_shop',q);
+}
+function gpsShop(){showToast('GPS: szukam...');}
+
+// ===== TIME MIC =====
+function timeMic(sfx){
+  var SR=window.webkitSpeechRecognition||window.SpeechRecognition;
+  if(!SR){
+    var v=prompt('Wpisz czas (np. 17:15 do 17:30):');
+    if(v)parseTimeInput(sfx,v);return;
+  }
+  var rec=new SR();rec.lang='pl-PL';rec.interimResults=false;
+  showToast('Mow: 17 15 do 17 30');
+  rec.onresult=function(e){parseTimeInput(sfx,e.results[0][0].transcript);};
+  rec.onerror=function(){showToast('Blad mikrofonu');};
+  try{rec.start();}catch(e){var v=prompt('Wpisz czas:');if(v)parseTimeInput(sfx,v);}
+}
+function parseTimeInput(sfx,txt){
+  var nums=txt.replace(/[:.]/g,' ').replace(/do|od|przez/gi,' ').replace(/\s+/g,' ').trim().split(' ').filter(function(x){return /^\d+$/.test(x);});
+  if(nums.length>=4){
+    var oh=document.getElementById('odH_'+sfx),om=document.getElementById('odM_'+sfx);
+    var dh=document.getElementById('doH_'+sfx),dm=document.getElementById('doM_'+sfx);
+    if(oh)oh.value=('0'+nums[0]).slice(-2);
+    if(om)om.value=('0'+Math.round(parseInt(nums[1])/5)*5).slice(-2);
+    if(dh)dh.value=('0'+nums[2]).slice(-2);
+    if(dm)dm.value=('0'+Math.round(parseInt(nums[3])/5)*5).slice(-2);
+    saveTime(sfx);
+    showToast(('0'+nums[0]).slice(-2)+':'+('0'+Math.round(parseInt(nums[1])/5)*5).slice(-2)+' > '+('0'+nums[2]).slice(-2)+':'+('0'+Math.round(parseInt(nums[3])/5)*5).slice(-2));
+  } else showToast('Nie rozpoznano: '+txt);
+}
+
+// ===== MAGAZYN =====
+function magLoad(){try{var v=localStorage.getItem('rv_mag2');if(v)return JSON.parse(v);}catch(e){}var d={};MAG_PARTS.forEach(function(p){d[p.id]={qty:0,min:1,photo:null};});return d;}
+function magSave(){try{localStorage.setItem('rv_mag2',JSON.stringify(_magData));}catch(e){}}
+function magGet(id){if(!_magData[id])_magData[id]={qty:0,min:1,photo:null};return _magData[id];}
+function magSt(id){var d=magGet(id);if(d.qty<=0)return 'empty';if(d.qty<=(d.min||1))return 'warn';return 'ok';}
+
+function magRender(){
+  if(!_magData)_magData=magLoad();
+  var grid=document.getElementById('magGrid');
+  if(!grid)return;
+  var parts=MAG_PARTS.slice();
+  if(_magFilter)parts=parts.filter(function(p){return p.n.toLowerCase().indexOf(_magFilter)>=0||p.k.toLowerCase().indexOf(_magFilter)>=0;});
+  parts.sort(function(a,b){var o={empty:0,warn:1,ok:2};return o[magSt(a.id)]-o[magSt(b.id)]||a.cat.localeCompare(b.cat);});
+  var warn=0,empty=0;
+  MAG_PARTS.forEach(function(p){var s=magSt(p.id);if(s==='empty')empty++;else if(s==='warn')warn++;});
+  var tot=document.getElementById('magTotal'),w=document.getElementById('magWarn'),e=document.getElementById('magEmpty');
+  if(tot)tot.textContent=MAG_PARTS.length;if(w)w.textContent=warn;if(e)e.textContent=empty;
+  // Update alert banner
+  var banner=document.getElementById('stockAlert');
+  if(banner){
+    var n=warn+empty;
+    banner.style.display=n>0?'flex':'none';
+    var txt=document.getElementById('stockAlertTxt');
+    var num=document.getElementById('stockAlertN');
+    if(txt)txt.textContent=empty>0?'Brak czesci - wymagane zamowienie':'Niski stan czesci';
+    if(num)num.textContent=n;
+  }
+  if(!parts.length){grid.innerHTML='<div style="padding:20px;text-align:center;color:#8E8E93;font-size:13px">Brak wynikow</div>';return;}
+  var h='',lastCat='';
+  parts.forEach(function(p){
+    var d=magGet(p.id),st=magSt(p.id);
+    var barColor=st==='ok'?'#34C759':st==='warn'?'#FF9500':'#FF3B30';
+    if(!_magFilter&&p.cat!==lastCat){
+      h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#8E8E93;padding:8px 2px 4px">'+esc(p.cat)+'</div>';
+      lastCat=p.cat;
+    }
+    var thumb=d.photo?'<img src="'+d.photo+'" style="width:100%;height:100%;object-fit:cover">':'<svg width="18" height="18" viewBox="0 0 26 26" fill="none" stroke="#C8C6C4" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="5" width="22" height="16" rx="3"/><circle cx="13" cy="13" r="4"/><path d="M8 5l1.5-3h7L18 5"/></svg>';
+    h+='<div class="mag-row '+st+'" onclick="openMagSheet('+p.id+')">';
+    h+='<div class="mag-thumb">'+thumb+'</div>';
+    h+='<div class="mag-info"><div class="mag-name">'+esc(p.n)+'</div><div class="mag-code">'+esc(p.k)+'</div></div>';
+    h+='<div class="mag-qty '+st+'">'+Math.max(0,d.qty)+'</div>';
+    h+='<button class="mag-cam" onclick="event.stopPropagation();magCam('+p.id+',this)" title="Zdjecie"><svg width="14" height="14" viewBox="0 0 12 12" fill="none" stroke="#666" stroke-width="1.3" stroke-linecap="round"><rect x="1" y="2.5" width="10" height="8" rx="1.5"/><circle cx="6" cy="6.5" r="1.8"/><path d="M3.5 2.5l1-2h3l1 2"/></svg></button>';
+    h+='</div>';
+  });
+  grid.innerHTML=h;
+}
+
+function magSearch(q){_magFilter=q.toLowerCase().trim();magRender();}
+
+function openMagSheet(id){
+  _mshId=id;
+  if(!_magData)_magData=magLoad();
+  var p=MAG_PARTS.find(function(x){return x.id===id;});
+  var d=magGet(id);
+  document.getElementById('mshName').textContent=p?p.n:'';
+  document.getElementById('mshQty').textContent=Math.max(0,d.qty);
+  document.getElementById('mshMin').textContent=d.min||1;
+  var st=magSt(id);
+  var se=document.getElementById('mshStatus');
+  if(se){se.textContent=st==='empty'?'BRAK':st==='warn'?'NISKI STAN':'OK';se.style.color=st==='empty'?'#FF3B30':st==='warn'?'#FF9500':'#34C759';}
+  document.getElementById('magSheet').classList.add('open');
+}
+function closeMagSheet(){document.getElementById('magSheet').classList.remove('open');}
+function mshAdj(d){
+  if(_mshId===null)return;
+  var item=magGet(_mshId);item.qty=Math.max(0,item.qty+d);
+  magSave();
+  document.getElementById('mshQty').textContent=item.qty;
+  var st=magSt(_mshId);
+  var se=document.getElementById('mshStatus');
+  if(se){se.textContent=st==='empty'?'BRAK':st==='warn'?'NISKI STAN':'OK';se.style.color=st==='empty'?'#FF3B30':st==='warn'?'#FF9500':'#34C759';}
+  magRender();
+}
+function mshAdjMin(d){
+  if(_mshId===null)return;
+  var item=magGet(_mshId);item.min=Math.max(0,(item.min||1)+d);
+  magSave();document.getElementById('mshMin').textContent=item.min;magRender();
+}
+function orderPart(){
+  if(_mshId===null)return;
+  var p=MAG_PARTS.find(function(x){return x.id===_mshId;});
+  if(!p)return;
+  var to=localStorage.getItem('rv_email_to')||'';
+  var sig=localStorage.getItem('rv_email_sig')||'Daniel Stepanenko';
+  var subj='Zamowienie: '+p.n;
+  var body='Dzien dobry,\n\nProsze o zamowienie:\n\n'+p.n+'\nNr katalogowy: '+p.k+'\nIlosc: 1 szt.\n\nZ powazaniem,\n'+sig;
+  var link='mailto:'+to+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+  window.location.href=link;
+}
+
+function sendOrderEmail(){
+  if(!_magData)_magData=magLoad();
+  var empty=[],warn=[];
+  MAG_PARTS.forEach(function(p){var s=magSt(p.id),d=magGet(p.id);if(s==='empty')empty.push({p:p,d:d});else if(s==='warn')warn.push({p:p,d:d});});
+  if(!empty.length&&!warn.length){showToast('Wszystkie czesci w normie');return;}
+  var to=localStorage.getItem('rv_email_to')||'';
+  var sig=localStorage.getItem('rv_email_sig')||'Daniel Stepanenko';
+  var today=new Date();var dateStr=today.toLocaleDateString('pl-PL');
+  var SEP='========================================';
+  var body='Dzien dobry,\n\nProsze o zamowienie nastepujacych czesci zamiennych do maszyn RVM Systems:\n\n';
+  if(empty.length){
+    body+=SEP+'\n BRAK STANU (wymagane natychmiastowe zamowienie)\n'+SEP+'\n';
+    empty.forEach(function(x){body+='  '+x.p.n.padEnd(32)+' nr: '+x.p.k.padEnd(16)+' szt: '+x.d.qty+'\n';});
+    body+='\n';
+  }
+  if(warn.length){
+    body+=SEP+'\n NISKI STAN (zalecane uzupelnienie)\n'+SEP+'\n';
+    warn.forEach(function(x){body+='  '+x.p.n.padEnd(32)+' nr: '+x.p.k.padEnd(16)+' szt: '+x.d.qty+'\n';});
+    body+='\n';
+  }
+  body+=SEP+'\n\nZ powazaniem,\n'+sig+'\nRVM Systems Sp. z o.o.';
+  var subj='Zamowienie czesci zamiennych RVM - '+dateStr;
+  window.location.href='mailto:'+to+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+}
+
+function magCam(id,btn){
+  var inp=document.createElement('input');
+  inp.type='file';inp.accept='image/*';inp.capture='environment';
+  inp.onchange=function(){
+    var f=inp.files[0];if(!f)return;
+    var r=new FileReader();
+    r.onload=function(e){
+      if(!_magData)_magData=magLoad();
+      magGet(id).photo=e.target.result;
+      magSave();magRender();
+    };
+    r.readAsDataURL(f);
+  };
+  inp.click();
+}
+
+function magPrintQR(){
+  if(!_magData)_magData=magLoad();
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>QR Magazyn</title>';
+  html+='<scr'+'ipt src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/scr'+'ipt>';
+  html+='<style>body{font-family:sans-serif;padding:20px} .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px} .card{border:1px solid #ddd;border-radius:8px;padding:10px;display:flex;align-items:center;gap:10px} .info{flex:1} .name{font-size:12px;font-weight:700} .code{font-size:10px;color:#666;font-family:monospace} .qr{width:60px;height:60px;flex-shrink:0} .close-btn{position:fixed;top:10px;right:10px;background:#333;color:#fff;border:none;border-radius:50%;width:36px;height:36px;font-size:20px;cursor:pointer}</style></head>';
+  html+='<body><button class="close-btn" onclick="window.close()">&#215;</button><div class="grid">';
+  MAG_PARTS.forEach(function(p,i){
+    html+='<div class="card"><div class="info"><div class="name">'+p.n+'</div><div class="code">'+p.k+'</div></div><div class="qr" id="qr'+i+'"></div></div>';
+  });
+  html+='</div>'+'<scr'+'ipt>window.onload=function(){';
+  MAG_PARTS.forEach(function(p,i){
+    html+='new QRCode(document.getElementById("qr'+i+'"),{text:"'+p.k+'",width:60,height:60,colorDark:"#000",colorLight:"#fff"});';
+  });
+  html+='};'+'<\/scr'+'ipt><\/body><\/html>';
+  var w=window.open('','_blank');
+  if(w){w.document.write(html);w.document.close();}
+  else showToast('Zezwol na popup');
+}
+
+// ===== INIT APP =====
+(function(){
+  initSelects();
+  loadState();
+  syncTimeInputs();
+  var mode=ls('rv_mode','G');
+  curMode=mode;
+  SEL.kon=(mode==='G'?selKonG:selKonS).slice();
+  var g=mode==='G';
+  document.getElementById('tglG').classList.toggle('on',g);
+  document.getElementById('tglNG').classList.toggle('on',!g);
+  document.getElementById('timeG_row').style.display=g?'block':'none';
+  document.getElementById('timeS_row').style.display=g?'none':'block';
+  rstStyle=ls('rv_rst','tech');
+  document.getElementById('styleLbl').textContent=rstStyle==='tech'?'Techniczny':'Prosty';
+  document.getElementById('sp-tech').style.background=rstStyle==='tech'?'rgba(0,122,255,.1)':'';
+  document.getElementById('sp-plain').style.background=rstStyle==='plain'?'rgba(0,122,255,.1)':'';
+  updateBadges();
+  renderSummary();
+  updateTmplCount();
+  // Check stock alert
+  if(!_magData)_magData=magLoad();
+  var n=0;
+  MAG_PARTS.forEach(function(p){var s=magSt(p.id);if(s!=='ok')n++;});
+  var banner=document.getElementById('stockAlert');
+  if(banner&&n>0){
+    banner.style.display='flex';
+    var empty=MAG_PARTS.filter(function(p){return magSt(p.id)==='empty';}).length;
+    document.getElementById('stockAlertTxt').textContent=empty>0?'Brak czesci - wymagane zamowienie':'Niski stan czesci';
+    document.getElementById('stockAlertN').textContent=n;
+  }
+})();
+</script>
+
+<script>
+/* RVM Raport — restored interaction layer (ported from stable 223b9c8, adapted to new design ids) */
+(function(){
+  window._emailRecipients = window._emailRecipients || [];
+  window._customShops = window._customShops || [];
+  if (typeof window._currentShop === 'undefined') window._currentShop = null;
+  if (typeof window._schedDay === 'undefined') window._schedDay = null;
+  if (typeof window._schedTime === 'undefined') window._schedTime = '';
+  if (typeof window._schedTimer === 'undefined') window._schedTimer = null;
+  if (typeof window._myLat === 'undefined') window._myLat = null;
+  if (typeof window._myLon === 'undefined') window._myLon = null;
+})();
+
+function _toast(m){ if(typeof showToast==='function') showToast(m); }
+
+/* flow blocks (serwisBlock/mod1block/defFlowWrap/manualInner/flowWrap) do not exist in this design; safe no-op so interaction handlers that call it never throw */
+function _updateFlowState(){}
+
+/* ---- overlays / sheets ---- */
+function openSh(id){var el=document.getElementById(id);if(el){el.style.display="flex";setTimeout(function(){el.classList.add("open");},10);}}
+function openOv(id){openSh(id);}
+function closeOv(id){var el=document.getElementById(id);if(el){el.classList.remove("open");setTimeout(function(){el.style.display="none";},300);}}
+
+/* ---- settings accordions ---- */
+function setAcc(id){
+  ['accEmail','accSched','accLib'].forEach(function(a){
+    var b=document.getElementById(a), r=document.getElementById(a+'Arr');
+    var wasOpen=b&&b.classList.contains('open');
+    if(b)b.classList.remove('open');
+    if(r)r.classList.remove('open');
+    if(a===id&&!wasOpen){ if(b)b.classList.add('open'); if(r)r.classList.add('open'); }
+  });
+}
+
+/* ---- email recipients ---- */
+function emailSettingsSave(){
+  var ta=document.getElementById('emailRecipients'); if(!ta)return;
+  var raw=ta.value.trim();
+  window._emailRecipients = raw.split('\n').map(function(s){return s.trim();}).filter(function(s){return s.indexOf('@')>0;});
+  try{localStorage.setItem('rv_email_rec', JSON.stringify(window._emailRecipients));}catch(e){}
+  var st=document.getElementById('emailStatus');
+  if(st)st.textContent='Zapisano '+window._emailRecipients.length+' adresow';
+  _toast('Adresy zapisane: '+window._emailRecipients.length);
+}
+
+/* ---- schedule ---- */
+function schedCheck(){
+  if(window._schedDay===null||!window._schedTime)return;
+  var now=new Date();
+  var dayOk=now.getDay()===window._schedDay;
+  var t=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  if(dayOk&&t===window._schedTime&&typeof schedNotify==='function')schedNotify();
+}
+function schedStart(){
+  if(window._schedTimer)clearInterval(window._schedTimer);
+  window._schedTimer=setInterval(schedCheck,60000);
+  schedCheck();
+}
+function schedSave(){
+  var day=document.getElementById('schedDay'), time=document.getElementById('schedTime');
+  if(!day||!time)return;
+  window._schedDay=parseInt(day.value);
+  window._schedTime=time.value;
+  try{localStorage.setItem('rv_sched', JSON.stringify({day:window._schedDay,time:window._schedTime}));}catch(e){}
+  schedStart();
+  var days=['Niedziela','Poniedzialek','Wtorek','Sroda','Czwartek','Piatek','Sobota'];
+  var st=document.getElementById('schedStatus');
+  if(st)st.textContent='Zaplanowano: '+days[window._schedDay]+' o '+window._schedTime;
+  _toast('Harmonogram zapisany');
+}
+
+/* ---- shop helpers (shShop overlay is vestigial in this build; kept safe & functional) ---- */
+function shopGetRadius(){var el=document.getElementById('shopRadius');return el?parseInt(el.value):800;}
+function shopLoadCustom(){try{window._customShops=JSON.parse(localStorage.getItem('rv_custom_shops')||'[]');}catch(e){window._customShops=[];}}
+function shopSaveCustom(){try{localStorage.setItem('rv_custom_shops',JSON.stringify(window._customShops));}catch(e){}}
+function shopPick(s){
+  window._currentShop=s;
+  var label=s.chain+(s.id?' '+s.id:'')+(s.city?' \u2014 '+s.city:'')+(s.addr?', '+s.addr:'');
+  var btn=document.getElementById('shopBtn');
+  if(btn){btn.textContent=label;btn.style.color='#0078D4';btn.style.fontWeight='600';}
+  closeOv('shShop');
+  _toast(s.chain+(s.id?' '+s.id:''));
+}
+function shopClear(){
+  window._currentShop=null;
+  var btn=document.getElementById('shopBtn');
+  if(btn){btn.textContent='Wybierz sklep...';btn.style.color='#A19F9D';btn.style.fontWeight='400';}
+}
+function shopPickCustom(){
+  var inp=document.getElementById('shopCustomInp');
+  var val=inp?inp.value.trim():'';
+  if(!val)return;
+  shopPick({id:'',chain:val,city:'',addr:''});
+  if(inp)inp.value='';
+}
+function shopAddToBase(){
+  function v(id){var e=document.getElementById(id);return e?(e.value||'').trim():'';}
+  var chain=v('shopNewChain'), id=v('shopNewId'), city=v('shopNewCity'), addr=v('shopNewAddr');
+  if(!chain){_toast('Wpisz nazwe sieci');return;}
+  shopLoadCustom();
+  var newShop={id:id,chain:chain,city:city,addr:addr,custom:true};
+  var exists=window._customShops.some(function(s){return s.chain.toLowerCase()===chain.toLowerCase()&&s.id===id;});
+  if(!exists){window._customShops.push(newShop);shopSaveCustom();_toast('Dodano do bazy: '+chain+(id?' '+id:''));}
+  shopPick(newShop);
+  ['shopNewChain','shopNewId','shopNewCity','shopNewAddr'].forEach(function(elId){var el=document.getElementById(elId);if(el)el.value='';});
+}
+function shopRadiusUpdate(val){
+  var lbl=document.getElementById('shopRadiusVal');
+  if(lbl)lbl.textContent=val>=1000?(val/1000).toFixed(1)+' km':val+' m';
+}
+function shopRadiusChanged(val){
+  if(window._myLat&&window._myLon&&typeof shopFetchNearby==='function')shopFetchNearby(window._myLat,window._myLon,parseInt(val));
+}
+function shopAutoProc(el){
+  if(el.value.length>1){ if(typeof shopSearch==='function')shopSearch(el.value); }
+  else{var res=document.getElementById('shopResults');if(res)res.innerHTML='<div style="padding:14px;text-align:center;font-size:13px;color:#A19F9D">Wpisz nazwe lub uzyj GPS</div>';}
+}
+function shopGPS(){
+  if(!navigator.geolocation){_toast('GPS niedostepny');return;}
+  var status=document.getElementById('shopStatus');
+  if(status)status.textContent='Okreslam lokalizacje...';
+  navigator.geolocation.getCurrentPosition(function(pos){
+    window._myLat=pos.coords.latitude; window._myLon=pos.coords.longitude;
+    if(status)status.textContent='Lokalizacja OK';
+    if(typeof shopFetchNearby==='function')shopFetchNearby(window._myLat,window._myLon,shopGetRadius());
+    else _toast('GPS: '+window._myLat.toFixed(5)+', '+window._myLon.toFixed(5));
+  },function(err){
+    if(status)status.textContent='Blad GPS: '+err.message;
+    _toast('GPS: '+err.message);
+  },{enableHighAccuracy:true,timeout:12000});
+}
+
+/* ---- restore persisted settings + hook synonym render into settings open ---- */
+(function(){
+  try{ var er=localStorage.getItem('rv_email_rec'); if(er){window._emailRecipients=JSON.parse(er);var ta=document.getElementById('emailRecipients');if(ta&&!ta.value)ta.value=window._emailRecipients.join('\n');} }catch(e){}
+  try{ var sc=localStorage.getItem('rv_sched'); if(sc){var o=JSON.parse(sc);window._schedDay=o.day;window._schedTime=o.time;var sd=document.getElementById('schedDay');if(sd)sd.value=o.day;var stm=document.getElementById('schedTime');if(stm)stm.value=o.time;} }catch(e){}
+  try{ shopLoadCustom(); }catch(e){}
+  try{
+    if(typeof partsOpen!=='undefined')partsOpen=false;
+    var pb=document.getElementById('partsBody'); if(pb)pb.className='parts-body';
+    var pa=document.getElementById('partsArr'); if(pa)pa.style.transform='none';
+    var re_=document.getElementById('repEdit'); if(re_&&!re_._ueHooked){re_._ueHooked=1;re_.addEventListener('input',function(){this.setAttribute('data-ue','1');});}
+  }catch(e){}
+  if(typeof openSettings==='function' && typeof synRender==='function'){
+    var _origOpenSettings=openSettings;
+    window.openSettings=function(){_origOpenSettings.apply(this,arguments);setTimeout(synRender,80);};
+  }
+  if(typeof initDark==='function'){try{initDark();}catch(e){}}
+})();
+
+</script>
 </body>
 </html>
