@@ -600,12 +600,8 @@ body.theme-2 .tgl.on { background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.15); co
             <span id="rstArrow" style="font-size:9px;color:rgba(60,60,67,.4)">&#9660;</span>
           </button>
           <div id="rstDrop" style="display:none;position:absolute;right:0;top:calc(100% + 4px);background:#fff;border:1.5px solid #CDD2DB;border-radius:11px;min-width:160px;overflow:hidden;z-index:200;box-shadow:0 4px 16px rgba(0,0,0,.12)">
-            <div onclick="pickRst('kls')" class="rst-drop-item" data-rst="kls" style="padding:9px 14px;font-size:12px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">A ─ Klasyczny</div>
-            <div onclick="pickRst('biz')" class="rst-drop-item" data-rst="biz" style="padding:9px 14px;font-size:12px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">B ━ Delovoy</div>
-            <div onclick="pickRst('tec')" class="rst-drop-item" data-rst="tec" style="padding:9px 14px;font-size:12px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">C ▌ Pionowy</div>
-            <div onclick="pickRst('kmp')" class="rst-drop-item" data-rst="kmp" style="padding:9px 14px;font-size:12px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">D ■ Korporacyjny</div>
-            <div onclick="pickRst('prot')" class="rst-drop-item" data-rst="prot" style="padding:9px 14px;font-size:12px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">E ▶▶ Strzalkowy</div>
-            <div onclick="pickRst('frm')" class="rst-drop-item" data-rst="frm" style="padding:9px 14px;font-size:12px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">F ┌┐ Ramkowy</div>
+            <div onclick="pickRst('kls')" class="rst-drop-item" data-rst="kls" style="padding:11px 14px;font-size:13px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">Prosty</div>
+            <div onclick="pickRst('frm')" class="rst-drop-item" data-rst="frm" style="padding:11px 14px;font-size:13px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">Techniczny</div>
             <div id="myStylesDropList" style="border-top:1px solid #E8EAF0"></div>
           </div>
         </div>
@@ -738,84 +734,9 @@ body.theme-2 .tgl.on { background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.15); co
     <div class="sh-bar"></div>
     <div class="sh-title">Styl raportu</div>
     <div class="rst-row">
-      <div class="rst-opt" id="ro-kls" onclick="setRst('kls')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">A ─ Klasyczny</div><div style="font-size:12px;color:rgba(60,60,67,.45)">=== symbole ===</div></div></div>
-      <div class="rst-opt" id="ro-biz" onclick="setRst('biz')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">B ━ Delovoy</div><div style="font-size:12px;color:rgba(60,60,67,.45)">Element: Usterka: Naprawa:</div></div></div>
-      <div class="rst-opt" id="ro-tec" onclick="setRst('tec')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">C ▌ Pionowy</div><div style="font-size:12px;color:rgba(60,60,67,.45)">│ linia boczna</div></div></div>
-      <div class="rst-opt" id="ro-kmp" onclick="setRst('kmp')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">D ■ Korporacyjny</div><div style="font-size:12px;color:rgba(60,60,67,.45)">━━━ ramka ━━━</div></div></div>
-      <div class="rst-opt" id="ro-prot" onclick="setRst('prot')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">E ▶▶ Strzalkowy</div><div style="font-size:12px;color:rgba(60,60,67,.45)">┌─ └─ drzewo</div></div></div>
-      <div class="rst-opt" id="ro-frm" onclick="setRst('frm')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">F ┌┐ Ramkowy</div><div style="font-size:12px;color:rgba(60,60,67,.45)">┌───┐ ramka</div></div></div><div><div style="font-size:14px;font-weight:700">▬ Blokowy</div><div style="font-size:12px;color:rgba(60,60,67,.45)">Wyraźne bloki, nagłówki</div></div></div>
-      <div class="rst-opt" id="ro-tec" onclick="setRst('tec')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">⌨ Techniczny</div><div style="font-size:12px;color:rgba(60,60,67,.45)">Monospace, kody</div></div></div>
-    </div>
-    <div style="font-size:11px;color:rgba(60,60,67,.35);text-align:center;margin-top:8px">Zapisz styl przy zapisie szablonu</div>
-    <div style="height:6px"></div>
-    <button class="sh-btn lt" onclick="closeOv('shRst')">Zamknij</button>
-  </div>
-</div>
-
-<div class="ov" id="shMyStyle" style="display:none" onclick="if(event.target===this)closeOv('shMyStyle')">
-  <div class="sh" style="max-height:94vh;overflow-y:auto">
-    <div class="sh-bar"></div>
-    <div class="sh-title">✏️ Własny styl</div>
-
-    <input class="sh-inp" id="mysName" placeholder="Nazwa stylu (np. Dla WhatsApp, Dla szefa...)" maxlength="30" oninput="prevMyStyle()">
-
-    <!-- Символы под иконкой -->
-    <button id="mysSymBtn" onclick="toggleMysSyms()" style="display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:10px;border:1px solid rgba(60,60,67,.12);background:rgba(118,118,128,.07);color:rgba(60,60,67,.6);font-size:12px;font-weight:600;cursor:pointer;margin:6px 0">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="3" cy="4" r="1.2" fill="currentColor" stroke="none"/><circle cx="7" cy="4" r="1.2" fill="currentColor" stroke="none"/><circle cx="11" cy="4" r="1.2" fill="currentColor" stroke="none"/><circle cx="3" cy="8" r="1.2" fill="currentColor" stroke="none"/><circle cx="7" cy="8" r="1.2" fill="currentColor" stroke="none"/><circle cx="11" cy="8" r="1.2" fill="currentColor" stroke="none"/><circle cx="3" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="7" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="11" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg>
-      Symbole
-      <span id="mysSymArr" style="font-size:10px;transition:transform .2s">▾</span>
-    </button>
-    <div id="mysSymBox" style="display:none;flex-wrap:wrap;gap:4px;margin-bottom:8px;padding:8px;background:rgba(118,118,128,.05);border-radius:11px;border:1px solid rgba(60,60,67,.08)">
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('• ')">•</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('▪ ')">▪</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('▸ ')">▸</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('► ')">►</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('→ ')">→</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('➜ ')">➜</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('◆ ')">◆</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('★ ')">★</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('✓ ')">✓</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('✗ ')">✗</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('* ')">*</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('— ')">—</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('| ')">|</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('⚠️ ')">⚠️</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('✅ ')">✅</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('🛠 ')">🛠</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('🔧 ')">🔧</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('📍 ')">📍</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('🔴 ')">🔴</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('🟡 ')">🟡</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('🟢 ')">🟢</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('❗')">❗</button>
-      <button class="sym-btn" onmousedown="event.preventDefault();insSym('❓')">❓</button>
-    </div>
-
-    <!-- Панель форматирования — работает на выделении в любом поле -->
-    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px;padding:6px 8px;background:rgba(118,118,128,.06);border-radius:10px;margin-bottom:8px">
-      <button class="fmt-btn" onmousedown="event.preventDefault();fmtMys('bold')" title="Pogrubienie"><b>B</b></button>
-      <button class="fmt-btn" onmousedown="event.preventDefault();fmtMys('italic')" title="Kursywa"><i>I</i></button>
-      <button class="fmt-btn" onmousedown="event.preventDefault();fmtMys('underline')" title="Podkreślenie"><u>U</u></button>
-      <button class="fmt-btn" onmousedown="event.preventDefault();fmtMys('strikeThrough')" title="Przekreślenie" style="text-decoration:line-through">S</button>
-      <div style="width:.5px;height:18px;background:rgba(60,60,67,.15);margin:0 2px"></div>
-      <button class="fmt-btn" onmousedown="event.preventDefault();fmtMys('removeFormat')" title="Usuń formatowanie" style="font-size:11px">fmt</button>
-      <div style="width:.5px;height:18px;background:rgba(60,60,67,.15);margin:0 2px"></div>
-      <button class="col-btn" onmousedown="event.preventDefault();fmtMysColor('#1C1C1E')" style="background:#1C1C1E" title="Czarny"></button>
-      <button class="col-btn" onmousedown="event.preventDefault();fmtMysColor('#007A7A')" style="background:#007A7A" title="Morski"></button>
-      <button class="col-btn" onmousedown="event.preventDefault();fmtMysColor('#34C759')" style="background:#34C759" title="Zielony"></button>
-      <button class="col-btn" onmousedown="event.preventDefault();fmtMysColor('#0A84FF')" style="background:#0A84FF" title="Niebieski"></button>
-      <button class="col-btn" onmousedown="event.preventDefault();fmtMysColor('#FF9500')" style="background:#FF9500" title="Pomarańczowy"></button>
-      <button class="col-btn" onmousedown="event.preventDefault();fmtMysColor('#E53935')" style="background:#E53935" title="Czerwony"></button>
-      <button class="col-btn" onmousedown="event.preventDefault();fmtMysColor('#5856D6')" style="background:#5856D6" title="Fioletowy"></button>
-      <div style="width:.5px;height:18px;background:rgba(60,60,67,.15);margin:0 2px"></div>
-      <button class="fmt-btn" onmousedown="event.preventDefault();fmtMysSize(10)" style="font-size:10px">S</button>
-      <button class="fmt-btn" onmousedown="event.preventDefault();fmtMysSize(13)" style="font-size:12px">M</button>
-      <button class="fmt-btn" onmousedown="event.preventDefault();fmtMysSize(16)" style="font-size:14px">L</button>
-      <button class="fmt-btn" onmousedown="event.preventDefault();fmtMysSize(19)" style="font-size:16px">XL</button>
-    </div>
-
-    <!-- contenteditable поля — выделяй любое слово и форматируй -->
-    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(60,60,67,.4);margin-bottom:5px">Etykiety — zaznacz tekst i formatuj</div>
+      <div class="rst-opt" id="ro-kls" onclick="setRst('kls')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">Prosty</div><div style="font-size:12px;color:rgba(60,60,67,.45)">Czysty tekst dla Firmao</div></div></div>
+      <div class="rst-opt" id="ro-frm" onclick="setRst('frm')"><div class="rst-dot"></div><div><div style="font-size:14px;font-weight:700">Techniczny</div><div style="font-size:12px;color:rgba(60,60,67,.45)">======== ramka ========</div></div></div>
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(60,60,67,.4);margin-bottom:5px">Etykiety — zaznacz tekst i formatuj</div>
     <div class="mys-ce" id="mysElPre"  contenteditable="true" data-ph="Prefiks elementu (np. lub ▸ )"   oninput="prevMyStyle()" onkeydown="mysEnter(event)"></div>
     <div class="mys-ce" id="mysDefLbl" contenteditable="true" data-ph="Etykieta usterki (np. ⚠️ Usterka: )"  oninput="prevMyStyle()" onkeydown="mysEnter(event)"></div>
     <div class="mys-ce" id="mysSolLbl" contenteditable="true" data-ph="Etykieta działania (np. Wykonano: )" oninput="prevMyStyle()" onkeydown="mysEnter(event)"></div>
@@ -1852,7 +1773,7 @@ function pickRst(s){
 }
 function setRst(s){
   rstStyle=s;ss("rv_rst",s);
-  ["kls","biz","tec","kmp","prot","frm","tel"].forEach(function(x){var el=document.getElementById("ro-"+x);if(el)el.className="rst-opt"+(x===s?" on":"");});
+  ["kls","frm"].forEach(function(x){var el=document.getElementById("ro-"+x);if(el)el.className="rst-opt"+(x===s?" on":"");});
   renderMyStylesList();
   var lbl={kls:"A ─ Klasyczny",biz:"B ━ Delovoy",tec:"C ▌ Pionowy",kmp:"D ■ Korporacyjny",prot:"E ▶ Strzalkowy",frm:"F ┌┐ Ramkowy",tel:"G =[ Telegraf"};
   var lE=document.getElementById("rstLbl");
@@ -2015,41 +1936,50 @@ function _fmtRep(){
   (curMode==="G"?SEL.kon:selKonG).forEach(function(k){var v=k&&typeof k==="object"?k.pl||"":k;if(v&&konG.indexOf(v)<0)konG.push(v);});
   (curMode==="S"?SEL.kon:selKonS).forEach(function(k){var v=k&&typeof k==="object"?k.pl||"":k;if(v&&konS.indexOf(v)<0)konS.push(v);});
 
-  var SEP="========================================";
-  var sep2="----------------------------------------";
-
   function tFmt(t){
     if(!t||(!t.od&&!t.do))return "";
     var dur=_timeDuration(t);
-    var od=t.od||"--:--"; var d=t.do||"--:--";
-    return od+" - "+d+(dur?"  ("+dur+")":"");
+    return (t.od||"--:--")+" - "+(t.do||"--:--")+(dur?" ("+dur+")":"");
   }
 
   var lines=[];
+  var isTech=(rstStyle==="frm"||rstStyle==="biz"||rstStyle==="tec"||rstStyle==="kmp"||rstStyle==="prot");
 
   function sec(isG,ents,kon,sp){
     var label=isG?"GWARANCYJNY":"NIE GWARANCYJNY";
     var t=tFmt(isG?timeG:timeS);
-    lines.push(SEP);
-    lines.push(label+(t?"  |  "+t:""));
-    lines.push(SEP);
-    ents.forEach(function(e,i){
-      if(!e.el)return;
-      var df=_arr(e.def), sl=_arr(e.sol);
-      lines.push("["+( i+1)+"] "+e.el);
-      df.forEach(function(d){lines.push("    Usterka : "+d);});
-      sl.forEach(function(s){lines.push("    Naprawa : "+s);});
+
+    if(isTech){
+      // TECHNICZNY - z ramka ========
+      lines.push("========================================");
+      lines.push(label+(t?"  |  "+t:""));
+      lines.push("========================================");
+      ents.forEach(function(e,i){
+        if(!e.el)return;
+        lines.push("["+( i+1)+"] "+e.el);
+        _arr(e.def).forEach(function(d){lines.push("    Usterka : "+d);});
+        _arr(e.sol).forEach(function(s){lines.push("    Naprawa : "+s);});
+        lines.push("");
+      });
+      if(kon.length){lines.push("Serwis      : "+kon.join(", "));}
+      if(sp.length){lines.push("Czesci      : "+sp.join(", "));}
+      lines.push("========================================");
       lines.push("");
-    });
-    if(kon.length){
-      var konLine="Serwis      : "+kon.join(", ");
-      lines.push(konLine);
+    } else {
+      // PROSTY - czysty tekst
+      lines.push(label+(t?"  "+t:""));
+      ents.forEach(function(e,i){
+        if(!e.el)return;
+        lines.push("  "+e.el);
+        _arr(e.def).forEach(function(d){lines.push("    Usterka: "+d);});
+        _arr(e.sol).forEach(function(s){lines.push("    Naprawa: "+s);});
+      });
+      if(kon.length){
+        lines.push("  Serwis: "+kon.join(", "));
+      }
+      if(sp.length){lines.push("  Czesci: "+sp.join(", "));}
+      lines.push("");
     }
-    if(sp.length){
-      lines.push("Czesci      : "+sp.join(", "));
-    }
-    lines.push(SEP);
-    lines.push("");
   }
 
   if(eG.length||konG.length||spG.length) sec(true,eG,konG,spG);
@@ -2766,7 +2696,7 @@ function runDiagnostics(){
 ],_hidden:{}};ss("rv_c",custom);});}
 
   // 3. rstStyle — poprawna wartość
-  var validStyles=["kls","biz","tec","kmp","prot","frm","tel"];
+  var validStyles=["kls","frm"];
   var isMys=/^mys\d+$/.test(rstStyle);
   var validMys=isMys&&myStyles[parseInt(rstStyle.replace("mys",""))]!==undefined;
   chk("rstStyle: \""+rstStyle+"\" — "+( (validStyles.indexOf(rstStyle)>=0||validMys)?"OK":"NIEZNANY"),validStyles.indexOf(rstStyle)>=0||validMys);
