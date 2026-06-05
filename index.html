@@ -4967,6 +4967,16 @@ function magPrintQR(){
   else showToast('Zezwol na popup');
 }
 
+// Touch feedback
+document.addEventListener('touchstart',function(e){
+  var b=e.target.closest('button,.li,.mod-hdr,.acc-hdr,.tmpl-item,.mag-row');
+  if(b){b.style.opacity='.6';b.style.transform='scale(.97)';}
+},{passive:true});
+document.addEventListener('touchend',function(e){
+  var b=e.target.closest('button,.li,.mod-hdr,.acc-hdr,.tmpl-item,.mag-row');
+  if(b){setTimeout(function(){b.style.opacity='';b.style.transform='';},150);}
+},{passive:true});
+
 // ===== INIT APP =====
 (function(){
   initSelects();
