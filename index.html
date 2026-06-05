@@ -5567,12 +5567,20 @@ function modSrchMic(col) {
 }
 
 function openMySettings(){
+  // Hide ALL other overlays first
+  document.querySelectorAll('.ov').forEach(function(o){
+    o.style.display='none';
+    o.style.pointerEvents='none';
+    o.style.zIndex='-1';
+  });
   var el=document.getElementById('mySettings');
   if(!el)return;
   var to=localStorage.getItem('rv_email_to')||'';
   var sig=localStorage.getItem('rv_email_sig')||'';
   var inp=document.getElementById('setEmailTo');if(inp)inp.value=to;
   var s=document.getElementById('setEmailSig');if(s)s.value=sig;
+  el.style.zIndex='9999';
+  el.style.pointerEvents='auto';
   el.style.display='flex';
 }
 </script>
