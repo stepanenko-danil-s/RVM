@@ -4386,11 +4386,7 @@ function setTheme(n){
   updateThemeBtns();
   showToast('Motyw zmieniony');
 }
-function updateThemeBtns(){
-  var t=parseInt(localStorage.getItem('rv_theme')||'1');
-  document.getElementById('thBtn1').classList.toggle('on',t===1);
-  document.getElementById('thBtn2').classList.toggle('on',t===2);
-}
+function updateThemeBtns(){}
 function runDiag(){
   var out=document.getElementById('diagOut');
   var lines=['Wpisy: '+entries.length,'Szablony: '+repTmpls.length,'MAG: '+(MAG_PARTS?MAG_PARTS.length:0),'localStorage: OK'];
