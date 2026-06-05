@@ -811,7 +811,7 @@ body.theme-2 .tgl.on { background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.15); co
 
 
 
-<button onclick="openSh('shSet')" style="position:fixed;bottom:100px;right:16px;z-index:999;background:#FF3B30;color:#fff;border:none;border-radius:12px;padding:12px 16px;font-size:14px;font-weight:700;cursor:pointer">SETTINGS TEST</button>
+<button onclick="openSh('shSet')" style="position:fixed;bottom:100px;right:16px;z-index:999;background:#FF3B30;color:#fff;border:none;border-radius:12px;padding:12px 16px;font-size:14px;font-weight:700;cursor:pointer">!!! TAP HERE !!!</button>
 <div class="ov" id="shSet" style="display:none" onclick="if(event.target===this)closeOv('shSet')">
   <div class="sh" style="max-height:94vh;overflow-y:auto">
     <div class="sh-bar"></div>    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
@@ -2577,6 +2577,20 @@ _syncTimeInputs();
   }
 })();
 _updateFlowState();
+// Clean corrupted kon data on load
+(function(){
+  var saved=ls("rv_e",[]);
+  if(saved.length){
+    entries=saved.map(function(e){
+      if(e&&e.kon&&Array.isArray(e.kon)){
+        e.kon=e.kon.map(function(k){return(k&&typeof k==="object")?k.pl||"":k;}).filter(Boolean);
+      }
+      return e;
+    });
+    selKonG=selKonG.map(function(k){return k&&typeof k==="object"?k.pl||"":k;}).filter(Boolean);
+    selKonS=selKonS.map(function(k){return k&&typeof k==="object"?k.pl||"":k;}).filter(Boolean);
+  }
+})();
 renderList("el");renderList("def");renderList("kon");renderList("sol");renderParts();renderSummary();renderTmplList();renderMyStylesList();
 var _ids=["serwisBlock","mod1block","defFlowWrap","hdr1","hdr2","hdr3","body2","body3"];
 _ids.forEach(function(id){var el=document.getElementById(id);if(el){el.style.opacity="";el.style.pointerEvents="";}});
