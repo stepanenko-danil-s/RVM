@@ -414,7 +414,7 @@ body.theme-2 .tgl.on { background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.15); co
   </div>
   <div style="display:flex;gap:5px;flex-shrink:0">
     <button onclick="doReset()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);border-radius:9px;color:rgba(255,255,255,.65);font-size:17px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0">&#8635;</button>
-    <button onclick="openSh('shSet');setTimeout(function(){var el=document.getElementById('aiExpCode');if(el)el.value=_buildAIExp();genExp();},50)" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);border-radius:9px;color:rgba(255,255,255,.65);font-size:16px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0">&#9881;</button>
+    <button onclick="openMySettings()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);border-radius:9px;color:rgba(255,255,255,.65);font-size:16px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0">&#9881;</button>
   </div>
 </div>
 
@@ -5565,6 +5565,44 @@ function modSrchMic(col) {
   rec.onerror = function() { showToast('Blad mikrofonu'); };
   try { rec.start(); } catch(e2) { showToast('Blad mikrofonu'); }
 }
+
+function openMySettings(){
+  var el=document.getElementById('mySettings');
+  if(!el)return;
+  var to=localStorage.getItem('rv_email_to')||'';
+  var sig=localStorage.getItem('rv_email_sig')||'';
+  var inp=document.getElementById('setEmailTo');if(inp)inp.value=to;
+  var s=document.getElementById('setEmailSig');if(s)s.value=sig;
+  el.style.display='flex';
+}
 </script>
+
+<div id="mySettings" style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:none;align-items:flex-end;justify-content:center" onclick="if(event.target===this)document.getElementById('mySettings').style.display='none'">
+  <div style="background:#fff;border-radius:22px 22px 0 0;padding:20px 18px 40px;width:100%;max-width:430px;max-height:92vh;overflow-y:auto">
+    <div style="width:36px;height:4px;background:#E5E5EA;border-radius:2px;margin:0 auto 16px"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="font-size:18px;font-weight:800">Ustawienia</div>
+      <button onclick="document.getElementById('mySettings').style.display='none'" style="background:rgba(118,118,128,.15);border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer">&#215;</button>
+    </div>
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#8E8E93;margin-bottom:8px">Motyw</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px">
+      <button onclick="setTheme(1)" style="padding:10px;border-radius:12px;border:2px solid #007AFF;background:#F2F2F7;font-size:13px;font-weight:600;cursor:pointer">iOS</button>
+      <button onclick="setTheme(2)" style="padding:10px;border-radius:12px;border:1.5px solid #EDEBE9;background:#fff;color:#0078D4;font-size:13px;font-weight:600;cursor:pointer">Fluent</button>
+    </div>
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#8E8E93;margin-bottom:8px">Ustawienia e-mail (zamowienia)</div>
+    <div style="background:#F8F8F8;border-radius:12px;padding:14px;margin-bottom:20px">
+      <div style="font-size:12px;color:#8E8E93;margin-bottom:6px">Adres odbiorcy</div>
+      <input id="setEmailTo" type="email" placeholder="magazyn@firma.pl" style="width:100%;background:#fff;border:1px solid #E0E0E0;border-radius:8px;padding:9px 10px;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:10px" oninput="localStorage.setItem('rv_email_to',this.value)">
+      <div style="font-size:12px;color:#8E8E93;margin-bottom:6px">Podpis</div>
+      <input id="setEmailSig" type="text" placeholder="Daniel Stepanenko, RVM Systems" style="width:100%;background:#fff;border:1px solid #E0E0E0;border-radius:8px;padding:9px 10px;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box" oninput="localStorage.setItem('rv_email_sig',this.value)">
+    </div>
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#8E8E93;margin-bottom:8px">Diagnostyka</div>
+    <button onclick="runDiag()" style="width:100%;padding:12px;background:#F8F8F8;border:none;border-radius:12px;font-size:14px;font-weight:600;color:#007AFF;cursor:pointer;margin-bottom:8px">Sprawdz bledy i dane</button>
+    <div id="diagResult" style="display:none;margin-bottom:12px;padding:10px;background:#F0FFF4;border-radius:10px;font-size:12px;line-height:1.7"></div>
+    <button onclick="genAIExp()" style="width:100%;padding:12px;background:#007A7A;border:none;border-radius:12px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;margin-bottom:8px">Eksport dla AI</button>
+    <textarea id="aiExpCode" readonly onclick="this.select()" style="width:100%;height:100px;background:#F8F8F8;border:.5px solid #E0E0E0;border-radius:10px;padding:10px;font-size:10px;font-family:monospace;outline:none;resize:none;box-sizing:border-box;margin-bottom:8px" placeholder="Kliknij Eksport dla AI"></textarea>
+    <button onclick="backupToClipboard()" style="width:100%;padding:12px;background:#007AFF;border:none;border-radius:12px;font-size:14px;font-weight:700;color:#fff;cursor:pointer">Kopiuj info do odtworzenia</button>
+  </div>
+</div>
 </body>
 </html>
