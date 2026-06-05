@@ -602,7 +602,7 @@ body.theme-2 .tgl.on { background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.15); co
           <div id="rstDrop" style="display:none;position:absolute;right:0;top:calc(100% + 4px);background:#fff;border:1.5px solid #CDD2DB;border-radius:11px;min-width:160px;overflow:hidden;z-index:200;box-shadow:0 4px 16px rgba(0,0,0,.12)">
             <div onclick="pickRst('kls')" class="rst-drop-item" data-rst="kls" style="padding:11px 14px;font-size:13px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">Prosty</div>
             <div onclick="pickRst('frm')" class="rst-drop-item" data-rst="frm" style="padding:11px 14px;font-size:13px;font-weight:600;color:#080814;cursor:pointer;border-bottom:1px solid #F0F2F7">Techniczny</div>
-            <div id="myStylesDropList" style="border-top:1px solid #E8EAF0"></div>
+            
           </div>
         </div>
         <button id="fmtToggle" onclick="toggleFmtBar()" style="width:32px;height:32px;border-radius:9px;border:1px solid #DDE0E8;background:#F0F2F7;cursor:pointer;font-size:15px;color:rgba(60,60,67,.5);display:flex;align-items:center;justify-content:center;transition:all .15s" title="Formatowanie">&#9998;</button>
@@ -1731,7 +1731,7 @@ function toggleRstDrop(){
             +'&#9671; '+esc(m.name||("Styl "+(i+1)))+'</div>';
         }).join("");
       }else{
-        msl.innerHTML='<div style="padding:9px 14px;font-size:12px;color:rgba(60,60,67,.4)">Brak własnych stylów</div>';
+        msl.innerHTML='';
       }
     }
     // Highlight active built-in
