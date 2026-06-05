@@ -107,8 +107,7 @@ button{cursor:pointer}
 .toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:rgba(22,22,24,.92);color:#fff;padding:10px 20px;border-radius:24px;font-size:13px;font-weight:600;z-index:200;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1}
 /* OV + SH */
-.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:flex-end;justify-content:center;backdrop-filter:blur(8px);display:none}
-.ov.open{display:flex}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(8px)}
 .sh{background:#fff;border-radius:22px 22px 0 0;padding:18px 18px 36px;width:100%;max-width:430px;max-height:88vh;overflow-y:auto}
 .sh-bar{width:40px;height:4px;background:rgba(60,60,67,.14);border-radius:2px;margin:0 auto 16px}
 .sh-title{font-size:17px;font-weight:800;margin-bottom:14px}
@@ -850,7 +849,7 @@ function ls(k,d){try{var v=localStorage.getItem(k);return v!==null?JSON.parse(v)
 function ss(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 function showToast(msg){var t=document.getElementById("toast");if(!t)return;t.innerHTML=msg;t.className="toast show";clearTimeout(t._to);t._to=setTimeout(function(){t.className="toast";},2200);}
-function openSh(id){var el=document.getElementById(id);if(el){el.style.display="flex";setTimeout(function(){el.classList.add("open");},10);}}
+function openSh(id){var el=document.getElementById(id);if(el){el.style.display="flex";}}
 function closeOv(id){var el=document.getElementById(id);if(el){el.classList.remove("open");setTimeout(function(){el.style.display="none";},300);}}
 function _applyMod(i){var n=i+1;var hdr=document.getElementById("hdr"+n),body=document.getElementById("body"+n),bdg=document.getElementById("bdg"+n),arr=document.getElementById("arr"+n);var has=(i===0&&SEL.el.length)||(i===1&&(SEL.def.length||SEL.kon.length))||(i===2&&SEL.sol.length);var open=mOpen[i];if(body)body.className="mod-body"+(open?" open":"");if(arr)arr.className="mod-arr"+(open?" open":"");if(hdr)hdr.className="mod-hdr"+(open?" active":has?" done":" idle");if(bdg){bdg.className="badge"+(open?" active":has?" done":" idle");}}
 function _updateFlowState(){
