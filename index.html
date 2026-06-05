@@ -992,10 +992,24 @@ function closeMod(i){
   mOpen[i]=false;
   _applyMod(i);
 }
-function toggleMod(i){
-  if(mOpen[i]){mOpen[i]=false;_applyMod(i);}
-  else{openMod(i);if(i===1){renderList("def");renderList("kon");}if(i===2)renderList("sol");}
-  _updateFlowState();
+function toggleMod(id){
+  var body=document.getElementById(id==='S'?'bodyS':'body'+id);
+  var arr=document.getElementById(id==='S'?'arrS':'arr'+id);
+  var isOpen=body&&body.classList.contains('open');
+  ['S',1,2,3].forEach(function(x){
+    var b=document.getElementById(x==='S'?'bodyS':'body'+x);
+    var a=document.getElementById(x==='S'?'arrS':'arr'+x);
+    if(b)b.classList.remove('open');
+    if(a)a.classList.remove('open');
+  });
+  if(!isOpen&&body){
+    body.classList.add('open');
+    if(arr)arr.classList.add('open');
+    if(id==='S')renderList('kon');
+    else if(id===1)renderList('el');
+    else if(id===2)renderList('def');
+    else if(id===3)renderList('sol');
+  }
 }
 function toggleModS(){
   if(mOpenS){
@@ -4679,6 +4693,8 @@ function pickStyle(s){
   document.getElementById('sp-tech').style.background=s==='tech'?'rgba(0,122,255,.1)':'';
   document.getElementById('sp-plain').style.background=s==='plain'?'rgba(0,122,255,.1)':'';
   renderSummary();
+  renderSummary();
+  showToast('Styl: '+(s==='tech'?'Techniczny':'Prosty'));
 }
 
 // ===== TEMPLATES =====
