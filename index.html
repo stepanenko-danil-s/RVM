@@ -414,7 +414,7 @@ body.theme-2 .tgl.on { background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.15); co
   </div>
   <div style="display:flex;gap:5px;flex-shrink:0">
     <button onclick="doReset()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);border-radius:9px;color:rgba(255,255,255,.65);font-size:17px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0">&#8635;</button>
-    <button onclick="openSh('shSet');setTimeout(function(){var el=document.getElementById('aiExpCode');if(el)el.value=_buildAIExp();genExp();},50)" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);border-radius:9px;color:rgba(255,255,255,.65);font-size:16px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0">&#9881;</button>
+    <button ontouchend="event.preventDefault();openSh('shSet');setTimeout(function(){var el=document.getElementById('aiExpCode');if(el)el.value=_buildAIExp();genExp();},50)" onclick="openSh('shSet');setTimeout(function(){var el=document.getElementById('aiExpCode');if(el)el.value=_buildAIExp();genExp();},50)" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);border-radius:9px;color:rgba(255,255,255,.65);font-size:16px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0">&#9881;</button>
   </div>
 </div>
 
