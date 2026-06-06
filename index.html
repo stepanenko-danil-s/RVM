@@ -174,48 +174,31 @@ button:active{opacity:.7;transform:scale(.97)}
 .set-acc-body.open{display:block}
 .set-acc-arr{transition:transform .2s;display:inline-block}
 .set-acc-arr.open{transform:rotate(180deg)}
-/* ===== Light theme contrast bump ===== */
+/* ===== iOS contrast ===== */
 .badge{background:#D8D8DE;color:#5B5B60}
 .mod-val{color:#6E6E73}
-/* ===== DARK THEME (v6.2) ===== */
-body.dark{background:#0B0B0D;color:#F2F2F7}
-body.dark .shop-bar{background:#1C1C1E;box-shadow:0 1px 3px rgba(0,0,0,.5)}
-body.dark .shop-bar input{color:#F2F2F7}
-body.dark .shop-bar input::placeholder,body.dark input::placeholder,body.dark textarea::placeholder{color:#8E8E93}
-body.dark .tgl-wrap,body.dark .mag-tabs{background:#2C2C2E}
-body.dark .tgl{color:#98989F}
-body.dark .tgl.on,body.dark .mag-tab.on{background:#48484A;color:#fff;box-shadow:none}
-body.dark .tgl.g.on{color:#30D158}
-body.dark .tgl.s.on{color:#40C8C8}
-body.dark .mod,body.dark .acc-card,body.dark .mag-row,body.dark .rep-wrap{background:#1C1C1E;box-shadow:0 1px 3px rgba(0,0,0,.5)}
-body.dark .mod-ttl{color:#F2F2F7}
-body.dark .mod-val{color:#98989F}
-body.dark .mod-val.has{color:#40C8C8}
-body.dark .mod-body{border-top-color:#2C2C2E}
-body.dark .badge{background:#3A3A3C;color:#C5C5CA}
-body.dark .badge.done{background:rgba(64,200,200,.18);color:#40C8C8}
-body.dark .badge.active{background:#0A84FF;color:#fff}
-body.dark .li{background:#2C2C2E;color:#F2F2F7}
-body.dark .srch-row{background:#161618}
-body.dark .srch-row input{background:#2C2C2E;border-color:#38383A;color:#F2F2F7}
-body.dark .qty-btn{background:#2C2C2E;border-color:#48484A;color:#0A84FF}
-body.dark .cat-hdr{color:#98989F}
-body.dark .style-btn{background:#2C2C2E;color:#F2F2F7}
-body.dark .time-pill,body.dark .time-sel{background:#2C2C2E;color:#40C8C8;border-color:rgba(64,200,200,.4)}
-body.dark .time-sel-wrap{background:#161618}
-body.dark .sh,body.dark .modal-sheet{background:#1C1C1E;color:#F2F2F7}
-body.dark .sh-inp{background:#2C2C2E;border-color:#38383A;color:#F2F2F7}
-body.dark .sh-inp:focus{background:#2C2C2E;border-color:#0A84FF}
-body.dark .bnav{background:rgba(18,18,20,.95);border-top-color:rgba(255,255,255,.12)}
-body.dark .bnav-btn{color:#8E8E93}
-body.dark .bnav-btn.on{color:#0A84FF}
-body.dark .sh-theme-btn{background:#2C2C2E;border-color:#38383A;color:#F2F2F7}
-body.dark .sh-theme-btn.on{border-color:#0A84FF;background:rgba(10,132,255,.18);color:#0A84FF}
-/* inline-style catches for dark */
-body.dark [style*="background:#fff"],body.dark [style*="background:#FFF"],body.dark [style*="background:#ffffff"],body.dark [style*="background:white"]{background:#1C1C1E !important}
-body.dark [style*="background:#F5F5F7"],body.dark [style*="background:#F8F8F8"],body.dark [style*="background:#FAFAFA"],body.dark [style*="background:#F2F2F7"],body.dark [style*="background:#F0F0F0"],body.dark [style*="background:#F0F0F5"]{background:#2C2C2E !important}
-body.dark [style*="color:#323130"],body.dark [style*="color:#1C1C1E"]{color:#F2F2F7 !important}
-body.dark [style*="color:#A19F9D"],body.dark [style*="color:#605E5C"],body.dark [style*="color:#8E8E93"],body.dark [style*="color:#C8C6C4"],body.dark [style*="color:#C7C7CC"]{color:#98989F !important}
+/* ===== Microsoft / Fluent style (v6.4) ===== */
+body.fluent{font-family:'Segoe UI','Segoe UI Web',-apple-system,system-ui,sans-serif}
+body.fluent .nav{background:#0078D4}
+body.fluent .shop-bar,body.fluent .mod,body.fluent .acc-card,body.fluent .mag-row,body.fluent .rep-wrap,body.fluent .sh,body.fluent .modal-sheet{border-radius:4px;box-shadow:none;border:1px solid #E1DFDD}
+body.fluent .li,body.fluent .srch-row input,body.fluent .sh-inp,body.fluent .qty-btn,body.fluent .style-btn{border-radius:2px}
+body.fluent .li{border:1px solid #EDEBE9;background:#fff}
+body.fluent .li.on{background:#EFF6FC;border-color:#0078D4}
+body.fluent .tgl-wrap,body.fluent .mag-tabs{border-radius:2px;background:#F3F2F1}
+body.fluent .tgl{border-radius:2px}
+body.fluent .tgl.on,body.fluent .mag-tab.on{border-radius:2px;background:#fff;box-shadow:inset 0 0 0 1px #0078D4;color:#0078D4}
+body.fluent .tgl.g.on{color:#107C10}
+body.fluent .tgl.s.on{color:#0078D4}
+body.fluent .badge{border-radius:2px;background:#EDEBE9;color:#605E5C}
+body.fluent .badge.done{background:#DFF6DD;color:#107C10}
+body.fluent .badge.active{background:#0078D4;color:#fff}
+body.fluent .bnav-btn.on{color:#0078D4}
+body.fluent .cat-hdr{color:#0078D4;text-transform:uppercase;letter-spacing:.04em}
+body.fluent .li-add{color:#0078D4}
+body.fluent .sh-inp:focus{border-color:#0078D4}
+body.fluent [style*="background:#007AFF"]{background:#0078D4 !important}
+body.fluent [style*="color:#007AFF"]{color:#0078D4 !important}
+body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D4 !important}
 </style>
 </head>
 <body>
@@ -230,8 +213,8 @@ body.dark [style*="color:#A19F9D"],body.dark [style*="color:#605E5C"],body.dark 
     </div>
     <div class="sh-sec">Motyw</div>
     <div class="sh-btn-row">
-      <button class="sh-theme-btn on" id="thBtn1" onclick="setTheme(1)">&#9728;&#65039; Jasny</button>
-      <button class="sh-theme-btn" id="thBtn2" onclick="setTheme(2)">&#127769; Ciemny</button>
+      <button class="sh-theme-btn on" id="thBtn1" onclick="setTheme(1)">iOS</button>
+      <button class="sh-theme-btn" id="thBtn2" onclick="setTheme(2)">Microsoft</button>
     </div>
     <div class="sh-sec">E-mail (zamowienia czesci)</div>
     <input class="sh-inp" id="setTo" type="email" placeholder="odbiorca@firma.pl" oninput="saveSetting('rv_email_to',this.value)">
@@ -307,7 +290,7 @@ body.dark [style*="color:#A19F9D"],body.dark [style*="color:#605E5C"],body.dark 
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v6.3.2</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v6.4</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2439,7 +2422,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v6.3.2",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v6.4",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -4857,9 +4840,10 @@ function closeSettings(){
 function setTheme(n){
   n=parseInt(n)||1;
   localStorage.setItem('rv_theme',n);
-  document.body.classList.toggle('dark',n===2);
+  document.body.classList.remove('dark');
+  document.body.classList.toggle('fluent',n===2);
   updateThemeBtns();
-  showToast(n===2?'Tryb ciemny':'Tryb jasny');
+  showToast(n===2?'Styl: Microsoft':'Styl: iOS');
 }
 function updateThemeBtns(){
   var t=parseInt(localStorage.getItem('rv_theme')||'1');
@@ -4869,7 +4853,8 @@ function updateThemeBtns(){
 }
 function applyTheme(){
   var t=parseInt(localStorage.getItem('rv_theme')||'1');
-  document.body.classList.toggle('dark',t===2);
+  document.body.classList.remove('dark');
+  document.body.classList.toggle('fluent',t===2);
   updateThemeBtns();
 }
 function runDiag(){
