@@ -174,6 +174,48 @@ button:active{opacity:.7;transform:scale(.97)}
 .set-acc-body.open{display:block}
 .set-acc-arr{transition:transform .2s;display:inline-block}
 .set-acc-arr.open{transform:rotate(180deg)}
+/* ===== Light theme contrast bump ===== */
+.badge{background:#D8D8DE;color:#5B5B60}
+.mod-val{color:#6E6E73}
+/* ===== DARK THEME (v6.2) ===== */
+body.dark{background:#0B0B0D;color:#F2F2F7}
+body.dark .shop-bar{background:#1C1C1E;box-shadow:0 1px 3px rgba(0,0,0,.5)}
+body.dark .shop-bar input{color:#F2F2F7}
+body.dark .shop-bar input::placeholder,body.dark input::placeholder,body.dark textarea::placeholder{color:#8E8E93}
+body.dark .tgl-wrap,body.dark .mag-tabs{background:#2C2C2E}
+body.dark .tgl{color:#98989F}
+body.dark .tgl.on,body.dark .mag-tab.on{background:#48484A;color:#fff;box-shadow:none}
+body.dark .tgl.g.on{color:#30D158}
+body.dark .tgl.s.on{color:#40C8C8}
+body.dark .mod,body.dark .acc-card,body.dark .mag-row,body.dark .rep-wrap{background:#1C1C1E;box-shadow:0 1px 3px rgba(0,0,0,.5)}
+body.dark .mod-ttl{color:#F2F2F7}
+body.dark .mod-val{color:#98989F}
+body.dark .mod-val.has{color:#40C8C8}
+body.dark .mod-body{border-top-color:#2C2C2E}
+body.dark .badge{background:#3A3A3C;color:#C5C5CA}
+body.dark .badge.done{background:rgba(64,200,200,.18);color:#40C8C8}
+body.dark .badge.active{background:#0A84FF;color:#fff}
+body.dark .li{background:#2C2C2E;color:#F2F2F7}
+body.dark .srch-row{background:#161618}
+body.dark .srch-row input{background:#2C2C2E;border-color:#38383A;color:#F2F2F7}
+body.dark .qty-btn{background:#2C2C2E;border-color:#48484A;color:#0A84FF}
+body.dark .cat-hdr{color:#98989F}
+body.dark .style-btn{background:#2C2C2E;color:#F2F2F7}
+body.dark .time-pill,body.dark .time-sel{background:#2C2C2E;color:#40C8C8;border-color:rgba(64,200,200,.4)}
+body.dark .time-sel-wrap{background:#161618}
+body.dark .sh,body.dark .modal-sheet{background:#1C1C1E;color:#F2F2F7}
+body.dark .sh-inp{background:#2C2C2E;border-color:#38383A;color:#F2F2F7}
+body.dark .sh-inp:focus{background:#2C2C2E;border-color:#0A84FF}
+body.dark .bnav{background:rgba(18,18,20,.95);border-top-color:rgba(255,255,255,.12)}
+body.dark .bnav-btn{color:#8E8E93}
+body.dark .bnav-btn.on{color:#0A84FF}
+body.dark .sh-theme-btn{background:#2C2C2E;border-color:#38383A;color:#F2F2F7}
+body.dark .sh-theme-btn.on{border-color:#0A84FF;background:rgba(10,132,255,.18);color:#0A84FF}
+/* inline-style catches for dark */
+body.dark [style*="background:#fff"],body.dark [style*="background:#FFF"],body.dark [style*="background:#ffffff"],body.dark [style*="background:white"]{background:#1C1C1E !important}
+body.dark [style*="background:#F5F5F7"],body.dark [style*="background:#F8F8F8"],body.dark [style*="background:#FAFAFA"],body.dark [style*="background:#F2F2F7"],body.dark [style*="background:#F0F0F0"],body.dark [style*="background:#F0F0F5"]{background:#2C2C2E !important}
+body.dark [style*="color:#323130"],body.dark [style*="color:#1C1C1E"]{color:#F2F2F7 !important}
+body.dark [style*="color:#A19F9D"],body.dark [style*="color:#605E5C"],body.dark [style*="color:#8E8E93"],body.dark [style*="color:#C8C6C4"],body.dark [style*="color:#C7C7CC"]{color:#98989F !important}
 </style>
 </head>
 <body>
@@ -188,8 +230,8 @@ button:active{opacity:.7;transform:scale(.97)}
     </div>
     <div class="sh-sec">Motyw</div>
     <div class="sh-btn-row">
-      <button class="sh-theme-btn on" id="thBtn1" onclick="setTheme(1)">iOS</button>
-      <button class="sh-theme-btn" id="thBtn2" onclick="setTheme(2)">Fluent</button>
+      <button class="sh-theme-btn on" id="thBtn1" onclick="setTheme(1)">&#9728;&#65039; Jasny</button>
+      <button class="sh-theme-btn" id="thBtn2" onclick="setTheme(2)">&#127769; Ciemny</button>
     </div>
     <div class="sh-sec">E-mail (zamowienia czesci)</div>
     <input class="sh-inp" id="setTo" type="email" placeholder="odbiorca@firma.pl" oninput="saveSetting('rv_email_to',this.value)">
@@ -265,7 +307,7 @@ button:active{opacity:.7;transform:scale(.97)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v6.1</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v6.2</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2397,7 +2439,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v6.1",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v6.2",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -4813,14 +4855,22 @@ function closeSettings(){
   if(el)el.classList.remove('open');
 }
 function setTheme(n){
+  n=parseInt(n)||1;
   localStorage.setItem('rv_theme',n);
+  document.body.classList.toggle('dark',n===2);
   updateThemeBtns();
-  showToast('Motyw zmieniony');
+  showToast(n===2?'Tryb ciemny':'Tryb jasny');
 }
 function updateThemeBtns(){
   var t=parseInt(localStorage.getItem('rv_theme')||'1');
-  document.getElementById('thBtn1').classList.toggle('on',t===1);
-  document.getElementById('thBtn2').classList.toggle('on',t===2);
+  var b1=document.getElementById('thBtn1'),b2=document.getElementById('thBtn2');
+  if(b1)b1.classList.toggle('on',t===1);
+  if(b2)b2.classList.toggle('on',t===2);
+}
+function applyTheme(){
+  var t=parseInt(localStorage.getItem('rv_theme')||'1');
+  document.body.classList.toggle('dark',t===2);
+  updateThemeBtns();
 }
 function runDiag(){
   var out=document.getElementById('diagOut');
@@ -4831,7 +4881,7 @@ function doExport(){
   var data={entries:entries,repTmpls:repTmpls,custParts:custParts,timeG:timeG,timeS:timeS};
   document.getElementById('expOut').value=JSON.stringify(data,null,2);
 }
-var APP_STRUCTURE="{\"_meta\": {\"app\": \"RVM Raport v6.1\", \"url\": \"https://stepanenko-danil-s.github.io/RVM/\", \"repo\": \"stepanenko-danil-s/RVM\", \"commit\": \"430072a\"}, \"pages\": [\"Raport\", \"Magazyn\"], \"modules\": [\"Serwis(kon)\", \"Element(el)\", \"Niesnosnosc(def)\", \"Co_zrobiono(sol)\", \"Czesci\", \"Raport\"], \"state\": {\"curMode\": \"G|S\", \"entries\": \"[{el,def[],sol[],kon[],mode}]\", \"SEL\": \"{el,def[],sol[],kon[]}\", \"timeG_timeS\": \"{od,do}\", \"custParts\": \"{G:{id:qty}}\", \"repTmpls\": \"[]\", \"rstStyle\": \"tech|plain\", \"magData\": \"{id:{qty,min,photo}}\"}, \"localStorage\": {\"rv_e\": \"entries\", \"rv_skg\": \"selKonG\", \"rv_sks\": \"selKonS\", \"rv_tG\": \"timeG\", \"rv_tS\": \"timeS\", \"rv_cp\": \"custParts\", \"rv_rt\": \"repTmpls\", \"rv_rst\": \"rstStyle\", \"rv_mag2\": \"magData\", \"rv_mode\": \"curMode\", \"rv_email_to\": \"email\", \"rv_email_sig\": \"sig\", \"rv_theme\": \"1|2\"}, \"db\": {\"D.el\": \"593 elements\", \"D.def\": \"200 defects\", \"D.sol\": \"200 solutions\", \"D.kon\": \"34 activities\", \"MAG_PARTS\": \"470 parts {id,n,k,cat}\"}, \"functions\": {\"setMode\": \"switch G/NG commit entry\", \"commitEntry\": \"save SEL to entries\", \"togItem\": \"toggle selection\", \"buildReport\": \"plain text from entries\", \"doCopy\": \"copy to clipboard\", \"renderList\": \"render filtered list\", \"magRender\": \"render magazyn + alert\", \"sendOrderEmail\": \"mailto all low/empty\", \"openSettings\": \"show overlay\", \"genAI\": \"Anthropic API call\", \"timeMic\": \"voice time input\"}, \"overlays\": [\"settingsOv\", \"tmplModal\", \"aiModal\", \"magSheet\"], \"deploy\": \"curl raw.githubusercontent -> modify -> GET sha -> PUT API -> POST pages/builds\", \"rules\": \"Only edit last script block. Never remove shSet overlay. Validate JS before deploy.\"}";
+var APP_STRUCTURE="{\"_meta\": {\"app\": \"RVM Raport v6.2\", \"url\": \"https://stepanenko-danil-s.github.io/RVM/\", \"repo\": \"stepanenko-danil-s/RVM\", \"commit\": \"430072a\"}, \"pages\": [\"Raport\", \"Magazyn\"], \"modules\": [\"Serwis(kon)\", \"Element(el)\", \"Niesnosnosc(def)\", \"Co_zrobiono(sol)\", \"Czesci\", \"Raport\"], \"state\": {\"curMode\": \"G|S\", \"entries\": \"[{el,def[],sol[],kon[],mode}]\", \"SEL\": \"{el,def[],sol[],kon[]}\", \"timeG_timeS\": \"{od,do}\", \"custParts\": \"{G:{id:qty}}\", \"repTmpls\": \"[]\", \"rstStyle\": \"tech|plain\", \"magData\": \"{id:{qty,min,photo}}\"}, \"localStorage\": {\"rv_e\": \"entries\", \"rv_skg\": \"selKonG\", \"rv_sks\": \"selKonS\", \"rv_tG\": \"timeG\", \"rv_tS\": \"timeS\", \"rv_cp\": \"custParts\", \"rv_rt\": \"repTmpls\", \"rv_rst\": \"rstStyle\", \"rv_mag2\": \"magData\", \"rv_mode\": \"curMode\", \"rv_email_to\": \"email\", \"rv_email_sig\": \"sig\", \"rv_theme\": \"1|2\"}, \"db\": {\"D.el\": \"593 elements\", \"D.def\": \"200 defects\", \"D.sol\": \"200 solutions\", \"D.kon\": \"34 activities\", \"MAG_PARTS\": \"470 parts {id,n,k,cat}\"}, \"functions\": {\"setMode\": \"switch G/NG commit entry\", \"commitEntry\": \"save SEL to entries\", \"togItem\": \"toggle selection\", \"buildReport\": \"plain text from entries\", \"doCopy\": \"copy to clipboard\", \"renderList\": \"render filtered list\", \"magRender\": \"render magazyn + alert\", \"sendOrderEmail\": \"mailto all low/empty\", \"openSettings\": \"show overlay\", \"genAI\": \"Anthropic API call\", \"timeMic\": \"voice time input\"}, \"overlays\": [\"settingsOv\", \"tmplModal\", \"aiModal\", \"magSheet\"], \"deploy\": \"curl raw.githubusercontent -> modify -> GET sha -> PUT API -> POST pages/builds\", \"rules\": \"Only edit last script block. Never remove shSet overlay. Validate JS before deploy.\"}";
 function copyStructure(){if(navigator.clipboard){navigator.clipboard.writeText(APP_STRUCTURE).then(function(){showToast("Struktura skopiowana!");});}else{var ta=document.getElementById("structOut");if(ta){ta.value=APP_STRUCTURE;ta.style.display="block";ta.select();}}}
 function doBackup(){
   var info='URL: https://stepanenko-danil-s.github.io/RVM/\nRepo: stepanenko-danil-s/RVM\nCommit stabilny: 223b9c8\nAby przywrocic - powiedz AI:\nPrzywroc index.html w repo stepanenko-danil-s/RVM do commita 223b9c8';
@@ -5466,6 +5516,7 @@ function magPrintQR(){
 (function(){
   initSelects();
   loadState();
+  applyTheme();
   syncTimeInputs();
   var mode=ls('rv_mode','G');
   curMode=mode;
