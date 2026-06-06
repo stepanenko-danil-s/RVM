@@ -307,7 +307,7 @@ body.dark [style*="color:#A19F9D"],body.dark [style*="color:#605E5C"],body.dark 
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v6.3</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v6.3.1</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2439,7 +2439,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v6.3",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v6.3.1",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -4936,6 +4936,7 @@ function toggleMod(id){
     else if(id===1)renderList('el');
     else if(id===2)renderList('def');
     else if(id===3)renderList('sol');
+    setTimeout(function(){_scrollMod(id);},60);
   }
 }
 
@@ -5004,6 +5005,15 @@ function _relSols(){
   (D.sol||[]).forEach(function(s){if(solCats.indexOf(s.cat)>=0&&out.indexOf(s.pl)<0)out.push(s.pl);});
   return out;
 }
+function _scrollMod(id){
+  var card=document.getElementById('mod'+id);
+  if(!card)return;
+  var nav=document.querySelector('.nav');
+  var off=(nav?nav.offsetHeight:0)+8;
+  var y=card.getBoundingClientRect().top+window.pageYOffset-off;
+  if(y<0)y=0;
+  try{window.scrollTo({top:y,behavior:'smooth'});}catch(e){window.scrollTo(0,y);}
+}
 function openMod(n){var b=document.getElementById('body'+n),a=document.getElementById('arr'+n);if(b)b.classList.add('open');if(a)a.classList.add('open');}
 
 function renderList(col){
@@ -5063,7 +5073,7 @@ function togItem(col,pl){
   renderList(col);
   if(col==='el'){
     renderList('def'); renderList('sol');
-    if(SEL.el){ openMod(2); var b2=document.getElementById('body2'); if(b2&&b2.scrollIntoView)setTimeout(function(){try{b2.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}},80); }
+    if(SEL.el){ openMod(2); setTimeout(function(){_scrollMod(2);},80); }
   } else if(col==='def'){ renderList('sol'); }
   updateBadges();
   renderSummary();
