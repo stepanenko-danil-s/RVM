@@ -290,7 +290,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v6.4.1</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v6.5</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2422,7 +2422,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v6.4.1",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v6.5",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -4927,6 +4927,8 @@ function toggleMod(id){
 
 // ===== LISTS =====
 var _filters={el:'',def:'',sol:'',kon:''};
+var _showAll={def:false,sol:false};
+function toggleShowAll(col){_showAll[col]=!_showAll[col];renderList(col);}
 
 function filterList(col,q){
   _filters[col]=(q||'').toLowerCase().trim();
@@ -4977,12 +4979,7 @@ function _relDefs(){
 function _relSols(){
   var en=SEL.el;
   if(en&&typeof HINTS!=='undefined'&&HINTS[en]&&HINTS[en].sol){
-    var o=HINTS[en].sol.slice();
-    if(SEL.def.length){
-      var sc=[]; SEL.def.forEach(function(dp){var it=(D.def||[]).find(function(x){return x.pl===dp;});if(it&&DEF2SOL[it.cat])DEF2SOL[it.cat].forEach(function(c){if(sc.indexOf(c)<0)sc.push(c);});});
-      (D.sol||[]).forEach(function(s){if(sc.indexOf(s.cat)>=0&&o.indexOf(s.pl)<0)o.push(s.pl);});
-    }
-    return o;
+    return HINTS[en].sol.slice();
   }
   var out=[],solCats=[];
   var defSrc=SEL.def.length?SEL.def:_relDefs();
@@ -5027,18 +5024,19 @@ function renderList(col){
     f.forEach(function(it){h+=liH(it,false);});
   } else {
     var rel=(col==='def')?_relDefs():(col==='sol')?_relSols():[];
-    var shown={};
-    if(rel.length&&SEL.el){
-      h+='<div class="cat-hdr" style="color:#34C759">&#9656; Pasuje do '+(col==='def'?'elementu':'usterki')+'</div>';
-      rel.forEach(function(pl){var it=items.find(function(x){return x.pl===pl;});if(it){shown[pl]=1;h+=liH(it,true);}});
-      h+='<div class="cat-hdr">Pozostałe</div>';
+    var anchor=(col==='def')?(!!SEL.el):(col==='sol')?(!!SEL.el||SEL.def.length>0):false;
+    if(rel.length&&anchor&&!_showAll[col]){
+      h+='<div class="cat-hdr" style="color:#34C759">&#9656; '+(col==='def'?'Pasuje do elementu':'Pasuje do usterki')+'</div>';
+      rel.forEach(function(pl){var it=items.find(function(x){return x.pl===pl;});if(it)h+=liH(it,true);});
+      h+='<div class="li-add" onclick="toggleShowAll(\''+col+'\')">Pokaż wszystkie ('+items.length+')</div>';
+    } else {
+      if(rel.length&&anchor){h+='<div class="li-add" onclick="toggleShowAll(\''+col+'\')">&#9664; Pokaż tylko pasujące</div>';}
+      var lastCat='';
+      items.forEach(function(it){
+        if(it.cat&&it.cat!==lastCat){h+='<div class="cat-hdr">'+esc(it.cat)+'</div>';lastCat=it.cat;}
+        h+=liH(it,false);
+      });
     }
-    var lastCat='';
-    items.forEach(function(it){
-      if(shown[it.pl])return;
-      if(it.cat&&it.cat!==lastCat){h+='<div class="cat-hdr">'+esc(it.cat)+'</div>';lastCat=it.cat;}
-      h+=liH(it,false);
-    });
   }
   if(col==='sol')h+='<div class="li-add" onclick="addCustomSol()">+ Dodaj wlasne</div>';
   el.innerHTML=h;
@@ -5057,9 +5055,11 @@ function togItem(col,pl){
   }
   renderList(col);
   if(col==='el'){
+    _showAll.def=false;_showAll.sol=false;
     renderList('def'); renderList('sol');
     if(SEL.el){ openMod(2); setTimeout(function(){_scrollMod(2);},80); }
   } else if(col==='def'){
+    _showAll.sol=false;
     renderList('sol');
     if(SEL.def.indexOf(pl)>=0){ openMod(3); setTimeout(function(){_scrollMod(3);},80); }
   }
