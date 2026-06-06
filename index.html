@@ -290,7 +290,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v6.6</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v6.7</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2422,7 +2422,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v6.6",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v6.7",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -3040,7 +3040,7 @@ function magSave(){try{localStorage.setItem('rv_mag2',JSON.stringify(_magData));
 function magGet(id){if(!_magData[id])_magData[id]={qty:0,min:1,photo:null};return _magData[id];}
 function magSt(id){var d=magGet(id);if(d.qty<=0)return'empty';if(d.qty<=d.min)return'warn';return'ok';}
 function magSearch(q){_magFilter=q.toLowerCase().trim();magRender();}
-function magRender(){if(!_magData)_magData=magLoad();var grid=document.getElementById('magGrid');if(!grid)return;var parts=MAG_PARTS;if(_magFilter)parts=parts.filter(function(p){return p.n.toLowerCase().indexOf(_magFilter)>=0||p.k.toLowerCase().indexOf(_magFilter)>=0;});parts=parts.slice().sort(function(a,b){var ord={empty:0,warn:1,ok:2};var sa=ord[magSt(a.id)],sb=ord[magSt(b.id)];if(sa!==sb)return sa-sb;return a.cat.localeCompare(b.cat);});var warn=0,empty=0;MAG_PARTS.forEach(function(p){var s=magSt(p.id);if(s==='empty')empty++;else if(s==='warn')warn++;});var e1=document.getElementById('mst1');if(e1)e1.textContent=MAG_PARTS.length;var e2=document.getElementById('mst2');if(e2)e2.textContent=warn;var e3=document.getElementById('mst3');if(e3)e3.textContent=empty;if(!parts.length){grid.innerHTML='<div style="grid-column:1/-1;padding:20px;text-align:center;font-size:13px;color:#A19F9D">Brak wynikow</div>';return;}var h='',lastCat='';parts.forEach(function(p){var d=magGet(p.id),st=magSt(p.id);if(!_magFilter&&p.cat!==lastCat){h+='<div style="grid-column:1/-1;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A19F9D;padding:6px 2px 2px">'+esc(p.cat)+'</div>';lastCat=p.cat;}h+='<div class="mag-card">';h+='<div class="mag-bar" style="background:'+(st==='ok'?'#34C759':st==='warn'?'#FF9500':'#FF3B30')+'"></div>';h+='<div class="mag-photo" onclick="magMinus('+p.id+')" style="cursor:pointer">';if(d.photo){h+='<img src="'+d.photo+'" loading="lazy">';}else{h+='<svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="#C8C6C4" stroke-width="1.3" stroke-linecap="round"><rect x="2" y="5" width="22" height="16" rx="3"/><circle cx="13" cy="13" r="4"/><path d="M8 5l1.5-3h7L18 5"/></svg>';}h+='<div style="position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;font-weight:800;padding:2px 7px;border-radius:7px">'+Math.max(0,d.qty)+'</div>';h+='<button data-mid="'+p.id+'" onclick="event.stopPropagation();magOpenCamById(this)" style="position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(0,0,0,.45);border:none;border-radius:6px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="1.3" stroke-linecap="round"><rect x="1" y="2.5" width="10" height="8" rx="1.5"/><circle cx="6" cy="6.5" r="1.8"/><path d="M3.5 2.5l1-2h3l1 2"/></svg></button>';h+='</div>';h+='<div style="padding:6px 8px 8px;cursor:pointer" onclick="magOpenSheet('+p.id+')"><div style="font-size:11px;font-weight:600;color:#323130;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">'+esc(p.n)+'</div><div style="font-size:9px;color:#A19F9D;font-family:monospace;margin-top:1px">'+esc(p.k)+'</div></div></div>';});grid.innerHTML=h;}
+function magRender(){if(!_magData)_magData=magLoad();var grid=document.getElementById('magGrid');if(!grid)return;var parts=MAG_PARTS;if(_magFilter)parts=parts.filter(function(p){return p.n.toLowerCase().indexOf(_magFilter)>=0||p.k.toLowerCase().indexOf(_magFilter)>=0;});parts=parts.slice().sort(function(a,b){var ord={empty:0,warn:1,ok:2};var sa=ord[magSt(a.id)],sb=ord[magSt(b.id)];if(sa!==sb)return sa-sb;return a.cat.localeCompare(b.cat);});var warn=0,empty=0;MAG_PARTS.forEach(function(p){if(!magActive(p.id))return;var s=magSt(p.id);if(s==='empty')empty++;else if(s==='warn')warn++;});var e1=document.getElementById('mst1');if(e1)e1.textContent=MAG_PARTS.length;var e2=document.getElementById('mst2');if(e2)e2.textContent=warn;var e3=document.getElementById('mst3');if(e3)e3.textContent=empty;if(!parts.length){grid.innerHTML='<div style="grid-column:1/-1;padding:20px;text-align:center;font-size:13px;color:#A19F9D">Brak wynikow</div>';return;}var h='',lastCat='';parts.forEach(function(p){var d=magGet(p.id),st=magSt(p.id);if(!_magFilter&&p.cat!==lastCat){h+='<div style="grid-column:1/-1;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A19F9D;padding:6px 2px 2px">'+esc(p.cat)+'</div>';lastCat=p.cat;}h+='<div class="mag-card">';h+='<div class="mag-bar" style="background:'+(st==='ok'?'#34C759':st==='warn'?'#FF9500':'#FF3B30')+'"></div>';h+='<div class="mag-photo" onclick="magMinus('+p.id+')" style="cursor:pointer">';if(d.photo){h+='<img src="'+d.photo+'" loading="lazy">';}else{h+='<svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="#C8C6C4" stroke-width="1.3" stroke-linecap="round"><rect x="2" y="5" width="22" height="16" rx="3"/><circle cx="13" cy="13" r="4"/><path d="M8 5l1.5-3h7L18 5"/></svg>';}h+='<div style="position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;font-weight:800;padding:2px 7px;border-radius:7px">'+Math.max(0,d.qty)+'</div>';h+='<button data-mid="'+p.id+'" onclick="event.stopPropagation();magOpenCamById(this)" style="position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(0,0,0,.45);border:none;border-radius:6px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="1.3" stroke-linecap="round"><rect x="1" y="2.5" width="10" height="8" rx="1.5"/><circle cx="6" cy="6.5" r="1.8"/><path d="M3.5 2.5l1-2h3l1 2"/></svg></button>';h+='</div>';h+='<div style="padding:6px 8px 8px;cursor:pointer" onclick="magOpenSheet('+p.id+')"><div style="font-size:11px;font-weight:600;color:#323130;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">'+esc(p.n)+'</div><div style="font-size:9px;color:#A19F9D;font-family:monospace;margin-top:1px">'+esc(p.k)+'</div></div></div>';});grid.innerHTML=h;}
 function magMinus(id){
   if(!_magData)_magData=magLoad();
   var d=magGet(id);
@@ -3498,7 +3498,7 @@ function magSave(){try{localStorage.setItem('rv_mag2',JSON.stringify(_magData));
 function magGet(id){if(!_magData[id])_magData[id]={qty:0,min:1,photo:null};return _magData[id];}
 function magSt(id){var d=magGet(id);if(d.qty<=0)return'empty';if(d.qty<=d.min)return'warn';return'ok';}
 function magSearch(q){_magFilter=q.toLowerCase().trim();magRender();}
-function magRender(){if(!_magData)_magData=magLoad();var grid=document.getElementById('magGrid');if(!grid)return;var parts=MAG_PARTS;if(_magFilter)parts=parts.filter(function(p){return p.n.toLowerCase().indexOf(_magFilter)>=0||p.k.toLowerCase().indexOf(_magFilter)>=0;});parts=parts.slice().sort(function(a,b){var ord={empty:0,warn:1,ok:2};var sa=ord[magSt(a.id)],sb=ord[magSt(b.id)];if(sa!==sb)return sa-sb;return a.cat.localeCompare(b.cat);});var warn=0,empty=0;MAG_PARTS.forEach(function(p){var s=magSt(p.id);if(s==='empty')empty++;else if(s==='warn')warn++;});var e1=document.getElementById('mst1');if(e1)e1.textContent=MAG_PARTS.length;var e2=document.getElementById('mst2');if(e2)e2.textContent=warn;var e3=document.getElementById('mst3');if(e3)e3.textContent=empty;if(!parts.length){grid.innerHTML='<div style="grid-column:1/-1;padding:20px;text-align:center;font-size:13px;color:#A19F9D">Brak wynikow</div>';return;}var h='',lastCat='';parts.forEach(function(p){var d=magGet(p.id),st=magSt(p.id);if(!_magFilter&&p.cat!==lastCat){h+='<div style="grid-column:1/-1;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A19F9D;padding:6px 2px 2px">'+esc(p.cat)+'</div>';lastCat=p.cat;}h+='<div class="mag-card">';h+='<div class="mag-bar" style="background:'+(st==='ok'?'#34C759':st==='warn'?'#FF9500':'#FF3B30')+'"></div>';h+='<div class="mag-photo" onclick="magMinus('+p.id+')" style="cursor:pointer">';if(d.photo){h+='<img src="'+d.photo+'" loading="lazy">';}else{h+='<svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="#C8C6C4" stroke-width="1.3" stroke-linecap="round"><rect x="2" y="5" width="22" height="16" rx="3"/><circle cx="13" cy="13" r="4"/><path d="M8 5l1.5-3h7L18 5"/></svg>';}h+='<div style="position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;font-weight:800;padding:2px 7px;border-radius:7px">'+Math.max(0,d.qty)+'</div>';h+='<button data-mid="'+p.id+'" onclick="event.stopPropagation();magOpenCamById(this)" style="position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(0,0,0,.45);border:none;border-radius:6px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="1.3" stroke-linecap="round"><rect x="1" y="2.5" width="10" height="8" rx="1.5"/><circle cx="6" cy="6.5" r="1.8"/><path d="M3.5 2.5l1-2h3l1 2"/></svg></button>';h+='</div>';h+='<div style="padding:6px 8px 8px;cursor:pointer" onclick="magOpenSheet('+p.id+')"><div style="font-size:11px;font-weight:600;color:#323130;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">'+esc(p.n)+'</div><div style="font-size:9px;color:#A19F9D;font-family:monospace;margin-top:1px">'+esc(p.k)+'</div></div></div>';});grid.innerHTML=h;}
+function magRender(){if(!_magData)_magData=magLoad();var grid=document.getElementById('magGrid');if(!grid)return;var parts=MAG_PARTS;if(_magFilter)parts=parts.filter(function(p){return p.n.toLowerCase().indexOf(_magFilter)>=0||p.k.toLowerCase().indexOf(_magFilter)>=0;});parts=parts.slice().sort(function(a,b){var ord={empty:0,warn:1,ok:2};var sa=ord[magSt(a.id)],sb=ord[magSt(b.id)];if(sa!==sb)return sa-sb;return a.cat.localeCompare(b.cat);});var warn=0,empty=0;MAG_PARTS.forEach(function(p){if(!magActive(p.id))return;var s=magSt(p.id);if(s==='empty')empty++;else if(s==='warn')warn++;});var e1=document.getElementById('mst1');if(e1)e1.textContent=MAG_PARTS.length;var e2=document.getElementById('mst2');if(e2)e2.textContent=warn;var e3=document.getElementById('mst3');if(e3)e3.textContent=empty;if(!parts.length){grid.innerHTML='<div style="grid-column:1/-1;padding:20px;text-align:center;font-size:13px;color:#A19F9D">Brak wynikow</div>';return;}var h='',lastCat='';parts.forEach(function(p){var d=magGet(p.id),st=magSt(p.id);if(!_magFilter&&p.cat!==lastCat){h+='<div style="grid-column:1/-1;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A19F9D;padding:6px 2px 2px">'+esc(p.cat)+'</div>';lastCat=p.cat;}h+='<div class="mag-card">';h+='<div class="mag-bar" style="background:'+(st==='ok'?'#34C759':st==='warn'?'#FF9500':'#FF3B30')+'"></div>';h+='<div class="mag-photo" onclick="magMinus('+p.id+')" style="cursor:pointer">';if(d.photo){h+='<img src="'+d.photo+'" loading="lazy">';}else{h+='<svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="#C8C6C4" stroke-width="1.3" stroke-linecap="round"><rect x="2" y="5" width="22" height="16" rx="3"/><circle cx="13" cy="13" r="4"/><path d="M8 5l1.5-3h7L18 5"/></svg>';}h+='<div style="position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;font-weight:800;padding:2px 7px;border-radius:7px">'+Math.max(0,d.qty)+'</div>';h+='<button data-mid="'+p.id+'" onclick="event.stopPropagation();magOpenCamById(this)" style="position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(0,0,0,.45);border:none;border-radius:6px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="1.3" stroke-linecap="round"><rect x="1" y="2.5" width="10" height="8" rx="1.5"/><circle cx="6" cy="6.5" r="1.8"/><path d="M3.5 2.5l1-2h3l1 2"/></svg></button>';h+='</div>';h+='<div style="padding:6px 8px 8px;cursor:pointer" onclick="magOpenSheet('+p.id+')"><div style="font-size:11px;font-weight:600;color:#323130;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">'+esc(p.n)+'</div><div style="font-size:9px;color:#A19F9D;font-family:monospace;margin-top:1px">'+esc(p.k)+'</div></div></div>';});grid.innerHTML=h;}
 function magMinus(id){
   if(!_magData)_magData=magLoad();
   var d=magGet(id);
@@ -5450,6 +5450,8 @@ function magLoad(){try{var v=localStorage.getItem('rv_mag2');if(v)return JSON.pa
 function magSave(){try{localStorage.setItem('rv_mag2',JSON.stringify(_magData));}catch(e){}}
 function magGet(id){if(!_magData[id])_magData[id]={qty:0,min:1,photo:null};return _magData[id];}
 function magSt(id){var d=magGet(id);if(d.qty<=0)return 'empty';if(d.qty<=(d.min||1))return 'warn';return 'ok';}
+function magActive(id){var d=magGet(id);return d.active===true;}
+function magToggleActive(id){var d=magGet(id);d.active=!d.active;magSave();magRender();}
 
 function magRender(){
   if(!_magData)_magData=magLoad();
@@ -5459,7 +5461,7 @@ function magRender(){
   if(_magFilter)parts=parts.filter(function(p){return p.n.toLowerCase().indexOf(_magFilter)>=0||p.k.toLowerCase().indexOf(_magFilter)>=0;});
   parts.sort(function(a,b){var o={empty:0,warn:1,ok:2};return o[magSt(a.id)]-o[magSt(b.id)]||a.cat.localeCompare(b.cat);});
   var warn=0,empty=0;
-  MAG_PARTS.forEach(function(p){var s=magSt(p.id);if(s==='empty')empty++;else if(s==='warn')warn++;});
+  MAG_PARTS.forEach(function(p){if(!magActive(p.id))return;var s=magSt(p.id);if(s==='empty')empty++;else if(s==='warn')warn++;});
   var tot=document.getElementById('magTotal'),w=document.getElementById('magWarn'),e=document.getElementById('magEmpty');
   if(tot)tot.textContent=MAG_PARTS.length;if(w)w.textContent=warn;if(e)e.textContent=empty;
   // Update alert banner
@@ -5482,7 +5484,9 @@ function magRender(){
       lastCat=p.cat;
     }
     var thumb=d.photo?'<img src="'+d.photo+'" style="width:100%;height:100%;object-fit:cover">':'<svg width="18" height="18" viewBox="0 0 26 26" fill="none" stroke="#C8C6C4" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="5" width="22" height="16" rx="3"/><circle cx="13" cy="13" r="4"/><path d="M8 5l1.5-3h7L18 5"/></svg>';
-    h+='<div class="mag-row '+st+'" onclick="openMagSheet('+p.id+')">';
+    var act=magActive(p.id);
+    h+='<div class="mag-row '+st+'" onclick="openMagSheet('+p.id+')" style="opacity:'+(act?'1':'.5')+'">';
+    h+='<button onclick="event.stopPropagation();magToggleActive('+p.id+')" title="Aktywna w aucie" style="background:none;border:none;padding:2px 6px 2px 2px;cursor:pointer;flex-shrink:0">'+(act?'<span style=\"display:block;width:12px;height:12px;border-radius:50%;background:#34C759\"></span>':'<span style=\"display:block;width:12px;height:12px;border-radius:50%;border:1.6px solid #C7C7CC;box-sizing:border-box\"></span>')+'</button>';
     h+='<div class="mag-thumb">'+thumb+'</div>';
     h+='<div class="mag-info"><div class="mag-name">'+esc(p.n)+'</div><div class="mag-code">'+esc(p.k)+'</div></div>';
     h+='<div class="mag-qty '+st+'">'+Math.max(0,d.qty)+'</div>';
@@ -5510,7 +5514,7 @@ function openMagSheet(id){
 function closeMagSheet(){document.getElementById('magSheet').classList.remove('open');}
 function mshAdj(d){
   if(_mshId===null)return;
-  var item=magGet(_mshId);item.qty=Math.max(0,item.qty+d);
+  var item=magGet(_mshId);item.qty=Math.max(0,item.qty+d);if(d>0)item.active=true;
   magSave();
   document.getElementById('mshQty').textContent=item.qty;
   var st=magSt(_mshId);
@@ -5520,7 +5524,7 @@ function mshAdj(d){
 }
 function mshAdjMin(d){
   if(_mshId===null)return;
-  var item=magGet(_mshId);item.min=Math.max(0,(item.min||1)+d);
+  var item=magGet(_mshId);item.min=Math.max(0,(item.min||1)+d);if(d>0)item.active=true;
   magSave();document.getElementById('mshMin').textContent=item.min;magRender();
 }
 function orderPart(){
@@ -5538,7 +5542,7 @@ function orderPart(){
 function sendOrderEmail(){
   if(!_magData)_magData=magLoad();
   var empty=[],warn=[];
-  MAG_PARTS.forEach(function(p){var s=magSt(p.id),d=magGet(p.id);if(s==='empty')empty.push({p:p,d:d});else if(s==='warn')warn.push({p:p,d:d});});
+  MAG_PARTS.forEach(function(p){if(!magActive(p.id))return;var s=magSt(p.id),d=magGet(p.id);if(s==='empty')empty.push({p:p,d:d});else if(s==='warn')warn.push({p:p,d:d});});
   if(!empty.length&&!warn.length){showToast('Wszystkie czesci w normie');return;}
   var to=localStorage.getItem('rv_email_to')||'';
   var sig=localStorage.getItem('rv_email_sig')||'Daniel Stepanenko';
@@ -5619,11 +5623,11 @@ function magPrintQR(){
   // Check stock alert
   if(!_magData)_magData=magLoad();
   var n=0;
-  MAG_PARTS.forEach(function(p){var s=magSt(p.id);if(s!=='ok')n++;});
+  MAG_PARTS.forEach(function(p){if(!magActive(p.id))return;var s=magSt(p.id);if(s!=='ok')n++;});
   var banner=document.getElementById('stockAlert');
   if(banner&&n>0){
     banner.style.display='flex';
-    var empty=MAG_PARTS.filter(function(p){return magSt(p.id)==='empty';}).length;
+    var empty=MAG_PARTS.filter(function(p){return magActive(p.id)&&magSt(p.id)==='empty';}).length;
     document.getElementById('stockAlertTxt').textContent=empty>0?'Brak czesci - wymagane zamowienie':'Niski stan czesci';
     document.getElementById('stockAlertN').textContent=n;
   }
