@@ -475,7 +475,8 @@ button:active{opacity:.7;transform:scale(.97)}
       </div>
     </div>
     <input placeholder="Szukaj..." oninput="magSearch(this.value)" style="width:100%;background:#fff;border:1px solid #E5E5EA;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:8px">
-    <div id="magGrid"></div>
+    <button onclick="aiDistOpen()" style="width:100%;padding:11px;background:linear-gradient(135deg,#007AFF,#5856D6);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:6px">&#10024; AI rozdziel cz&#281;&#347;ci po modu&#322;ach</button>
+<div id="magGrid"></div>
   </div>
 </div>
 
@@ -5200,6 +5201,69 @@ function copyAI(){
   navigator.clipboard?navigator.clipboard.writeText(txt).then(function(){showToast('Skopiowano!');closeAI();}):closeAI();
 }
 
+// ===== AI ROZDZIELACZ CZESCI =====
+function aiDistOpen(){var o=document.getElementById('aiDistOut');if(o){o.style.display='none';o.innerHTML='';}openSh('shAiDist');}
+function _aiDistAdd(n,k,ru,cat){
+  n=(n||'').trim();k=(k||'').trim();ru=(ru||'').trim();cat=(cat||'Inne').trim()||'Inne';
+  if(!n)return null;
+  if(!_magCustParts)magLoadCust();
+  if(!_magData)_magData=magLoad();
+  var all=(typeof magGetAll==='function')?magGetAll():MAG_PARTS.concat(_magCustParts||[]);
+  var dup=all.find(function(p){return (k&&p.k&&p.k.toLowerCase()===k.toLowerCase())||(p.n&&p.n.toLowerCase()===n.toLowerCase());});
+  var status;
+  if(dup){status='exists';}
+  else{
+    var ids=all.map(function(p){return p.id;});
+    var newId=Math.max.apply(null,[2000].concat(ids))+1;
+    _magCustParts.push({id:newId,n:n,k:k,cat:cat});
+    magSaveCust();
+    _magData[newId]={qty:0,min:1,photo:null};
+    magSave();
+    status='added';
+  }
+  if(!window.custom)window.custom={el:[],def:[],sol:[],kon:[],_hidden:{}};
+  if(!window.custom.el)window.custom.el=[];
+  var elDup=window.custom.el.some(function(x){return x.pl&&x.pl.toLowerCase()===n.toLowerCase();})||(typeof D!=='undefined'&&D.el&&D.el.some(function(x){return x.pl&&x.pl.toLowerCase()===n.toLowerCase();}));
+  if(!elDup){window.custom.el.push({cat:cat,pl:n,ru:ru||n});}
+  try{ss('rv_custom',window.custom);ss('rv_c',window.custom);}catch(e){}
+  return status;
+}
+async function aiDistribute(){
+  var inEl=document.getElementById('aiDistIn'),outEl=document.getElementById('aiDistOut'),btn=document.getElementById('aiDistBtn');
+  var raw=((inEl&&inEl.value)||'').trim();
+  if(!raw){showToast('Wklej liste czesci');return;}
+  if(btn){btn.textContent='AI analizuje...';btn.disabled=true;}
+  if(outEl){outEl.style.display='block';outEl.textContent='Przetwarzanie...';}
+  var CATS=["Czujniki","Silniki","Nap\u0119d","Elektronika","Elektryczne","Druk i Karta","Mechanika","Sortowanie","Pojemniki","Komunikacja","Identyfikacja","Narz\u0119dzia","Bezpiecze\u0144stwo","Przeno\u015bniki","ProLine","Wlot","Obudowa","Konstrukcja","Kable","Us\u0142ugi","Materia\u0142y","Inne"];
+  var prompt='Jeste\u015b klasyfikatorem cz\u0119\u015bci dla aplikacji serwisowej RVM (butelkomaty/recyklomaty RVM Systems w sklepach Biedronka). Dla ka\u017cdej linii wej\u015bcia (nazwa cz\u0119\u015bci lub s\u0142owo; mo\u017ce by\u0107 po polsku, rosyjsku lub mieszane) zwr\u00f3\u0107 obiekt JSON: {"n":"nazwa po polsku oczyszczona","k":"kod/SKU je\u015bli widoczny inaczej pusty","ru":"kr\u00f3tkie t\u0142umaczenie rosyjskie","cat":"jedna kategoria z listy"}. Dozwolone kategorie: '+CATS.join(', ')+'. Zwr\u00f3\u0107 WY\u0141\u0104CZNIE tablic\u0119 JSON (od [ do ]), bez markdown, bez potr\u00f3jnych apostrof\u00f3w, bez komentarzy.\n\nWEJ\u015aCIE:\n'+raw;
+  try{
+    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:3000,messages:[{role:'user',content:prompt}]})});
+    var d=await r.json();
+    var txt=(d.content||[]).map(function(x){return x.text||'';}).join('').trim();
+    txt=txt.replace(/```json/gi,'').replace(/```/g,'').trim();
+    var s=txt.indexOf('['),e=txt.lastIndexOf(']');
+    if(s>=0&&e>s)txt=txt.slice(s,e+1);
+    var arr=JSON.parse(txt);
+    if(!Array.isArray(arr))throw new Error('zly format odpowiedzi');
+    var added=0,exists=0,html='';
+    arr.forEach(function(it){
+      if(!it||!it.n)return;
+      var st=_aiDistAdd(it.n,it.k||'',it.ru||'',it.cat||'Inne');
+      if(st==='added')added++;else if(st==='exists')exists++;
+      var col=(st==='added')?'#34C759':'#FF9500';
+      html+='<div style="display:flex;gap:8px;padding:4px 0;border-bottom:1px solid #F0F0F0"><span style="flex:1">'+esc(it.n)+'</span><span style="color:#A19F9D;font-size:11px">'+esc(it.cat||'Inne')+'</span><span style="color:'+col+';font-weight:700">'+(st==='added'?'+':'=')+'</span></div>';
+    });
+    if(typeof magRender==='function')magRender();
+    try{if(typeof renderList==='function')renderList('el');}catch(e){}
+    if(outEl){outEl.innerHTML='<div style="font-weight:700;margin-bottom:6px">Dodano: '+added+' &middot; ju\u017c by\u0142o: '+exists+'</div>'+html;}
+    showToast('AI rozdzieli\u0142: +'+added+' cz\u0119\u015bci');
+  }catch(err){
+    if(outEl){outEl.textContent='Blad AI: '+err.message;}
+    showToast('Blad AI: '+err.message);
+  }
+  if(btn){btn.textContent='Rozdziel przez AI';btn.disabled=false;}
+}
+
 // ===== RESET =====
 function doReset(){
   if(!confirm('Zresetowac wszystkie dane?'))return;
@@ -5583,5 +5647,19 @@ function shopGPS(){
 })();
 
 </script>
+<div class="ov" id="shAiDist" style="display:none" onclick="if(event.target===this)closeOv('shAiDist')">
+  <div class="sh" style="max-height:88vh;overflow-y:auto">
+    <div class="sh-bar"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <div style="font-size:17px;font-weight:800;color:#007AFF">&#10024; AI rozdzielacz cz&#281;&#347;ci</div>
+      <button onclick="closeOv('shAiDist')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&times;</button>
+    </div>
+    <div style="font-size:12px;color:#A19F9D;margin-bottom:10px;line-height:1.4">Wklej nazwy/s&#322;owa cz&#281;&#347;ci (jedna w linii, mo&#380;e by&#263; PL/RU). AI sam przypisze kategori&#281;, kod i t&#322;umaczenie &#8594; doda do <b>Magazynu</b> i biblioteki <b>Element</b>.</div>
+    <textarea id="aiDistIn" rows="6" placeholder="Silnik 24V 80rpm&#10;Czujnik indukcyjny M8&#10;Pas klinowy eXtend&#10;Zasilacz 24V 320W" style="width:100%;padding:11px 13px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;resize:vertical;margin-bottom:10px;box-sizing:border-box"></textarea>
+    <button id="aiDistBtn" onclick="aiDistribute()" style="width:100%;padding:13px;background:#007AFF;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px">Rozdziel przez AI</button>
+    <div id="aiDistOut" style="display:none;max-height:240px;overflow:auto;background:#FAFAFA;border-radius:10px;padding:8px 10px;font-size:13px;color:#323130;margin-bottom:8px"></div>
+    <button onclick="closeOv('shAiDist')" class="sh-btn lt">Zamknij</button>
+  </div>
+</div>
 </body>
 </html>
