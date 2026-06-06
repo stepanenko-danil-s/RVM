@@ -307,7 +307,7 @@ body.dark [style*="color:#A19F9D"],body.dark [style*="color:#605E5C"],body.dark 
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v6.2.1</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v6.3</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2439,7 +2439,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v6.2.1",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v6.3",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -4948,38 +4948,104 @@ function filterList(col,q){
 }
 function clearFilters(){_filters={el:'',def:'',sol:'',kon:''};}
 
+/* ===== Suggestion chain: element -> defect -> solution (v6.3) ===== */
+var EL2DEF={
+ "Czujniki":["Czystość / Czujniki","Czujniki / Optyka","Elektryczne","Mechaniczne"],
+ "Identyfikacja":["Czujniki / Optyka","Czystość / Czujniki","Elektryczne"],
+ "Silniki":["Mechaniczne","Elektryczne"],
+ "Napęd":["Mechaniczne"],"Naped":["Mechaniczne"],
+ "Przenośniki":["Mechaniczne"],
+ "Sortowanie":["Mechaniczne","Elektryczne"],
+ "Wlot":["Mechaniczne","Czystość / Czujniki"],"Mechanika wlotu":["Mechaniczne","Czystość / Czujniki"],
+ "Mechanika":["Mechaniczne"],"Konstrukcja":["Mechaniczne"],"Obudowa":["Mechaniczne"],
+ "Elektronika":["Elektryczne","Oprogramowanie","Sieć / Komunikacja"],
+ "Elektryczne":["Elektryczne"],"Zasilanie":["Elektryczne"],
+ "Kable":["Elektryczne","Sieć / Komunikacja"],
+ "Komunikacja":["Sieć / Komunikacja","Elektryczne","Oprogramowanie"],
+ "ProLine":["Sieć / Komunikacja","Mechaniczne","Oprogramowanie","Elektryczne"],
+ "ProLine i Sortowanie":["Sieć / Komunikacja","Mechaniczne","Oprogramowanie"],
+ "Kompaktory":["Mechaniczne","Elektryczne"],
+ "Druk i Karta":["Drukarka","Elektryczne","Mechaniczne"],
+ "Pojemniki":["Pojemniki","Mechaniczne"],
+ "Oprogramowanie":["Oprogramowanie","Sieć / Komunikacja"],
+ "Bezpieczeństwo":["Elektryczne","Mechaniczne"]
+};
+var DEF2SOL={
+ "Mechaniczne":["Wymiana","Czyszczenie","Smarowanie","Regulacja / Kalibracja","Regulacja"],
+ "Elektryczne":["Elektryczne","Wymiana","Diagnostyka","Wynik / Diagnoza"],
+ "Oprogramowanie":["Oprogramowanie / Restart","Oprogramowanie","Reset / Restart","Wynik / Diagnoza"],
+ "Sieć / Komunikacja":["Sieć / Komunikacja","Oprogramowanie / Restart","Reset / Restart"],
+ "Czystość / Czujniki":["Czyszczenie","Regulacja / Kalibracja","Kalibracja","Wymiana"],
+ "Czujniki / Optyka":["Czyszczenie","Kalibracja","Regulacja / Kalibracja","Wymiana"],
+ "Pojemniki":["Pojemniki","Wymiana"],
+ "Drukarka":["Wymiana","Czyszczenie","Oprogramowanie / Restart"],
+ "Inne":["Wymiana","Wynik / Diagnoza"]
+};
+function _elObj(pl){var a=(D.el||[]).concat((window.custom&&custom.el)||[]);return a.find(function(x){return x.pl===pl;});}
+function _relDefs(){
+  var en=SEL.el; if(!en)return [];
+  if(typeof HINTS!=='undefined'&&HINTS[en]&&HINTS[en].def)return HINTS[en].def.slice();
+  var e=_elObj(en); var cats=(e&&EL2DEF[e.cat])||[]; if(!cats.length)return [];
+  var out=[]; (D.def||[]).forEach(function(d){if(cats.indexOf(d.cat)>=0)out.push(d.pl);}); return out;
+}
+function _relSols(){
+  var en=SEL.el;
+  if(en&&typeof HINTS!=='undefined'&&HINTS[en]&&HINTS[en].sol){
+    var o=HINTS[en].sol.slice();
+    if(SEL.def.length){
+      var sc=[]; SEL.def.forEach(function(dp){var it=(D.def||[]).find(function(x){return x.pl===dp;});if(it&&DEF2SOL[it.cat])DEF2SOL[it.cat].forEach(function(c){if(sc.indexOf(c)<0)sc.push(c);});});
+      (D.sol||[]).forEach(function(s){if(sc.indexOf(s.cat)>=0&&o.indexOf(s.pl)<0)o.push(s.pl);});
+    }
+    return o;
+  }
+  var out=[],solCats=[];
+  var defSrc=SEL.def.length?SEL.def:_relDefs();
+  defSrc.forEach(function(dp){var it=(D.def||[]).find(function(x){return x.pl===dp;});if(it&&DEF2SOL[it.cat])DEF2SOL[it.cat].forEach(function(c){if(solCats.indexOf(c)<0)solCats.push(c);});});
+  (D.sol||[]).forEach(function(s){if(solCats.indexOf(s.cat)>=0&&out.indexOf(s.pl)<0)out.push(s.pl);});
+  return out;
+}
+function openMod(n){var b=document.getElementById('body'+n),a=document.getElementById('arr'+n);if(b)b.classList.add('open');if(a)a.classList.add('open');}
+
 function renderList(col){
   var listId=col==='kon'?'lstKon':col==='el'?'lstEl':col==='def'?'lstDef':'lstSol';
   var el=document.getElementById(listId);
   if(!el)return;
-  var q=_filters[col]||'';
-  var items=D[col]||[];
-  // For sol, show suggested first
-  if(col==='sol'&&SEL.el){
-    var el2=D.el.find(function(x){return x.pl===SEL.el;});
-    // standard render
+  var q=(_filters[col]||'').toLowerCase().trim();
+  var items=(D[col]||[]).concat((window.custom&&custom[col])||[]);
+  function onState(it){
+    if(col==='el')return SEL.el===it.pl;
+    if(col==='kon')return SEL.kon.indexOf(it.pl)>=0;
+    if(col==='def')return SEL.def.indexOf(it.pl)>=0;
+    return SEL.sol.indexOf(it.pl)>=0;
   }
-  var h='',lastCat='';
-  var filtered=q?items.filter(function(it){return (it.pl+' '+(it.ru||'')).toLowerCase().indexOf(q)>=0;}):items;
-  filtered.forEach(function(it){
-    if(!q&&it.cat&&it.cat!==lastCat){
-      h+='<div class="cat-hdr">'+esc(it.cat)+'</div>';
-      lastCat=it.cat;
+  function liH(it,rel){
+    var on=onState(it);
+    var s='<div class="li'+(on?' on':'')+'" onclick="togItem(\''+col+'\',\''+(''+it.pl).replace(/'/g,"\\'")+'\')">';
+    s+='<div class="li-pl">'+(rel?'<span style="color:#34C759">&#9656; </span>':'')+esc(it.pl)+'</div>';
+    if(it.ru)s+='<div class="li-ru">'+esc(it.ru)+'</div>';
+    s+='</div>'; return s;
+  }
+  var h='';
+  if(q){
+    var f=items.filter(function(it){return (it.pl+' '+(it.ru||'')).toLowerCase().indexOf(q)>=0;});
+    f.sort(function(a,b){var ap=a.pl.toLowerCase().indexOf(q)===0?0:1,bp=b.pl.toLowerCase().indexOf(q)===0?0:1;return ap-bp;});
+    f.forEach(function(it){h+=liH(it,false);});
+  } else {
+    var rel=(col==='def')?_relDefs():(col==='sol')?_relSols():[];
+    var shown={};
+    if(rel.length&&SEL.el){
+      h+='<div class="cat-hdr" style="color:#34C759">&#9656; Pasuje do '+(col==='def'?'elementu':'usterki')+'</div>';
+      rel.forEach(function(pl){var it=items.find(function(x){return x.pl===pl;});if(it){shown[pl]=1;h+=liH(it,true);}});
+      h+='<div class="cat-hdr">Pozostałe</div>';
     }
-    var on=false;
-    if(col==='el')on=SEL.el===it.pl;
-    else if(col==='kon')on=SEL.kon.indexOf(it.pl)>=0;
-    else if(col==='def')on=SEL.def.indexOf(it.pl)>=0;
-    else if(col==='sol')on=SEL.sol.indexOf(it.pl)>=0;
-    h+='<div class="li'+(on?' on':'')+'" onclick="togItem(\''+col+'\',\''+it.pl.replace(/'/g,"\\'")+'\')">';
-    h+='<div class="li-pl">'+esc(it.pl)+'</div>';
-    if(it.ru)h+='<div class="li-ru">'+esc(it.ru)+'</div>';
-    h+='</div>';
-  });
-  // Custom add for sol
-  if(col==='sol'){
-    h+='<div class="li-add" onclick="addCustomSol()">+ Dodaj wlasne</div>';
+    var lastCat='';
+    items.forEach(function(it){
+      if(shown[it.pl])return;
+      if(it.cat&&it.cat!==lastCat){h+='<div class="cat-hdr">'+esc(it.cat)+'</div>';lastCat=it.cat;}
+      h+=liH(it,false);
+    });
   }
+  if(col==='sol')h+='<div class="li-add" onclick="addCustomSol()">+ Dodaj wlasne</div>';
   el.innerHTML=h;
 }
 
@@ -4988,20 +5054,20 @@ function togItem(col,pl){
     if(SEL.el&&SEL.el!==pl)commitEntry();
     SEL.el=(SEL.el===pl)?'':pl;
   } else if(col==='kon'){
-    var i=SEL.kon.indexOf(pl);
-    if(i>=0)SEL.kon.splice(i,1);else SEL.kon.push(pl);
+    var i=SEL.kon.indexOf(pl); if(i>=0)SEL.kon.splice(i,1);else SEL.kon.push(pl);
   } else if(col==='def'){
-    var i=SEL.def.indexOf(pl);
-    if(i>=0)SEL.def.splice(i,1);else SEL.def.push(pl);
+    var i=SEL.def.indexOf(pl); if(i>=0)SEL.def.splice(i,1);else SEL.def.push(pl);
   } else if(col==='sol'){
-    var i=SEL.sol.indexOf(pl);
-    if(i>=0)SEL.sol.splice(i,1);else SEL.sol.push(pl);
+    var i=SEL.sol.indexOf(pl); if(i>=0)SEL.sol.splice(i,1);else SEL.sol.push(pl);
   }
   renderList(col);
+  if(col==='el'){
+    renderList('def'); renderList('sol');
+    if(SEL.el){ openMod(2); var b2=document.getElementById('body2'); if(b2&&b2.scrollIntoView)setTimeout(function(){try{b2.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}},80); }
+  } else if(col==='def'){ renderList('sol'); }
   updateBadges();
   renderSummary();
 }
-
 function addCustomSol(){
   var val=prompt('Wpisz dzialanie:');
   if(!val||!val.trim())return;
@@ -5096,9 +5162,10 @@ function renderSummary(){
 }
 
 function buildReport(){
-  if(SEL.el||SEL.def.length||SEL.sol.length||SEL.kon.length)commitEntry();
-  var eG=entries.filter(function(e){return e.mode==='G';});
-  var eS=entries.filter(function(e){return e.mode==='S';});
+  var _cur=(SEL.el||SEL.def.length||SEL.sol.length)?[{el:SEL.el,def:SEL.def.slice(),sol:SEL.sol.slice(),kon:[],mode:curMode}]:[];
+  var _all=entries.concat(_cur);
+  var eG=_all.filter(function(e){return e.mode==='G';});
+  var eS=_all.filter(function(e){return e.mode==='S';});
   var konG=[],konS=[];
   eG.forEach(function(e){_arr(e.kon).forEach(function(k){if(konG.indexOf(k)<0)konG.push(k);});});
   eS.forEach(function(e){_arr(e.kon).forEach(function(k){if(konS.indexOf(k)<0)konS.push(k);});});
