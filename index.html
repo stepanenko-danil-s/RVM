@@ -277,6 +277,10 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
       <div id="mshName" style="font-size:16px;font-weight:800"></div>
       <button onclick="closeMagSheet()" style="background:rgba(118,118,128,.15);border:none;width:30px;height:30px;border-radius:50%;font-size:18px;cursor:pointer">&#215;</button>
     </div>
+    <div style="text-align:center;margin-bottom:14px">
+      <div id="mshPhoto" onclick="magCam(_mshId)" style="width:118px;height:118px;margin:0 auto;border-radius:14px;background:#F2F2F7;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;border:1px solid #E5E5EA"></div>
+      <button onclick="magCam(_mshId)" style="margin-top:8px;background:rgba(0,120,212,.12);color:#0078D4;border:none;border-radius:9px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">&#128247; Zdjecie / przerob</button>
+    </div>
     <div style="text-align:center;margin-bottom:16px">
       <div id="mshStatus" style="font-size:12px;font-weight:700;margin-bottom:8px"></div>
       <div style="font-size:48px;font-weight:900" id="mshQty">0</div>
@@ -301,7 +305,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.12</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.13</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -411,9 +415,9 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
     <!-- Czesci zamienne -->
     <div class="acc-card">
-      <div class="acc-hdr" onclick="toggleParts()">
+      <div class="acc-hdr" onclick="goTab('mag')">
         <span class="acc-hdr-t">Czesci zamienne</span>
-        <span id="partsArr" style="color:#C7C7CC;font-size:13px">&#9660;</span>
+        <span id="partsArr" style="color:#C7C7CC;font-size:15px">&#8250;</span>
       </div>
       <div class="parts-body" id="partsBody">
         <div style="display:flex;gap:6px;margin-bottom:8px">
@@ -479,7 +483,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 <!-- PAGE: MAGAZYN -->
 <div class="pg" id="pgMag">
   <div style="padding:8px 12px 0">
-    <div style="display:flex;gap:8px;margin-bottom:8px;overflow-x:auto;padding-bottom:2px" id="magBtns">
+    <div style="display:flex;gap:8px;margin-bottom:8px;overflow-x:auto;padding-bottom:2px" id="magBtns"><button onclick="goTab('raport')" style="background:#E5E5EA;color:#333;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">&#8249; Raport</button>
       <button onclick="magPrintQR()" style="background:#605E5C;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">QR PDF</button>
       <button onclick="sendOrderEmail()" style="background:#FF9500;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">Zamow czesci</button>
       <button onclick="openMagCfg()" style="background:#0078D4;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">E-mail / Harmonogram</button>
@@ -511,10 +515,6 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
   <button class="bnav-btn on" id="navRaport" onclick="goTab('raport')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></svg>
     Raport
-  </button>
-  <button class="bnav-btn" id="navMag" onclick="goTab('mag')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,9 22,9"/><line x1="7" y1="4" x2="7" y2="9"/><line x1="17" y1="4" x2="17" y2="9"/></svg>
-    Magazyn
   </button>
 </div>
 
@@ -2423,7 +2423,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.12",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.13",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -5637,7 +5637,13 @@ function openMagSheet(id){
   var st=magSt(id);
   var se=document.getElementById('mshStatus');
   if(se){se.textContent=st==='empty'?'BRAK':st==='warn'?'NISKI STAN':'OK';se.style.color=st==='empty'?'#FF3B30':st==='warn'?'#FF9500':'#34C759';}
+  _mshSetPhoto(id);
   document.getElementById('magSheet').classList.add('open');
+}
+function _mshSetPhoto(id){
+  var el=document.getElementById('mshPhoto'); if(!el)return;
+  var d=magGet(id);
+  el.innerHTML=d.photo?'<img src="'+d.photo+'" style="width:100%;height:100%;object-fit:cover">':'<svg width="40" height="40" viewBox="0 0 26 26" fill="none" stroke="#C8C6C4" stroke-width="1.4" stroke-linecap="round"><rect x="3" y="6" width="20" height="15" rx="2"/><circle cx="13" cy="13.5" r="4"/><path d="M9 6l1.6-2.3h4.8L17 6"/></svg>';
 }
 function closeMagSheet(){document.getElementById('magSheet').classList.remove('open');}
 function _mshCurId(){
@@ -5701,6 +5707,7 @@ function magCam(id,btn){
       if(!_magData)_magData=magLoad();
       magGet(id).photo=e.target.result;
       magSave();magRender();
+      if(typeof _mshSetPhoto==='function')_mshSetPhoto(id);
     };
     r.readAsDataURL(f);
   };
