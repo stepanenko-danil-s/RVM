@@ -243,6 +243,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
     <div class="sh-sec">Struktura programu (dla AI)</div>
     <button class="sh-act-btn" style="background:#5856D6;color:#fff" onclick="copyStructure()">Kopiuj strukture dla AI</button>
     <button class="sh-act-btn" style="background:#34C759;color:#fff" onclick="copyFullCode()">Kopiuj caly kod programu (dla AI)</button>
+    <button class="sh-act-btn" style="background:#FF9500;color:#fff" onclick="runDiag()">Diagnostyka (sprawdz bledy)</button>
     <textarea id="structOut" readonly onclick="this.select()" style="display:none;width:100%;height:80px;background:#F8F8F8;border:.5px solid #E5E5EA;border-radius:10px;padding:8px;font-size:9px;font-family:monospace;outline:none;resize:none;margin-bottom:8px"></textarea>
     <button class="sh-act-btn" style="background:#007AFF;color:#fff" onclick="doBackup()">Kopiuj info do odtworzenia</button>
     <div class="sh-sec">Raporty: e-mail, harmonogram, biblioteka</div>
@@ -350,7 +351,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v9.9</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.0</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2469,7 +2470,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v9.9",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.0",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -6009,8 +6010,68 @@ function magFilterStatus(s){
   if(typeof magRender==='function')magRender();
 }
 function saveTimeS(el){try{var sfx=el&&el.getAttribute?el.getAttribute('data-sfx'):null;if(sfx&&typeof saveTime==='function')saveTime(sfx);}catch(e){}}
+function runDiag(){
+  var L=[],issues=0;
+  function ok(s){L.push('[OK] '+s);}
+  function bad(s){L.push('[!!] '+s);issues++;}
+  var ver='?';var vb=document.querySelector('.nav-title span');if(vb)ver=vb.textContent;
+  L.push('RVM Raport - diagnostyka');L.push('Wersja: '+ver);L.push('Data: '+new Date().toLocaleString());L.push('');
+  var handlers=new Set();
+  document.querySelectorAll('*').forEach(function(el){
+    if(!el.getAttribute)return;
+    ['onclick','onchange','oninput','onsubmit'].forEach(function(a){
+      var v=el.getAttribute(a);if(!v)return;
+      v=v.replace(/'[^']*'/g,"''").replace(/"[^"]*"/g,'""');
+      var re=/([A-Za-z_$][\w$]*)\s*\(/g,mm;
+      while((mm=re.exec(v))){if(v[mm.index-1]==='.')continue;var n=mm[1];if(['if','for','while','function','return','typeof','switch','catch'].indexOf(n)>=0)continue;handlers.add(n);}
+    });
+  });
+  var miss=[];handlers.forEach(function(n){if(typeof window[n]!=='function')miss.push(n);});
+  if(miss.length)bad('Handlery: brak '+miss.length+' funkcji: '+miss.join(', '));else ok('Handlery: wszystkie '+handlers.size+' OK');
+  var seen={},dups=[];
+  document.querySelectorAll('[id]').forEach(function(el){var id=el.id;seen[id]=(seen[id]||0)+1;if(seen[id]===2)dups.push(id);});
+  if(dups.length)L.push('[i] Duplikaty ID ('+dups.length+', nieaktywne): '+dups.join(', '));else ok('Duplikaty ID: brak');
+  var crit=['mshAdj','mshAdjMin','magRender','magGet','magSave','magSt','buildReport','doCopy','saveTime','saveTimeS','magHistoryAdd','magHistOpen','magFilterStatus','copyFullCode','openAIPanel','runOffline','openInClaude','magAddSave','magOpenSheet','openMagSheet','renderSummary'];
+  var cmiss=crit.filter(function(n){return typeof window[n]!=='function';});
+  if(cmiss.length)bad('Krytyczne funkcje: brak '+cmiss.join(', '));else ok('Krytyczne funkcje ('+crit.length+'): OK');
+  function gck(label,test){try{if(test())ok('Dane: '+label);else bad('Dane: '+label+' - problem');}catch(e){bad('Dane: '+label+' - '+e.message);}}
+  gck('MAG_PARTS '+(typeof MAG_PARTS!=='undefined'?MAG_PARTS.length:0)+' szt.',function(){return typeof MAG_PARTS!=='undefined'&&MAG_PARTS.length>0;});
+  gck('Katalog D (el/def/sol/kon)',function(){return typeof D!=='undefined'&&D.el&&D.def&&D.sol&&D.kon;});
+  gck('custom (wlasny katalog)',function(){return typeof custom!=='undefined'&&!!custom;});
+  gck('selPartsG/S',function(){return typeof selPartsG!=='undefined'&&typeof selPartsS!=='undefined';});
+  var lsBad=[],lsCount=0,lsBytes=0;
+  try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k.indexOf('rv_')!==0)continue;lsCount++;var val=localStorage.getItem(k);lsBytes+=val.length;try{JSON.parse(val);}catch(e){lsBad.push(k);}}}catch(e){}
+  if(lsBad.length)bad('localStorage: uszkodzone: '+lsBad.join(', '));else ok('localStorage: '+lsCount+' kluczy OK ('+Math.round(lsBytes/1024)+' KB)');
+  try{
+    var all=(typeof magGetAll==='function'?magGetAll():MAG_PARTS),act=0,low=0,emp=0,cust=0;
+    all.forEach(function(p){if(p.id>=1000)cust++;if(typeof magActive==='function'&&magActive(p.id)){act++;var s=magSt(p.id);if(s==='warn')low++;else if(s==='empty')emp++;}});
+    L.push('');L.push('Magazyn: '+all.length+' poz. ('+cust+' wlasnych), aktywne '+act+', malo '+low+', brak '+emp);
+    var hist=[];try{hist=JSON.parse(localStorage.getItem('rv_maghist')||'[]');}catch(e){}
+    L.push('Historia uzycia: '+(hist.length||0)+' wpisow');
+    L.push('Pozycje w raporcie: '+((typeof entries!=='undefined'&&entries.length)||0));
+  }catch(e){bad('Magazyn snapshot: '+e.message);}
+  L.push('');L.push(issues===0?'WYNIK: OK - brak bledow.':'WYNIK: znaleziono '+issues+' problem(ow).');
+  var out=L.join('\n');var el=document.getElementById('rvDiagOut');if(el)el.textContent=out;
+  if(typeof openSh==='function')openSh('shDiag');else{var o=document.getElementById('shDiag');if(o)o.style.display='flex';}
+}
+function copyDiag(){
+  var t=(document.getElementById('rvDiagOut')||{}).textContent||'';
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){if(typeof showToast==='function')showToast('Raport skopiowany');}).catch(function(){});}
+  else{var ta=document.getElementById('rvDiagOut');if(ta){var r=document.createRange();r.selectNodeContents(ta);var s=getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand('copy');if(typeof showToast==='function')showToast('Raport skopiowany');}catch(e){}}}
+}
 
 </script>
+<div class="ov" id="shDiag" style="display:none" onclick="if(event.target===this)closeOv('shDiag')">
+  <div class="sh" style="max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="font-size:17px;font-weight:800;color:#323130">Diagnostyka</div>
+      <button onclick="closeOv('shDiag')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button>
+    </div>
+    <pre id="rvDiagOut" style="white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11px;line-height:1.5;background:#F8F8F8;border:.5px solid #E5E5EA;border-radius:10px;padding:12px;color:#323130;margin-bottom:10px"></pre>
+    <button onclick="copyDiag()" style="width:100%;padding:12px;background:#0078D4;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Kopiuj raport</button>
+    <button class="sh-btn lt" onclick="closeOv('shDiag')" style="margin-top:8px">Zamknij</button>
+  </div>
+</div>
 <div class="ov" id="shAI" style="display:none" onclick="if(event.target===this)closeOv('shAI')">
   <div class="sh" style="max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
