@@ -350,7 +350,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v9.6</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v9.7</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -516,7 +516,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
         <button class="btn-save" onclick="saveTmpl()">+ Zapisz</button>
       </div>
       <div style="display:flex;gap:8px;padding:0 14px 14px">
-        <button class="btn-ai" onclick="openAI()">AI</button>
+        <button class="btn-ai" onclick="openAIPanel()">AI</button>
         <button class="btn-copy" onclick="doCopy()">Kopiuj</button>
       </div>
     </div>
@@ -2200,7 +2200,7 @@ function runOffline(cmd){
   if(navigator.clipboard){navigator.clipboard.writeText(result).then(function(){showToast("&#10003; Skopiowano");});}
 }
 function openInClaude(){
-  var raport=_fmtRep();
+  var raport=(typeof buildReport==='function'?buildReport():_fmtRep());
   var q=(document.getElementById("aiQuestion")||{}).value||"";
   var msg="Jestem technikiem serwisowym RVM. Oto mój aktualny raport serwisowy:\n\n"+raport;
   if(q.trim())msg+="\n\n"+q.trim();
@@ -2469,7 +2469,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v9.6",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v9.7",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -5960,6 +5960,7 @@ function magHistClear(){
 (function(){
   function _aiChatMsg(){try{if(typeof showToast==='function')showToast('AI robisz w czacie Claude \u2014 w aplikacji wylaczone');}catch(e){}}
   try{if(!window.custom||typeof window.custom!=='object')window.custom={el:[],def:[],sol:[],kon:[]};}catch(e){}
+  try{window.selPartsG=window.selPartsG||{};window.selPartsS=window.selPartsS||{};window.partQtyG=window.partQtyG||{};window.partQtyS=window.partQtyS||{};}catch(e){}
   try{_vsAI=false;}catch(e){}
   try{window._vsAI=false;}catch(e){}
   window.genAI=function(){_aiChatMsg();};
@@ -6002,6 +6003,28 @@ function _codeTextarea(out){
 }
 
 </script>
+<div class="ov" id="shAI" style="display:none" onclick="if(event.target===this)closeOv('shAI')">
+  <div class="sh" style="max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div style="font-size:17px;font-weight:800;color:#323130">Asystent</div>
+      <button onclick="closeOv('shAI')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button>
+    </div>
+    <div style="font-size:12px;color:#A19F9D;margin-bottom:10px">Dziala offline na podstawie Twojego raportu.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+      <button onclick="runOffline('email')" style="padding:11px;background:#fff;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit">List do klienta</button>
+      <button onclick="runOffline('skrot')" style="padding:11px;background:#fff;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit">Krotkie podsumowanie</button>
+      <button onclick="runOffline('en')" style="padding:11px;background:#fff;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit">Tlumacz na EN</button>
+      <button onclick="runOffline('ru')" style="padding:11px;background:#fff;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit">Tlumacz na RU</button>
+      <button onclick="runOffline('priorytety')" style="grid-column:1/3;padding:11px;background:#fff;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit">Priorytety</button>
+    </div>
+    <div id="offlineResult" style="display:none;font-size:13px;line-height:1.6;background:#F8F8F8;border-radius:10px;padding:12px;white-space:pre-wrap;margin-bottom:10px;max-height:240px;overflow-y:auto"></div>
+    <div style="height:1px;background:#EDEBE9;margin:4px 0 12px"></div>
+    <div style="font-size:12px;font-weight:700;color:#605E5C;margin-bottom:6px">Albo zapytaj Claude (czat):</div>
+    <input id="aiQuestion" placeholder="Pytanie (opcjonalnie)..." style="width:100%;padding:11px;background:#F8F8F8;border:.5px solid #E5E5EA;border-radius:10px;font-size:14px;font-family:inherit;outline:none;margin-bottom:8px">
+    <button onclick="openInClaude()" style="width:100%;padding:13px;background:#5856D6;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Otworz w czacie Claude z raportem</button>
+    <button class="sh-btn lt" onclick="closeOv('shAI')" style="margin-top:8px">Zamknij</button>
+  </div>
+</div>
 <div class="ov" id="shAiDist" style="display:none" onclick="if(event.target===this)closeOv('shAiDist')">
   <div class="sh" style="max-height:88vh;overflow-y:auto">
     <div class="sh-bar"></div>
