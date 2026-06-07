@@ -349,7 +349,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.4</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.5</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -528,6 +528,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
     <div style="display:flex;gap:8px;margin-bottom:8px;overflow-x:auto;padding-bottom:2px" id="magBtns">
       <button onclick="magPrintQR()" style="background:#605E5C;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">QR PDF</button>
       <button onclick="sendOrderEmail()" style="background:#FF9500;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">Zamow czesci</button>
+      <button onclick="openMagCfg()" style="background:#0078D4;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">E-mail / Harmonogram</button>
     </div>
     <div style="display:flex;gap:8px;margin-bottom:8px">
       <div id="magStatAll" onclick="magFilterStatus('')" style="flex:1;background:#fff;border-radius:10px;padding:10px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.08);cursor:pointer">
@@ -2468,7 +2469,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.4",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.5",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -6013,6 +6014,86 @@ function magFilterStatus(s){
 function saveTimeS(el){try{var sfx=el&&el.getAttribute?el.getAttribute('data-sfx'):null;if(sfx&&typeof saveTime==='function')saveTime(sfx);}catch(e){}}
 var DEFAULT_ORDER_TMPL='Dzien dobry,\n\nProsze o zamowienie nastepujacych czesci zamiennych do maszyn RVM:\n\n{czesci}\n\nProsze o potwierdzenie dostepnosci oraz przewidywanego terminu realizacji.\n\nDziekuje.';
 function _orderApply(block){var t=localStorage.getItem('rv_order_tmpl');if(t===null||t==='')t=DEFAULT_ORDER_TMPL;if(t.indexOf('{czesci}')>=0)return t.replace(/\{czesci\}/g,block);return t+'\n\n'+block;}
+function openMagCfg(){
+  try{
+    var to=document.getElementById('mcTo');if(to)to.value=localStorage.getItem('rv_email_to')||'';
+    var tm=document.getElementById('mcTmpl');if(tm)tm.value=localStorage.getItem('rv_order_tmpl')||(typeof DEFAULT_ORDER_TMPL!=='undefined'?DEFAULT_ORDER_TMPL:'');
+    var dd=document.getElementById('mcSchedDay');if(dd&&window._schedDay!==null&&window._schedDay!==undefined&&!isNaN(window._schedDay))dd.value=window._schedDay;
+    var tt=document.getElementById('mcSchedTime');if(tt)tt.value=window._schedTime||'08:00';
+    magCfgApplyUI();
+  }catch(e){}
+  if(typeof openSh==='function')openSh('shMagCfg');else{var o=document.getElementById('shMagCfg');if(o)o.style.display='flex';}
+}
+function magCfgApplyUI(){
+  var on=window._schedOn===true;
+  var sw=document.getElementById('mcSchedSwitch'),kn=document.getElementById('mcSchedKnob');
+  if(sw)sw.style.background=on?'#34C759':'#E5E5EA';
+  if(kn)kn.style.left=on?'20px':'2px';
+  var st=document.getElementById('mcSchedStatus');
+  var days=['Niedziela','Poniedzialek','Wtorek','Sroda','Czwartek','Piatek','Sobota'];
+  if(st){
+    if(!on)st.textContent='Harmonogram wylaczony';
+    else if(window._schedDay!==null&&window._schedDay!==undefined&&!isNaN(window._schedDay)&&window._schedTime)st.textContent='Zaplanowano: '+days[window._schedDay]+' o '+window._schedTime;
+    else st.textContent='Ustaw dzien i godzine';
+  }
+}
+function magCfgSchedToggle(){
+  window._schedOn=!(window._schedOn===true);
+  try{localStorage.setItem('rv_sched_on',window._schedOn?'1':'0');}catch(e){}
+  if(window._schedOn&&typeof schedStart==='function')schedStart();else if(window._schedTimer){clearInterval(window._schedTimer);window._schedTimer=null;}
+  magCfgApplyUI();if(typeof schedApplyUI==='function')schedApplyUI();
+  _toast(window._schedOn?'Harmonogram wlaczony':'Harmonogram wylaczony');
+}
+function magCfgSchedSave(){
+  var dd=document.getElementById('mcSchedDay'),tt=document.getElementById('mcSchedTime');
+  if(!dd||!tt)return;
+  window._schedDay=parseInt(dd.value);window._schedTime=tt.value;
+  try{localStorage.setItem('rv_sched',JSON.stringify({day:window._schedDay,time:window._schedTime}));}catch(e){}
+  window._schedOn=true;try{localStorage.setItem('rv_sched_on','1');}catch(e){}
+  if(typeof schedStart==='function')schedStart();
+  magCfgApplyUI();if(typeof schedApplyUI==='function')schedApplyUI();
+  _toast('Harmonogram zapisany');
+}
+function _magReportBody(){
+  var all=(typeof magGetAll==='function'?magGetAll():(typeof MAG_PARTS!=='undefined'?MAG_PARTS:[]));
+  var b='RAPORT MAGAZYNU RVM\nData: '+new Date().toLocaleString('pl-PL')+'\n\n';
+  b+='STAN MAGAZYNU (aktywne czesci):\n';
+  var act=all.filter(function(p){return typeof magActive!=='function'||magActive(p.id);});
+  if(!act.length)b+='(brak aktywnych czesci)\n';
+  act.forEach(function(p){
+    var d=(typeof magGet==='function')?magGet(p.id):{qty:0};var s=(typeof magSt==='function')?magSt(p.id):'';
+    var tag=s==='empty'?' [BRAK]':(s==='warn'?' [NISKI]':'');
+    b+='- '+p.n+' (nr kat. '+p.k+'): '+((d&&d.qty!=null)?d.qty:0)+' szt.'+tag+'\n';
+  });
+  var hist=[];try{hist=JSON.parse(localStorage.getItem('rv_maghist')||'[]');}catch(e){}
+  b+='\nHISTORIA UZYCIA CZESCI (ostatnie '+Math.min(hist.length,100)+' z '+hist.length+'):\n';
+  if(!hist.length)b+='(brak wpisow)\n';
+  hist.slice(0,100).forEach(function(h){
+    var dt=new Date(h.t);var ds=isNaN(dt.getTime())?'':dt.toLocaleDateString('pl-PL')+' '+String(dt.getHours()).padStart(2,'0')+':'+String(dt.getMinutes()).padStart(2,'0');
+    b+='- '+ds+' | '+(h.n||'')+(h.k?' ('+h.k+')':'')+' x'+(h.q||1)+(h.shop?' | '+h.shop:'')+(h.mode?' | '+h.mode:'')+'\n';
+  });
+  return b;
+}
+function magReportSend(){
+  var to=localStorage.getItem('rv_email_to')||'';
+  if(!to){try{var rec=JSON.parse(localStorage.getItem('rv_email_rec')||'[]');if(rec&&rec.length)to=rec[0];}catch(e){}}
+  var subj='Raport magazynu RVM - '+new Date().toLocaleDateString('pl-PL');
+  window.location.href='mailto:'+encodeURIComponent(to)+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(_magReportBody());
+}
+function schedNotify(){
+  var key=new Date().toDateString()+' '+(window._schedTime||'');
+  if(window._schedLast===key)return;window._schedLast=key;
+  magReportSend();
+}
+(function(){try{
+  var s=null;try{s=JSON.parse(localStorage.getItem('rv_sched')||'null');}catch(e){}
+  if(s){window._schedDay=(typeof s.day==='number')?s.day:parseInt(s.day);window._schedTime=s.time||'';}
+  window._schedOn=localStorage.getItem('rv_sched_on')==='1';
+  var dd=document.getElementById('schedDay');if(dd&&window._schedDay!==null&&window._schedDay!==undefined&&!isNaN(window._schedDay))dd.value=window._schedDay;
+  var tt=document.getElementById('schedTime');if(tt&&window._schedTime)tt.value=window._schedTime;
+  if(typeof schedApplyUI==='function')schedApplyUI();
+  if(window._schedOn&&typeof schedStart==='function')schedStart();
+}catch(e){}})();
 function runDiag(){
   var L=[],issues=0;
   function ok(s){L.push('[OK] '+s);}
@@ -6064,6 +6145,29 @@ function copyDiag(){
 }
 
 </script>
+<div class="ov" id="shMagCfg" style="display:none" onclick="if(event.target===this)closeOv('shMagCfg')">
+  <div class="sh" style="max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-size:17px;font-weight:800;color:#323130">E-mail i harmonogram</div>
+      <button onclick="closeOv('shMagCfg')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:#605E5C;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Odbiorca e-mail</div>
+    <input id="mcTo" type="email" placeholder="odbiorca@firma.pl" oninput="saveSetting('rv_email_to',this.value)" style="width:100%;padding:11px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:14px">
+    <div style="font-size:12px;font-weight:700;color:#605E5C;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Tresc maila zamowienia</div>
+    <textarea id="mcTmpl" oninput="saveSetting('rv_order_tmpl',this.value)" placeholder="Tresc maila zamowienia..." style="width:100%;min-height:115px;padding:11px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;font-family:inherit;line-height:1.5;outline:none;resize:vertical;color:#323130;margin-bottom:4px"></textarea>
+    <div style="font-size:11px;color:#A19F9D;margin-bottom:14px;line-height:1.4">Zostaw <b>{czesci}</b> - tam wstawia sie zamawiane czesci.</div>
+    <div style="font-size:12px;font-weight:700;color:#605E5C;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Harmonogram (auto-raport: stan + historia)</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0 12px"><span style="font-size:14px;font-weight:600;color:#323130">Harmonogram aktywny</span><div id="mcSchedSwitch" onclick="magCfgSchedToggle()" style="width:46px;height:28px;border-radius:14px;background:#E5E5EA;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0"><div id="mcSchedKnob" style="position:absolute;top:2px;left:2px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:left .2s"></div></div></div>
+    <select id="mcSchedDay" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:8px">
+      <option value="1">Poniedzialek</option><option value="2">Wtorek</option><option value="3">Sroda</option><option value="4">Czwartek</option><option value="5">Piatek</option><option value="6">Sobota</option><option value="0">Niedziela</option>
+    </select>
+    <input type="time" id="mcSchedTime" value="08:00" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:10px">
+    <button onclick="magCfgSchedSave()" style="width:100%;padding:12px;background:#007AFF;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px">Zapisz harmonogram</button>
+    <button onclick="magReportSend()" style="width:100%;padding:12px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Wyslij raport teraz</button>
+    <div id="mcSchedStatus" style="font-size:12px;color:#A19F9D;margin-top:8px;text-align:center"></div>
+    <div style="font-size:11px;color:#8A6D3B;margin-top:10px;line-height:1.45;background:#FFF8E1;border-radius:8px;padding:9px 11px">Uwaga: automatyczna wysylka dziala tylko gdy aplikacja jest otwarta o zaplanowanej godzinie. Przy zamknietej apce telefon nie wysle maila sam - uzyj "Wyslij raport teraz".</div>
+  </div>
+</div>
 <div class="ov" id="shDiag" style="display:none" onclick="if(event.target===this)closeOv('shDiag')">
   <div class="sh" style="max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
