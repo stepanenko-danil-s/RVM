@@ -274,7 +274,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
   <div class="modal-sheet">
     <div class="sh-bar"></div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div id="mshName" style="font-size:16px;font-weight:800"></div>
+      <div style="flex:1;min-width:0;padding-right:8px"><div id="mshName" style="font-size:16px;font-weight:800"></div><div id="mshCode" style="font-size:12px;color:#8E8E93;font-weight:700;margin-top:2px"></div><div id="mshCat" style="font-size:11px;color:#A0A0A8;margin-top:1px"></div></div>
       <button onclick="closeMagSheet()" style="background:rgba(118,118,128,.15);border:none;width:30px;height:30px;border-radius:50%;font-size:18px;cursor:pointer">&#215;</button>
     </div>
     <div style="text-align:center;margin-bottom:14px">
@@ -296,16 +296,28 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
       <span id="mshMin" style="font-size:15px;font-weight:700;min-width:24px;text-align:center">1</span>
       <button onclick="mshAdjMin(1)" style="width:28px;height:28px;border-radius:50%;border:1.5px solid #E5E5EA;background:#fff;cursor:pointer;color:#8E8E93">+</button>
     </div>
-    <button onclick="orderPart()" style="width:100%;padding:12px;background:#FF9500;border:none;border-radius:13px;font-size:14px;font-weight:700;color:#fff;cursor:pointer">Zamow czesc</button>
+    <button id="mshActiveBtn" onclick="mshToggleActive()" style="width:100%;padding:11px;border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px">Aktywna</button><button onclick="orderPart()" style="width:100%;padding:12px;background:#FF9500;border:none;border-radius:13px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;font-family:inherit">Zamów tę część</button>
   </div>
 </div>
 
+<!-- SEND PICKER -->
+<div class="modal-ov" id="shSend" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal-sheet">
+    <div class="sh-bar"></div>
+    <div style="font-size:15px;font-weight:800;margin-bottom:4px" id="shSendTitle">Wyślij raport</div>
+    <div style="font-size:12px;color:#8E8E93;margin-bottom:14px">Wybierz sposób wysyłki</div>
+    <button onclick="sendPick('email')" style="width:100%;padding:13px;margin-bottom:8px;background:#0078D4;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">✉️ E-mail</button>
+    <button onclick="sendPick('whatsapp')" style="width:100%;padding:13px;margin-bottom:8px;background:#25D366;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">WhatsApp</button>
+    <button onclick="sendPick('teams')" style="width:100%;padding:13px;margin-bottom:8px;background:#5059C9;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Microsoft Teams</button>
+    <button onclick="document.getElementById('shSend').classList.remove('open')" style="width:100%;padding:11px;background:rgba(118,118,128,.12);color:#8E8E93;border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Anuluj</button>
+  </div>
+</div>
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.13</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.14</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -485,7 +497,8 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
   <div style="padding:8px 12px 0">
     <div style="display:flex;gap:8px;margin-bottom:8px;overflow-x:auto;padding-bottom:2px" id="magBtns"><button onclick="goTab('raport')" style="background:#E5E5EA;color:#333;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">&#8249; Raport</button>
       <button onclick="magPrintQR()" style="background:#605E5C;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">QR PDF</button>
-      <button onclick="sendOrderEmail()" style="background:#FF9500;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">Zamow czesci</button>
+      <button onclick="orderReport()" style="background:#FF9500;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">Zamówienie</button>
+      <button onclick="historyReport()" style="background:#34C759;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">Historia</button>
       <button onclick="openMagCfg()" style="background:#0078D4;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">E-mail / Harmonogram</button>
     </div>
     <div style="display:flex;gap:8px;margin-bottom:8px">
@@ -2423,7 +2436,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.13",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.14",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -5500,6 +5513,84 @@ function magQuickUse(id){
   var nm=p.n?p.n.split(' ').slice(0,3).join(' '):'';
   showToast('Spisano \u00b7 '+nm+' \u00b7 w raporcie: '+custParts[m][p.id]+' \u00b7 stan: '+Math.max(0,d.qty));
 }
+function _sendVia(channel,subject,body){
+  if(channel==='email'){
+    var to=localStorage.getItem('rv_email_to')||'';
+    if(!to){try{var rec=JSON.parse(localStorage.getItem('rv_email_rec')||'[]');if(rec&&rec.length)to=rec[0];}catch(e){}}
+    window.location.href='mailto:'+encodeURIComponent(to)+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+  }else if(channel==='whatsapp'){
+    window.open('https://wa.me/?text='+encodeURIComponent(subject+'\n\n'+body),'_blank');
+  }else if(channel==='teams'){
+    window.open('https://teams.microsoft.com/l/chat/0/0?message='+encodeURIComponent(subject+'\n\n'+body),'_blank');
+  }
+}
+function openSendPicker(subject,body,title){
+  window._sendSubj=subject;window._sendBody=body;
+  var t=document.getElementById('shSendTitle');if(t)t.textContent=title||'Wyslij raport';
+  document.getElementById('shSend').classList.add('open');
+}
+function sendPick(ch){
+  document.getElementById('shSend').classList.remove('open');
+  _sendVia(ch,window._sendSubj||'',window._sendBody||'');
+}
+function _orderTable(){
+  if(!_magData)_magData=magLoad();
+  var all=(typeof magGetAll==='function'?magGetAll():MAG_PARTS);
+  var rows=[];
+  all.forEach(function(p){
+    if(!magActive(p.id))return;
+    var d=magGet(p.id),min=(d.min||1),qty=Math.max(0,d.qty||0);
+    var ord=Math.max(0,min-qty);
+    if(ord<=0)return;
+    rows.push({k:p.k||'',n:p.n||'',min:min,qty:qty,ord:ord});
+  });
+  var date=new Date().toLocaleDateString('pl-PL');
+  var b='ZAMOWIENIE CZESCI RVM\nData: '+date+'\n\n';
+  if(!rows.length)return {body:b+'(brak czesci do zamowienia)',empty:true};
+  b+='Nr czesci | Nazwa | Powinno byc | Jest | Zamowic\n';
+  b+='--------------------------------------------------\n';
+  rows.forEach(function(r){
+    b+=r.k+' | '+r.n+' | '+r.min+' | '+r.qty+' | '+r.ord+'\n';
+  });
+  b+='\nRazem pozycji: '+rows.length;
+  return {body:b,empty:false};
+}
+function orderReport(){
+  var r=_orderTable();
+  if(r.empty){showToast('Wszystkie czesci w normie');return;}
+  var tmpl=_orderApply(r.body);
+  openSendPicker('Zamowienie czesci RVM - '+new Date().toLocaleDateString('pl-PL'),tmpl,'Wyslij zamowienie');
+}
+function _histTable(){
+  var hist=[];try{hist=JSON.parse(localStorage.getItem('rv_maghist')||'[]');}catch(e){}
+  var b='HISTORIA UZYCIA CZESCI RVM\nData eksportu: '+new Date().toLocaleString('pl-PL')+'\n\n';
+  if(!hist.length)return {body:b+'(brak wpisow)',empty:true};
+  b+='Data | Nr czesci | Nazwa | Ilosc | Sklep\n';
+  b+='--------------------------------------------------\n';
+  hist.slice(0,200).forEach(function(x){
+    var dt=new Date(x.t);
+    var ds=isNaN(dt.getTime())?'':(dt.toLocaleDateString('pl-PL')+' '+String(dt.getHours()).padStart(2,'0')+':'+String(dt.getMinutes()).padStart(2,'0'));
+    b+=ds+' | '+(x.k||'')+' | '+(x.n||'')+' | '+(x.q||1)+' | '+(x.shop||'')+'\n';
+  });
+  b+='\nRazem wpisow: '+hist.length;
+  return {body:b,empty:false};
+}
+function historyReport(){
+  var r=_histTable();
+  if(r.empty){showToast('Historia pusta');return;}
+  openSendPicker('Historia uzycia czesci RVM - '+new Date().toLocaleDateString('pl-PL'),r.body,'Wyslij historie');
+}
+function _mshSetActive(id){
+  var b=document.getElementById('mshActiveBtn');if(!b)return;
+  var a=magActive(id);
+  b.textContent=a?'\u2713 Aktywna w magazynie':'Nieaktywna \u2014 wlacz';
+  b.style.background=a?'rgba(52,199,89,.12)':'rgba(118,118,128,.12)';
+  b.style.color=a?'#34C759':'#8E8E93';
+}
+function mshToggleActive(){
+  var id=_mshCurId();if(id===null||id===undefined)return;
+  magToggleActive(id);_mshSetActive(id);
+}
 function _setShopFields(n,i,a){
   var en=document.getElementById('shopName'),ei=document.getElementById('shopId'),ea=document.getElementById('shopAddr');
   if(en)en.value=n||'';if(ei)ei.value=(i===0||i)?(''+i):'';if(ea)ea.value=a||'';
@@ -5632,6 +5723,9 @@ function openMagSheet(id){
   var p=MAG_PARTS.find(function(x){return x.id===id;});
   var d=magGet(id);
   document.getElementById('mshName').textContent=p?p.n:'';
+  var _ce=document.getElementById('mshCode');if(_ce)_ce.textContent=p?('Nr cz\u0119\u015bci: '+(p.k||'\u2014')):'';
+  var _cc=document.getElementById('mshCat');if(_cc)_cc.textContent=(p&&p.cat)?p.cat:'';
+  if(typeof _mshSetActive==='function')_mshSetActive(id);
   document.getElementById('mshQty').textContent=Math.max(0,d.qty);
   document.getElementById('mshMin').textContent=d.min||1;
   var st=magSt(id);
@@ -5674,12 +5768,13 @@ function orderPart(){
   var id=(typeof _mshCurId==='function')?_mshCurId():(typeof _mshId!=='undefined'?_mshId:null);
   if(id===null||id===undefined)return;
   var all=(typeof magGetAll==='function'?magGetAll():MAG_PARTS);
-  var p=all.find(function(x){return x.id===id;});
-  if(!p)return;
-  var to=localStorage.getItem('rv_email_to')||'';
-  var body=_orderApply('- '+p.n+' (nr kat. '+p.k+') - 1 szt.');
-  var subj='Zamowienie czesci: '+p.n;
-  window.location.href='mailto:'+to+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+  var p=all.find(function(x){return x.id===id;});if(!p)return;
+  var d=magGet(id),min=(d.min||1),qty=Math.max(0,d.qty||0),ord=Math.max(1,min-qty);
+  var b='ZAMOWIENIE CZESCI RVM\nData: '+new Date().toLocaleDateString('pl-PL')+'\n\n';
+  b+='Nr czesci | Nazwa | Powinno byc | Jest | Zamowic\n';
+  b+='--------------------------------------------------\n';
+  b+=(p.k||'')+' | '+p.n+' | '+min+' | '+qty+' | '+ord+'\n';
+  openSendPicker('Zamowienie czesci: '+p.n,_orderApply(b),'Wyslij zamowienie');
 }
 
 function sendOrderEmail(){
