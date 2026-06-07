@@ -323,7 +323,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.21</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.22</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -502,7 +502,6 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 <div class="pg" id="pgMag">
   <div style="padding:8px 12px 0">
     <div style="display:flex;gap:8px;margin-bottom:8px;overflow-x:auto;padding-bottom:2px" id="magBtns"><button onclick="goTab('raport')" style="background:#E5E5EA;color:#333;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap"><span class="ti"><span class="ic-ios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="ic-ms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter"><path d="M15 5l-7 7 7 7"/></svg></span></span>Raport</button>
-      <button onclick="magScanQR()" style="background:#0078D4;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap"><span class="ti"><span class="ic-ios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8"/><path d="M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8"/><path d="M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16"/><path d="M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"/><rect x="8.3" y="8.3" width="3.2" height="3.2" rx="0.7"/><rect x="13" y="13" width="2.6" height="2.6" rx="0.5"/></svg></span><span class="ic-ms"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h6v6H4V4Zm2 2v2h2V6H6Z"/><path d="M14 4h6v6h-6V4Zm2 2v2h2V6h-2Z"/><path d="M4 14h6v6H4v-6Zm2 2v2h2v-2H6Z"/><path d="M13 13h3v3h-3zM17 13h3v2h-3zM13 17h2v3h-2zM16 17h4v3h-4z"/></svg></span></span>Skanuj QR</button>
       <button onclick="magPrintQR()" style="background:#605E5C;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap"><span class="ti"><span class="ic-ios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V4h10v5"/><rect x="3.5" y="9" width="17" height="7" rx="2"/><path d="M7 14h10v6H7z"/></svg></span><span class="ic-ms"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3h10v4H7z"/><path d="M4.5 8h15A1.5 1.5 0 0 1 21 9.5V15a1 1 0 0 1-1 1h-2.5v-3.5h-11V16H4a1 1 0 0 1-1-1V9.5A1.5 1.5 0 0 1 4.5 8Z"/><path d="M7.5 13h9v7h-9z"/></svg></span></span>QR PDF</button>
       <button onclick="openOrder()" style="background:#FF9500;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap"><span class="ti"><span class="ic-ios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.2"/><circle cx="17.5" cy="20" r="1.2"/><path d="M3 4h2l2.1 10.4a1 1 0 0 0 1 .8h8.5a1 1 0 0 0 1-.78L20 8H5.6"/></svg></span><span class="ic-ms"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 4a1 1 0 0 0 0 2h1.4l1.9 9.6A2 2 0 0 0 8.26 17H18a1 1 0 0 0 0-2H8.26l-.2-1h9.5a2 2 0 0 0 1.96-1.6L20.8 7.2A1 1 0 0 0 19.82 6H6.2l-.22-1.2A1 1 0 0 0 5 4Z"/><circle cx="9" cy="20" r="1.5"/><circle cx="17.5" cy="20" r="1.5"/></svg></span></span>Zamówienie</button>
       <button onclick="magHistOpen()" style="background:#34C759;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap"><span class="ti"><span class="ic-ios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.5-5.8L4 8.5"/><path d="M4 4v4.5h4.5"/><path d="M12 8v4.3l3 1.7"/></svg></span><span class="ic-ms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="square" stroke-linejoin="miter"><path d="M4 12a8 8 0 1 0 2.5-5.8L4 8.5"/><path d="M4 4v4.5h4.5"/><path d="M12 8v4.3l3 1.7"/></svg></span></span>Historia</button>
@@ -526,13 +525,6 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
     <button onclick="magAddNew()" style="width:100%;padding:11px;background:#fff;border:1px solid #34C759;border-radius:10px;font-size:13px;font-weight:700;color:#34C759;cursor:pointer;font-family:inherit;margin-bottom:8px">+ Dodaj czesc recznie</button>
 <div id="magGrid"></div>
   </div>
-</div>
-
-<!-- BOTTOM NAV -->
-<div class="bnav">
-  <button class="bnav-btn on" id="navRaport" onclick="goTab('raport')">
-    Raport
-  </button>
 </div>
 
 <script>
@@ -2440,7 +2432,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.21",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.22",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -5614,19 +5606,13 @@ function _histTable(channel){
   var hist=[];try{hist=JSON.parse(localStorage.getItem('rv_maghist')||'[]');}catch(e){}
   var b='HISTORIA UZYCIA CZESCI RVM\nData eksportu: '+new Date().toLocaleString('pl-PL')+'\n\n';
   if(!hist.length)return {body:b+'(brak wpisow)',empty:true};
-  if(channel==='whatsapp'||channel==='teams'){
-    var data=hist.slice(0,200).map(function(x){
-      var d=new Date(x.t);var ds=isNaN(d.getTime())?'':(('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2));
-      return [ds,x.k||'-',_clip(x.n||'-',18),''+(x.q||1),_clip(x.shop||'-',22)];
-    });
-    b+='```\n'+_monoTable(['Data','Nr','Nazwa','Szt','Sklep'],data)+'\n```\nRazem: '+hist.length+' poz.';
-  }else{
-    hist.slice(0,200).forEach(function(x,i){
-      var d=new Date(x.t);var ds=isNaN(d.getTime())?'':(d.toLocaleDateString('pl-PL')+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2));
-      b+='--------------------------------\n'+(i+1)+') '+(x.n||'-')+'\n   Nr: '+(x.k||'-')+'\n   Data: '+ds+'\n   Ilosc: '+(x.q||1)+'\n   Sklep: '+(x.shop||'-')+'\n';
-    });
-    b+='--------------------------------\nRazem wpisow: '+hist.length;
-  }
+  var data=hist.slice(0,200).map(function(x){
+    var d=new Date(x.t);var ds=isNaN(d.getTime())?'':(('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2));
+    return [ds,x.k||'-',_clip(x.n||'-',16),''+(x.q||1),_clip(x.shop||'-',20)];
+  });
+  var tbl=_monoTable(['Data','Nr','Nazwa','Szt','Sklep'],data);
+  b+=(channel==='whatsapp'||channel==='teams')?('```\n'+tbl+'\n```'):tbl;
+  b+='\nRazem: '+hist.length+' poz.';
   return {body:b,empty:false};
 }
 function historyReport(){
@@ -5678,26 +5664,21 @@ function _orderRenderTable(){
 function _clip(s,n){s=(s==null?'':''+s);return s.length>n?s.slice(0,n-1)+'.':s;}
 function _monoTable(hdr,rows){
   var w=[];for(var c=0;c<hdr.length;c++){var mx=(''+hdr[c]).length;rows.forEach(function(r){var l=(''+r[c]).length;if(l>mx)mx=l;});w[c]=mx;}
-  function ln(cells){return cells.map(function(v,c){var s=''+v;while(s.length<w[c])s+=' ';return s;}).join(' ');}
-  var dash=w.map(function(x){var d='';while(d.length<x)d+='-';return d;});
-  var out=ln(hdr)+'\n'+ln(dash)+'\n';rows.forEach(function(r){out+=ln(r)+'\n';});
-  return out.replace(/\n$/,'');
+  function bd(){return '+'+w.map(function(x){var d='';while(d.length<x+2)d+='-';return d;}).join('+')+'+';}
+  function rw(cells){return '|'+cells.map(function(v,c){var s=' '+v+' ';while(s.length<w[c]+2)s+=' ';return s;}).join('|')+'|';}
+  var out=bd()+'\n'+rw(hdr)+'\n'+bd()+'\n';
+  rows.forEach(function(r){out+=rw(r)+'\n';});
+  return out+bd();
 }
 function _orderBuildText(channel){
   var bd=document.getElementById('ordBody');var intro=bd?bd.value:'';
   var rows=_orderRows();
   var b=intro?intro+'\n\n':'';
   if(!rows.length)return b+'(brak czesci do zamowienia)';
-  if(channel==='whatsapp'||channel==='teams'){
-    var data=rows.map(function(r){return [r.k||'-',_clip(r.n,20),''+r.min,''+r.qty,''+r.ord];});
-    b+='```\n'+_monoTable(['Nr','Nazwa','Pow','Jest','Wys'],data)+'\n```\nRazem: '+rows.length+' poz.';
-  }else{
-    rows.forEach(function(r,i){
-      b+='--------------------------------\n';
-      b+=(i+1)+') '+r.n+'\n   Nr: '+r.k+'\n   Powinno: '+r.min+'   Jest: '+r.qty+'   WYSLAC: '+r.ord+'\n';
-    });
-    b+='--------------------------------\nRazem pozycji: '+rows.length;
-  }
+  var data=rows.map(function(r){return [r.k||'-',_clip(r.n,18),''+r.min,''+r.qty,''+r.ord];});
+  var tbl=_monoTable(['Nr','Nazwa','Pow','Jest','Wys'],data);
+  b+=(channel==='whatsapp'||channel==='teams')?('```\n'+tbl+'\n```'):tbl;
+  b+='\nRazem: '+rows.length+' poz.';
   return b;
 }
 function orderSend(channel){
