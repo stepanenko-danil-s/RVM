@@ -323,7 +323,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.29</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.30</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2432,7 +2432,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.29",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.30",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -5607,7 +5607,7 @@ function _histTable(channel){
   var b='HISTORIA UZYCIA CZESCI RVM\nData eksportu: '+new Date().toLocaleString('pl-PL')+'\n\n';
   if(!hist.length)return {body:b+'(brak wpisow)',empty:true};
   var st=_tblStyle();
-  var tbl=_fmtRows(['Nr','Nazwa','Data','Szt','Sklep'],_histData(200),st,1,0);
+  var tbl=_fmtRows(['Nr','Nazwa','Szt','Data','Sklep'],_histData(200),st,1,0);
   var fence=(channel==='whatsapp'||channel==='teams')&&(st==='1'||st==='2');
   b+=fence?('```\n'+tbl+'\n```'):tbl;
   b+='\nRazem: '+hist.length+' poz.';
@@ -5719,16 +5719,16 @@ function _shareImg(kind,withText){
   var cols,rows,title,redCol=-1,txt='',subject='';
   if(kind==='order'){
     var rws=_orderRows();if(!rws.length){showToast('Brak czesci do zamowienia');return;}
-    cols=[{label:'Nr',w:150},{label:'Nazwa',w:320},{label:'Pow',w:64,align:'center'},{label:'Jest',w:64,align:'center'},{label:'Wyslac',w:78,align:'center'}];
-    rows=rws.map(function(r){return [r.k||'-',r.n||'-',''+r.min,''+r.qty,''+r.ord];});
-    title='Zamowienie czesci RVM - '+new Date().toLocaleDateString('pl-PL');redCol=4;
+    cols=[{label:'Nr',w:150},{label:'Nazwa',w:320},{label:'Wyslac',w:78,align:'center'},{label:'Pow',w:64,align:'center'},{label:'Jest',w:64,align:'center'}];
+    rows=rws.map(function(r){return [r.k||'-',r.n||'-',''+r.ord,''+r.min,''+r.qty];});
+    title='Zamowienie czesci RVM - '+new Date().toLocaleDateString('pl-PL');redCol=2;
     var sj=document.getElementById('ordSubj');subject=(sj&&sj.value)?sj.value:title;
     var bd=document.getElementById('ordBody');txt=bd?bd.value:'';
   }else{
     var hist=[];try{hist=JSON.parse(localStorage.getItem('rv_maghist')||'[]');}catch(e){}
     if(!hist.length){showToast('Historia pusta');return;}
-    cols=[{label:'Nr',w:150},{label:'Nazwa',w:250},{label:'Data',w:118},{label:'Szt',w:56,align:'center'},{label:'Sklep',w:180}];
-    rows=hist.slice(0,200).map(function(x){var d=new Date(x.t);var ds=isNaN(d.getTime())?'':(('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear()+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2));return [x.k||'-',x.n||'-',ds,''+(x.q||1),x.shop||'-'];});
+    cols=[{label:'Nr',w:150},{label:'Nazwa',w:250},{label:'Szt',w:56,align:'center'},{label:'Data',w:118},{label:'Sklep',w:180}];
+    rows=hist.slice(0,200).map(function(x){var d=new Date(x.t);var ds=isNaN(d.getTime())?'':(('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear()+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2));return [x.k||'-',x.n||'-',''+(x.q||1),ds,x.shop||'-'];});
     title='Historia uzycia czesci - '+new Date().toLocaleDateString('pl-PL');subject=title;txt='Historia uzycia czesci RVM ('+rows.length+' poz.) - '+new Date().toLocaleDateString('pl-PL')+'.';
   }
   _tableImageBlob(title,cols,rows,redCol).then(function(blob){
@@ -5772,17 +5772,17 @@ function _fmtRows(hdr,rows,style,titleIdx,nrIdx){
   function rb(cs){return '|'+cs.map(function(v,c){var s=' '+v+' ';while(s.length<w[c]+2)s+=' ';return s;}).join('|')+'|';}
   var out=bd()+'\n'+rb(hdr)+'\n'+bd()+'\n';rows.forEach(function(r){out+=rb(r)+'\n';});return out+bd();
 }
-function _orderData(){return _orderRows().map(function(r){return [r.k||'-',_clip(r.n,18),''+r.min,''+r.qty,''+r.ord];});}
-function _histData(n){var hist=[];try{hist=JSON.parse(localStorage.getItem('rv_maghist')||'[]');}catch(e){}return hist.slice(0,n||200).map(function(x){var d=new Date(x.t);var ds=isNaN(d.getTime())?'':(('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2));return [x.k||'-',_clip(x.n||'-',16),ds,''+(x.q||1),_clip(x.shop||'-',20)];});}
-function _orderPreview(){var pre=document.getElementById('ordPreview');if(!pre)return;var d=_orderData();pre.textContent=d.length?_fmtRows(['Nr','Nazwa','Pow','Jest','Wys'],d,_tblStyle(),1,0):'(brak czesci do zamowienia)';}
-function _histPreview(){var pre=document.getElementById('histPreview');if(!pre)return;var d=_histData(30);pre.textContent=d.length?_fmtRows(['Nr','Nazwa','Data','Szt','Sklep'],d,_tblStyle(),1,0):'(brak wpisow)';}
+function _orderData(){return _orderRows().map(function(r){return [r.k||'-',_clip(r.n,18),''+r.ord,''+r.min,''+r.qty];});}
+function _histData(n){var hist=[];try{hist=JSON.parse(localStorage.getItem('rv_maghist')||'[]');}catch(e){}return hist.slice(0,n||200).map(function(x){var d=new Date(x.t);var ds=isNaN(d.getTime())?'':(('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2));return [x.k||'-',_clip(x.n||'-',16),''+(x.q||1),ds,_clip(x.shop||'-',20)];});}
+function _orderPreview(){var pre=document.getElementById('ordPreview');if(!pre)return;var d=_orderData();pre.textContent=d.length?_fmtRows(['Nr','Nazwa','Wyslac','Pow','Jest'],d,_tblStyle(),1,0):'(brak czesci do zamowienia)';}
+function _histPreview(){var pre=document.getElementById('histPreview');if(!pre)return;var d=_histData(30);pre.textContent=d.length?_fmtRows(['Nr','Nazwa','Szt','Data','Sklep'],d,_tblStyle(),1,0):'(brak wpisow)';}
 function _orderBuildText(channel){
   var bd=document.getElementById('ordBody');var intro=bd?bd.value:'';
   var rows=_orderRows();
   var b=intro?intro+'\n\n':'';
   if(!rows.length)return b+'(brak czesci do zamowienia)';
   var st=_tblStyle();
-  var tbl=_fmtRows(['Nr','Nazwa','Pow','Jest','Wys'],_orderData(),st,1,0);
+  var tbl=_fmtRows(['Nr','Nazwa','Wyslac','Pow','Jest'],_orderData(),st,1,0);
   var fence=(channel==='whatsapp'||channel==='teams')&&(st==='1'||st==='2');
   b+=fence?('```\n'+tbl+'\n```'):tbl;
   b+='\nRazem: '+rows.length+' poz.';
