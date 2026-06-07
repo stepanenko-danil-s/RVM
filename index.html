@@ -333,7 +333,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v7.5</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v7.6</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -471,7 +471,6 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
         <div onclick="pickStyle('tech')" style="padding:9px 12px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:4px" id="sp-tech">Techniczny (═══)</div>
         <div onclick="pickStyle('biz')" style="padding:9px 12px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:4px" id="sp-biz">Biznesowy (───)</div>
         <div onclick="pickStyle('czyt')" style="padding:9px 12px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:4px" id="sp-czyt">Czytelny (pogrubienia)</div>
-        <div onclick="pickStyle('plain')" style="padding:9px 12px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer" id="sp-plain">Prosty (czysty tekst)</div>
       </div>
       <!-- Time G -->
       <div id="timeG_row" style="padding:4px 14px">
@@ -2467,7 +2466,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v7.5",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v7.6",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -5205,51 +5204,41 @@ function buildReport(){
       lines.push("──────────────────────────────");
       ents.forEach(function(e){
         if(!e.el)return;
-        lines.push('▪ '+e.el);
-        _arr(e.def).forEach(function(d){lines.push('   • Usterka: '+d);});
-        _arr(e.sol).forEach(function(s){lines.push('   • Wykonano: '+s);});
-      });
-      if(kon.length)lines.push('Czynności serwisowe: '+kon.join(', '));
-      if(sp.length)lines.push('Użyte części: '+sp.join(', '));
-    } else if(style==='czyt'){
-      lines.push('**RAPORT SERWISOWY — '+label+'**');
-      if(t)lines.push('**Czas pracy:** '+t);
-      lines.push('');
-      var _n=0;
-      ents.forEach(function(e){
-        if(!e.el)return; _n++;
-        lines.push('**Element '+_n+':** '+e.el);
+        lines.push('Element: '+e.el);
         _arr(e.def).forEach(function(d){lines.push('   Usterka:  '+d);});
         _arr(e.sol).forEach(function(s){lines.push('   Wykonano: '+s);});
         lines.push('');
       });
-      if(kon.length)lines.push('**Czynności serwisowe:** '+kon.join(', '));
-      if(sp.length)lines.push('**Użyte części:** '+sp.join(', '));
-    } else if(style==='plain'){
-      lines.push(label);
-      if(t)lines.push('Czas: '+t);
+      if(kon.length){lines.push('Czynności serwisowe:');kon.forEach(function(k){lines.push('   • '+k);});}
+      if(sp.length){lines.push('Użyte części:');sp.forEach(function(p){lines.push('   • '+p);});}
+    } else if(style==='czyt'){
+      lines.push('**'+label+'**');
+      if(t)lines.push('**Czas:** '+t);
+      lines.push('');
+      var _n=0;
       ents.forEach(function(e){
-        if(!e.el)return;
-        lines.push('  '+e.el);
-        _arr(e.def).forEach(function(d){lines.push('    Usterka: '+d);});
-        _arr(e.sol).forEach(function(s){lines.push('    Naprawa: '+s);});
+        if(!e.el)return; _n++;
+        lines.push('**'+_n+'. '+e.el+'**');
+        _arr(e.def).forEach(function(d){lines.push('   Usterka:  '+d);});
+        _arr(e.sol).forEach(function(s){lines.push('   Wykonano: '+s);});
+        lines.push('');
       });
-      if(kon.length)lines.push('  Serwis: '+kon.join(', '));
-      if(sp.length)lines.push('  Czesci: '+sp.join(', '));
+      if(kon.length){lines.push('**Serwis:**');kon.forEach(function(k){lines.push('   – '+k);});}
+      if(sp.length){lines.push('**Części:**');sp.forEach(function(p){lines.push('   – '+p);});}
     } else {
       lines.push("══════════════════════════════");
       lines.push(' '+label);
+      if(t)lines.push(' Czas: '+t);
       lines.push("══════════════════════════════");
-      if(t)lines.push('Czas : '+t);
       ents.forEach(function(e,i){
         if(!e.el)return;
         lines.push('['+(i+1)+'] '+e.el);
-        _arr(e.def).forEach(function(d){lines.push('    ├ Usterka : '+d);});
-        _arr(e.sol).forEach(function(s){lines.push('    └ Naprawa : '+s);});
+        _arr(e.def).forEach(function(d){lines.push('    • Usterka : '+d);});
+        _arr(e.sol).forEach(function(s){lines.push('    • Naprawa : '+s);});
         lines.push('');
       });
-      if(kon.length)lines.push('▸ Serwis  : '+kon.join(', '));
-      if(sp.length)lines.push('▸ Części  : '+sp.join(', '));
+      if(kon.length){lines.push('Serwis:');kon.forEach(function(k){lines.push('  – '+k);});}
+      if(sp.length){lines.push('Części:');sp.forEach(function(p){lines.push('  – '+p);});}
       lines.push("══════════════════════════════");
     }
     lines.push('');
@@ -5277,9 +5266,9 @@ function toggleStylePicker(){
 function pickStyle(s){
   rstStyle=s;
   ss('rv_rst',s);
-  document.getElementById('styleLbl').textContent=s==='tech'?'Techniczny':s==='biz'?'Biznesowy':s==='czyt'?'Czytelny':'Prosty';
+  document.getElementById('styleLbl').textContent=s==='tech'?'Techniczny':s==='biz'?'Biznesowy':'Czytelny';
   document.getElementById('stylePicker').style.display='none';
-  ['tech','biz','czyt','plain'].forEach(function(k){var el=document.getElementById('sp-'+k);if(el)el.style.background=(s===k)?'rgba(0,122,255,.1)':'';});
+  ['tech','biz','czyt'].forEach(function(k){var el=document.getElementById('sp-'+k);if(el)el.style.background=(s===k)?'rgba(0,122,255,.1)':'';});
   renderSummary();
 }
 
@@ -5641,10 +5630,9 @@ function magPrintQR(){
   document.getElementById('tglNG').classList.toggle('on',!g);
   document.getElementById('timeG_row').style.display='block';
   document.getElementById('timeS_row').style.display='block';
-  rstStyle=ls('rv_rst','tech');
-  document.getElementById('styleLbl').textContent=rstStyle==='tech'?'Techniczny':'Prosty';
-  document.getElementById('sp-tech').style.background=rstStyle==='tech'?'rgba(0,122,255,.1)':'';
-  document.getElementById('sp-plain').style.background=rstStyle==='plain'?'rgba(0,122,255,.1)':'';
+  rstStyle=ls('rv_rst','tech'); if(['tech','biz','czyt'].indexOf(rstStyle)<0)rstStyle='tech';
+  var _lbl=document.getElementById('styleLbl'); if(_lbl)_lbl.textContent=rstStyle==='tech'?'Techniczny':rstStyle==='biz'?'Biznesowy':'Czytelny';
+  ['tech','biz','czyt'].forEach(function(k){var el=document.getElementById('sp-'+k);if(el)el.style.background=(rstStyle===k)?'rgba(0,122,255,.1)':'';});
   updateBadges();
   renderSummary();
   updateTmplCount();
