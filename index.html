@@ -317,7 +317,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.15</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.16</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -496,9 +496,10 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 <div class="pg" id="pgMag">
   <div style="padding:8px 12px 0">
     <div style="display:flex;gap:8px;margin-bottom:8px;overflow-x:auto;padding-bottom:2px" id="magBtns"><button onclick="goTab('raport')" style="background:#E5E5EA;color:#333;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">&#8249; Raport</button>
+      <button onclick="magScanQR()" style="background:#0078D4;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">&#128247; Skanuj QR</button>
       <button onclick="magPrintQR()" style="background:#605E5C;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">QR PDF</button>
-      <button onclick="orderReport()" style="background:#FF9500;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">Zamówienie</button>
-      <button onclick="historyReport()" style="background:#34C759;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">Historia</button>
+      <button onclick="openOrder()" style="background:#FF9500;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">Zamówienie</button>
+      <button onclick="magHistOpen()" style="background:#34C759;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">Historia</button>
       <button onclick="openMagCfg()" style="background:#0078D4;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">E-mail / Harmonogram</button>
     </div>
     <div style="display:flex;gap:8px;margin-bottom:8px">
@@ -2435,7 +2436,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.15",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.16",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -2687,6 +2688,26 @@ function restoreData(input){
   </div>
 </div>
 
+<div class="ov" id="shOrder" style="display:none" onclick="if(event.target===this)closeOv('shOrder')">
+  <div class="sh" style="max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-size:17px;font-weight:800;color:#323130">Zamowienie czesci</div>
+      <button onclick="closeOv('shOrder')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button>
+    </div>
+    <div style="font-size:11px;font-weight:700;color:#A19F9D;margin-bottom:4px">ADRES E-MAIL (odbiorca)</div>
+    <input id="ordTo" type="email" placeholder="zamowienia@firma.pl" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;margin-bottom:10px">
+    <div style="font-size:11px;font-weight:700;color:#A19F9D;margin-bottom:4px">TEMAT</div>
+    <input id="ordSubj" type="text" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;margin-bottom:10px">
+    <div style="font-size:11px;font-weight:700;color:#A19F9D;margin-bottom:4px">TRESC (mozna zmienic)</div>
+    <textarea id="ordBody" style="width:100%;min-height:78px;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;font-family:inherit;line-height:1.5;outline:none;resize:vertical;margin-bottom:10px"></textarea>
+    <div style="font-size:11px;font-weight:700;color:#A19F9D;margin-bottom:4px">CZESCI DO ZAMOWIENIA</div>
+    <div id="ordTable" style="background:#fff;border:0.5px solid #EDEBE9;border-radius:10px;margin-bottom:14px;padding:2px 4px"></div>
+    <button onclick="orderSend('email')" style="width:100%;padding:13px;margin-bottom:8px;background:#0078D4;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">&#9993;&#65039; E-mail (z tabela)</button>
+    <button onclick="orderSend('whatsapp')" style="width:100%;padding:13px;margin-bottom:8px;background:#25D366;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">WhatsApp (tekst)</button>
+    <button onclick="orderSend('teams')" style="width:100%;padding:13px;margin-bottom:8px;background:#5059C9;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Microsoft Teams (tekst)</button>
+    <button class="sh-btn lt" onclick="closeOv('shOrder')">Zamknij</button>
+  </div>
+</div>
 <div class="ov" id="shMagHist" style="display:none" onclick="if(event.target===this)closeOv('shMagHist')">
   <div class="sh" style="max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
@@ -2694,7 +2715,7 @@ function restoreData(input){
       <button onclick="closeOv('shMagHist')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">x</button>
     </div>
     <div id="magHistList" style="display:flex;flex-direction:column;gap:8px"></div>
-    <button onclick="magHistClear()" style="width:100%;padding:11px;background:#fff;border:1px solid #FF3B30;border-radius:12px;font-size:13px;font-weight:700;color:#FF3B30;cursor:pointer;font-family:inherit;margin-top:12px">Wyczysc historie</button>
+    <div style="font-size:11px;font-weight:700;color:#A19F9D;margin:10px 0 6px">EKSPORT HISTORII</div><button onclick="histSend('email')" style="width:100%;padding:12px;margin-bottom:8px;background:#0078D4;color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">&#9993;&#65039; E-mail (tabela)</button><button onclick="histSend('whatsapp')" style="width:100%;padding:12px;margin-bottom:8px;background:#25D366;color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">WhatsApp (tekst)</button><button onclick="histSend('teams')" style="width:100%;padding:12px;margin-bottom:8px;background:#5059C9;color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Microsoft Teams (tekst)</button><button onclick="magHistClear()" style="width:100%;padding:11px;background:#fff;border:1px solid #FF3B30;border-radius:12px;font-size:13px;font-weight:700;color:#FF3B30;cursor:pointer;font-family:inherit;margin-top:12px">Wyczysc historie</button>
     <button class="sh-btn lt" onclick="closeOv('shMagHist')" style="margin-top:8px">Zamknij</button>
   </div>
 </div>
@@ -4177,6 +4198,7 @@ openSh = function(id) {
       <div style="font-size:17px;font-weight:800;color:#0078D4">Skanuj QR</div>
       <button onclick="magStopCamera();closeOv('shMagScan')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">×</button>
     </div>
+    <div id="magScanBanner" style="display:none;text-align:center;font-size:13px;font-weight:700;padding:11px 12px;border-radius:10px;margin-bottom:10px;line-height:1.4"></div>
     <div style="position:relative;width:100%;border-radius:12px;overflow:hidden;background:#000;margin-bottom:12px">
       <video id="magScanVideo" playsinline style="width:100%;display:block"></video>
       <canvas id="magScanCanvas" style="display:none"></canvas>
@@ -4215,6 +4237,8 @@ openSh = function(id) {
 
 // --- QR СКАНЕР ---
 function magScanQR() {
+  var bn=document.getElementById('magScanBanner'); if(bn){bn.style.display='none';bn.textContent='';}
+  window._lastScanCode=null; window._lastScanT=0;
   openSh('shMagScan');
   setTimeout(function() { magStartCamera(); }, 400);
 }
@@ -4304,26 +4328,32 @@ function magStopCamera() {
 }
 
 function magScanFound(code) {
-  _magScanDone = true;
-  magStopCamera();
-
-  // Вибрация (iPhone поддерживает)
-  if (navigator.vibrate) navigator.vibrate(100);
-
-  closeOv('shMagScan');
-
+  if (navigator.vibrate) navigator.vibrate(60);
+  var now=Date.now();
+  if(code===window._lastScanCode && (now-(window._lastScanT||0))<1800){ if(!_magScanDone)setTimeout(function(){if(!_magScanDone)magScanLoop();},250); return; }
+  window._lastScanCode=code; window._lastScanT=now;
   if (!_magData) _magData = magLoad();
   var all = magGetAll();
-  var found = all.find(function(p) {
-    return p.k && (p.k.toLowerCase() === code.toLowerCase() || p.k === code);
-  });
-
-  if (found) {
-    showToast('✓ ' + found.n.split(' ').slice(0,3).join(' '));
-    setTimeout(function() { magOpenSheet(found.id); }, 400);
+  var found = all.find(function(p){ return p.k && (p.k.toLowerCase()===code.toLowerCase()); });
+  var bn=document.getElementById('magScanBanner');
+  if(found){
+    var d=magGet(found.id);
+    if(d.qty>0){d.qty--;magSave();}
+    if(!custParts||typeof custParts!=='object'||Array.isArray(custParts))custParts={};
+    var m=(typeof curMode!=='undefined'&&curMode)?curMode:'S';
+    if(!custParts[m])custParts[m]={};
+    custParts[m][found.id]=(custParts[m][found.id]||0)+1;
+    try{ss('rv_cp',custParts);}catch(e){}
+    magHistoryAdd(found,1);
+    if(typeof renderParts==='function')renderParts();
+    if(typeof renderSummary==='function')renderSummary();
+    magRender();
+    if(bn){bn.style.display='block';bn.style.background='rgba(52,199,89,.14)';bn.style.color='#1f8f43';
+      bn.innerHTML='\u2713 <b>'+esc(found.n.split(' ').slice(0,4).join(' '))+'</b><br>Spisano 1 \u00b7 w raporcie: '+custParts[m][found.id]+' \u00b7 pozosta\u0142o: '+Math.max(0,d.qty);}
   } else {
-    showToast('Nie znaleziono: ' + code);
+    if(bn){bn.style.display='block';bn.style.background='rgba(255,59,48,.12)';bn.style.color='#FF3B30';bn.textContent='Nie znaleziono kodu: '+code;}
   }
+  if(!_magScanDone)setTimeout(function(){if(!_magScanDone)magScanLoop();},900);
 }
 
 // --- DODAJ NOWĄ CZĘŚĆ ---
@@ -5579,6 +5609,73 @@ function historyReport(){
   if(r.empty){showToast('Historia pusta');return;}
   openSendPicker('Historia uzycia czesci RVM - '+new Date().toLocaleDateString('pl-PL'),r.body,'Wyslij historie');
 }
+var DEFAULT_ORDER_INTRO='Dzien dobry,\n\nProsze o zamowienie nastepujacych czesci zamiennych do maszyn RVM (kolumna "Wyslac" = ilosc do uzupelnienia):';
+function _orderDefSubj(){return 'Zamowienie czesci RVM - '+new Date().toLocaleDateString('pl-PL');}
+function _orderRows(){
+  if(!_magData)_magData=magLoad();
+  var all=(typeof magGetAll==='function'?magGetAll():MAG_PARTS);
+  var rows=[];
+  all.forEach(function(p){
+    if(typeof magActive==='function'&&!magActive(p.id))return;
+    var d=magGet(p.id),min=(d.min||1),qty=Math.max(0,d.qty||0),ord=Math.max(0,min-qty);
+    if(ord<=0)return;
+    rows.push({k:p.k||'',n:p.n||'',min:min,qty:qty,ord:ord});
+  });
+  return rows;
+}
+function openOrder(){
+  var to=document.getElementById('ordTo'); if(to)to.value=localStorage.getItem('rv_email_to')||'';
+  var sj=document.getElementById('ordSubj'); if(sj)sj.value=localStorage.getItem('rv_order_subj')||_orderDefSubj();
+  var bd=document.getElementById('ordBody'); if(bd){var t=localStorage.getItem('rv_order_intro'); bd.value=(t===null?DEFAULT_ORDER_INTRO:t);}
+  _orderRenderTable();
+  if(typeof openSh==='function')openSh('shOrder');
+}
+function _orderRenderTable(){
+  var box=document.getElementById('ordTable'); if(!box)return;
+  var rows=_orderRows();
+  if(!rows.length){box.innerHTML='<div style="padding:14px;text-align:center;font-size:12px;color:#A19F9D">Wszystkie czesci w normie</div>';return;}
+  var h='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px">';
+  h+='<thead><tr style="text-align:left;color:#A19F9D"><th style="padding:5px 6px">Nr</th><th style="padding:5px 6px">Nazwa</th><th style="padding:5px 6px;text-align:center">Pow.</th><th style="padding:5px 6px;text-align:center">Jest</th><th style="padding:5px 6px;text-align:center">Wyslac</th></tr></thead><tbody>';
+  rows.forEach(function(r){
+    h+='<tr style="border-top:0.5px solid #EDEBE9">'+
+       '<td style="padding:5px 6px;font-family:monospace;white-space:nowrap">'+esc(r.k)+'</td>'+
+       '<td style="padding:5px 6px">'+esc(r.n)+'</td>'+
+       '<td style="padding:5px 6px;text-align:center">'+r.min+'</td>'+
+       '<td style="padding:5px 6px;text-align:center">'+r.qty+'</td>'+
+       '<td style="padding:5px 6px;text-align:center;color:#FF3B30;font-weight:800">'+r.ord+'</td></tr>';
+  });
+  h+='</tbody></table></div>';
+  box.innerHTML=h;
+}
+function _orderBuildText(){
+  var bd=document.getElementById('ordBody');var intro=bd?bd.value:'';
+  var rows=_orderRows();
+  var b=intro?intro+'\n\n':'';
+  if(!rows.length)return b+'(brak czesci do zamowienia)';
+  b+='Nr czesci | Nazwa | Powinno | Jest | Wyslac\n';
+  b+='------------------------------------------\n';
+  rows.forEach(function(r){b+=r.k+' | '+r.n+' | '+r.min+' | '+r.qty+' | '+r.ord+'\n';});
+  b+='\nRazem pozycji: '+rows.length;
+  return b;
+}
+function orderSend(channel){
+  var to=(document.getElementById('ordTo')||{}).value||'';
+  var subj=(document.getElementById('ordSubj')||{}).value||_orderDefSubj();
+  var intro=(document.getElementById('ordBody')||{}).value||'';
+  if(typeof saveSetting==='function'){saveSetting('rv_email_to',to);saveSetting('rv_order_subj',subj);saveSetting('rv_order_intro',intro);}
+  var body=_orderBuildText();
+  if(typeof closeOv==='function')closeOv('shOrder');
+  if(channel==='email'){window.location.href='mailto:'+encodeURIComponent(to)+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);}
+  else if(channel==='whatsapp'){window.open('https://wa.me/?text='+encodeURIComponent(body),'_blank');}
+  else if(channel==='teams'){window.open('https://teams.microsoft.com/l/chat/0/0?message='+encodeURIComponent(body),'_blank');}
+}
+function histSend(channel){
+  var r=_histTable();
+  if(r.empty){showToast('Historia pusta');return;}
+  var subj='Historia uzycia czesci RVM - '+new Date().toLocaleDateString('pl-PL');
+  if(typeof closeOv==='function')closeOv('shMagHist');
+  _sendVia(channel,subj,r.body);
+}
 function _mshSetActive(id){
   var b=document.getElementById('mshActiveBtn');if(!b)return;
   var a=magActive(id);
@@ -6050,21 +6147,20 @@ function magHistOpen(){magHistRender();if(typeof openSh==='function')openSh('shM
 function magHistRender(){
   var box=document.getElementById('magHistList');if(!box)return;
   var hist=[];try{hist=JSON.parse(localStorage.getItem('rv_maghist')||'[]');}catch(e){hist=[];}
-  if(!Array.isArray(hist)||!hist.length){box.innerHTML='<div style="padding:24px;text-align:center;font-size:13px;color:#A19F9D">Brak historii. Uzyj czesci w raporcie przyciskiem "Uzyj w raporcie (-1)".</div>';return;}
-  var months=['sty','lut','mar','kwi','maj','cze','lip','sie','wrz','paz','lis','gru'];
-  var h='',lastDay='';
+  if(!Array.isArray(hist)||!hist.length){box.innerHTML='<div style="padding:24px;text-align:center;font-size:13px;color:#A19F9D">Brak historii.</div>';return;}
+  var h='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:11px">';
+  h+='<thead><tr style="text-align:left;color:#A19F9D"><th style="padding:5px 6px">Data</th><th style="padding:5px 6px">Nr</th><th style="padding:5px 6px">Nazwa</th><th style="padding:5px 6px;text-align:center">Szt.</th><th style="padding:5px 6px">Sklep</th></tr></thead><tbody>';
   hist.forEach(function(e){
     var d=new Date(e.t||0);
-    var dayKey=d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();
-    if(dayKey!==lastDay){h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#A19F9D;padding:8px 2px 2px">'+d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear()+'</div>';lastDay=dayKey;}
-    var hh=('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);
-    var modeTag=e.mode==='G'?'<span style="font-size:9px;font-weight:800;color:#34C759">G</span>':e.mode==='S'?'<span style="font-size:9px;font-weight:800;color:#FF9500">NG</span>':'';
-    h+='<div style="background:#fff;border:0.5px solid #EDEBE9;border-radius:10px;padding:10px 12px">';
-    h+='<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><div style="font-size:13px;font-weight:600;color:#323130;line-height:1.3">'+esc(e.n||'-')+' <span style="color:#0078D4;font-weight:800">x'+(e.q||1)+'</span></div><div style="font-size:11px;color:#A19F9D;white-space:nowrap">'+hh+' '+modeTag+'</div></div>';
-    if(e.k)h+='<div style="font-size:10px;color:#A19F9D;font-family:monospace;margin-top:2px">'+esc(e.k)+'</div>';
-    h+='<div style="font-size:11px;color:'+(e.shop?'#605E5C':'#C8C6C4')+';margin-top:4px">'+(e.shop?esc(e.shop):'(sklep nie wybrany)')+'</div>';
-    h+='</div>';
+    var ds=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);
+    h+='<tr style="border-top:0.5px solid #EDEBE9">'+
+       '<td style="padding:5px 6px;white-space:nowrap;color:#605E5C">'+ds+'</td>'+
+       '<td style="padding:5px 6px;font-family:monospace;white-space:nowrap;color:#A19F9D">'+esc(e.k||'')+'</td>'+
+       '<td style="padding:5px 6px;color:#323130">'+esc(e.n||'-')+'</td>'+
+       '<td style="padding:5px 6px;text-align:center;font-weight:700">'+(e.q||1)+'</td>'+
+       '<td style="padding:5px 6px;color:'+(e.shop?'#605E5C':'#C8C6C4')+'">'+(e.shop?esc(e.shop):'-')+'</td></tr>';
   });
+  h+='</tbody></table></div>';
   box.innerHTML=h;
 }
 function magHistClear(){
