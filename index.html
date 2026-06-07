@@ -500,7 +500,6 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
       <button onclick="magPrintQR()" style="background:#605E5C;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">QR PDF</button>
       <button onclick="openOrder()" style="background:#FF9500;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">Zamówienie</button>
       <button onclick="magHistOpen()" style="background:#34C759;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">Historia</button>
-      <button onclick="openMagCfg()" style="background:#0078D4;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">E-mail / Harmonogram</button>
     </div>
     <div style="display:flex;gap:8px;margin-bottom:8px">
       <div id="magStatAll" onclick="magFilterStatus('')" style="flex:1;background:#fff;border-radius:10px;padding:10px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.08);cursor:pointer">
@@ -2704,7 +2703,16 @@ function restoreData(input){
     <button onclick="orderSend('email')" style="width:100%;padding:13px;margin-bottom:8px;background:#0078D4;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">&#9993;&#65039; E-mail (z tabela)</button>
     <button onclick="orderSend('whatsapp')" style="width:100%;padding:13px;margin-bottom:8px;background:#25D366;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">WhatsApp (tekst)</button>
     <button onclick="orderSend('teams')" style="width:100%;padding:13px;margin-bottom:8px;background:#5059C9;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Microsoft Teams (tekst)</button>
-    <button class="sh-btn lt" onclick="closeOv('shOrder')">Zamknij</button>
+    <div style="border-top:1px solid #EDEBE9;margin:14px 0 10px"></div><div style="font-size:11px;font-weight:700;color:#A19F9D;margin-bottom:6px">AUTO-RAPORT (HARMONOGRAM)</div><div style="font-size:12px;font-weight:700;color:#605E5C;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Harmonogram (auto-raport: stan + historia)</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0 12px"><span style="font-size:14px;font-weight:600;color:#323130">Harmonogram aktywny</span><div id="mcSchedSwitch" onclick="magCfgSchedToggle()" style="width:46px;height:28px;border-radius:14px;background:#E5E5EA;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0"><div id="mcSchedKnob" style="position:absolute;top:2px;left:2px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:left .2s"></div></div></div>
+    <select id="mcSchedDay" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:8px">
+      <option value="1">Poniedzialek</option><option value="2">Wtorek</option><option value="3">Sroda</option><option value="4">Czwartek</option><option value="5">Piatek</option><option value="6">Sobota</option><option value="0">Niedziela</option>
+    </select>
+    <input type="time" id="mcSchedTime" value="08:00" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:10px">
+    <button onclick="magCfgSchedSave()" style="width:100%;padding:12px;background:#007AFF;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px">Zapisz harmonogram</button>
+    <button onclick="magReportSend()" style="width:100%;padding:12px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Wyslij raport teraz</button>
+    <div id="mcSchedStatus" style="font-size:12px;color:#A19F9D;margin-top:8px;text-align:center"></div>
+    <div style="font-size:11px;color:#8A6D3B;margin-top:10px;line-height:1.45;background:#FFF8E1;border-radius:8px;padding:9px 11px">Uwaga: automatyczna wysylka dziala tylko gdy aplikacja jest otwarta o zaplanowanej godzinie. Przy zamknietej apce telefon nie wysle maila sam - uzyj "Wyslij raport teraz".</div><div style="height:12px"></div><button class="sh-btn lt" onclick="closeOv('shOrder')">Zamknij</button>
   </div>
 </div>
 <div class="ov" id="shMagHist" style="display:none" onclick="if(event.target===this)closeOv('shMagHist')">
@@ -5629,6 +5637,9 @@ function openOrder(){
   var sj=document.getElementById('ordSubj'); if(sj)sj.value=localStorage.getItem('rv_order_subj')||_orderDefSubj();
   var bd=document.getElementById('ordBody'); if(bd){var t=localStorage.getItem('rv_order_intro'); bd.value=(t===null?DEFAULT_ORDER_INTRO:t);}
   _orderRenderTable();
+  var dd=document.getElementById('mcSchedDay');if(dd&&window._schedDay!==null&&window._schedDay!==undefined&&!isNaN(window._schedDay))dd.value=window._schedDay;
+  var tt=document.getElementById('mcSchedTime');if(tt)tt.value=window._schedTime||'08:00';
+  if(typeof magCfgApplyUI==='function')magCfgApplyUI();
   if(typeof openSh==='function')openSh('shOrder');
 }
 function _orderRenderTable(){
@@ -6382,29 +6393,6 @@ function copyDiag(){
 }
 
 </script>
-<div class="ov" id="shMagCfg" style="display:none" onclick="if(event.target===this)closeOv('shMagCfg')">
-  <div class="sh" style="max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div style="font-size:17px;font-weight:800;color:#323130">E-mail i harmonogram</div>
-      <button onclick="closeOv('shMagCfg')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button>
-    </div>
-    <div style="font-size:12px;font-weight:700;color:#605E5C;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Odbiorca e-mail</div>
-    <input id="mcTo" type="email" placeholder="odbiorca@firma.pl" oninput="saveSetting('rv_email_to',this.value)" style="width:100%;padding:11px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:14px">
-    <div style="font-size:12px;font-weight:700;color:#605E5C;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Tresc maila zamowienia</div>
-    <textarea id="mcTmpl" oninput="saveSetting('rv_order_tmpl',this.value)" placeholder="Tresc maila zamowienia..." style="width:100%;min-height:115px;padding:11px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;font-family:inherit;line-height:1.5;outline:none;resize:vertical;color:#323130;margin-bottom:4px"></textarea>
-    <div style="font-size:11px;color:#A19F9D;margin-bottom:14px;line-height:1.4">Zostaw <b>{czesci}</b> - tam wstawia sie zamawiane czesci.</div>
-    <div style="font-size:12px;font-weight:700;color:#605E5C;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Harmonogram (auto-raport: stan + historia)</div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0 12px"><span style="font-size:14px;font-weight:600;color:#323130">Harmonogram aktywny</span><div id="mcSchedSwitch" onclick="magCfgSchedToggle()" style="width:46px;height:28px;border-radius:14px;background:#E5E5EA;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0"><div id="mcSchedKnob" style="position:absolute;top:2px;left:2px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:left .2s"></div></div></div>
-    <select id="mcSchedDay" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:8px">
-      <option value="1">Poniedzialek</option><option value="2">Wtorek</option><option value="3">Sroda</option><option value="4">Czwartek</option><option value="5">Piatek</option><option value="6">Sobota</option><option value="0">Niedziela</option>
-    </select>
-    <input type="time" id="mcSchedTime" value="08:00" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:10px">
-    <button onclick="magCfgSchedSave()" style="width:100%;padding:12px;background:#007AFF;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px">Zapisz harmonogram</button>
-    <button onclick="magReportSend()" style="width:100%;padding:12px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Wyslij raport teraz</button>
-    <div id="mcSchedStatus" style="font-size:12px;color:#A19F9D;margin-top:8px;text-align:center"></div>
-    <div style="font-size:11px;color:#8A6D3B;margin-top:10px;line-height:1.45;background:#FFF8E1;border-radius:8px;padding:9px 11px">Uwaga: automatyczna wysylka dziala tylko gdy aplikacja jest otwarta o zaplanowanej godzinie. Przy zamknietej apce telefon nie wysle maila sam - uzyj "Wyslij raport teraz".</div>
-  </div>
-</div>
 <div class="ov" id="shDiag" style="display:none" onclick="if(event.target===this)closeOv('shDiag')">
   <div class="sh" style="max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
