@@ -323,7 +323,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.27</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.28</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2432,7 +2432,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.27",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.28",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -2698,9 +2698,9 @@ function restoreData(input){
     <textarea id="ordBody" style="width:100%;min-height:78px;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;font-family:inherit;line-height:1.5;outline:none;resize:vertical;margin-bottom:10px"></textarea>
     <div style="font-size:11px;font-weight:700;color:#A19F9D;margin-bottom:4px">CZESCI DO ZAMOWIENIA</div>
     <div id="ordTable" style="background:#fff;border:0.5px solid #EDEBE9;border-radius:10px;margin-bottom:14px;padding:2px 4px"></div>
-    <div style="font-size:11px;font-weight:700;color:#A19F9D;margin:4px 0 6px">STYL TABELI W WIADOMOSCI (podglad)</div><div style="display:flex;gap:6px;margin-bottom:8px"><button class="stylebtn" data-s="1" onclick="setTblStyle('1')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Ramka</button><button class="stylebtn" data-s="2" onclick="setTblStyle('2')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Lekka</button><button class="stylebtn" data-s="3" onclick="setTblStyle('3')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Karty</button><button class="stylebtn" data-s="4" onclick="setTblStyle('4')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Obraz</button></div><pre id="ordPreview" style="background:#1C1C1E;color:#E5E5EA;border-radius:8px;padding:10px;font-size:10px;line-height:1.35;overflow-x:auto;white-space:pre;margin-bottom:12px;-webkit-overflow-scrolling:touch"></pre><button onclick="orderSend('email')" style="width:100%;padding:13px;margin-bottom:8px;background:#0078D4;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">&#9993;&#65039; E-mail (z tabela)</button>
+    <div style="font-size:11px;font-weight:700;color:#A19F9D;margin:4px 0 6px">STYL TABELI W WIADOMOSCI (podglad)</div><div style="display:flex;gap:6px;margin-bottom:8px"><button class="stylebtn" data-s="1" onclick="setTblStyle('1')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Ramka</button><button class="stylebtn" data-s="2" onclick="setTblStyle('2')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Lekka</button><button class="stylebtn" data-s="3" onclick="setTblStyle('3')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Karty</button><button class="stylebtn" data-s="5" onclick="setTblStyle('5')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Linia</button></div><pre id="ordPreview" style="background:#1C1C1E;color:#E5E5EA;border-radius:8px;padding:10px;font-size:10px;line-height:1.35;overflow-x:auto;white-space:pre;margin-bottom:12px;-webkit-overflow-scrolling:touch"></pre><button onclick="orderSend('email')" style="width:100%;padding:13px;margin-bottom:8px;background:#0078D4;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">&#9993;&#65039; E-mail (z tabela)</button>
     <button onclick="orderSend('whatsapp')" style="width:100%;padding:13px;margin-bottom:8px;background:#25D366;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">WhatsApp (tekst)</button>
-    <button onclick="orderSend('teams')" style="width:100%;padding:13px;margin-bottom:8px;background:#5059C9;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Microsoft Teams (tekst)</button><button onclick="shareOrderImg()" style="width:100%;padding:13px;margin-bottom:8px;background:#34C759;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Obraz + tekst (udostepnij)</button>
+    <button onclick="orderSend('teams')" style="width:100%;padding:13px;margin-bottom:8px;background:#5059C9;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Microsoft Teams (tekst)</button><button onclick="shareOrderImg()" style="width:100%;padding:13px;margin-bottom:8px;background:#34C759;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Tabela jako obraz (udostepnij)</button>
     <div style="border-top:1px solid #EDEBE9;margin:14px 0 10px"></div><div style="font-size:11px;font-weight:700;color:#A19F9D;margin-bottom:6px">AUTO-RAPORT (HARMONOGRAM)</div><div style="font-size:12px;font-weight:700;color:#605E5C;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Harmonogram (auto-raport: stan + historia)</div>
     <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0 12px"><span style="font-size:14px;font-weight:600;color:#323130">Harmonogram aktywny</span><div id="mcSchedSwitch" onclick="magCfgSchedToggle()" style="width:46px;height:28px;border-radius:14px;background:#E5E5EA;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0"><div id="mcSchedKnob" style="position:absolute;top:2px;left:2px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:left .2s"></div></div></div>
     <select id="mcSchedDay" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:8px">
@@ -2719,7 +2719,7 @@ function restoreData(input){
       <div style="font-size:17px;font-weight:800;color:#323130">Historia uzycia czesci</div>
       <button onclick="closeOv('shMagHist')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">x</button>
     </div>
-    <div style="display:flex;gap:6px;margin-bottom:12px"><button onclick="histSend('email')" style="flex:1;padding:10px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">&#9993;&#65039; E-mail</button><button onclick="histSend('whatsapp')" style="flex:1;padding:10px;background:#25D366;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">WhatsApp</button><button onclick="histSend('teams')" style="flex:1;padding:10px;background:#5059C9;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Teams</button></div><button onclick="shareHistImg()" style="width:100%;padding:11px;margin-bottom:4px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Obraz + tekst (udostepnij)</button><div style="font-size:11px;font-weight:700;color:#A19F9D;margin:4px 0 6px">STYL TABELI W WIADOMOSCI (podglad)</div><div style="display:flex;gap:6px;margin-bottom:8px"><button class="stylebtn" data-s="1" onclick="setTblStyle('1')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Ramka</button><button class="stylebtn" data-s="2" onclick="setTblStyle('2')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Lekka</button><button class="stylebtn" data-s="3" onclick="setTblStyle('3')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Karty</button><button class="stylebtn" data-s="4" onclick="setTblStyle('4')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Obraz</button></div><pre id="histPreview" style="background:#1C1C1E;color:#E5E5EA;border-radius:8px;padding:10px;font-size:10px;line-height:1.35;overflow-x:auto;white-space:pre;margin-bottom:12px;-webkit-overflow-scrolling:touch"></pre><div id="magHistList" style="display:flex;flex-direction:column;gap:8px"></div><button onclick="magHistClear()" style="width:100%;padding:11px;margin-top:8px;background:#fff;border:1px solid #FF3B30;border-radius:12px;font-size:13px;font-weight:700;color:#FF3B30;cursor:pointer;font-family:inherit">Wyczysc historie</button><button class="sh-btn lt" onclick="closeOv('shMagHist')" style="margin-top:8px">Zamknij</button>
+    <div style="display:flex;gap:6px;margin-bottom:12px"><button onclick="histSend('email')" style="flex:1;padding:10px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">&#9993;&#65039; E-mail</button><button onclick="histSend('whatsapp')" style="flex:1;padding:10px;background:#25D366;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">WhatsApp</button><button onclick="histSend('teams')" style="flex:1;padding:10px;background:#5059C9;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Teams</button></div><button onclick="shareHistImg()" style="width:100%;padding:11px;margin-bottom:4px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Tabela jako obraz (udostepnij)</button><div style="font-size:11px;font-weight:700;color:#A19F9D;margin:4px 0 6px">STYL TABELI W WIADOMOSCI (podglad)</div><div style="display:flex;gap:6px;margin-bottom:8px"><button class="stylebtn" data-s="1" onclick="setTblStyle('1')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Ramka</button><button class="stylebtn" data-s="2" onclick="setTblStyle('2')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Lekka</button><button class="stylebtn" data-s="3" onclick="setTblStyle('3')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Karty</button><button class="stylebtn" data-s="5" onclick="setTblStyle('5')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Linia</button></div><pre id="histPreview" style="background:#1C1C1E;color:#E5E5EA;border-radius:8px;padding:10px;font-size:10px;line-height:1.35;overflow-x:auto;white-space:pre;margin-bottom:12px;-webkit-overflow-scrolling:touch"></pre><div id="magHistList" style="display:flex;flex-direction:column;gap:8px"></div><button onclick="magHistClear()" style="width:100%;padding:11px;margin-top:8px;background:#fff;border:1px solid #FF3B30;border-radius:12px;font-size:13px;font-weight:700;color:#FF3B30;cursor:pointer;font-family:inherit">Wyczysc historie</button><button class="sh-btn lt" onclick="closeOv('shMagHist')" style="margin-top:8px">Zamknij</button>
   </div>
 </div>
 
@@ -5608,7 +5608,7 @@ function _histTable(channel){
   if(!hist.length)return {body:b+'(brak wpisow)',empty:true};
   var st=_tblStyle();
   var tbl=_fmtRows(['Data','Nr','Nazwa','Szt','Sklep'],_histData(200),st,2);
-  var fence=(channel==='whatsapp'||channel==='teams')&&st!=='3';
+  var fence=(channel==='whatsapp'||channel==='teams')&&(st==='1'||st==='2');
   b+=fence?('```\n'+tbl+'\n```'):tbl;
   b+='\nRazem: '+hist.length+' poz.';
   return {body:b,empty:false};
@@ -5746,16 +5746,21 @@ function _shareImg(kind,withText){
     else{var a=document.createElement('a');a.href=url;a.download=fname;a.click();}
   });
 }
-function shareOrderImg(){_shareImg('order',true);}
-function shareHistImg(){_shareImg('hist',true);}
-function _tblStyle(){var s=localStorage.getItem('rv_tbl_style');return (s==='2'||s==='3'||s==='4')?s:'1';}
+function shareOrderImg(){_shareImg('order',false);}
+function shareHistImg(){_shareImg('hist',false);}
+function _tblStyle(){var s=localStorage.getItem('rv_tbl_style');return (s==='2'||s==='3'||s==='5')?s:'3';}
 function setTblStyle(s){if(typeof saveSetting==='function')saveSetting('rv_tbl_style',s);_styleBtnsUpd();_orderPreview();_histPreview();}
-function _styleBtnsUpd(){var st=_tblStyle();['1','2','3','4'].forEach(function(s){var on=(s===st);document.querySelectorAll('.stylebtn[data-s="'+s+'"]').forEach(function(b){b.style.background=on?'#0078D4':'#F0F0F5';b.style.color=on?'#fff':'#605E5C';});});}
+function _styleBtnsUpd(){var st=_tblStyle();['1','2','3','5'].forEach(function(s){var on=(s===st);document.querySelectorAll('.stylebtn[data-s="'+s+'"]').forEach(function(b){b.style.background=on?'#0078D4':'#F0F0F5';b.style.color=on?'#fff':'#605E5C';});});}
 function _fmtRows(hdr,rows,style,titleIdx){
   if(style==='3'){
     var ti=(titleIdx==null?0:titleIdx),o='';
     rows.forEach(function(r){o+='\u2022 '+r[ti]+'\n  ';var parts=[];hdr.forEach(function(hh,c){if(c!==ti)parts.push(hh+': '+r[c]);});o+=parts.join(' \u00b7 ')+'\n';});
     return o.replace(/\n$/,'');
+  }
+  if(style==='5'){
+    var ti5=(titleIdx==null?0:titleIdx),o5='';
+    rows.forEach(function(r){var parts=[];hdr.forEach(function(hh,c){if(c!==ti5)parts.push(hh+' '+r[c]);});o5+='\u2022 '+r[ti5]+' \u2014 '+parts.join(' \u00b7 ')+'\n';});
+    return o5.replace(/\n$/,'');
   }
   var w=[];for(var c=0;c<hdr.length;c++){var mx=(''+hdr[c]).length;rows.forEach(function(r){var l=(''+r[c]).length;if(l>mx)mx=l;});w[c]=mx;}
   if(style==='2'){
@@ -5769,8 +5774,8 @@ function _fmtRows(hdr,rows,style,titleIdx){
 }
 function _orderData(){return _orderRows().map(function(r){return [r.k||'-',_clip(r.n,18),''+r.min,''+r.qty,''+r.ord];});}
 function _histData(n){var hist=[];try{hist=JSON.parse(localStorage.getItem('rv_maghist')||'[]');}catch(e){}return hist.slice(0,n||200).map(function(x){var d=new Date(x.t);var ds=isNaN(d.getTime())?'':(('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2));return [ds,x.k||'-',_clip(x.n||'-',16),''+(x.q||1),_clip(x.shop||'-',20)];});}
-function _orderPreview(){var pre=document.getElementById('ordPreview');if(!pre)return;if(_tblStyle()==='4'){pre.textContent='Wysylka jako OBRAZ PNG (sama tabela, bez tekstu).\nNacisnij Email / WhatsApp / Teams - wybor aplikacji w oknie Udostepnij.\nPrzycisk "Obraz + tekst" dolacza temat i tresc.';return;}var d=_orderData();pre.textContent=d.length?_fmtRows(['Nr','Nazwa','Pow','Jest','Wys'],d,_tblStyle(),1):'(brak czesci do zamowienia)';}
-function _histPreview(){var pre=document.getElementById('histPreview');if(!pre)return;if(_tblStyle()==='4'){pre.textContent='Wysylka jako OBRAZ PNG (sama tabela, bez tekstu).\nNacisnij Email / WhatsApp / Teams - wybor aplikacji w oknie Udostepnij.\nPrzycisk "Obraz + tekst" dolacza tekst.';return;}var d=_histData(30);pre.textContent=d.length?_fmtRows(['Data','Nr','Nazwa','Szt','Sklep'],d,_tblStyle(),2):'(brak wpisow)';}
+function _orderPreview(){var pre=document.getElementById('ordPreview');if(!pre)return;var d=_orderData();pre.textContent=d.length?_fmtRows(['Nr','Nazwa','Pow','Jest','Wys'],d,_tblStyle(),1):'(brak czesci do zamowienia)';}
+function _histPreview(){var pre=document.getElementById('histPreview');if(!pre)return;var d=_histData(30);pre.textContent=d.length?_fmtRows(['Data','Nr','Nazwa','Szt','Sklep'],d,_tblStyle(),2):'(brak wpisow)';}
 function _orderBuildText(channel){
   var bd=document.getElementById('ordBody');var intro=bd?bd.value:'';
   var rows=_orderRows();
@@ -5778,7 +5783,7 @@ function _orderBuildText(channel){
   if(!rows.length)return b+'(brak czesci do zamowienia)';
   var st=_tblStyle();
   var tbl=_fmtRows(['Nr','Nazwa','Pow','Jest','Wys'],_orderData(),st,1);
-  var fence=(channel==='whatsapp'||channel==='teams')&&st!=='3';
+  var fence=(channel==='whatsapp'||channel==='teams')&&(st==='1'||st==='2');
   b+=fence?('```\n'+tbl+'\n```'):tbl;
   b+='\nRazem: '+rows.length+' poz.';
   return b;
@@ -5788,7 +5793,6 @@ function orderSend(channel){
   var subj=(document.getElementById('ordSubj')||{}).value||_orderDefSubj();
   var intro=(document.getElementById('ordBody')||{}).value||'';
   if(typeof saveSetting==='function'){saveSetting('rv_email_to',to);saveSetting('rv_order_subj',subj);saveSetting('rv_order_intro',intro);}
-  if(_tblStyle()==='4'){_shareImg('order',false);return;}
   var body=_orderBuildText(channel);
   if(typeof closeOv==='function')closeOv('shOrder');
   if(channel==='email'){
@@ -5800,7 +5804,6 @@ function orderSend(channel){
   }
 }
 function histSend(channel){
-  if(_tblStyle()==='4'){_shareImg('hist',false);return;}
   var r=_histTable(channel);
   if(r.empty){showToast('Historia pusta');return;}
   var subj='Historia uzycia czesci RVM - '+new Date().toLocaleDateString('pl-PL');
