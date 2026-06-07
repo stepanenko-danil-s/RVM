@@ -301,7 +301,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.6</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.7</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2421,7 +2421,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.6",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.7",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -5466,7 +5466,44 @@ function doReset(){
 function shopSearch(q){
   shopVal=q;ss('rv_shop',q);
 }
-function gpsShop(){showToast('GPS: szukam...');}
+function gpsShop(){
+  if(!navigator.geolocation){_toast('GPS niedostepny w tej przegladarce');return;}
+  var inp=document.getElementById('shopInp');
+  var prev=inp?inp.value:'';
+  if(inp)inp.value='GPS: okreslam...';
+  _toast('GPS: szukam lokalizacji...');
+  navigator.geolocation.getCurrentPosition(function(pos){
+    var la=pos.coords.latitude, lo=pos.coords.longitude;
+    window._myLat=la; window._myLon=lo;
+    var url='https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&accept-language=pl&lat='+la+'&lon='+lo;
+    fetch(url,{headers:{'Accept':'application/json'}}).then(function(r){return r.json();}).then(function(d){
+      var a=(d&&d.address)||{};
+      var road=a.road||a.pedestrian||a.footway||a.residential||a.neighbourhood||'';
+      var num=a.house_number||'';
+      var city=a.city||a.town||a.village||a.municipality||a.county||'';
+      var zip=a.postcode||'';
+      var street=(road+(num?' '+num:'')).trim();
+      var addr=[street,((zip?zip+' ':'')+city).trim()].filter(function(x){return x;}).join(', ');
+      if(!addr)addr=(d&&d.display_name)||(la.toFixed(5)+', '+lo.toFixed(5));
+      var match=null;
+      try{if(zip&&typeof SHOPS_DB!=='undefined'){var f=SHOPS_DB.filter(function(s){return s.zip===zip;});if(f.length===1)match=f[0];}}catch(e){}
+      var label=addr;
+      if(match){label=match.chain+' '+match.id+', '+match.addr+', '+match.city;window._currentShop={chain:match.chain,id:match.id,city:match.city,addr:match.addr};}
+      else{window._currentShop=null;}
+      shopVal=label;try{ss('rv_shop',label);}catch(e){}
+      if(inp)inp.value=label;
+      _toast(match?('Sklep z bazy: '+match.chain+' '+match.id):('Adres: '+addr));
+    }).catch(function(){
+      var fb=la.toFixed(5)+', '+lo.toFixed(5);
+      shopVal=fb;window._currentShop=null;try{ss('rv_shop',fb);}catch(e){}
+      if(inp)inp.value=fb;
+      _toast('Brak internetu - zapisano wspolrzedne GPS');
+    });
+  },function(err){
+    if(inp)inp.value=prev;
+    _toast('GPS: '+(err&&err.message?err.message:'blad'));
+  },{enableHighAccuracy:true,timeout:12000,maximumAge:0});
+}
 
 // ===== TIME MIC =====
 function timeMic(sfx){
