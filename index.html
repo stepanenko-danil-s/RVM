@@ -349,7 +349,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v9.1</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v9.2</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -545,6 +545,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
     </div>
     <input placeholder="Szukaj..." oninput="magSearch(this.value)" style="width:100%;background:#fff;border:1px solid #E5E5EA;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:8px">
     <button onclick="aiDistOpen()" style="width:100%;padding:11px;background:linear-gradient(135deg,#007AFF,#5856D6);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:6px">&#10024; AI rozdziel cz&#281;&#347;ci po modu&#322;ach</button>
+    <button onclick="magAddNew()" style="width:100%;padding:11px;background:#fff;border:1px solid #34C759;border-radius:10px;font-size:13px;font-weight:700;color:#34C759;cursor:pointer;font-family:inherit;margin-bottom:8px">+ Dodaj czesc recznie</button>
     <button onclick="magHistOpen()" style="width:100%;padding:11px;background:#fff;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-weight:600;color:#0078D4;cursor:pointer;font-family:inherit;margin-bottom:10px">Historia uzycia czesci</button>
 <div id="magGrid"></div>
   </div>
@@ -2467,7 +2468,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v9.1",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v9.2",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -3505,7 +3506,7 @@ function magMinus(id){
   showToast('-1 · '+(p?p.n.split(' ').slice(0,3).join(' '):''));
 }
 function magOpenCamById(btn){_magOpenId=parseInt(btn.getAttribute('data-mid'));var inp=document.getElementById('magCamInp');if(inp)inp.click();}
-function magOpenSheet(id){if(!_magData)_magData=magLoad();_magOpenId=id;var p=MAG_PARTS.find(function(x){return x.id===id;});var d=magGet(id);var st=magSt(id);if(!p)return;var nm=document.getElementById('msh_name');if(nm)nm.textContent=p.n;var cd=document.getElementById('msh_code');if(cd)cd.textContent=p.k;var qt=document.getElementById('msh_qty');if(qt)qt.textContent=d.qty;var mn=document.getElementById('msh_min');if(mn)mn.textContent=d.min;var stEl=document.getElementById('msh_status');if(stEl){stEl.textContent=st==='empty'?'Brak':st==='warn'?'Niski stan':'OK';stEl.style.color=st==='empty'?'#FF3B30':st==='warn'?'#FF9500':'#34C759';}var ph=document.getElementById('msh_photo');if(ph){if(d.photo){ph.innerHTML='<img src="'+d.photo+'" style="width:100%;height:100%;object-fit:cover">';}else{ph.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:6px;color:#C8C6C4"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#C8C6C4" stroke-width="1.4" stroke-linecap="round"><rect x="3" y="7" width="30" height="22" rx="4"/><circle cx="18" cy="18" r="6"/><path d="M10 7l2.5-4h11l2.5 4"/></svg><span style="font-size:12px">Brak zdjecia</span></div>';}}openSh('shMagPart');}
+function magOpenSheet(id){if(!_magData)_magData=magLoad();_magOpenId=id;var p=(typeof magGetAll==='function'?magGetAll():MAG_PARTS).find(function(x){return x.id===id;});var d=magGet(id);var st=magSt(id);if(!p)return;var nm=document.getElementById('msh_name');if(nm)nm.textContent=p.n;var cd=document.getElementById('msh_code');if(cd)cd.textContent=p.k;var qt=document.getElementById('msh_qty');if(qt)qt.textContent=d.qty;var mn=document.getElementById('msh_min');if(mn)mn.textContent=d.min;var stEl=document.getElementById('msh_status');if(stEl){stEl.textContent=st==='empty'?'Brak':st==='warn'?'Niski stan':'OK';stEl.style.color=st==='empty'?'#FF3B30':st==='warn'?'#FF9500':'#34C759';}var ph=document.getElementById('msh_photo');if(ph){if(d.photo){ph.innerHTML='<img src="'+d.photo+'" style="width:100%;height:100%;object-fit:cover">';}else{ph.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:6px;color:#C8C6C4"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#C8C6C4" stroke-width="1.4" stroke-linecap="round"><rect x="3" y="7" width="30" height="22" rx="4"/><circle cx="18" cy="18" r="6"/><path d="M10 7l2.5-4h11l2.5 4"/></svg><span style="font-size:12px">Brak zdjecia</span></div>';}}openSh('shMagPart');}
 function mshQtyEdit() {
   if (_magOpenId === null) return;
   var item = magGet(_magOpenId);
@@ -4400,7 +4401,7 @@ function magAddSave() {
   magSaveCust();
 
   if (!_magData) _magData = magLoad();
-  _magData[newId] = {qty: 0, min: 1, photo: null};
+  _magData[newId] = {qty: 0, min: 1, photo: null, active: true};
   magSave();
 
   closeOv('shMagAdd');
@@ -5554,13 +5555,14 @@ function magRender(){
   if(!_magData)_magData=magLoad();
   var grid=document.getElementById('magGrid');
   if(!grid)return;
-  var parts=MAG_PARTS.slice();
+  var _all=(typeof magGetAll==='function'?magGetAll():MAG_PARTS);
+  var parts=_all.slice();
   if(_magFilter)parts=parts.filter(function(p){return p.n.toLowerCase().indexOf(_magFilter)>=0||p.k.toLowerCase().indexOf(_magFilter)>=0;});
   parts.sort(function(a,b){var o={empty:0,warn:1,ok:2};return o[magSt(a.id)]-o[magSt(b.id)]||a.cat.localeCompare(b.cat);});
   var warn=0,empty=0;
-  MAG_PARTS.forEach(function(p){if(!magActive(p.id))return;var s=magSt(p.id);if(s==='empty')empty++;else if(s==='warn')warn++;});
+  _all.forEach(function(p){if(!magActive(p.id))return;var s=magSt(p.id);if(s==='empty')empty++;else if(s==='warn')warn++;});
   var tot=document.getElementById('magTotal'),w=document.getElementById('magWarn'),e=document.getElementById('magEmpty');
-  if(tot)tot.textContent=MAG_PARTS.length;if(w)w.textContent=warn;if(e)e.textContent=empty;
+  if(tot)tot.textContent=_all.length;if(w)w.textContent=warn;if(e)e.textContent=empty;
   // Update alert banner
   var banner=document.getElementById('stockAlert');
   if(banner){
