@@ -238,6 +238,8 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
     <div class="sh-sec">E-mail (zamowienia czesci)</div>
     <input class="sh-inp" id="setTo" type="email" placeholder="odbiorca@firma.pl" oninput="saveSetting('rv_email_to',this.value)">
     <input class="sh-inp" id="setSig" type="text" placeholder="Podpis: Daniel Stepanenko" oninput="saveSetting('rv_email_sig',this.value)">
+    <textarea class="sh-inp" id="setOrderTmpl" oninput="saveSetting('rv_order_tmpl',this.value)" placeholder="Tresc maila zamowienia..." style="min-height:130px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+    <div style="font-size:11px;color:#A19F9D;margin:-2px 0 8px;padding:0 2px;line-height:1.4">Zostaw <b>{czesci}</b> w tresci - tam automatycznie wstawia sie zamawiane czesci (nazwa, nr kat., ilosc). Podpis dodaj sam w tresci, jesli potrzebny.</div>
     <div class="sh-sec">Diagnostyka i AI</div>
     <button class="sh-act-btn" style="background:#FF9500;color:#fff" onclick="runDiag()">Diagnostyka - bledy i dane</button>
     <button class="sh-act-btn" style="background:#34C759;color:#fff" onclick="copyFullCode()">Kopiuj caly kod (dla AI)</button>
@@ -347,7 +349,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.3</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.4</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2466,7 +2468,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.3",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.4",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -4895,6 +4897,7 @@ function openSettings(){
   if(!el)return;
   document.getElementById('setTo').value=localStorage.getItem('rv_email_to')||'';
   document.getElementById('setSig').value=localStorage.getItem('rv_email_sig')||'';
+  var _ot=document.getElementById('setOrderTmpl');if(_ot)_ot.value=localStorage.getItem('rv_order_tmpl')||(typeof DEFAULT_ORDER_TMPL!=='undefined'?DEFAULT_ORDER_TMPL:'');
   updateThemeBtns();
   el.classList.add('open');
 }
@@ -5635,39 +5638,29 @@ function mshAdjMin(d){
   magSave(); _mshSync(id); magRender();
 }
 function orderPart(){
-  if(_mshId===null)return;
-  var p=MAG_PARTS.find(function(x){return x.id===_mshId;});
+  var id=(typeof _mshCurId==='function')?_mshCurId():(typeof _mshId!=='undefined'?_mshId:null);
+  if(id===null||id===undefined)return;
+  var all=(typeof magGetAll==='function'?magGetAll():MAG_PARTS);
+  var p=all.find(function(x){return x.id===id;});
   if(!p)return;
   var to=localStorage.getItem('rv_email_to')||'';
-  var sig=localStorage.getItem('rv_email_sig')||'Daniel Stepanenko';
-  var subj='Zamowienie: '+p.n;
-  var body='Dzien dobry,\n\nProsze o zamowienie:\n\n'+p.n+'\nNr katalogowy: '+p.k+'\nIlosc: 1 szt.\n\nZ powazaniem,\n'+sig;
-  var link='mailto:'+to+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
-  window.location.href=link;
+  var body=_orderApply('- '+p.n+' (nr kat. '+p.k+') - 1 szt.');
+  var subj='Zamowienie czesci: '+p.n;
+  window.location.href='mailto:'+to+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
 }
 
 function sendOrderEmail(){
   if(!_magData)_magData=magLoad();
   var empty=[],warn=[];
-  MAG_PARTS.forEach(function(p){if(!magActive(p.id))return;var s=magSt(p.id),d=magGet(p.id);if(s==='empty')empty.push({p:p,d:d});else if(s==='warn')warn.push({p:p,d:d});});
+  (typeof magGetAll==='function'?magGetAll():MAG_PARTS).forEach(function(p){if(!magActive(p.id))return;var s=magSt(p.id),d=magGet(p.id);if(s==='empty')empty.push({p:p,d:d});else if(s==='warn')warn.push({p:p,d:d});});
   if(!empty.length&&!warn.length){showToast('Wszystkie czesci w normie');return;}
   var to=localStorage.getItem('rv_email_to')||'';
-  var sig=localStorage.getItem('rv_email_sig')||'Daniel Stepanenko';
-  var today=new Date();var dateStr=today.toLocaleDateString('pl-PL');
-  var SEP='========================================';
-  var body='Dzien dobry,\n\nProsze o zamowienie nastepujacych czesci zamiennych do maszyn RVM Systems:\n\n';
-  if(empty.length){
-    body+=SEP+'\n BRAK STANU (wymagane natychmiastowe zamowienie)\n'+SEP+'\n';
-    empty.forEach(function(x){body+='  '+x.p.n.padEnd(32)+' nr: '+x.p.k.padEnd(16)+' szt: '+x.d.qty+'\n';});
-    body+='\n';
-  }
-  if(warn.length){
-    body+=SEP+'\n NISKI STAN (zalecane uzupelnienie)\n'+SEP+'\n';
-    warn.forEach(function(x){body+='  '+x.p.n.padEnd(32)+' nr: '+x.p.k.padEnd(16)+' szt: '+x.d.qty+'\n';});
-    body+='\n';
-  }
-  body+=SEP+'\n\nZ powazaniem,\n'+sig+'\nRVM Systems Sp. z o.o.';
-  var subj='Zamowienie czesci zamiennych RVM - '+dateStr;
+  var dateStr=new Date().toLocaleDateString('pl-PL');
+  var block='';
+  if(empty.length){block+='BRAK STANU:\n';empty.forEach(function(x){block+='- '+x.p.n+' (nr kat. '+x.p.k+') - stan: '+x.d.qty+' szt.\n';});}
+  if(warn.length){block+=(block?'\n':'')+'NISKI STAN:\n';warn.forEach(function(x){block+='- '+x.p.n+' (nr kat. '+x.p.k+') - stan: '+x.d.qty+' szt.\n';});}
+  var body=_orderApply(block.replace(/\n+$/,''));
+  var subj='Zamowienie czesci RVM - '+dateStr;
   window.location.href='mailto:'+to+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
 }
 
@@ -6018,6 +6011,8 @@ function magFilterStatus(s){
   if(typeof magRender==='function')magRender();
 }
 function saveTimeS(el){try{var sfx=el&&el.getAttribute?el.getAttribute('data-sfx'):null;if(sfx&&typeof saveTime==='function')saveTime(sfx);}catch(e){}}
+var DEFAULT_ORDER_TMPL='Dzien dobry,\n\nProsze o zamowienie nastepujacych czesci zamiennych do maszyn RVM:\n\n{czesci}\n\nProsze o potwierdzenie dostepnosci oraz przewidywanego terminu realizacji.\n\nDziekuje.';
+function _orderApply(block){var t=localStorage.getItem('rv_order_tmpl');if(t===null||t==='')t=DEFAULT_ORDER_TMPL;if(t.indexOf('{czesci}')>=0)return t.replace(/\{czesci\}/g,block);return t+'\n\n'+block;}
 function runDiag(){
   var L=[],issues=0;
   function ok(s){L.push('[OK] '+s);}
