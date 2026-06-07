@@ -90,6 +90,10 @@ button:active{opacity:.7;transform:scale(.97)}
 .tsep,.tarr{color:#8E8E93}
 .tdur{font-size:12px;color:#8E8E93;font-weight:600}
 .tmic{border:none;border-radius:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.rep-picker.tinact{opacity:.5}
+.rep-picker.tinact select{pointer-events:none}
+.rep-picker.tinact .tmic{pointer-events:none;opacity:.6}
+.thint{font-size:12px;color:#8E8E93;font-weight:600;cursor:pointer}
 
 /* BOTTOM BUTTONS */
 .rep-btns{padding:10px 14px;display:flex;gap:8px;border-top:0.5px solid #F2F2F7}
@@ -343,7 +347,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v8.1</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v8.2</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -485,18 +489,18 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
       <div id="repPlaceholder" style="padding:12px 14px;color:rgba(60,60,67,.3);font-size:13px">Raport pojawi sie po dodaniu pozycji...</div>
       <div id="repSecG" class="rep-sec" style="display:none">
         <div id="repHeadG" class="rep-head"></div>
-        <div class="rep-picker">
+        <div class="rep-picker tinact" id="pickG" onclick="actTime('G')">
           <select id="odH_G" onchange="saveTime('G')" class="tsel tg"></select><span class="tsep">:</span><select id="odM_G" onchange="saveTime('G')" class="tsel tg"></select><span class="tarr">&#8594;</span><select id="doH_G" onchange="saveTime('G')" class="tsel tg"></select><span class="tsep">:</span><select id="doM_G" onchange="saveTime('G')" class="tsel tg"></select>
-          <span id="durG" class="tdur"></span>
+          <span id="thintG" class="thint">⏱ Ustaw czas</span><span id="durG" class="tdur"></span>
           <button onclick="timeMic('G')" class="tmic" style="background:#34C759"><svg width="13" height="13" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/></svg></button>
         </div>
         <div id="repBodyG" class="rep-body"></div>
       </div>
       <div id="repSecS" class="rep-sec" style="display:none">
         <div id="repHeadS" class="rep-head"></div>
-        <div class="rep-picker">
+        <div class="rep-picker tinact" id="pickS" onclick="actTime('S')">
           <select id="odH_S" onchange="saveTime('S')" class="tsel ts"></select><span class="tsep">:</span><select id="odM_S" onchange="saveTime('S')" class="tsel ts"></select><span class="tarr">&#8594;</span><select id="doH_S" onchange="saveTime('S')" class="tsel ts"></select><span class="tsep">:</span><select id="doM_S" onchange="saveTime('S')" class="tsel ts"></select>
-          <span id="durS" class="tdur"></span>
+          <span id="thintS" class="thint">⏱ Ustaw czas</span><span id="durS" class="tdur"></span>
           <button onclick="timeMic('S')" class="tmic" style="background:#007A7A"><svg width="13" height="13" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/></svg></button>
         </div>
         <div id="repBodyS" class="rep-body"></div>
@@ -2434,7 +2438,7 @@ function doReset(){entries=[];custParts=[];selKonG=[];selKonS=[];timeG={od:"00:0
 ,{cat:"Interwencja",pl:"Uzupelnienie papieru",ru:"Заправка бумаги"}
 ,{cat:"Interwencja",pl:"Wznowienie pracy po awarii",ru:"Восстановление после аварии"}
 ,{cat:"Interwencja",pl:"Sprawdzenie polaczenia sieciowego",ru:"Проверка сети"}
-],_hidden:{}};lastDefCat="";[0,1,2].forEach(function(i){mOpen[i]=false;_applyMod(i);});[["val1","Wybierz element"],["val2","Wybierz usterke"],["valS","Aktywnosci serwisowe"],["val3","Wybierz lub dodaj dzialanie"]].forEach(function(p){var e=document.getElementById(p[0]);if(e){e.textContent=p[1];e.className="mod-val";}});partsOpen=false;var _pb=document.getElementById("partsBody");if(_pb)_pb.className="parts-body";var _pa=document.getElementById("partsArr");if(_pa)_pa.style.transform="none";var ed=document.getElementById("repEdit");if(ed){ed.removeAttribute("data-ue");}renderList("el");renderList("def");renderList("kon");renderList("sol");renderParts();renderSummary();curMode="G";var tGr=document.getElementById("tglG"),tSr=document.getElementById("tglNG"),twr=document.getElementById("tglWrap");if(tGr)tGr.className="tgl g on";if(tSr)tSr.className="tgl s";var twr2=document.getElementById("tglWrap");if(twr2)twr2.className="tgl-wrap";var tagR=document.getElementById("partsModeTag");if(tagR){tagR.innerHTML='<span style="width:6px;height:6px;border-radius:50%;background:#34C759;display:inline-block;flex-shrink:0"></span>Gwar.';tagR.style.background="rgba(52,199,89,.1)";tagR.style.color="#34C759";tagR.style.borderColor="rgba(52,199,89,.25)";}_syncTimeInputs();showToast("&#8635; Zresetowano");}
+],_hidden:{}};lastDefCat="";[0,1,2].forEach(function(i){mOpen[i]=false;_applyMod(i);});[["val1","Wybierz element"],["val2","Wybierz usterke"],["valS","Aktywnosci serwisowe"],["val3","Wybierz lub dodaj dzialanie"]].forEach(function(p){var e=document.getElementById(p[0]);if(e){e.textContent=p[1];e.className="mod-val";}});partsOpen=false;var _pb=document.getElementById("partsBody");if(_pb)_pb.className="parts-body";var _pa=document.getElementById("partsArr");if(_pa)_pa.style.transform="none";var ed=document.getElementById("repEdit");if(ed){ed.removeAttribute("data-ue");}renderList("el");renderList("def");renderList("kon");renderList("sol");renderParts();renderSummary();curMode="G";var tGr=document.getElementById("tglG"),tSr=document.getElementById("tglNG"),twr=document.getElementById("tglWrap");if(tGr)tGr.className="tgl g on";if(tSr)tSr.className="tgl s";var twr2=document.getElementById("tglWrap");if(twr2)twr2.className="tgl-wrap";var tagR=document.getElementById("partsModeTag");if(tagR){tagR.innerHTML='<span style="width:6px;height:6px;border-radius:50%;background:#34C759;display:inline-block;flex-shrink:0"></span>Gwar.';tagR.style.background="rgba(52,199,89,.1)";tagR.style.color="#34C759";tagR.style.borderColor="rgba(52,199,89,.25)";}_syncTimeInputs();if(typeof _applyTimeUI==='function'){_applyTimeUI('G');_applyTimeUI('S');}showToast("&#8635; Zresetowano");}
 function _buildAIExp(){
   var eG=entries.filter(function(e){return e.mode==="G";});
   var eS=entries.filter(function(e){return e.mode==="S";});
@@ -2460,7 +2464,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v8.1",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v8.2",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -4739,8 +4743,8 @@ function loadState(){
   }).filter(function(e){return e&&typeof e==='object';});
   selKonG=(ls('rv_skg',[])).map(function(k){return k&&typeof k==='object'?k.pl||'':k;}).filter(Boolean);
   selKonS=(ls('rv_sks',[])).map(function(k){return k&&typeof k==='object'?k.pl||'':k;}).filter(Boolean);
-  timeG=ls('rv_tG',{od:'',do:''});
-  timeS=ls('rv_tS',{od:'',do:''});
+  timeG=ls('rv_tG',{od:'',do:'',_on:false}); if(timeG._on!==true)timeG._on=false;
+  timeS=ls('rv_tS',{od:'',do:'',_on:false}); if(timeS._on!==true)timeS._on=false;
   repTmpls=ls('rv_rt',[]);
   rstStyle=ls('rv_rst','tech');
   custParts=ls('rv_cp',{});
@@ -4766,22 +4770,49 @@ function syncTimeInputs(){
   });
 }
 
+function _setSelTime(sfx,od,dd){
+  od=od||'00:00'; dd=dd||'00:00';
+  var a=od.split(':'),b=dd.split(':');
+  var oh=document.getElementById('odH_'+sfx),om=document.getElementById('odM_'+sfx),dh=document.getElementById('doH_'+sfx),dm=document.getElementById('doM_'+sfx);
+  if(oh)oh.value=a[0]; if(om)om.value=('0'+Math.round(parseInt(a[1]||0)/5)*5).slice(-2);
+  if(dh)dh.value=b[0]; if(dm)dm.value=('0'+Math.round(parseInt(b[1]||0)/5)*5).slice(-2);
+}
+function _applyTimeUI(sfx){
+  var t=sfx==='G'?timeG:timeS; if(!t)return;
+  var on=t._on===true;
+  var pick=document.getElementById('pick'+sfx);
+  if(pick)pick.className='rep-picker'+(on?'':' tinact');
+  ['odH_','odM_','doH_','doM_'].forEach(function(p){var s=document.getElementById(p+sfx);if(s)s.disabled=!on;});
+  var hint=document.getElementById('thint'+sfx); if(hint)hint.style.display=on?'none':'inline';
+  var dur=document.getElementById('dur'+sfx); if(dur&&!on){dur.textContent='';dur.style.color='';}
+  if(on)updateDuration(sfx);
+}
+function actTime(sfx){
+  var t=sfx==='G'?timeG:timeS; if(!t)return;
+  if(t._on)return;
+  t._on=true; if(!t.od)t.od='00:00'; if(!t.do)t.do='00:00';
+  ss('rv_t'+sfx,t);
+  _applyTimeUI(sfx);
+  renderSummary();
+}
 function saveTime(sfx){
   var t=sfx==='G'?timeG:timeS;
-  var oh=document.getElementById('odH_'+sfx);
-  var om=document.getElementById('odM_'+sfx);
-  var dh=document.getElementById('doH_'+sfx);
-  var dm=document.getElementById('doM_'+sfx);
-  t.od=(oh?oh.value:'00')+':'+(om?om.value:'00');
-  t.do=(dh?dh.value:'00')+':'+(dm?dm.value:'00');
-  var _a=t.od.split(':'),_b=t.do.split(':');
-  var _mins=(parseInt(_b[0])*60+parseInt(_b[1]))-(parseInt(_a[0])*60+parseInt(_a[1]));
-  if(_mins<0){
-    t.do=t.od;
-    if(dh)dh.value=(oh?oh.value:'00');
-    if(dm)dm.value=(om?om.value:'00');
-    if(typeof showToast==='function')showToast('\u26a0 Koniec nie mo\u017ce by\u0107 przed startem');
+  if(!t._on)return;
+  var oh=document.getElementById('odH_'+sfx),om=document.getElementById('odM_'+sfx),dh=document.getElementById('doH_'+sfx),dm=document.getElementById('doM_'+sfx);
+  var nod=(oh?oh.value:'00')+':'+(om?om.value:'00');
+  var ndo=(dh?dh.value:'00')+':'+(dm?dm.value:'00');
+  var a=nod.split(':'),b=ndo.split(':');
+  var mins=(parseInt(b[0])*60+parseInt(b[1]))-(parseInt(a[0])*60+parseInt(a[1]));
+  if(mins<=0){
+    if(typeof showToast==='function')showToast('\u26a0 Koniec musi by\u0107 po starcie');
+    _setSelTime(sfx,t.od,t.do); updateDuration(sfx); return;
   }
+  var other=sfx==='G'?timeS:timeG;
+  if(other&&other._on&&other.od===nod&&other.do===ndo){
+    if(typeof showToast==='function')showToast('\u26a0 Czas G i NG nie mo\u017ce by\u0107 taki sam');
+    _setSelTime(sfx,t.od,t.do); updateDuration(sfx); return;
+  }
+  t.od=nod; t.do=ndo;
   ss('rv_t'+sfx,t);
   updateDuration(sfx);
   renderSummary();
@@ -4791,7 +4822,7 @@ function updateDuration(sfx){
   var t=sfx==='G'?timeG:timeS;
   var el=document.getElementById('dur'+sfx);
   if(!el)return;
-  if(!t||!t.od||!t.do){el.textContent='';el.style.color='';return;}
+  if(!t||!t._on||!t.od||!t.do){el.textContent='';el.style.color='';return;}
   var a=t.od.split(':'),b=t.do.split(':');
   var mins=(parseInt(b[0])*60+parseInt(b[1]))-(parseInt(a[0])*60+parseInt(a[1]));
   if(mins<0){el.textContent='⚠ koniec przed startem';el.style.color='#FF3B30';return;}
@@ -5236,7 +5267,7 @@ function buildReport(){
   var lines=[];
   function add(isG,ents,kon,sp,sfx){
     var p=_secParts(isG,ents,kon,sp,style);
-    var t=_tFmt(_liveTime(sfx));
+    var _t=(sfx==='G'?timeG:timeS); var t=(_t&&_t._on)?_tFmt(_liveTime(sfx)):'';
     lines=lines.concat(p.head);
     if(t)lines.push(_czasPrefix(style)+t);
     lines=lines.concat(p.body);
@@ -5309,7 +5340,7 @@ function loadTmpl(i){
   if(t.timeG)timeG=Object.assign({},t.timeG);
   if(t.timeS)timeS=Object.assign({},t.timeS);
   ss('rv_e',entries);
-  syncTimeInputs();
+  syncTimeInputs();if(typeof _applyTimeUI==='function'){_applyTimeUI('G');_applyTimeUI('S');}
   updateBadges();
   renderSummary();
   closeTmpl();
@@ -5421,7 +5452,7 @@ function doReset(){
   SEL={el:'',def:[],sol:[],kon:[]};
   custParts={};
   ['rv_e','rv_skg','rv_sks','rv_tG','rv_tS','rv_cp'].forEach(function(k){localStorage.removeItem(k);});
-  syncTimeInputs();
+  syncTimeInputs();if(typeof _applyTimeUI==='function'){_applyTimeUI('G');_applyTimeUI('S');}
   updateBadges();
   renderSummary();
   renderParts();
@@ -5620,7 +5651,7 @@ function magPrintQR(){
   initSelects();
   loadState();
   applyTheme();
-  syncTimeInputs();
+  syncTimeInputs();if(typeof _applyTimeUI==='function'){_applyTimeUI('G');_applyTimeUI('S');}
   var mode=ls('rv_mode','G');
   curMode=mode;
   SEL.kon=(mode==='G'?selKonG:selKonS).slice();
