@@ -323,7 +323,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.32</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.33</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -341,7 +341,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
     <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#C7C7CC" stroke-width="1.8" style="flex:0 0 auto"><circle cx="10" cy="8" r="4"/><path d="M4 18c0-4 12-4 12 0"/></svg>
     <input id="shopName" placeholder="Sklep" oninput="shopSync()" autocomplete="off" style="flex:1 1 38%;min-width:0;background:#F2F2F7;border-radius:14px;padding:6px 11px;font-size:13px;color:#1C1C1E">
     <input id="shopId" placeholder="ID" oninput="shopSync()" autocomplete="off" inputmode="numeric" style="flex:0 0 56px;width:56px;background:#F2F2F7;border-radius:14px;padding:6px 8px;font-size:13px;color:#1C1C1E;text-align:center">
-    <button onclick="gpsShop()" style="background:#007AFF;border:none;border-radius:14px;color:#fff;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;flex:0 0 auto">GPS</button>
+    <button onclick="gpsShop()" style="background:#007AFF;border:none;border-radius:14px;color:#fff;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;flex:0 0 auto">GPS</button><button onclick="placeSaveCurrent()" style="background:#34C759;border:none;border-radius:14px;color:#fff;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;flex:0 0 auto">Zapisz</button><button onclick="openPlaces()" style="background:#8E8E93;border:none;border-radius:14px;color:#fff;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;flex:0 0 auto">Baza</button>
     <input id="shopAddr" placeholder="Adres" oninput="shopSync()" autocomplete="off" style="flex:1 1 100%;min-width:0;background:#F2F2F7;border-radius:14px;padding:6px 11px;font-size:13px;color:#1C1C1E">
   </div>
 
@@ -2432,7 +2432,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.32",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.33",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -2684,6 +2684,23 @@ function restoreData(input){
   </div>
 </div>
 
+<div class="ov" id="shPlaces" style="display:none" onclick="if(event.target===this)closeOv('shPlaces')">
+  <div class="sh" style="max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-size:17px;font-weight:800;color:#323130">Baza / zapamietane miejsca</div>
+      <button onclick="closeOv('shPlaces')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button>
+    </div>
+    <div style="font-size:11px;font-weight:700;color:#A19F9D;margin-bottom:4px">ZAPAMIETANE MIEJSCA (GPS)</div>
+    <div id="placesList"></div>
+    <div style="font-size:11px;font-weight:700;color:#A19F9D;margin:16px 0 4px">WLASNA BAZA SKLEPOW</div>
+    <div id="shopsCount" style="font-size:12px;color:#605E5C;margin-bottom:8px"></div>
+    <input type="file" id="shopsFile" accept=".csv,text/csv,text/plain" onchange="placesFile(event)" style="width:100%;font-size:12px;margin-bottom:8px">
+    <textarea id="shopsPaste" placeholder="lub wklej CSV: id;siec;miasto;adres;kod" style="width:100%;box-sizing:border-box;height:70px;background:#F5F5F7;border:none;border-radius:10px;padding:9px;font-size:12px;font-family:inherit;margin-bottom:8px"></textarea>
+    <button onclick="importShopsCSV(document.getElementById('shopsPaste').value)" style="width:100%;padding:11px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px">Importuj wklejony CSV</button>
+    <button onclick="shopsClear()" style="width:100%;padding:9px;background:#F5F5F7;color:#D81E2C;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Wyczysc wlasna baze</button>
+    <div style="font-size:11px;color:#A19F9D;margin-top:10px;line-height:1.4">Format CSV: id; siec; miasto; adres; kod (rozdzielane ; lub ,). Pliki PDF/Excel przeslij do konwersji na baze.</div>
+  </div>
+</div>
 <div class="ov" id="shOrder" style="display:none" onclick="if(event.target===this)closeOv('shOrder')">
   <div class="sh" style="max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
@@ -5835,6 +5852,56 @@ function shopSync(){
   shopVal=label;try{ss('rv_shop',label);ss('rv_shop_n',n);ss('rv_shop_i',i);ss('rv_shop_a',a);}catch(e){}
   if(typeof _updRepHdr==='function')_updRepHdr();
 }
+function _dist(a1,o1,a2,o2){var R=6371000,t=Math.PI/180,dla=(a2-a1)*t,dlo=(o2-o1)*t,p1=a1*t,p2=a2*t;var x=Math.sin(dla/2)*Math.sin(dla/2)+Math.cos(p1)*Math.cos(p2)*Math.sin(dlo/2)*Math.sin(dlo/2);return 2*R*Math.asin(Math.sqrt(x));}
+function _places(){try{return JSON.parse(localStorage.getItem('rv_places')||'[]');}catch(e){return[];}}
+function _placesSave(a){try{localStorage.setItem('rv_places',JSON.stringify(a));}catch(e){}}
+function _allShops(){var c=(window._customShops&&window._customShops.length)?window._customShops:[];return (typeof SHOPS_DB!=='undefined'?SHOPS_DB:[]).concat(c);}
+function _findPlace(la,lo){var best=null,bd=80;_places().forEach(function(p){if(typeof p.lat==='number'){var d=_dist(la,lo,p.lat,p.lon);if(d<bd){bd=d;best=p;}}});return best;}
+function placeSaveCurrent(){
+  if(typeof window._myLat!=='number'){_toast('Najpierw nacisnij GPS');return;}
+  var n=((document.getElementById('shopName')||{}).value||'').trim();
+  var i=((document.getElementById('shopId')||{}).value||'').trim();
+  var a=((document.getElementById('shopAddr')||{}).value||'').trim();
+  if(!n&&!i&&!a){_toast('Wpisz dane sklepu');return;}
+  var arr=_places(),rep=-1;
+  for(var k=0;k<arr.length;k++){if(typeof arr[k].lat==='number'&&_dist(window._myLat,window._myLon,arr[k].lat,arr[k].lon)<80){rep=k;break;}}
+  var rec={lat:window._myLat,lon:window._myLon,name:n,id:i,addr:a,t:Date.now()};
+  if(rep>=0)arr[rep]=rec;else arr.unshift(rec);
+  if(arr.length>500)arr=arr.slice(0,500);
+  _placesSave(arr);_toast('Zapamietano: '+(n||a||(i?'ID '+i:'miejsce')));
+  if(typeof placesRender==='function')placesRender();
+}
+function placesRender(){
+  var box=document.getElementById('placesList');
+  if(box){var arr=_places();
+    if(!arr.length)box.innerHTML='<div style="color:#A19F9D;font-size:13px;padding:8px 0">Brak zapamietanych miejsc. Nacisnij GPS, sprawdz dane i \"Zapisz\".</div>';
+    else box.innerHTML=arr.map(function(p,i){var t=[p.name,p.id?('ID '+p.id):'',p.addr].filter(function(x){return x;}).join(' \u00b7 ');return '<div style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid #EEE"><div style="flex:1;min-width:0;font-size:13px;color:#1C1C1E;cursor:pointer" onclick="placeLoad('+i+')">'+(typeof esc==='function'?esc(t||'(bez nazwy)'):(t||'(bez nazwy)'))+'</div><button onclick="placeDel('+i+')" style="background:#FFE5E5;border:none;border-radius:8px;color:#D81E2C;padding:5px 9px;font-size:12px;font-weight:700;cursor:pointer">Usun</button></div>';}).join('');
+  }
+  var c=document.getElementById('shopsCount');if(c)c.textContent=((window._customShops||[]).length)+' wlasnych + '+(typeof SHOPS_DB!=='undefined'?SHOPS_DB.length:0)+' wbudowanych';
+}
+function placeLoad(i){var p=_places()[i];if(!p)return;_setShopFields(p.name||'',p.id||'',p.addr||'');window._myLat=p.lat;window._myLon=p.lon;closeOv('shPlaces');_toast('Zaladowano: '+(p.name||p.addr||''));}
+function placeDel(i){var a=_places();if(i<0||i>=a.length)return;a.splice(i,1);_placesSave(a);placesRender();}
+function openPlaces(){placesRender();openSh('shPlaces');}
+function importShopsCSV(text){
+  var lines=(''+text).split(/\r?\n/).filter(function(l){return l.trim();});
+  if(!lines.length){_toast('Brak danych');return;}
+  var out=[],added=0;
+  lines.forEach(function(l){
+    if(/sklep|nazwa|chain|adres|kod|postal/i.test(l)&&/[a-z]/i.test(l.split(/[;,\t]/)[0])&&!/^\d/.test(l.trim()))return;
+    var p=l.split(/[;,\t]/).map(function(x){return x.trim();});
+    if(p.length<2)return;
+    out.push({id:p[0]||'',chain:p[1]||'',city:p[2]||'',addr:p[3]||'',zip:(p[4]||'').replace(/\s+/g,''),custom:true});added++;
+  });
+  if(!added){_toast('Nie rozpoznano wierszy CSV');return;}
+  if(typeof shopLoadCustom==='function')shopLoadCustom();
+  if(!window._customShops)window._customShops=[];
+  out.forEach(function(r){window._customShops.push(r);});
+  if(typeof shopSaveCustom==='function')shopSaveCustom();
+  var ta=document.getElementById('shopsPaste');if(ta)ta.value='';
+  _toast('Dodano '+added+' sklepow (razem wlasnych: '+window._customShops.length+')');placesRender();
+}
+function placesFile(ev){var f=ev.target.files&&ev.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){importShopsCSV(r.result);};r.readAsText(f);}
+function shopsClear(){if(!confirm('Usunac wlasna baze sklepow?'))return;try{localStorage.removeItem('rv_custom_shops');}catch(e){}window._customShops=[];placesRender();_toast('Wyczyszczono wlasna baze');}
 function _normStr(s){return (''+s).toLowerCase().replace(/ul\.|al\.|ulica|aleja/g,'').replace(/[.,]/g,' ').replace(/\s+/g,' ').trim();}
 function gpsShop(){
   if(!navigator.geolocation){_toast('GPS niedostepny w tej przegladarce');return;}
@@ -5842,6 +5909,8 @@ function gpsShop(){
   navigator.geolocation.getCurrentPosition(function(pos){
     var la=pos.coords.latitude, lo=pos.coords.longitude;
     window._myLat=la; window._myLon=lo;
+    var _rp=_findPlace(la,lo);
+    if(_rp){_setShopFields(_rp.name||'',_rp.id||'',_rp.addr||'');_toast('Zapamietane: '+((_rp.name||'')+(_rp.id?' '+_rp.id:'')||'miejsce'));return;}
     var url='https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&accept-language=pl&lat='+la+'&lon='+lo;
     fetch(url,{headers:{'Accept':'application/json'}}).then(function(r){return r.json();}).then(function(d){
       var a=(d&&d.address)||{};
@@ -5855,8 +5924,8 @@ function gpsShop(){
       var osmName=(d&&d.name)?(''+d.name).trim():'';
       var match=null, cand=[];
       try{
-        if(zip&&typeof SHOPS_DB!=='undefined'){
-          cand=SHOPS_DB.filter(function(s){return s.zip===zip;});
+        if(zip){
+          cand=_allShops().filter(function(s){return s.zip===zip;});
           if(cand.length===1){match=cand[0];}
           else if(cand.length>1 && road){
             var rn=_normStr(road), nn=num?_normStr(num):'';
