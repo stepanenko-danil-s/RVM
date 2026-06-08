@@ -323,7 +323,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.34</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.35</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2162,8 +2162,45 @@ function runOffline(cmd){
   if(r){r.textContent=result;r.style.display="block";}
   if(navigator.clipboard){navigator.clipboard.writeText(result).then(function(){showToast("&#10003; Skopiowano");});}
 }
+function _aiFullReport(){
+  var live=(typeof _liveEntry==='function')?_liveEntry():null;
+  var allE=live?entries.concat([live]):entries.slice();
+  var eG=allE.filter(function(e){return e.mode==="G";});
+  var eS=allE.filter(function(e){return e.mode==="S";});
+  var spG=(typeof getSelPartsArrFor==='function')?getSelPartsArrFor("G"):[];
+  var spS=(typeof getSelPartsArrFor==='function')?getSelPartsArrFor("S"):[];
+  var konG=[]; eG.forEach(function(e){_arr(e.kon).forEach(function(k){if(konG.indexOf(k)<0)konG.push(k);});});
+  var konS=[]; eS.forEach(function(e){_arr(e.kon).forEach(function(k){if(konS.indexOf(k)<0)konS.push(k);});});
+  try{(curMode==="G"?SEL.kon:selKonG).forEach(function(k){if(konG.indexOf(k)<0)konG.push(k);});}catch(e){}
+  try{(curMode==="S"?SEL.kon:selKonS).forEach(function(k){if(konS.indexOf(k)<0)konS.push(k);});}catch(e){}
+  var L=[];
+  var sn=((document.getElementById('shopName')||{}).value||(typeof ls==='function'?ls('rv_shop_n',''):'')||'').trim();
+  var si=((document.getElementById('shopId')||{}).value||(typeof ls==='function'?ls('rv_shop_i',''):'')||'').trim();
+  var sa=((document.getElementById('shopAddr')||{}).value||(typeof ls==='function'?ls('rv_shop_a',''):'')||'').trim();
+  var shop=[sn,si,sa].filter(function(x){return x;}).join(', ');
+  if(shop)L.push('Sklep: '+shop);
+  L.push('Data: '+new Date().toLocaleDateString('pl-PL'));
+  function sec(title,ents,kon,sp){
+    var has=kon.length||sp.length||ents.some(function(e){return e.el||_arr(e.def).length||_arr(e.sol).length;});
+    if(!has)return;
+    L.push('');L.push('=== '+title+' ===');
+    var n=0;
+    ents.forEach(function(e){
+      if(!e.el&&!_arr(e.def).length&&!_arr(e.sol).length)return;
+      n++;L.push(n+'. '+(e.el||'(bez elementu)'));
+      var df=_arr(e.def),sl=_arr(e.sol);
+      if(df.length)L.push('   Usterka: '+df.join(', '));
+      if(sl.length)L.push('   Wykonano: '+sl.join(', '));
+    });
+    if(kon.length)L.push('   Serwis: '+kon.join(', '));
+    if(sp.length)L.push('   Czesci zamienne: '+sp.join(', '));
+  }
+  sec('GWARANCYJNY (G)',eG,konG,spG);
+  sec('NIE GWARANCYJNY / SERWIS (NG)',eS,konS,spS);
+  return L.join('\n').trim();
+}
 function openInClaude(){
-  var raport=(typeof buildReport==='function'?buildReport():_fmtRep());
+  var raport=(typeof _aiFullReport==='function'?_aiFullReport():(typeof buildReport==='function'?buildReport():''));
   var q=(document.getElementById("aiQuestion")||{}).value||"";
   var msg="Jestem technikiem serwisowym RVM. Oto mój aktualny raport serwisowy:\n\n"+raport;
   if(q.trim())msg+="\n\n"+q.trim();
@@ -2432,7 +2469,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.34",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.35",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
