@@ -323,7 +323,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.33</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.34</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2432,7 +2432,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.33",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.34",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -5902,6 +5902,14 @@ function importShopsCSV(text){
 }
 function placesFile(ev){var f=ev.target.files&&ev.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){importShopsCSV(r.result);};r.readAsText(f);}
 function shopsClear(){if(!confirm('Usunac wlasna baze sklepow?'))return;try{localStorage.removeItem('rv_custom_shops');}catch(e){}window._customShops=[];placesRender();_toast('Wyczyszczono wlasna baze');}
+var SHOP_CHAINS=['Biedronka','Kaufland','Lidl','Auchan','Carrefour','Netto','Aldi','Dino','Stokrotka','Zabka','\u017dabka','Lewiatan','POLOmarket','Polomarket','Polo Market','Intermarche','Intermarch\u00e9','Tesco','Selgros','Makro','Leclerc','Spar','Eurospar','Mila','Topaz','Groszek','Chata Polska','Delikatesy Centrum','Spolem','Spo\u0142em','Twoj Market','Frac','Kefirek','Piotr i Pawel','Arhelan','Prim Market','Lidl Polska'];
+function _chainFromName(name){
+  if(!name)return '';
+  var low=(''+name).toLowerCase();
+  for(var i=0;i<SHOP_CHAINS.length;i++){ if(low.indexOf(SHOP_CHAINS[i].toLowerCase())>=0) return SHOP_CHAINS[i]; }
+  var cleaned=(''+name).replace(/^\s*(parking(\s+(przy|sklepu|sklep|dla|pod))?|sklep|market|hipermarket|supermarket|dyskont)\b[\s:.,\u2013-]*/i,'').trim();
+  return cleaned||(''+name);
+}
 function _normStr(s){return (''+s).toLowerCase().replace(/ul\.|al\.|ulica|aleja/g,'').replace(/[.,]/g,' ').replace(/\s+/g,' ').trim();}
 function gpsShop(){
   if(!navigator.geolocation){_toast('GPS niedostepny w tej przegladarce');return;}
@@ -5922,21 +5930,25 @@ function gpsShop(){
       var addr=[street,((zip?zip+' ':'')+city).trim()].filter(function(x){return x;}).join(', ');
       if(!addr)addr=(d&&d.display_name)||(la.toFixed(5)+', '+lo.toFixed(5));
       var osmName=(d&&d.name)?(''+d.name).trim():'';
+      var a2=(d&&d.address)||{};
+      var chain=_chainFromName(osmName)|| _chainFromName(a2.shop||'') || _chainFromName(a2.amenity||'');
       var match=null, cand=[];
       try{
         if(zip){
           cand=_allShops().filter(function(s){return s.zip===zip;});
-          if(cand.length===1){match=cand[0];}
-          else if(cand.length>1 && road){
+          var pool=cand;
+          if(chain){var cc=cand.filter(function(s){return (s.chain||'').toLowerCase().indexOf(chain.toLowerCase())>=0;});if(cc.length)pool=cc;}
+          if(pool.length===1){match=pool[0];}
+          else if(pool.length>1 && road){
             var rn=_normStr(road), nn=num?_normStr(num):'';
-            var sc=cand.map(function(s){var a=_normStr(s.addr||'');var hit=(rn&&a.indexOf(rn)>=0)?2:0;var nh=(nn&&a.indexOf(nn)>=0)?1:0;return {s:s,sc:hit+nh};});
+            var sc=pool.map(function(s){var a=_normStr(s.addr||'');var hit=(rn&&a.indexOf(rn)>=0)?2:0;var nh=(nn&&a.indexOf(nn)>=0)?1:0;return {s:s,sc:hit+nh};});
             sc.sort(function(a,b){return b.sc-a.sc;});
             if(sc[0].sc>0 && (sc.length<2 || sc[0].sc>sc[1].sc)) match=sc[0].s;
           }
         }
       }catch(e){}
-      if(match){_setShopFields(match.chain,match.id,(match.addr||'')+(match.city?', '+match.city:''));_toast('Sklep: '+match.chain+' '+match.id+(match.city?' - '+match.city:''));}
-      else{var nm=osmName||(cand.length?cand[0].chain:'')||'';_setShopFields(nm,'',addr);_toast(nm?('Sklep: '+nm+' - popraw nr/adres'):('Adres: '+addr+' - wpisz sklep'));}
+      if(match){_setShopFields(match.chain,match.id,(match.addr||'')+(match.city?', '+match.city:''));_toast('Sklep: '+match.chain+(match.id?' '+match.id:'')+(match.city?' - '+match.city:''));}
+      else{var nm=chain||(cand.length?cand[0].chain:'')||'';_setShopFields(nm,'',addr);_toast(nm?('Sklep: '+nm+' - sprawdz nr/adres'):('Adres: '+addr+' - wpisz sklep'));}
     }).catch(function(){
       var fb=la.toFixed(5)+', '+lo.toFixed(5);
       _setShopFields('','',fb);
