@@ -323,7 +323,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.43</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.44</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -490,6 +490,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
         </button>
         <button class="btn-save" onclick="saveTmpl()">+ Zapisz</button>
       </div>
+      <div style="display:flex;gap:8px;padding:0 14px 8px"><button onclick="visitSave()" style="flex:1;padding:12px;background:#FF9500;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Zapisz wizyte</button><button onclick="visitsOpen()" style="flex:1;padding:12px;background:#5856D6;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Wizyty (<span id="visitsCount">0</span>)</button></div>
       <div style="display:flex;gap:8px;padding:0 14px 14px">
         <button class="btn-ai" onclick="openAIPanel()">AI</button>
         <button class="btn-copy" onclick="doCopy()">Kopiuj</button>
@@ -2486,7 +2487,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.43",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.44",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -2738,6 +2739,7 @@ function restoreData(input){
   </div>
 </div>
 
+<div class="ov" id="shVisits" style="display:none" onclick="if(event.target===this)closeOv('shVisits')"><div class="sh" style="max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="font-size:17px;font-weight:800;color:#323130">Wizyty (dzis)</div><button onclick="closeOv('shVisits')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button></div><div id="visitsList"></div><button onclick="visitsCopyAll()" style="width:100%;padding:11px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:6px">Kopiuj wszystkie raporty</button><button onclick="visitsClear()" style="width:100%;padding:9px;background:#F5F5F7;color:#D81E2C;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px">Wyczysc wszystkie wizyty</button></div></div>
 <div class="ov" id="shPlaces" style="display:none" onclick="if(event.target===this)closeOv('shPlaces')">
   <div class="sh" style="max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
@@ -6739,6 +6741,55 @@ function copyDiag(){
 </div>
 <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script>
 <script>function appUpdate(){if(typeof showToast==='function')showToast('Aktualizuje...');var done=function(){setTimeout(function(){try{location.reload();}catch(e){location.href=location.pathname+'?t='+Date.now();}},500);};try{var tasks=[];if('serviceWorker' in navigator){tasks.push(navigator.serviceWorker.getRegistrations().then(function(rs){return Promise.all(rs.map(function(r){return r.unregister();}));}).catch(function(){}));}if(window.caches&&caches.keys){tasks.push(caches.keys().then(function(ks){return Promise.all(ks.map(function(k){return caches.delete(k);}));}).catch(function(){}));}Promise.all(tasks).then(done,done);}catch(e){done();}}</script>
-<script>window.addEventListener('load',function(){setTimeout(function(){try{_photoBoot();}catch(e){}},300);});</script>
+<script>
+function _visits(){try{return JSON.parse(localStorage.getItem('rv_visits')||'[]');}catch(e){return[];}}
+function _visitsSave(a){try{localStorage.setItem('rv_visits',JSON.stringify(a));}catch(e){}}
+function _visitsBadge(){var b=document.getElementById('visitsCount');if(b)b.textContent=_visits().length;}
+function _resetWork(){
+  try{entries=[];selKonG=[];selKonS=[];timeG={od:'',do:''};timeS={od:'',do:''};SEL={el:'',def:[],sol:[],kon:[]};custParts={};}catch(e){}
+  ['rv_e','rv_skg','rv_sks','rv_tG','rv_tS','rv_cp','rv_shop','rv_shop_n','rv_shop_i','rv_shop_a'].forEach(function(k){try{localStorage.removeItem(k);}catch(e){}});
+  try{shopVal='';window._currentShop=null;}catch(e){}
+  ['shopName','shopId','shopAddr'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  try{syncTimeInputs();}catch(e){}
+  if(typeof _applyTimeUI==='function'){try{_applyTimeUI('G');_applyTimeUI('S');}catch(e){}}
+  try{updateBadges();}catch(e){}try{renderSummary();}catch(e){}try{renderParts();}catch(e){}
+}
+function visitSave(){
+  if(typeof _commitEntry==='function')_commitEntry();
+  var report=(typeof buildReport==='function'&&buildReport())||'';
+  if(!report){if(typeof showToast==='function')showToast('Pusty raport');return;}
+  var gv=function(id){var e=document.getElementById(id);return e?(e.value||'').trim():'';};
+  var parts=[];try{parts=getSelPartsArrFor('G').concat(getSelPartsArrFor('S'));}catch(e){}
+  var v={t:Date.now(),name:gv('shopName'),idv:gv('shopId'),addr:gv('shopAddr'),lat:(typeof window._myLat==='number'?window._myLat:null),lon:(typeof window._myLon==='number'?window._myLon:null),report:report,parts:parts};
+  var arr=_visits();arr.unshift(v);if(arr.length>50)arr=arr.slice(0,50);_visitsSave(arr);_visitsBadge();
+  if(confirm('Wizyta zapisana ('+(v.name||'bez nazwy')+'). Wyczyscic do nastepnej lokalizacji?')){_resetWork();}
+  if(typeof showToast==='function')showToast('Zapisano wizyte');
+}
+function visitsOpen(){visitsRender();if(typeof openSh==='function')openSh('shVisits');}
+function visitsRender(){
+  var box=document.getElementById('visitsList');if(!box)return;var arr=_visits();
+  if(!arr.length){box.innerHTML='<div style="color:#A19F9D;font-size:13px;padding:8px 0">Brak wizyt. Na obiekcie wypelnij raport i nacisnij Zapisz wizyte.</div>';return;}
+  box.innerHTML=arr.map(function(v,i){
+    var d=new Date(v.t);var ts=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);
+    var E=(typeof esc==='function')?esc:function(x){return x;};
+    var title=[v.name,v.idv?('ID '+v.idv):''].filter(Boolean).join(' ')||'(bez nazwy)';
+    var sub=(v.addr||'')+((v.parts&&v.parts.length)?(' \u00b7 czesci: '+v.parts.length):'');
+    return '<div style="border:1px solid #EEE;border-radius:12px;padding:10px;margin-bottom:8px">'
+      +'<div style="display:flex;justify-content:space-between;gap:8px"><div style="font-weight:700;font-size:14px;color:#1C1C1E;min-width:0">'+E(title)+'</div><div style="font-size:11px;color:#A19F9D;white-space:nowrap">'+ts+'</div></div>'
+      +'<div style="font-size:11px;color:#605E5C;margin:4px 0 8px">'+E(sub)+'</div>'
+      +'<div style="display:flex;gap:6px">'
+      +'<button onclick="visitCopy('+i+')" style="flex:1;padding:9px;background:#0078D4;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">Kopiuj raport</button>'
+      +'<button onclick="visitShow('+i+')" style="padding:9px 12px;background:#F0F0F5;color:#323130;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">Podglad</button>'
+      +'<button onclick="visitDel('+i+')" style="padding:9px 12px;background:#FFE5E5;color:#D81E2C;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">Usun</button></div>'
+      +'<pre id="vrep'+i+'" style="display:none;white-space:pre-wrap;background:#1C1C1E;color:#E5E5EA;border-radius:8px;padding:9px;font-size:11px;margin-top:8px;max-height:240px;overflow:auto"></pre></div>';
+  }).join('');
+}
+function visitCopy(i){var v=_visits()[i];if(!v)return;var t=v.report||'';var ok=function(){if(typeof showToast==='function')showToast('Skopiowano raport');};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,function(){if(typeof _fb==='function')_fb(t);ok();});}else{if(typeof _fb==='function')_fb(t);ok();}}
+function visitShow(i){var p=document.getElementById('vrep'+i);var v=_visits()[i];if(!p||!v)return;if(p.style.display==='none'){p.textContent=v.report||'';p.style.display='block';}else{p.style.display='none';}}
+function visitDel(i){var a=_visits();if(i<0||i>=a.length)return;if(!confirm('Usunac te wizyte?'))return;a.splice(i,1);_visitsSave(a);visitsRender();_visitsBadge();}
+function visitsClear(){if(!confirm('Usunac wszystkie wizyty?'))return;try{localStorage.removeItem('rv_visits');}catch(e){}visitsRender();_visitsBadge();}
+function visitsCopyAll(){var a=_visits();if(!a.length){if(typeof showToast==='function')showToast('Brak wizyt');return;}var t=a.map(function(v){return (v.name||'')+(v.idv?' '+v.idv:'')+'\n'+(v.report||'');}).join('\n\n========================\n\n');var ok=function(){if(typeof showToast==='function')showToast('Skopiowano '+a.length+' raportow');};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,function(){if(typeof _fb==='function')_fb(t);ok();});}else{if(typeof _fb==='function')_fb(t);ok();}}
+</script>
+<script>window.addEventListener('load',function(){setTimeout(function(){try{_photoBoot();}catch(e){}try{_visitsBadge();}catch(e){}},300);});</script>
 </body>
 </html>
