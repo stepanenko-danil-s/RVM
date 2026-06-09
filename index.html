@@ -52,6 +52,7 @@ button:active{opacity:.7;transform:scale(.97)}
 .srch-row{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#F8F8F8}
 .srch-row input{flex:1;background:#fff;border:1px solid #E5E5EA;border-radius:10px;padding:8px 12px;font-size:14px}
 .srch-row input:focus{border-color:#007AFF}
+.srch-add{flex:0 0 auto;padding:0 14px;height:37px;border:none;border-radius:10px;background:#007AFF;color:#fff;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit}
 
 /* LIST */
 .ilist{padding:0 8px 8px;max-height:300px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
@@ -210,7 +211,7 @@ body.fluent .ti .ic-ios{display:none}
 body.fluent .ti .ic-ms{display:inline-flex}
 body.fluent .nav{background:#0078D4}
 body.fluent .shop-bar,body.fluent .mod,body.fluent .acc-card,body.fluent .mag-row,body.fluent .rep-wrap,body.fluent .sh,body.fluent .modal-sheet{border-radius:4px;box-shadow:0 1.6px 3.6px rgba(0,0,0,.13);border:1px solid #C5C3C1}
-body.fluent .li,body.fluent .srch-row input,body.fluent .sh-inp,body.fluent .qty-btn,body.fluent .style-btn{border-radius:2px}
+body.fluent .li,body.fluent .srch-row input,body.fluent .srch-add,body.fluent .sh-inp,body.fluent .qty-btn,body.fluent .style-btn{border-radius:2px}
 body.fluent .li{border:1px solid #D8D5D2;background:#fff}
 body.fluent .li.on{background:#EFF6FC;border-color:#0078D4}
 body.fluent .tgl-wrap,body.fluent .mag-tabs{border-radius:2px;background:#F3F2F1}
@@ -327,7 +328,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.54</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.55</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -378,7 +379,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
       </div>
       <div class="mod-body" id="bodyS">
         <div class="srch-row">
-          <input placeholder="Szukaj aktywnosci..." oninput="filterList('kon',this.value)" autocomplete="off" autocorrect="off" spellcheck="false">
+          <input placeholder="Szukaj aktywnosci..." oninput="filterList('kon',this.value)" autocomplete="off" autocorrect="off" spellcheck="false"><button class="srch-add" onclick="addCustomItem('kon')">+ Dodaj</button>
         </div>
         <div class="ilist" id="lstKon"></div>
       </div>
@@ -396,7 +397,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
       </div>
       <div class="mod-body" id="body1">
         <div class="srch-row">
-          <input placeholder="Szukaj elementu..." oninput="filterList('el',this.value)" autocomplete="off" autocorrect="off" spellcheck="false">
+          <input placeholder="Szukaj elementu..." oninput="filterList('el',this.value)" autocomplete="off" autocorrect="off" spellcheck="false"><button class="srch-add" onclick="addCustomItem('el')">+ Dodaj</button>
         </div>
         <div class="ilist" id="lstEl"></div>
       </div>
@@ -414,7 +415,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
       </div>
       <div class="mod-body" id="body2">
         <div class="srch-row">
-          <input placeholder="Szukaj usterki..." oninput="filterList('def',this.value)" autocomplete="off" autocorrect="off" spellcheck="false">
+          <input placeholder="Szukaj usterki..." oninput="filterList('def',this.value)" autocomplete="off" autocorrect="off" spellcheck="false"><button class="srch-add" onclick="addCustomItem('def')">+ Dodaj</button>
         </div>
         <div class="ilist" id="lstDef"></div>
       </div>
@@ -432,7 +433,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
       </div>
       <div class="mod-body" id="body3">
         <div class="srch-row">
-          <input placeholder="Szukaj dzialania..." oninput="filterList('sol',this.value)" autocomplete="off" autocorrect="off" spellcheck="false">
+          <input placeholder="Szukaj dzialania..." oninput="filterList('sol',this.value)" autocomplete="off" autocorrect="off" spellcheck="false"><button class="srch-add" onclick="addCustomItem('sol')">+ Dodaj</button>
         </div>
         <div class="ilist" id="lstSol"></div>
       </div>
@@ -2494,7 +2495,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.54",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.55",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -5206,7 +5207,7 @@ function renderList(col){
     if(it.ru)s+='<div class="li-ru">'+esc(it.ru)+'</div>';
     s+='</div>'; return s;
   }
-  var h='<div class="li-add" onclick="addCustomItem(\''+col+'\')" style="margin-bottom:6px;font-weight:700">+ Dodaj</div>';
+  var h='';
   if(q){
     var f=items.filter(function(it){return (it.pl+' '+(it.ru||'')).toLowerCase().indexOf(q)>=0;});
     f.sort(function(a,b){var ap=a.pl.toLowerCase().indexOf(q)===0?0:1,bp=b.pl.toLowerCase().indexOf(q)===0?0:1;return ap-bp;});
