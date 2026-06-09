@@ -11,7 +11,7 @@
 button,.mag-row,.mag-card{transition:transform .07s ease,filter .07s ease}
 button:active,.mag-row:active,.mag-card:active,.ilist [onclick]:active,.ai-row:active,[onclick]:active:not(.ov):not(.modal-ov):not(.sh):not(.settings-ov){transform:scale(.96);filter:brightness(.88)}
 .rv-press{transition:transform .05s ease,filter .05s ease!important;transform:scale(.93)!important;filter:brightness(.82)!important}
-body{font-family:-apple-system,sans-serif;background:#F2F2F7;color:#1C1C1E;min-height:100vh}
+body{font-family:-apple-system,sans-serif;background:#DFE3E9;color:#1C1C1E;min-height:100vh}
 button,input,textarea,select{font-family:inherit;-webkit-appearance:none;appearance:none;outline:none}
 button:active{opacity:.7;transform:scale(.97)}
 
@@ -194,10 +194,14 @@ button:active{opacity:.7;transform:scale(.97)}
 .set-acc-arr{transition:transform .2s;display:inline-block}
 .set-acc-arr.open{transform:rotate(180deg)}
 /* ===== iOS contrast ===== */
-.badge{background:#D8D8DE;color:#5B5B60}
+.badge{background:#C2C7CF;color:#3A3A3C}
 .mod-val{color:#6E6E73}
+.shop-bar,.mod,.acc-card,.rep-wrap{border:1px solid #C4CAD3;box-shadow:0 1px 5px rgba(0,0,0,.14)}
+.li{border:1px solid #E2E5EA}
+.mod-body{border-top:1px solid #E2E5EA}
+.mod-ttl,.acc-hdr-t{color:#11131A}
 /* ===== Microsoft / Fluent style (v6.4) ===== */
-body.fluent{font-family:'Segoe UI','Segoe UI Web',-apple-system,system-ui,sans-serif}
+body.fluent{font-family:'Segoe UI','Segoe UI Web',-apple-system,system-ui,sans-serif;background:#EAE8E6}
 body .ti{display:inline-flex;align-items:center;vertical-align:-3px;margin-right:5px}
 .ti .ic-ios,.ti .ic-ms{display:inline-flex;align-items:center;line-height:0}
 .ti .ic-ios svg,.ti .ic-ms svg{width:15px;height:15px;display:block}
@@ -205,16 +209,16 @@ body .ti{display:inline-flex;align-items:center;vertical-align:-3px;margin-right
 body.fluent .ti .ic-ios{display:none}
 body.fluent .ti .ic-ms{display:inline-flex}
 body.fluent .nav{background:#0078D4}
-body.fluent .shop-bar,body.fluent .mod,body.fluent .acc-card,body.fluent .mag-row,body.fluent .rep-wrap,body.fluent .sh,body.fluent .modal-sheet{border-radius:4px;box-shadow:none;border:1px solid #E1DFDD}
+body.fluent .shop-bar,body.fluent .mod,body.fluent .acc-card,body.fluent .mag-row,body.fluent .rep-wrap,body.fluent .sh,body.fluent .modal-sheet{border-radius:4px;box-shadow:0 1.6px 3.6px rgba(0,0,0,.13);border:1px solid #C5C3C1}
 body.fluent .li,body.fluent .srch-row input,body.fluent .sh-inp,body.fluent .qty-btn,body.fluent .style-btn{border-radius:2px}
-body.fluent .li{border:1px solid #EDEBE9;background:#fff}
+body.fluent .li{border:1px solid #D8D5D2;background:#fff}
 body.fluent .li.on{background:#EFF6FC;border-color:#0078D4}
 body.fluent .tgl-wrap,body.fluent .mag-tabs{border-radius:2px;background:#F3F2F1}
 body.fluent .tgl{border-radius:2px}
 body.fluent .tgl.on,body.fluent .mag-tab.on{border-radius:2px;background:#fff;box-shadow:inset 0 0 0 1px #0078D4;color:#0078D4}
 body.fluent .tgl.g.on{color:#107C10}
 body.fluent .tgl.s.on{color:#0078D4}
-body.fluent .badge{border-radius:2px;background:#EDEBE9;color:#605E5C}
+body.fluent .badge{border-radius:2px;background:#D4D1CF;color:#37363A}
 body.fluent .badge.done{background:#DFF6DD;color:#107C10}
 body.fluent .badge.active{background:#0078D4;color:#fff}
 body.fluent .bnav-btn.on{color:#0078D4}
@@ -323,7 +327,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.44</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.45</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2487,7 +2491,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.44",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.45",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
