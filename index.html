@@ -174,7 +174,7 @@ button:active{opacity:.7;transform:scale(.97)}
 
 /* PAGES */
 .pg{display:none}
-.pg.on{display:block}
+.pg.on{display:block;padding-bottom:88px}
 
 /* TEMPLATE LIST */
 .tmpl-item{background:#F8F8F8;border-radius:10px;padding:11px 13px;margin-bottom:6px;display:flex;align-items:center;gap:10px;cursor:pointer}
@@ -327,7 +327,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.48</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.49</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -504,13 +504,6 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
       </div>
     </div>
   </div>
-    <div class="sec-label">WIEDZA</div>
-    <div class="acc-card" onclick="kbOpen()" style="cursor:pointer">
-      <div class="acc-hdr">
-        <div><div class="acc-hdr-t">Wiedza</div><div style="font-size:12px;color:#8E8E93;margin-top:2px">Pamietki, notatki, gwarancja</div></div>
-        <span style="color:#C7C7CC;font-size:18px">&#8250;</span>
-      </div>
-    </div>
 </div>
 
 <!-- PAGE: MAGAZYN -->
@@ -2501,7 +2494,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.48",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.49",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -2753,7 +2746,19 @@ function restoreData(input){
   </div>
 </div>
 
-<div class="ov" id="shKB" style="display:none" onclick="if(event.target===this)closeOv('shKB')"><div class="sh" style="max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="font-size:17px;font-weight:800;color:#323130">Wiedza</div><button onclick="closeOv('shKB')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button></div><div id="kbList"></div></div></div>
+<!-- PAGE: WIEDZA -->
+<div class="pg" id="pgWiedza">
+  <div style="padding:12px 12px 0">
+    <div style="font-size:20px;font-weight:800;color:#1C1C1E;margin:4px 4px 12px">Wiedza</div>
+    <div id="kbList"></div>
+  </div>
+</div>
+<!-- BOTTOM NAV -->
+<div class="bnav">
+  <button class="bnav-btn on" id="navRaport" onclick="goTab('raport')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3H7a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V8z"/><path d="M13 3v5h5"/><path d="M9 13h6M9 17h6"/></svg>Raport</button>
+  <button class="bnav-btn" id="navMag" onclick="goTab('mag')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M3 7l9 4 9-4M12 11v10"/></svg>Magazyn</button>
+  <button class="bnav-btn" id="navWiedza" onclick="goTab('wiedza')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4a1 1 0 0 1 1-1h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M19 19H6a2 2 0 0 0-2 2"/><path d="M9 7h7"/></svg>Wiedza</button>
+</div>
 <div class="ov" id="shGwInfo" style="display:none" onclick="if(event.target===this)closeOv('shGwInfo')"><div class="sh" style="max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div style="font-size:17px;font-weight:800;color:#323130">Gwarancja czy serwis (NG)?</div><button onclick="closeOv('shGwInfo')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button></div><div style="border:1px solid #BFE3C6;background:#F1FBF2;border-radius:12px;padding:12px;margin-bottom:10px"><div style="font-weight:800;color:#107C10;font-size:14px;margin-bottom:6px">✅ GWARANCJA (G) — koszt pokrywa producent</div><ul style="margin:0 0 0 16px;font-size:13px;color:#1C1C1E;line-height:1.5"><li style="margin:3px 0">Wada fabryczna / materiałowa (заводской дефект)</li><li style="margin:3px 0">Awaria podzespołu przy <b>normalnej, prawidłowej</b> eksploatacji w okresie gwarancji</li><li style="margin:3px 0">Wadliwe wykonanie: zła lutowina, błąd montażu fabrycznego, fabrycznie przerwany przewód</li></ul></div><div style="border:1px solid #F2C9C9;background:#FFF4F4;border-radius:12px;padding:12px;margin-bottom:10px"><div style="font-weight:800;color:#D81E2C;font-size:14px;margin-bottom:6px">❌ NIE GWARANCJA (NG / serwis) — koszt po stronie klienta</div><ul style="margin:0 0 0 16px;font-size:13px;color:#1C1C1E;line-height:1.5"><li style="margin:3px 0">Uszkodzenia mechaniczne: złamane/pęknięte części, wgniecenia, przerwane przewody od siły zewnętrznej</li><li style="margin:3px 0">Zjawiska losowe: <b>przepięcie</b>, zalanie/woda, pożar, wyładowania</li><li style="margin:3px 0">Niewłaściwa eksploatacja lub niezgodna z instrukcją; ciała obce w mechanizmie</li><li style="margin:3px 0">Brak konserwacji / przeglądów</li><li style="margin:3px 0">Normalne zużycie i części eksploatacyjne (rolki, paski, szczotki, zarysowania)</li><li style="margin:3px 0">Samowolne naprawy, przeróbki, serwis nieautoryzowany</li><li style="margin:3px 0">Wandalizm, wina użytkownika lub osób trzecich</li><li style="margin:3px 0">Po upływie okresu gwarancji</li></ul></div><div style="font-size:12px;color:#605E5C;line-height:1.5;background:#F5F5F7;border-radius:10px;padding:10px"><b>Gwarancja</b> = dobrowolne zobowiązanie producenta wg karty gwarancyjnej (sam określa zakres i czas). <b>Rękojmia</b> / niezgodność z umową = ustawowa odpowiedzialność sprzedawcy, 2 lata; w B2B działa jako „rękojmia” i można ją umownie ograniczyć.</div><div style="font-size:11.5px;color:#8E8E93;line-height:1.5;margin-top:8px">RU: <b>G</b> — заводской дефект при нормальной работе в гарантийный срок (платит производитель). <b>NG</b> — мех. повреждения, перепады/залив, неправильная эксплуатация, износ/расходники, несанкц. ремонт, вандализм, после срока (платит клиент).</div></div></div>
 <div class="ov" id="shVisits" style="display:none" onclick="if(event.target===this)closeOv('shVisits')"><div class="sh" style="max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="font-size:17px;font-weight:800;color:#323130">Wizyty (dzis)</div><button onclick="closeOv('shVisits')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button></div><div id="visitsList"></div><button onclick="visitsCopyAll()" style="width:100%;padding:11px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:6px">Kopiuj wszystkie raporty</button><button onclick="visitsClear()" style="width:100%;padding:9px;background:#F5F5F7;color:#D81E2C;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px">Wyczysc wszystkie wizyty</button></div></div>
 <div class="ov" id="shPlaces" style="display:none" onclick="if(event.target===this)closeOv('shPlaces')">
@@ -5011,6 +5016,7 @@ function goTab(t){
   if(pg)pg.classList.add('on');
   if(bn)bn.classList.add('on');
   if(t==='mag'){if(!_magData)_magData=magLoad();setTimeout(magRender,50);}
+  if(t==='wiedza'){try{kbRender();}catch(e){}}
 }
 
 // ===== SETTINGS =====
@@ -6831,7 +6837,7 @@ function visitsCopyAll(){var a=_visits();if(!a.length){if(typeof showToast==='fu
 <script>
 function _kb(){try{return JSON.parse(localStorage.getItem('rv_kb')||'[]');}catch(e){return[];}}
 function _kbSave(a){try{localStorage.setItem('rv_kb',JSON.stringify(a));}catch(e){}}
-function kbOpen(){kbRender();if(typeof openSh==='function')openSh('shKB');}
+function kbOpen(){if(typeof goTab==='function')goTab('wiedza');}
 function kbRender(){
   var box=document.getElementById('kbList');if(!box)return;var arr=_kb();
   var E=(typeof esc==='function')?esc:function(x){return x;};
