@@ -327,7 +327,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.47</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.48</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2501,7 +2501,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.47",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.48",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -6017,8 +6017,14 @@ function gpsShop(){
     window._myLat=la; window._myLon=lo;
     var _rp=_findPlace(la,lo);
     if(_rp){_setShopFields(_rp.name||'',_rp.id||'',_rp.addr||'');_toast('Zapamietane: '+((_rp.name||'')+(_rp.id?' '+_rp.id:'')||'miejsce'));return;}
-    var url='https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&accept-language=pl&lat='+la+'&lon='+lo;
-    fetch(url,{headers:{'Accept':'application/json'}}).then(function(r){return r.json();}).then(function(d){
+    _toast('GPS: rozpoznaje sklep...');
+    var nomUrl='https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&accept-language=pl&lat='+la+'&lon='+lo;
+    var ovQ='[out:json][timeout:20];(node(around:90,'+la+','+lo+')[shop];way(around:90,'+la+','+lo+')[shop];node(around:90,'+la+','+lo+')[amenity=fuel];);out center tags 40;';
+    var ovUrl='https://overpass-api.de/api/interpreter?data='+encodeURIComponent(ovQ);
+    var pNom=fetch(nomUrl,{headers:{'Accept':'application/json'}}).then(function(r){return r.json();}).catch(function(){return null;});
+    var pOv=fetch(ovUrl).then(function(r){return r.json();}).catch(function(){return null;});
+    Promise.all([pNom,pOv]).then(function(res){
+      var d=res[0]||{}, ov=res[1];
       var a=(d&&d.address)||{};
       var road=a.road||a.pedestrian||a.footway||a.residential||a.neighbourhood||'';
       var num=a.house_number||'';
@@ -6027,9 +6033,26 @@ function gpsShop(){
       var street=(road+(num?' '+num:'')).trim();
       var addr=[street,((zip?zip+' ':'')+city).trim()].filter(function(x){return x;}).join(', ');
       if(!addr)addr=(d&&d.display_name)||(la.toFixed(5)+', '+lo.toFixed(5));
+      // nearest named shop POI from Overpass
+      var poiName='', poiChain='';
+      try{
+        if(ov&&ov.elements&&ov.elements.length){
+          var best=null,bestD=1e9;
+          ov.elements.forEach(function(el){
+            var t=el.tags||{}; var nm=t.brand||t.name||t.operator||''; if(!nm)return;
+            var ela=(el.type==='node')?{lat:el.lat,lon:el.lon}:(el.center||{});
+            if(ela.lat==null||ela.lon==null)return;
+            var dd=_dist(la,lo,ela.lat,ela.lon);
+            var known=_chainFromName(nm)?0.7:1; // lekko preferuj znane sieci
+            if(dd*known<bestD){bestD=dd*known;best={nm:nm,t:t};}
+          });
+          if(best){poiName=best.nm; poiChain=_chainFromName(best.nm)||_chainFromName(best.t.brand||'')||'';}
+        }
+      }catch(e){}
       var osmName=(d&&d.name)?(''+d.name).trim():'';
-      var a2=(d&&d.address)||{};
-      var chain=_chainFromName(osmName)|| _chainFromName(a2.shop||'') || _chainFromName(a2.amenity||'');
+      var chain = poiChain || _chainFromName(osmName) || _chainFromName(a.shop||'') || '';
+      var name = chain || poiName || osmName || '';
+      // dopasuj ID z bazy po sieci + kod + ulica
       var match=null, cand=[];
       try{
         if(zip){
@@ -6039,18 +6062,17 @@ function gpsShop(){
           if(pool.length===1){match=pool[0];}
           else if(pool.length>1 && road){
             var rn=_normStr(road), nn=num?_normStr(num):'';
-            var sc=pool.map(function(s){var a=_normStr(s.addr||'');var hit=(rn&&a.indexOf(rn)>=0)?2:0;var nh=(nn&&a.indexOf(nn)>=0)?1:0;return {s:s,sc:hit+nh};});
-            sc.sort(function(a,b){return b.sc-a.sc;});
+            var sc=pool.map(function(s){var aa=_normStr(s.addr||'');var hit=(rn&&aa.indexOf(rn)>=0)?2:0;var nh=(nn&&aa.indexOf(nn)>=0)?1:0;return {s:s,sc:hit+nh};});
+            sc.sort(function(x,y){return y.sc-x.sc;});
             if(sc[0].sc>0 && (sc.length<2 || sc[0].sc>sc[1].sc)) match=sc[0].s;
           }
         }
       }catch(e){}
-      if(match){_setShopFields(match.chain,match.id,(match.addr||'')+(match.city?', '+match.city:''));_toast('Sklep: '+match.chain+(match.id?' '+match.id:'')+(match.city?' - '+match.city:''));}
-      else{var nm=chain||(cand.length?cand[0].chain:'')||'';_setShopFields(nm,'',addr);_toast(nm?('Sklep: '+nm+' - sprawdz nr/adres'):('Adres: '+addr+' - wpisz sklep'));}
+      if(match){_setShopFields(match.chain||name,match.id,addr||((match.addr||'')+(match.city?', '+match.city:'')));_toast('Sklep: '+(match.chain||name)+(match.id?' '+match.id:'')+(city?' - '+city:''));}
+      else if(name){_setShopFields(name,'',addr);_toast('Sklep: '+name+' - sprawdz/wpisz nr (ID)');}
+      else{_setShopFields('','',addr);_toast('Adres: '+addr+' - wpisz sklep');}
     }).catch(function(){
-      var fb=la.toFixed(5)+', '+lo.toFixed(5);
-      _setShopFields('','',fb);
-      _toast('Brak internetu - zapisano wspolrzedne GPS');
+      var fb=la.toFixed(5)+', '+lo.toFixed(5);_setShopFields('','',fb);_toast('Brak internetu - zapisano wspolrzedne GPS');
     });
   },function(err){
     _toast('GPS: '+(err&&err.message?err.message:'blad'));
