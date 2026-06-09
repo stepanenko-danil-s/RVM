@@ -327,7 +327,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.53</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.54</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2494,7 +2494,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.53",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.54",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -2814,22 +2814,6 @@ function restoreData(input){
       <button onclick="closeOv('shMagHist')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">x</button>
     </div>
     <div style="display:flex;gap:6px;margin-bottom:12px"><button onclick="histSend('email')" style="flex:1;padding:10px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">&#9993;&#65039; E-mail</button><button onclick="histSend('whatsapp')" style="flex:1;padding:10px;background:#25D366;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">WhatsApp</button><button onclick="histSend('teams')" style="flex:1;padding:10px;background:#5059C9;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Teams</button></div><button onclick="shareHistImg()" style="width:100%;padding:11px;margin-bottom:4px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Tabela jako obraz (udostepnij)</button><div style="font-size:11px;font-weight:700;color:#A19F9D;margin:4px 0 6px">STYL TABELI W WIADOMOSCI (podglad)</div><div style="display:flex;gap:6px;margin-bottom:8px"><button class="stylebtn" data-s="1" onclick="setTblStyle('1')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Ramka</button><button class="stylebtn" data-s="2" onclick="setTblStyle('2')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Lekka</button><button class="stylebtn" data-s="3" onclick="setTblStyle('3')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Karty</button><button class="stylebtn" data-s="5" onclick="setTblStyle('5')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Linia</button></div><pre id="histPreview" style="background:#1C1C1E;color:#E5E5EA;border-radius:8px;padding:10px;font-size:10px;line-height:1.35;overflow-x:auto;white-space:pre;margin-bottom:12px;-webkit-overflow-scrolling:touch"></pre><div id="magHistList" style="display:flex;flex-direction:column;gap:8px"></div><button onclick="magHistClear()" style="width:100%;padding:11px;margin-top:8px;background:#fff;border:1px solid #FF3B30;border-radius:12px;font-size:13px;font-weight:700;color:#FF3B30;cursor:pointer;font-family:inherit">Wyczysc historie</button><button class="sh-btn lt" onclick="closeOv('shMagHist')" style="margin-top:8px">Zamknij</button>
-  </div>
-</div>
-
-<div class="ov" id="shPhotos" style="display:none" onclick="if(event.target===this)closeOv('shPhotos')">
-  <div class="sh" style="max-height:92vh;overflow-y:auto">
-    <div class="sh-bar"></div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div style="font-size:18px;font-weight:800;color:#1C1C1E">Zdjecia zadania</div>
-      <button onclick="closeOv('shPhotos')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C;display:flex;align-items:center;justify-content:center">x</button>
-    </div>
-    <div class="photo-grid" id="photoGrid" style="margin-bottom:10px">
-      <div class="photo-add" onclick="photoTrigger()"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#A19F9D" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="4" width="19" height="15" rx="3"/><circle cx="11" cy="11.5" r="3.5"/><path d="M7 4l1.5-2.5h5L15 4"/></svg><span>Dodaj</span></div>
-    </div>
-    <input type="file" id="photoCamInp" accept="image/*" capture="environment" multiple style="display:none" onchange="photoHandle(this)">
-    <button onclick="photoClear()" style="width:100%;padding:10px;background:rgba(255,59,48,.07);border:1px solid rgba(255,59,48,.2);border-radius:12px;font-size:12px;font-weight:600;color:#FF3B30;cursor:pointer;font-family:inherit;margin-bottom:8px">Usun wszystkie</button>
-    <button onclick="closeOv('shPhotos')" style="width:100%;padding:12px;background:#F5F5F7;border:none;border-radius:12px;font-size:13px;font-weight:600;color:#605E5C;cursor:pointer;font-family:inherit">Zamknij</button>
   </div>
 </div>
 
