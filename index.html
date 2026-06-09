@@ -327,7 +327,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.46</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.47</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -504,6 +504,13 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
       </div>
     </div>
   </div>
+    <div class="sec-label">WIEDZA</div>
+    <div class="acc-card" onclick="kbOpen()" style="cursor:pointer">
+      <div class="acc-hdr">
+        <div><div class="acc-hdr-t">Wiedza</div><div style="font-size:12px;color:#8E8E93;margin-top:2px">Pamietki, notatki, gwarancja</div></div>
+        <span style="color:#C7C7CC;font-size:18px">&#8250;</span>
+      </div>
+    </div>
 </div>
 
 <!-- PAGE: MAGAZYN -->
@@ -2494,7 +2501,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.46",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.47",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -2746,6 +2753,7 @@ function restoreData(input){
   </div>
 </div>
 
+<div class="ov" id="shKB" style="display:none" onclick="if(event.target===this)closeOv('shKB')"><div class="sh" style="max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="font-size:17px;font-weight:800;color:#323130">Wiedza</div><button onclick="closeOv('shKB')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button></div><div id="kbList"></div></div></div>
 <div class="ov" id="shGwInfo" style="display:none" onclick="if(event.target===this)closeOv('shGwInfo')"><div class="sh" style="max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div style="font-size:17px;font-weight:800;color:#323130">Gwarancja czy serwis (NG)?</div><button onclick="closeOv('shGwInfo')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button></div><div style="border:1px solid #BFE3C6;background:#F1FBF2;border-radius:12px;padding:12px;margin-bottom:10px"><div style="font-weight:800;color:#107C10;font-size:14px;margin-bottom:6px">✅ GWARANCJA (G) — koszt pokrywa producent</div><ul style="margin:0 0 0 16px;font-size:13px;color:#1C1C1E;line-height:1.5"><li style="margin:3px 0">Wada fabryczna / materiałowa (заводской дефект)</li><li style="margin:3px 0">Awaria podzespołu przy <b>normalnej, prawidłowej</b> eksploatacji w okresie gwarancji</li><li style="margin:3px 0">Wadliwe wykonanie: zła lutowina, błąd montażu fabrycznego, fabrycznie przerwany przewód</li></ul></div><div style="border:1px solid #F2C9C9;background:#FFF4F4;border-radius:12px;padding:12px;margin-bottom:10px"><div style="font-weight:800;color:#D81E2C;font-size:14px;margin-bottom:6px">❌ NIE GWARANCJA (NG / serwis) — koszt po stronie klienta</div><ul style="margin:0 0 0 16px;font-size:13px;color:#1C1C1E;line-height:1.5"><li style="margin:3px 0">Uszkodzenia mechaniczne: złamane/pęknięte części, wgniecenia, przerwane przewody od siły zewnętrznej</li><li style="margin:3px 0">Zjawiska losowe: <b>przepięcie</b>, zalanie/woda, pożar, wyładowania</li><li style="margin:3px 0">Niewłaściwa eksploatacja lub niezgodna z instrukcją; ciała obce w mechanizmie</li><li style="margin:3px 0">Brak konserwacji / przeglądów</li><li style="margin:3px 0">Normalne zużycie i części eksploatacyjne (rolki, paski, szczotki, zarysowania)</li><li style="margin:3px 0">Samowolne naprawy, przeróbki, serwis nieautoryzowany</li><li style="margin:3px 0">Wandalizm, wina użytkownika lub osób trzecich</li><li style="margin:3px 0">Po upływie okresu gwarancji</li></ul></div><div style="font-size:12px;color:#605E5C;line-height:1.5;background:#F5F5F7;border-radius:10px;padding:10px"><b>Gwarancja</b> = dobrowolne zobowiązanie producenta wg karty gwarancyjnej (sam określa zakres i czas). <b>Rękojmia</b> / niezgodność z umową = ustawowa odpowiedzialność sprzedawcy, 2 lata; w B2B działa jako „rękojmia” i można ją umownie ograniczyć.</div><div style="font-size:11.5px;color:#8E8E93;line-height:1.5;margin-top:8px">RU: <b>G</b> — заводской дефект при нормальной работе в гарантийный срок (платит производитель). <b>NG</b> — мех. повреждения, перепады/залив, неправильная эксплуатация, износ/расходники, несанкц. ремонт, вандализм, после срока (платит клиент).</div></div></div>
 <div class="ov" id="shVisits" style="display:none" onclick="if(event.target===this)closeOv('shVisits')"><div class="sh" style="max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="font-size:17px;font-weight:800;color:#323130">Wizyty (dzis)</div><button onclick="closeOv('shVisits')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button></div><div id="visitsList"></div><button onclick="visitsCopyAll()" style="width:100%;padding:11px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:6px">Kopiuj wszystkie raporty</button><button onclick="visitsClear()" style="width:100%;padding:9px;background:#F5F5F7;color:#D81E2C;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px">Wyczysc wszystkie wizyty</button></div></div>
 <div class="ov" id="shPlaces" style="display:none" onclick="if(event.target===this)closeOv('shPlaces')">
@@ -6797,6 +6805,28 @@ function visitShow(i){var p=document.getElementById('vrep'+i);var v=_visits()[i]
 function visitDel(i){var a=_visits();if(i<0||i>=a.length)return;if(!confirm('Usunac te wizyte?'))return;a.splice(i,1);_visitsSave(a);visitsRender();_visitsBadge();}
 function visitsClear(){if(!confirm('Usunac wszystkie wizyty?'))return;try{localStorage.removeItem('rv_visits');}catch(e){}visitsRender();_visitsBadge();}
 function visitsCopyAll(){var a=_visits();if(!a.length){if(typeof showToast==='function')showToast('Brak wizyt');return;}var t=a.map(function(v){return (v.name||'')+(v.idv?' '+v.idv:'')+'\n'+(v.report||'');}).join('\n\n========================\n\n');var ok=function(){if(typeof showToast==='function')showToast('Skopiowano '+a.length+' raportow');};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,function(){if(typeof _fb==='function')_fb(t);ok();});}else{if(typeof _fb==='function')_fb(t);ok();}}
+</script>
+<script>
+function _kb(){try{return JSON.parse(localStorage.getItem('rv_kb')||'[]');}catch(e){return[];}}
+function _kbSave(a){try{localStorage.setItem('rv_kb',JSON.stringify(a));}catch(e){}}
+function kbOpen(){kbRender();if(typeof openSh==='function')openSh('shKB');}
+function kbRender(){
+  var box=document.getElementById('kbList');if(!box)return;var arr=_kb();
+  var E=(typeof esc==='function')?esc:function(x){return x;};
+  var h='<button onclick="openSh(\'shGwInfo\')" style="width:100%;text-align:left;padding:12px;background:#EFF6FC;border:1px solid #BBD9F2;border-radius:10px;font-size:14px;font-weight:700;color:#0078D4;cursor:pointer;font-family:inherit;margin-bottom:8px">Gwarancja / Serwis (NG) \u2014 pamietka</button>';
+  h+='<button onclick="kbAdd()" style="width:100%;padding:11px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:10px">+ Dodaj notatke</button>';
+  if(!arr.length){h+='<div style="color:#A19F9D;font-size:13px;padding:4px 0">Brak notatek. Dodaj wlasna wiedze techniczna.</div>';}
+  else{h+=arr.map(function(n,i){return '<div style="border:1px solid #E2E5EA;border-radius:10px;padding:10px;margin-bottom:8px">'
+    +'<div onclick="kbShow('+i+')" style="font-weight:700;font-size:14px;color:#1C1C1E;cursor:pointer;display:flex;justify-content:space-between;gap:8px"><span style="min-width:0">'+E(n.title||'(bez tytulu)')+'</span><span style="color:#C7C7CC">&#8250;</span></div>'
+    +'<div id="kbb'+i+'" style="display:none;white-space:pre-wrap;font-size:13px;color:#3A3A3C;margin-top:8px;line-height:1.5">'+E(n.body||'')+'</div>'
+    +'<div style="display:flex;gap:6px;margin-top:8px"><button onclick="kbEdit('+i+')" style="flex:1;padding:7px;background:#F0F0F5;color:#323130;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer">Edytuj</button><button onclick="kbDel('+i+')" style="flex:1;padding:7px;background:#FFE5E5;color:#D81E2C;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer">Usun</button></div></div>';
+  }).join('');}
+  box.innerHTML=h;
+}
+function kbShow(i){var b=document.getElementById('kbb'+i);if(b)b.style.display=(b.style.display==='none'?'block':'none');}
+function kbAdd(){var t=prompt('Tytul notatki');if(t===null)return;t=(t||'').trim();if(!t)return;var b=prompt('Tresc notatki')||'';var a=_kb();a.unshift({id:Date.now(),title:t,body:b,t:Date.now()});_kbSave(a);kbRender();}
+function kbEdit(i){var a=_kb();if(!a[i])return;var t=prompt('Tytul',a[i].title);if(t===null)return;var b=prompt('Tresc',a[i].body);if(b===null)return;a[i].title=(t||'').trim()||a[i].title;a[i].body=b;_kbSave(a);kbRender();}
+function kbDel(i){var a=_kb();if(!a[i])return;if(!confirm('Usunac notatke?'))return;a.splice(i,1);_kbSave(a);kbRender();}
 </script>
 <script>window.addEventListener('load',function(){setTimeout(function(){try{_photoBoot();}catch(e){}try{_visitsBadge();}catch(e){}},300);});</script>
 </body>
