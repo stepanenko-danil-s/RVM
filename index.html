@@ -328,7 +328,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.55</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.56</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2495,7 +2495,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.55",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.56",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -6000,6 +6000,12 @@ function _chainFromName(name){
   return cleaned||(''+name);
 }
 function _normStr(s){return (''+s).toLowerCase().replace(/ul\.|al\.|ulica|aleja/g,'').replace(/[.,]/g,' ').replace(/\s+/g,' ').trim();}
+function _overpass(q){
+  var enc=encodeURIComponent(q);
+  var u1='https://overpass-api.de/api/interpreter?data='+enc;
+  var u2='https://overpass.kumi.systems/api/interpreter?data='+enc;
+  return fetch(u1).then(function(r){if(!r.ok)throw 0;return r.json();}).catch(function(){return fetch(u2).then(function(r){return r.json();});}).catch(function(){return null;});
+}
 function gpsShop(){
   if(!navigator.geolocation){_toast('GPS niedostepny');return;}
   _toast('GPS: szukam lokalizacji...');
@@ -6010,11 +6016,10 @@ function gpsShop(){
     if(_rp){_setShopFields(_rp.name||'',_rp.id||'',_rp.addr||'');_toast('Zapamietane: '+((_rp.name||'')+(_rp.id?' '+_rp.id:'')||'miejsce'));return;}
     _toast('GPS: rozpoznaje sklep...');
     var nomUrl='https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&accept-language=pl&lat='+la+'&lon='+lo;
-    var R=60;
-    var ovQ='[out:json][timeout:20];(node(around:'+R+','+la+','+lo+')[shop];way(around:'+R+','+la+','+lo+')[shop];node(around:'+R+','+la+','+lo+')[amenity=fuel];);out center tags 50;';
-    var ovUrl='https://overpass-api.de/api/interpreter?data='+encodeURIComponent(ovQ);
+    var R=120;
+    var ovQ='[out:json][timeout:25];(node(around:'+R+','+la+','+lo+')[shop];way(around:'+R+','+la+','+lo+')[shop];node(around:'+R+','+la+','+lo+')[amenity=fuel];);out center tags 60;';
     var pNom=fetch(nomUrl,{headers:{'Accept':'application/json'}}).then(function(r){return r.json();}).catch(function(){return null;});
-    var pOv=fetch(ovUrl).then(function(r){return r.json();}).catch(function(){return null;});
+    var pOv=_overpass(ovQ);
     Promise.all([pNom,pOv]).then(function(res){
       var d=res[0]||{}, ov=res[1];
       var a=(d&&d.address)||{};
@@ -6036,29 +6041,36 @@ function gpsShop(){
       window._gpsCand=uniq;
       if(uniq.length>1){_renderPick();if(typeof openSh==='function')openSh('shPick');_toast('Wybierz sklep ('+uniq.length+')');return;}
       if(uniq.length===1){_applyShopChoice(uniq[0].name,uniq[0].chain);return;}
+      // brak POI -> sprobuj z bazy po adresie
       var osmName=(d&&d.name)?(''+d.name).trim():'';
       var chain=_chainFromName(osmName)||_chainFromName(a.shop||'')||'';
-      var name=chain||osmName||'';
-      if(name)_applyShopChoice(name,chain); else {_setShopFields('','',addr);_toast('Adres: '+addr+' - wpisz sklep');}
+      var m=_matchShopId(chain);
+      if(m){_setShopFields(m.chain,m.id,addr||((m.addr||'')+(m.city?', '+m.city:'')));_toast('Sklep z bazy: '+m.chain+(m.id?' '+m.id:''));return;}
+      if(chain||osmName){_setShopFields(chain||osmName,'',addr);_toast('Sklep: '+(chain||osmName)+' - wpisz nr (ID)');return;}
+      _setShopFields('','',addr);_toast('Adres: '+addr+' - wybierz/wpisz sklep');
     }).catch(function(){
-      var fb=la.toFixed(5)+', '+lo.toFixed(5);_setShopFields('','',fb);_toast('Brak internetu - wspolrzedne GPS');
+      var fb=la.toFixed(5)+', '+lo.toFixed(5);_setShopFields('','',fb);_toast('Blad sieci - wspolrzedne GPS');
     });
   },function(err){_toast('GPS: '+(err&&err.message?err.message:'blad'));},{enableHighAccuracy:true,timeout:12000,maximumAge:0});
 }
 function _matchShopId(chain){
-  var zip=window._gpsZip,road=window._gpsRoad,num=window._gpsNum;
-  if(!zip)return null;
-  try{
-    var c=_allShops().filter(function(s){return s.zip===zip;}), pool=c;
-    if(chain){var cc=c.filter(function(s){return (s.chain||'').toLowerCase().indexOf(chain.toLowerCase())>=0;});if(cc.length)pool=cc;}
-    if(pool.length===1)return pool[0];
-    if(pool.length>1&&road){
-      var rn=_normStr(road),nn=num?_normStr(num):'';
-      var sc=pool.map(function(s){var aa=_normStr(s.addr||'');return {s:s,sc:((rn&&aa.indexOf(rn)>=0)?2:0)+((nn&&aa.indexOf(nn)>=0)?1:0)};});
-      sc.sort(function(x,y){return y.sc-x.sc;});
-      if(sc[0].sc>0&&(sc.length<2||sc[0].sc>sc[1].sc))return sc[0].s;
-    }
-  }catch(e){}
+  var road=_normStr(window._gpsRoad||''), num=_normStr(window._gpsNum||''), city=_normStr(window._gpsCity||''), zip=(window._gpsZip||'').trim();
+  if(!road && !zip && !city) return null;
+  var pool=_allShops();
+  if(chain){var cc=pool.filter(function(s){return (s.chain||'').toLowerCase().indexOf(chain.toLowerCase())>=0;}); if(cc.length)pool=cc;}
+  var rw=road?road.split(' ').filter(function(x){return x.length>2;}):[];
+  var best=null,bestSc=0,second=0;
+  pool.forEach(function(s){
+    var aa=_normStr(s.addr||''), sc=_normStr(s.city||''), sz=(s.zip||'').trim();
+    var score=0;
+    if(zip&&sz&&sz===zip)score+=4;
+    if(city&&sc&&(sc===city||sc.indexOf(city)>=0||city.indexOf(sc)>=0))score+=3;
+    if(rw.length&&rw.some(function(w){return aa.indexOf(w)>=0;}))score+=3;
+    if(num&&aa.indexOf(num)>=0)score+=2;
+    if(score>bestSc){second=bestSc;bestSc=score;best=s;}
+    else if(score>second)second=score;
+  });
+  if(best && bestSc>=5 && bestSc>second) return best;
   return null;
 }
 function _applyShopChoice(name,chain){
