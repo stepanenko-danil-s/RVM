@@ -328,7 +328,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.63</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.64</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -346,7 +346,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
     <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#C7C7CC" stroke-width="1.8" style="flex:0 0 auto"><circle cx="10" cy="8" r="4"/><path d="M4 18c0-4 12-4 12 0"/></svg>
     <input id="shopName" placeholder="Sklep" oninput="shopSync()" autocomplete="off" style="flex:1 1 auto;min-width:0;background:#F2F2F7;border-radius:14px;padding:6px 11px;font-size:13px;color:#1C1C1E">
     <input id="shopId" placeholder="ID" oninput="shopSync()" autocomplete="off" inputmode="numeric" style="flex:0 0 70px;width:70px;background:#F2F2F7;border-radius:14px;padding:6px 8px;font-size:13px;color:#1C1C1E;text-align:center">
-    <input id="shopAddr" placeholder="Adres" oninput="shopSync()" autocomplete="off" style="flex:1 1 100%;min-width:0;background:#F2F2F7;border-radius:14px;padding:6px 11px;font-size:13px;color:#1C1C1E"><div style="flex:1 1 100%;height:0"></div><button onclick="gpsShop()" style="background:#007AFF;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">GPS</button><button onclick="shopSaveToBase()" style="background:#34C759;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">Zapisz</button><button onclick="openPlaces()" style="background:#8E8E93;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">Baza</button>
+    <input id="shopAddr" placeholder="Adres" oninput="shopSync()" autocomplete="off" style="flex:1 1 100%;min-width:0;background:#F2F2F7;border-radius:14px;padding:6px 11px;font-size:13px;color:#1C1C1E"><div style="flex:1 1 100%;height:0"></div><button onclick="gpsShop()" style="background:#007AFF;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">GPS</button><button onclick="shopSaveToBase()" style="background:#34C759;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">Zapisz</button><button onclick="openPlaces()" style="background:#8E8E93;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">Baza</button><div style="flex:1 1 100%;height:0"></div><div id="gpsDiag" onclick="if(this.textContent){try{navigator.clipboard&&navigator.clipboard.writeText(this.textContent);}catch(e){} if(typeof _toast==='function')_toast('Skopiowano');}" style="flex:1 1 100%;font-size:10px;line-height:1.35;color:#8E8E93;white-space:pre-wrap;word-break:break-word;margin-top:2px;cursor:pointer"></div>
     
   </div>
 
@@ -2495,7 +2495,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.63",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.64",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -8692,9 +8692,9 @@ function gpsShop(){
     var la=pos.coords.latitude, lo=pos.coords.longitude;
     window._myLat=la; window._myLon=lo;
     var _bs=(typeof _nearestSavedShop==='function')?_nearestSavedShop(la,lo):null;
-    if(_bs){_setShopFields(_bs.chain||_bs.name||'',(_bs.id!=null?(''+_bs.id):''),(_bs.addr||'')+(_bs.city?', '+_bs.city:''));_toast('Z bazy: '+((_bs.chain||_bs.name||'')+(_bs.id?' '+_bs.id:'')));return;}
+    if(_bs){var _bd=Math.round(_dist(la,lo,_bs.lat,_bs.lon));_diag('GPS '+la.toFixed(5)+', '+lo.toFixed(5)+'\n=> z ZAPISANYCH (~'+_bd+'m): '+((_bs.chain||_bs.name||'')+' #'+(_bs.id!=null?_bs.id:'?')));_setShopFields(_bs.chain||_bs.name||'',(_bs.id!=null?(''+_bs.id):''),(_bs.addr||'')+(_bs.city?', '+_bs.city:''));_toast('Z bazy: '+((_bs.chain||_bs.name||'')+(_bs.id?' '+_bs.id:'')));return;}
     var _rp=_findPlace(la,lo);
-    if(_rp){_setShopFields(_rp.name||'',_rp.id||'',_rp.addr||'');_toast('Zapamietane: '+((_rp.name||'')+(_rp.id?' '+_rp.id:'')||'miejsce'));return;}
+    if(_rp){_diag('GPS '+la.toFixed(5)+', '+lo.toFixed(5)+'\n=> ZAPAMIETANE MIEJSCE: '+((_rp.name||'')+' #'+(_rp.id||'?')));_setShopFields(_rp.name||'',_rp.id||'',_rp.addr||'');_toast('Zapamietane: '+((_rp.name||'')+(_rp.id?' '+_rp.id:'')||'miejsce'));return;}
     _toast('GPS: rozpoznaje sklep...');
     var nomUrl='https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&accept-language=pl&lat='+la+'&lon='+lo;
     var R=120;
@@ -8710,6 +8710,7 @@ function gpsShop(){
       var addr=[street,((zip?zip+' ':'')+city).trim()].filter(function(x){return x;}).join(', ');
       if(!addr)addr=(d&&d.display_name)||(la.toFixed(5)+', '+lo.toFixed(5));
       window._gpsAddr=addr; window._gpsZip=zip; window._gpsRoad=road; window._gpsNum=num; window._gpsCity=city;
+      _diag('GPS '+la.toFixed(5)+', '+lo.toFixed(5)+'\nMiasto: '+(city||'?')+' | Ulica: '+(road||'?')+(num?(' '+num):'')+' | Kod: '+(zip||'?'));
       var cand=[];
       try{ if(ov&&ov.elements){ ov.elements.forEach(function(el){
         var t=el.tags||{}; var nm=(t.brand||t.name||t.operator||'').trim(); if(!nm)return;
@@ -8719,9 +8720,9 @@ function gpsShop(){
       }); } }catch(e){}
       var seen={},uniq=[]; cand.sort(function(x,y){return x.dist-y.dist;});
       cand.forEach(function(c){var k=c.name.toLowerCase();if(seen[k])return;seen[k]=1;uniq.push(c);});
-      window._gpsCand=uniq;
-      if(uniq.length>1){_renderPick();if(typeof openSh==='function')openSh('shPick');_toast('Wybierz sklep ('+uniq.length+')');return;}
-      if(uniq.length===1){_applyShopChoice(uniq[0].name,uniq[0].chain);return;}
+      window._gpsCand=uniq; _diagAdd(' | POI: '+uniq.length);
+      if(uniq.length>1){_diagAdd('\n=> lista POI ('+uniq.length+')');_renderPick();if(typeof openSh==='function')openSh('shPick');_toast('Wybierz sklep ('+uniq.length+')');return;}
+      if(uniq.length===1){_diagAdd('\n=> POI: '+uniq[0].name);_applyShopChoice(uniq[0].name,uniq[0].chain);return;}
       // brak POI -> sprobuj z bazy po adresie
       var osmName=(d&&d.name)?(''+d.name).trim():'';
       var chain=_chainFromName(osmName)||_chainFromName(a.shop||'')||'';
@@ -8772,15 +8773,15 @@ function _resolveShop(name,chain){
   var cs=chain?_cityShops(chain):[];
   if(cs.length>1){
     var m=_matchShopId(chain);
-    if(m&&_strongMatch(m)){_applyDbShop(m);return;}
+    if(m&&_strongMatch(m)){_diagAdd('\n=> auto ulica+nr: #'+m.id);_applyDbShop(m);return;}
     cs.sort(function(a,b){return (''+(a.addr||'')).localeCompare(''+(b.addr||''));});
     window._cityCand=cs;_renderCityPick();if(typeof openSh==='function')openSh('shPick');
-    _toast((chain||'Sklep')+': wybierz w '+(window._gpsCity||'miescie')+' ('+cs.length+')');return;
+    _diagAdd('\n=> lista miasta ('+cs.length+')');_toast((chain||'Sklep')+': wybierz w '+(window._gpsCity||'miescie')+' ('+cs.length+')');return;
   }
-  if(cs.length===1){_applyDbShop(cs[0]);return;}
+  if(cs.length===1){_diagAdd('\n=> jedyny w miescie: #'+(cs[0].id!=null?cs[0].id:'?'));_applyDbShop(cs[0]);return;}
   var m2=_matchShopId(chain);
-  if(m2){_applyDbShop(m2);return;}
-  _setShopFields(name||chain,'',window._gpsAddr||'');_toast('Sklep: '+(name||chain)+' - wpisz nr (ID)');
+  if(m2){_diagAdd('\n=> baza: #'+(m2.id!=null?m2.id:'?'));_applyDbShop(m2);return;}
+  _diagAdd('\n=> tylko nazwa (brak w bazie)');_setShopFields(name||chain,'',window._gpsAddr||'');_toast('Sklep: '+(name||chain)+' - wpisz nr (ID)');
 }
 function _applyShopChoice(name,chain){ _resolveShop(name,chain); }
 function _renderPick(){
@@ -9580,6 +9581,8 @@ function kbDel(i){var a=_kb();if(!a[i])return;if(!confirm('Usunac notatke?'))ret
 <script>
 /* ===== Baza: full store browser + manual add (v10.59) ===== */
 function _shVal(id){var e=document.getElementById(id);return e?(''+e.value).trim():'';}
+function _diag(t){window.__gpsDiag=t||'';var e=document.getElementById('gpsDiag');if(e)e.textContent=window.__gpsDiag;}
+function _diagAdd(s){window.__gpsDiag=(window.__gpsDiag||'')+(s||'');var e=document.getElementById('gpsDiag');if(e)e.textContent=window.__gpsDiag;}
 function shopsSearch(q){
   var box=document.getElementById('shopsResults'); if(!box)return;
   var all=(typeof _allShops==='function')?_allShops():[]; var total=all.length;
