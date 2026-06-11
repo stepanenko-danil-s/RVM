@@ -328,7 +328,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.65</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.66</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2495,7 +2495,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.65",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.66",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -8686,12 +8686,29 @@ function _overpass(q){
   var u2='https://overpass.kumi.systems/api/interpreter?data='+enc;
   return fetch(u1).then(function(r){if(!r.ok)throw 0;return r.json();}).catch(function(){return fetch(u2).then(function(r){return r.json();});}).catch(function(){return null;});
 }
+function _acquirePos(ok,err){
+  if(!navigator.geolocation){if(err)err({code:2,message:'brak geolokalizacji'});return;}
+  var best=null,done=false,id=null,t0=Date.now(),ft=null,TARGET=6,SOFT=15,MINMS=1500,SOFTMS=6000,MAXMS=11000;
+  function bestAcc(){return (best&&best.coords&&best.coords.accuracy)||9999;}
+  function finish(){if(done)return;done=true;if(ft){clearTimeout(ft);ft=null;}if(id!=null){try{navigator.geolocation.clearWatch(id);}catch(e){}}if(best)ok(best);else if(err)err({code:3,message:'przekroczono czas'});}
+  try{
+    id=navigator.geolocation.watchPosition(function(p){
+      var ac=(p.coords&&p.coords.accuracy)||9999;
+      if(!best||ac<bestAcc())best=p;
+      if(typeof _toast==='function')_toast('GPS: dokladnosc +-'+Math.round(bestAcc())+' m...');
+      var el=Date.now()-t0, ba=bestAcc();
+      if(ba<=TARGET){if(el>=MINMS)return finish();if(!ft)ft=setTimeout(finish,MINMS-el);}
+      else if(ba<=SOFT&&el>=SOFTMS){return finish();}
+    },function(e){if(!best){done=true;if(ft){clearTimeout(ft);}if(id!=null){try{navigator.geolocation.clearWatch(id);}catch(_e){}}if(err)err(e);}},{enableHighAccuracy:true,timeout:MAXMS,maximumAge:0});
+  }catch(e){navigator.geolocation.getCurrentPosition(ok,err,{enableHighAccuracy:true,timeout:MAXMS,maximumAge:0});return;}
+  setTimeout(finish,MAXMS);
+}
 function gpsShop(){
   if(!navigator.geolocation){_toast('GPS niedostepny');return;}
   _toast('GPS: szukam lokalizacji...');
-  navigator.geolocation.getCurrentPosition(function(pos){
+  _acquirePos(function(pos){
     var la=pos.coords.latitude, lo=pos.coords.longitude;
-    window._myLat=la; window._myLon=lo;
+    window._myLat=la; window._myLon=lo; window._gpsAcc=(pos.coords&&pos.coords.accuracy)?Math.round(pos.coords.accuracy):null;
     var _bs=(typeof _nearestSavedShop==='function')?_nearestSavedShop(la,lo):null;
     if(_bs){var _bd=Math.round(_dist(la,lo,_bs.lat,_bs.lon));_diag('GPS '+la.toFixed(5)+', '+lo.toFixed(5)+'\n=> z ZAPISANYCH (~'+_bd+'m): '+((_bs.chain||_bs.name||'')+' #'+(_bs.id!=null?_bs.id:'?')));_setShopFields(_bs.chain||_bs.name||'',(_bs.id!=null?(''+_bs.id):''),(_bs.addr||'')+(_bs.city?', '+_bs.city:''));_toast('Z bazy: '+((_bs.chain||_bs.name||'')+(_bs.id?' '+_bs.id:'')));return;}
     var _rp=_findPlace(la,lo);
@@ -8711,27 +8728,26 @@ function gpsShop(){
       var addr=[street,((zip?zip+' ':'')+city).trim()].filter(function(x){return x;}).join(', ');
       if(!addr)addr=(d&&d.display_name)||(la.toFixed(5)+', '+lo.toFixed(5));
       window._gpsAddr=addr; window._gpsZip=zip; window._gpsRoad=road; window._gpsNum=num; window._gpsCity=city;
-      _diag('GPS '+la.toFixed(5)+', '+lo.toFixed(5)+'\nMiasto: '+(city||'?')+' | Ulica: '+(road||'?')+(num?(' '+num):'')+' | Kod: '+(zip||'?'));
+      _diag('GPS '+la.toFixed(5)+', '+lo.toFixed(5)+(window._gpsAcc?(' +-'+window._gpsAcc+'m'):'')+'\nMiasto: '+(city||'?')+' | Ulica: '+(road||'?')+(num?(' '+num):'')+' | Kod: '+(zip||'?'));
+      function _poiAddr(t){var ps=t['addr:street']||'',pn=t['addr:housenumber']||'',pc=t['addr:city']||t['addr:town']||t['addr:village']||'',pz=t['addr:postcode']||'';var st=(ps?(ps+(pn?' '+pn:'')):'').trim();var cz=((pz?pz+' ':'')+pc).trim();return [st,cz].filter(function(x){return x;}).join(', ');}
       var cand=[];
       try{ if(ov&&ov.elements){ ov.elements.forEach(function(el){
         var t=el.tags||{}; var nm=(t.brand||t.name||t.operator||'').trim(); if(!nm)return;
         var ela=(el.type==='node')?{lat:el.lat,lon:el.lon}:(el.center||{});
         if(ela.lat==null||ela.lon==null)return;
-        cand.push({name:nm,chain:_chainFromName(nm)||'',dist:Math.round(_dist(la,lo,ela.lat,ela.lon))});
+        cand.push({name:nm,chain:_chainFromName(nm)||'',dist:Math.round(_dist(la,lo,ela.lat,ela.lon)),addr:_poiAddr(t)});
       }); } }catch(e){}
       var seen={},uniq=[]; cand.sort(function(x,y){return x.dist-y.dist;});
       cand.forEach(function(c){var k=c.name.toLowerCase();if(seen[k])return;seen[k]=1;uniq.push(c);});
       window._gpsCand=uniq; _diagAdd(' | POI: '+uniq.length);
       if(uniq.length>1){_diagAdd('\n=> lista POI ('+uniq.length+')');_renderPick();if(typeof openSh==='function')openSh('shPick');_toast('Wybierz sklep ('+uniq.length+')');return;}
-      if(uniq.length===1){_diagAdd('\n=> POI: '+uniq[0].name);_applyShopChoice(uniq[0].name,uniq[0].chain);return;}
-      // brak POI -> sprobuj z bazy po adresie
+      if(uniq.length===1){_useCand(uniq[0]);return;}
       var osmName=(d&&d.name)?(''+d.name).trim():'';
       var chain=_chainFromName(osmName)||_chainFromName(a.shop||'')||'';
-      if(chain){_resolveShop(osmName||chain,chain);return;}
-      var m=_matchShopId('');
-      if(m){_applyDbShop(m);return;}
-      if(osmName){_setShopFields(osmName,'',addr);_toast('Sklep: '+osmName+' - wpisz nr (ID)');return;}
-      _setShopFields('','',addr);_toast('Adres: '+addr+' - wybierz/wpisz sklep');
+      var nm2=osmName||chain;
+      _diagAdd('\n=> '+(nm2?('nazwa: '+nm2):'tylko adres'));
+      _setShopFields(nm2||'','',addr);
+      _toast(nm2?('Sklep: '+nm2+' - wpisz nr (ID)'):('Adres: '+addr));
     }).catch(function(){
       var fb=la.toFixed(5)+', '+lo.toFixed(5);_setShopFields('','',fb);_toast('Blad sieci - wspolrzedne GPS');
     });
@@ -8795,12 +8811,14 @@ function _renderPick(){
   var arr=window._gpsCand||[];var E=(typeof esc==='function')?esc:function(x){return x;};
   var h=arr.map(function(c,i){
     var sub=(c.chain&&c.chain.toLowerCase()!==c.name.toLowerCase())?(' \u00b7 '+c.chain):'';
-    return '<button onclick="_pickShop('+i+')" style="width:100%;text-align:left;padding:11px;margin-bottom:6px;background:#fff;border:1px solid #C4CAD3;border-radius:10px;font-size:14px;font-weight:700;color:#1C1C1E;cursor:pointer;display:flex;justify-content:space-between;gap:8px"><span style="min-width:0">'+E(c.name)+'<span style="font-weight:500;color:#8E8E93">'+E(sub)+'</span></span><span style="color:#8E8E93;font-weight:600;white-space:nowrap">'+c.dist+' m</span></button>';
+    var ad=c.addr?('<div style="font-size:12px;font-weight:500;color:#8E8E93;margin-top:2px">'+E(c.addr)+'</div>'):'';
+    return '<button onclick="_pickShop('+i+')" style="width:100%;text-align:left;padding:11px;margin-bottom:6px;background:#fff;border:1px solid #C4CAD3;border-radius:10px;cursor:pointer"><div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:14px;font-weight:700;color:#1C1C1E;min-width:0">'+E(c.name)+'<span style="font-weight:500;color:#8E8E93">'+E(sub)+'</span></span><span style="color:#8E8E93;font-weight:600;white-space:nowrap;font-size:13px">'+c.dist+' m</span></div>'+ad+'</button>';
   }).join('');
   h+='<button onclick="_pickAddrOnly()" style="width:100%;padding:10px;margin-top:4px;background:#F5F5F7;border:none;border-radius:10px;font-size:13px;font-weight:700;color:#605E5C;cursor:pointer">Tylko adres (bez nazwy)</button>';
   box.innerHTML=h;
 }
-function _pickShop(i){var c=(window._gpsCand||[])[i];if(!c)return;if(typeof closeOv==='function')closeOv('shPick');_applyShopChoice(c.name,c.chain);}
+function _useCand(c){if(!c)return;var ad=c.addr||window._gpsAddr||'';_setShopFields(c.name||'','',ad);_diagAdd('\n=> POI: '+(c.name||'')+(c.addr?(' / '+c.addr):' / (adres z mapy)'));if(typeof _toast==='function')_toast('Sklep: '+(c.name||'')+' - wpisz nr (ID)');}
+function _pickShop(i){var c=(window._gpsCand||[])[i];if(!c)return;if(typeof closeOv==='function')closeOv('shPick');_useCand(c);}
 function _pickAddrOnly(){if(typeof closeOv==='function')closeOv('shPick');_setShopFields('','',window._gpsAddr||'');}
 function _renderCityPick(){
   var box=document.getElementById('pickList');if(!box)return;
