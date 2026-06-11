@@ -328,7 +328,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.70</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.71</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2495,7 +2495,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.70",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.71",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -9476,6 +9476,7 @@ function shopSync(){
   var label=[n,i,a].filter(function(x){return x;}).join(', ');
   shopVal=label;try{ss('rv_shop',label);ss('rv_shop_n',n);ss('rv_shop_i',i);ss('rv_shop_a',a);}catch(e){}
   if(typeof _updRepHdr==='function')_updRepHdr();
+  if(typeof _refreshPin==='function')_refreshPin();
 }
 function _dist(a1,o1,a2,o2){var R=6371000,t=Math.PI/180,dla=(a2-a1)*t,dlo=(o2-o1)*t,p1=a1*t,p2=a2*t;var x=Math.sin(dla/2)*Math.sin(dla/2)+Math.cos(p1)*Math.cos(p2)*Math.sin(dlo/2)*Math.sin(dlo/2);return 2*R*Math.asin(Math.sqrt(x));}
 function _places(){try{return JSON.parse(localStorage.getItem('rv_places')||'[]');}catch(e){return[];}}
@@ -10490,7 +10491,7 @@ function kbAdd(){var t=prompt('Tytul notatki');if(t===null)return;t=(t||'').trim
 function kbEdit(i){var a=_kb();if(!a[i])return;var t=prompt('Tytul',a[i].title);if(t===null)return;var b=prompt('Tresc',a[i].body);if(b===null)return;a[i].title=(t||'').trim()||a[i].title;a[i].body=b;_kbSave(a);kbRender();}
 function kbDel(i){var a=_kb();if(!a[i])return;if(!confirm('Usunac notatke?'))return;a.splice(i,1);_kbSave(a);kbRender();}
 </script>
-<script>window.addEventListener('load',function(){setTimeout(function(){try{_photoBoot();}catch(e){}try{_visitsBadge();}catch(e){}},300);});</script>
+<script>window.addEventListener('load',function(){setTimeout(function(){try{_photoBoot();}catch(e){}try{_visitsBadge();}catch(e){}try{_refreshPin();}catch(e){}},300);});</script>
 <script>
 /* ===== Baza: full store browser + manual add (v10.59) ===== */
 function _shVal(id){var e=document.getElementById(id);return e?(''+e.value).trim():'';}
@@ -10498,10 +10499,10 @@ function _diag(t){window.__gpsDiag=t||'';var e=document.getElementById('gpsDiag'
 function _diagAdd(s){window.__gpsDiag=(window.__gpsDiag||'')+(s||'');var e=document.getElementById('gpsDiag');if(e)e.textContent=window.__gpsDiag;}
 function _refreshPin(){
   var pill=document.getElementById('pinPill'); if(!pill)return;
-  var idv=_shVal('shopId'), pin='';
+  var idv=_shVal('shopId'), pin='', found=false;
   if(idv){
-    try{var all=(typeof _allShops==='function')?_allShops():[];for(var i=0;i<all.length;i++){if((''+all[i].id)===(''+idv)){pin=all[i].pin||'';break;}}}catch(e){}
-    if(!pin&&window._shopPin)pin=window._shopPin;
+    try{var all=(typeof _allShops==='function')?_allShops():[];for(var i=0;i<all.length;i++){if((''+all[i].id)===(''+idv)){pin=all[i].pin||'';found=true;break;}}}catch(e){}
+    if(!found&&window._shopPin)pin=window._shopPin;
   }
   var v=document.getElementById('pinPillVal');
   if(pin){if(v)v.textContent=pin;pill.style.display='block';window._shopPin=pin;}
