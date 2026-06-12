@@ -328,7 +328,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.75</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.76</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2501,7 +2501,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.75",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.76",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -9551,18 +9551,19 @@ function _overpass(q){
 }
 function _acquirePos(ok,err){
   if(!navigator.geolocation){if(err)err({code:2,message:'brak geolokalizacji'});return;}
-  var best=null,done=false,id=null,t0=Date.now(),ft=null,TARGET=6,SOFT=15,MINMS=1500,SOFTMS=6000,MAXMS=11000;
+  var best=null,done=false,id=null,t0=Date.now();
+  var STEPS=[{a:5,ms:800},{a:10,ms:2500},{a:15,ms:4000},{a:25,ms:5500},{a:50,ms:7000}],MAXMS=8000;
   function bestAcc(){return (best&&best.coords&&best.coords.accuracy)||9999;}
-  function finish(){if(done)return;done=true;if(ft){clearTimeout(ft);ft=null;}if(id!=null){try{navigator.geolocation.clearWatch(id);}catch(e){}}if(best)ok(best);else if(err)err({code:3,message:'przekroczono czas'});}
+  function finish(){if(done)return;done=true;if(id!=null){try{navigator.geolocation.clearWatch(id);}catch(e){}}if(best)ok(best);else if(err)err({code:3,message:'przekroczono czas'});}
+  function consider(){if(done)return;var el=Date.now()-t0,ba=bestAcc();for(var i=0;i<STEPS.length;i++){if(ba<=STEPS[i].a&&el>=STEPS[i].ms)return finish();}}
+  STEPS.forEach(function(s){setTimeout(consider,s.ms+30);});
   try{
     id=navigator.geolocation.watchPosition(function(p){
       var ac=(p.coords&&p.coords.accuracy)||9999;
       if(!best||ac<bestAcc())best=p;
       if(typeof _toast==='function')_toast('GPS: dokladnosc +-'+Math.round(bestAcc())+' m...');
-      var el=Date.now()-t0, ba=bestAcc();
-      if(ba<=TARGET){if(el>=MINMS)return finish();if(!ft)ft=setTimeout(finish,MINMS-el);}
-      else if(ba<=SOFT&&el>=SOFTMS){return finish();}
-    },function(e){if(!best){done=true;if(ft){clearTimeout(ft);}if(id!=null){try{navigator.geolocation.clearWatch(id);}catch(_e){}}if(err)err(e);}},{enableHighAccuracy:true,timeout:MAXMS,maximumAge:0});
+      consider();
+    },function(e){if(!best){done=true;if(id!=null){try{navigator.geolocation.clearWatch(id);}catch(_e){}}if(err)err(e);}},{enableHighAccuracy:true,timeout:MAXMS,maximumAge:0});
   }catch(e){navigator.geolocation.getCurrentPosition(ok,err,{enableHighAccuracy:true,timeout:MAXMS,maximumAge:0});return;}
   setTimeout(finish,MAXMS);
 }
