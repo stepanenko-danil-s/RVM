@@ -328,7 +328,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.78</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.79</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2501,7 +2501,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.78",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.79",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -2819,14 +2819,21 @@ function restoreData(input){
     <button onclick="orderSend('teams')" style="width:100%;padding:13px;margin-bottom:8px;background:#5059C9;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Microsoft Teams (tekst)</button><button onclick="shareOrderImg()" style="width:100%;padding:13px;margin-bottom:8px;background:#34C759;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Tabela jako obraz (udostepnij)</button>
     <div style="border-top:1px solid #EDEBE9;margin:14px 0 10px"></div><div style="font-size:11px;font-weight:700;color:#A19F9D;margin-bottom:6px">AUTO-RAPORT (HARMONOGRAM)</div><div style="font-size:12px;font-weight:700;color:#605E5C;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Harmonogram (auto-raport: stan + historia)</div>
     <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0 12px"><span style="font-size:14px;font-weight:600;color:#323130">Harmonogram aktywny</span><div id="mcSchedSwitch" onclick="magCfgSchedToggle()" style="width:46px;height:28px;border-radius:14px;background:#E5E5EA;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0"><div id="mcSchedKnob" style="position:absolute;top:2px;left:2px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:left .2s"></div></div></div>
+    <select id="mcSchedFreq" onchange="magCfgFreqUI()" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:8px">
+      <option value="daily">Codziennie</option><option value="weekly">Co tydzien</option><option value="biweekly">Co 2 tygodnie</option><option value="monthly">Co miesiac</option>
+    </select>
     <select id="mcSchedDay" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:8px">
       <option value="1">Poniedzialek</option><option value="2">Wtorek</option><option value="3">Sroda</option><option value="4">Czwartek</option><option value="5">Piatek</option><option value="6">Sobota</option><option value="0">Niedziela</option>
     </select>
-    <input type="time" id="mcSchedTime" value="08:00" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:10px">
+    <select id="mcSchedDom" style="display:none;width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:8px">
+      <option value="1">1 dzien miesiaca</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28 (ostatni pewny)</option>
+    </select>
+    <input type="time" id="mcSchedTime" value="08:00" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:8px">
+    <input type="email" id="mcSchedTo" placeholder="Komu wyslac (e-mail)" autocomplete="off" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:10px">
     <button onclick="magCfgSchedSave()" style="width:100%;padding:12px;background:#007AFF;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px">Zapisz harmonogram</button>
     <button onclick="magReportSend()" style="width:100%;padding:12px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Wyslij raport teraz</button>
     <div id="mcSchedStatus" style="font-size:12px;color:#A19F9D;margin-top:8px;text-align:center"></div>
-    <div style="font-size:11px;color:#8A6D3B;margin-top:10px;line-height:1.45;background:#FFF8E1;border-radius:8px;padding:9px 11px">Historia uzycia i Zamowienie NIE sa wysylane automatycznie — ani jako e-mail, ani jako wersja robocza. Wyslanie nastepuje tylko po recznym kliknieciu "Wyslij raport teraz".</div><div style="height:12px"></div><button class="sh-btn lt" onclick="closeOv('shOrder')">Zamknij</button>
+    <div style="font-size:11px;color:#8A6D3B;margin-top:10px;line-height:1.45;background:#FFF8E1;border-radius:8px;padding:9px 11px">Harmonogram dziala tylko gdy aplikacja jest otwarta o zaplanowanej porze. O wyznaczonym czasie aplikacja ZAPYTA o potwierdzenie przed wyslaniem — nic nie wychodzi samo bez Twojej zgody. Mozesz tez wyslac recznie przyciskiem ponizej.</div><div style="height:12px"></div><button class="sh-btn lt" onclick="closeOv('shOrder')">Zamknij</button>
   </div>
 </div>
 <div class="ov" id="shMagHist" style="display:none" onclick="if(event.target===this)closeOv('shMagHist')">
@@ -9964,6 +9971,11 @@ function magPrintQR(){
   if (typeof window._schedDay === 'undefined') window._schedDay = null;
   if (typeof window._schedTime === 'undefined') window._schedTime = '';
   if (typeof window._schedTimer === 'undefined') window._schedTimer = null;
+  if (typeof window._schedFreq === 'undefined') window._schedFreq = 'weekly';
+  if (typeof window._schedDom === 'undefined') window._schedDom = 1;
+  if (typeof window._schedTo === 'undefined') window._schedTo = '';
+  if (typeof window._schedAnchor === 'undefined') window._schedAnchor = '';
+  if (typeof window._schedLastSent === 'undefined') window._schedLastSent = '';
   if (typeof window._myLat === 'undefined') window._myLat = null;
   if (typeof window._myLon === 'undefined') window._myLon = null;
 })();
@@ -10001,18 +10013,43 @@ function emailSettingsSave(){
 }
 
 /* ---- schedule ---- */
+function _schedPad(n){return String(n).padStart(2,'0');}
+function _schedDue(now){
+  if(!window._schedTime)return null;
+  var f=window._schedFreq||'weekly';
+  var hhmm=_schedPad(now.getHours())+':'+_schedPad(now.getMinutes());
+  if(hhmm<window._schedTime)return null; /* godzina jeszcze nie nadeszla */
+  var dstr=now.getFullYear()+'-'+_schedPad(now.getMonth()+1)+'-'+_schedPad(now.getDate());
+  if(f==='daily')return dstr;
+  if(f==='monthly'){
+    var dom=parseInt(window._schedDom)||1;
+    var lastDom=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+    var useDom=Math.min(dom,lastDom);
+    if(now.getDate()!==useDom)return null;
+    return now.getFullYear()+'-'+_schedPad(now.getMonth()+1);
+  }
+  /* weekly / biweekly */
+  if(now.getDay()!==window._schedDay)return null;
+  if(f==='biweekly'){
+    var anchor=window._schedAnchor?new Date(window._schedAnchor):now;
+    var ms=now-anchor, weeks=Math.floor(ms/(7*86400000));
+    if(((weeks%2)+2)%2!==0)return null;
+  }
+  return dstr;
+}
 function schedCheck(){
   if(window._schedOn!==true)return;
-  if(window._schedDay===null||!window._schedTime)return;
-  var now=new Date();
-  var dayOk=now.getDay()===window._schedDay;
-  var t=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
-  if(dayOk&&t===window._schedTime&&typeof schedNotify==='function')schedNotify();
+  if(!window._schedTime)return;
+  var key=_schedDue(new Date());
+  if(key&&window._schedLastSent!==key&&typeof schedNotify==='function')schedNotify(key);
 }
 function schedStart(){
-  /* Auto-wysylka WYLACZONA na stale: Historia uzycia i Zamowienie nigdy nie wysylaja sie same (ani jako e-mail, ani jako wersja robocza). Wysylka tylko recznie przyciskiem. */
   if(window._schedTimer){clearInterval(window._schedTimer);window._schedTimer=null;}
+  if(window._schedOn!==true)return;
+  window._schedTimer=setInterval(schedCheck,60000);
+  schedCheck();
 }
+function _persistSched(){try{localStorage.setItem('rv_sched',JSON.stringify({freq:window._schedFreq,day:window._schedDay,dom:window._schedDom,time:window._schedTime,to:window._schedTo,anchor:window._schedAnchor,last:window._schedLastSent}));}catch(e){}}
 function schedSave(){
   var day=document.getElementById('schedDay'), time=document.getElementById('schedTime');
   if(!day||!time)return;
@@ -10251,23 +10288,39 @@ function openMagCfg(){
   try{
     var to=document.getElementById('mcTo');if(to)to.value=localStorage.getItem('rv_email_to')||'';
     var tm=document.getElementById('mcTmpl');if(tm)tm.value=localStorage.getItem('rv_order_tmpl')||(typeof DEFAULT_ORDER_TMPL!=='undefined'?DEFAULT_ORDER_TMPL:'');
+    var fq=document.getElementById('mcSchedFreq');if(fq)fq.value=window._schedFreq||'weekly';
     var dd=document.getElementById('mcSchedDay');if(dd&&window._schedDay!==null&&window._schedDay!==undefined&&!isNaN(window._schedDay))dd.value=window._schedDay;
+    var dm=document.getElementById('mcSchedDom');if(dm)dm.value=String(window._schedDom||1);
     var tt=document.getElementById('mcSchedTime');if(tt)tt.value=window._schedTime||'08:00';
+    var sto=document.getElementById('mcSchedTo');if(sto)sto.value=window._schedTo||localStorage.getItem('rv_email_to')||'';
     magCfgApplyUI();
   }catch(e){}
   if(typeof openSh==='function')openSh('shMagCfg');else{var o=document.getElementById('shMagCfg');if(o)o.style.display='flex';}
 }
+function magCfgFreqUI(){
+  var f=(document.getElementById('mcSchedFreq')||{}).value||window._schedFreq||'weekly';
+  var dayEl=document.getElementById('mcSchedDay'),domEl=document.getElementById('mcSchedDom');
+  if(dayEl)dayEl.style.display=(f==='weekly'||f==='biweekly')?'block':'none';
+  if(domEl)domEl.style.display=(f==='monthly')?'block':'none';
+}
+function _schedHuman(){
+  var f=window._schedFreq||'weekly',t=window._schedTime||'',days=['Niedziela','Poniedzialek','Wtorek','Sroda','Czwartek','Piatek','Sobota'];
+  if(f==='daily')return 'codziennie o '+t;
+  if(f==='monthly')return 'co miesiac, dzien '+(window._schedDom||1)+' o '+t;
+  var d=days[(window._schedDay==null||isNaN(window._schedDay))?1:window._schedDay];
+  return (f==='biweekly'?'co 2 tygodnie, ':'co tydzien, ')+d+' o '+t;
+}
 function magCfgApplyUI(){
+  if(typeof magCfgFreqUI==='function')magCfgFreqUI();
   var on=window._schedOn===true;
   var sw=document.getElementById('mcSchedSwitch'),kn=document.getElementById('mcSchedKnob');
   if(sw)sw.style.background=on?'#34C759':'#E5E5EA';
   if(kn)kn.style.left=on?'20px':'2px';
   var st=document.getElementById('mcSchedStatus');
-  var days=['Niedziela','Poniedzialek','Wtorek','Sroda','Czwartek','Piatek','Sobota'];
   if(st){
     if(!on)st.textContent='Harmonogram wylaczony';
-    else if(window._schedDay!==null&&window._schedDay!==undefined&&!isNaN(window._schedDay)&&window._schedTime)st.textContent='Zaplanowano: '+days[window._schedDay]+' o '+window._schedTime;
-    else st.textContent='Ustaw dzien i godzine';
+    else if(window._schedTime)st.textContent='Zaplanowano: '+_schedHuman()+(window._schedTo?(' \u2192 '+window._schedTo):'');
+    else st.textContent='Ustaw czestotliwosc i godzine';
   }
 }
 function magCfgSchedToggle(){
@@ -10278,11 +10331,20 @@ function magCfgSchedToggle(){
   _toast(window._schedOn?'Harmonogram wlaczony':'Harmonogram wylaczony');
 }
 function magCfgSchedSave(){
-  var dd=document.getElementById('mcSchedDay'),tt=document.getElementById('mcSchedTime');
-  if(!dd||!tt)return;
-  window._schedDay=parseInt(dd.value);window._schedTime=tt.value;
-  try{localStorage.setItem('rv_sched',JSON.stringify({day:window._schedDay,time:window._schedTime}));}catch(e){}
+  var fq=document.getElementById('mcSchedFreq'),dd=document.getElementById('mcSchedDay'),dm=document.getElementById('mcSchedDom'),tt=document.getElementById('mcSchedTime'),sto=document.getElementById('mcSchedTo');
+  if(!tt)return;
+  window._schedFreq=fq?fq.value:'weekly';
+  window._schedDay=dd?parseInt(dd.value):1;
+  window._schedDom=dm?parseInt(dm.value):1;
+  window._schedTime=tt.value||'08:00';
+  window._schedTo=sto?(sto.value||'').trim():'';
+  if(window._schedTo){try{localStorage.setItem('rv_email_to',window._schedTo);}catch(e){}}
+  if(!window._schedAnchor)window._schedAnchor=new Date().toISOString().slice(0,10);
+  /* uzbrojenie: jesli termin dla biezacego okresu juz minal, oznacz jako wyslany, by nie pytac od razu */
+  var nowKey=_schedDue(new Date());
+  window._schedLastSent=nowKey||'';
   window._schedOn=true;try{localStorage.setItem('rv_sched_on','1');}catch(e){}
+  _persistSched();
   if(typeof schedStart==='function')schedStart();
   magCfgApplyUI();if(typeof schedApplyUI==='function')schedApplyUI();
   _toast('Harmonogram zapisany');
@@ -10313,16 +10375,33 @@ function magReportSend(){
   var subj='Raport magazynu RVM - '+new Date().toLocaleDateString('pl-PL');
   window.location.href='mailto:'+encodeURIComponent(to)+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(_magReportBody());
 }
-function schedNotify(){
-  /* Auto-wysylka wylaczona - nic nie wysylamy automatycznie. */
+function schedNotify(key){
+  if(window._schedBusy)return;window._schedBusy=true;
+  try{
+    var to=window._schedTo||localStorage.getItem('rv_email_to')||'';
+    var msg='Zaplanowany raport magazynu (stan + historia).\nWyslac teraz'+(to?(' na: '+to):'')+'?';
+    var ok=(typeof confirm==='function')?confirm(msg):false;
+    window._schedLastSent=key;_persistSched();
+    if(ok&&typeof magReportSend==='function')magReportSend();
+  }catch(e){}
+  window._schedBusy=false;
 }
 (function(){try{
   var s=null;try{s=JSON.parse(localStorage.getItem('rv_sched')||'null');}catch(e){}
-  if(s){window._schedDay=(typeof s.day==='number')?s.day:parseInt(s.day);window._schedTime=s.time||'';}
-  window._schedOn=false;try{localStorage.setItem('rv_sched_on','0');}catch(e){}
+  if(s){
+    window._schedDay=(s.day===null||s.day===undefined)?null:parseInt(s.day);
+    window._schedTime=s.time||'';
+    window._schedFreq=s.freq||'weekly';
+    window._schedDom=s.dom?parseInt(s.dom):1;
+    window._schedTo=s.to||'';
+    window._schedAnchor=s.anchor||'';
+    window._schedLastSent=s.last||'';
+  }
+  window._schedOn=localStorage.getItem('rv_sched_on')==='1';
   var dd=document.getElementById('schedDay');if(dd&&window._schedDay!==null&&window._schedDay!==undefined&&!isNaN(window._schedDay))dd.value=window._schedDay;
   var tt=document.getElementById('schedTime');if(tt&&window._schedTime)tt.value=window._schedTime;
   if(typeof schedApplyUI==='function')schedApplyUI();
+  if(typeof magCfgApplyUI==='function')magCfgApplyUI();
   if(window._schedOn&&typeof schedStart==='function')schedStart();
 }catch(e){}})();
 function runDiag(){
