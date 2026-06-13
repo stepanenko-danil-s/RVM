@@ -334,7 +334,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.88</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.89</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2507,7 +2507,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.88",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.89",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -2849,7 +2849,8 @@ function restoreData(input){
     <button onclick="magReportSend()" style="width:100%;padding:12px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Wyslij raport teraz</button>
     <div id="mcSchedStatus" style="font-size:12px;color:#A19F9D;margin-top:8px;text-align:center"></div>
     <button onclick="_magNotifyParts()" style="width:100%;padding:11px;margin-top:8px;background:#F2F2F7;color:#3A3A3C;border:1px solid #D1D1D6;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Powiadomienie testowe (na zegarek)</button>
-    <div style="font-size:11px;color:#8A6D3B;margin-top:10px;line-height:1.45;background:#FFF8E1;border-radius:8px;padding:9px 11px">Harmonogram dziala tylko gdy aplikacja jest otwarta o zaplanowanej porze. O wyznaczonym czasie aplikacja ZAPYTA o potwierdzenie przed wyslaniem — nic nie wychodzi samo bez Twojej zgody. Mozesz tez wyslac recznie przyciskiem ponizej.</div><div style="height:12px"></div><button class="sh-btn lt" onclick="closeOv('shSched')">Zamknij</button>
+    <button onclick="magReminderICS()" style="width:100%;padding:12px;margin-top:8px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">Dodaj przypomnienie do Kalendarza (na zegarek)</button>
+    <div style="font-size:11px;color:#8A6D3B;margin-top:10px;line-height:1.45;background:#FFF8E1;border-radius:8px;padding:9px 11px">Harmonogram tylko PRZYPOMINA o stanie i zamowieniu (nic nie wysyla sam). Powiadomienie w aplikacji dziala, gdy apka jest otwarta. Aby zegarek przypominal NIEZAWODNIE (nawet przy zamknietej apce) — uzyj "Dodaj przypomnienie do Kalendarza": doda powtarzajace sie przypomnienie do Kalendarza iPhone wg ustawionej czestotliwosci, a alarm pojawi sie na Hammer. Raport e-mail wysylasz recznie przyciskiem ponizej.</div><div style="height:12px"></div><button class="sh-btn lt" onclick="closeOv('shSched')">Zamknij</button>
   </div>
 </div>
 <div class="ov" id="shMagHist" style="display:none" onclick="if(event.target===this)closeOv('shMagHist')">
@@ -10063,6 +10064,42 @@ function schedStart(){
   schedCheck();
 }
 function _persistSched(){try{localStorage.setItem('rv_sched',JSON.stringify({freq:window._schedFreq,day:window._schedDay,dom:window._schedDom,time:window._schedTime,to:window._schedTo,anchor:window._schedAnchor,last:window._schedLastSent}));}catch(e){}}
+function _icsEsc(s){return (''+s).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');}
+function magReminderICS(){
+  try{
+    var freq=(document.getElementById('mcSchedFreq')||{}).value||window._schedFreq||'daily';
+    var time=(document.getElementById('mcSchedTime')||{}).value||window._schedTime||'08:00';
+    var hh=parseInt(time.split(':')[0])||8, mm=parseInt((time.split(':')[1]||'0'))||0;
+    var day=parseInt((document.getElementById('mcSchedDay')||{}).value);if(isNaN(day))day=(window._schedDay==null?1:window._schedDay);
+    var dom=parseInt((document.getElementById('mcSchedDom')||{}).value)||window._schedDom||1;
+    var DW=['SU','MO','TU','WE','TH','FR','SA'];
+    var rrule='FREQ=DAILY';
+    if(freq==='weekly')rrule='FREQ=WEEKLY;BYDAY='+DW[day];
+    else if(freq==='biweekly')rrule='FREQ=WEEKLY;INTERVAL=2;BYDAY='+DW[day];
+    else if(freq==='monthly')rrule='FREQ=MONTHLY;BYMONTHDAY='+dom;
+    function pad(n){return String(n).padStart(2,'0');}
+    function fmt(d){return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'T'+pad(d.getHours())+pad(d.getMinutes())+'00';}
+    var now=new Date(), st=new Date(now.getFullYear(),now.getMonth(),now.getDate(),hh,mm,0);
+    if(st<=now)st.setDate(st.getDate()+1);
+    var uid='rvm-mag-'+Date.now()+'@rvmraport';
+    var title='RVM: sprawdz stan magazynu i zrob zamowienie';
+    var desc='Przypomnienie z RVM Raport. Otworz aplikacje, sprawdz braki i zamow czesci.';
+    var ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//RVM Raport//PL//','CALSCALE:GREGORIAN','METHOD:PUBLISH',
+      'BEGIN:VEVENT','UID:'+uid,'DTSTAMP:'+fmt(now),'DTSTART:'+fmt(st),'DTEND:'+fmt(new Date(st.getTime()+600000)),
+      'RRULE:'+rrule,'SUMMARY:'+_icsEsc(title),'DESCRIPTION:'+_icsEsc(desc),
+      'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+_icsEsc(title),'TRIGGER:PT0M','END:VALARM',
+      'END:VEVENT','END:VCALENDAR'].join('\r\n');
+    try{
+      var blob=new Blob([ics],{type:'text/calendar;charset=utf-8'});
+      var url=URL.createObjectURL(blob);
+      var a=document.createElement('a');a.href=url;a.download='rvm-przypomnienie.ics';document.body.appendChild(a);a.click();
+      setTimeout(function(){try{document.body.removeChild(a);URL.revokeObjectURL(url);}catch(e){}},1500);
+    }catch(e){
+      window.location.href='data:text/calendar;charset=utf-8,'+encodeURIComponent(ics);
+    }
+    if(typeof _toast==='function')_toast('Otworz plik i dodaj do Kalendarza iPhone');
+  }catch(e){if(typeof _toast==='function')_toast('Blad tworzenia przypomnienia');}
+}
 function schedSave(){
   var day=document.getElementById('schedDay'), time=document.getElementById('schedTime');
   if(!day||!time)return;
@@ -10433,14 +10470,7 @@ function _magNotifyParts(){
 }
 function schedNotify(key){
   if(window._schedBusy)return;window._schedBusy=true;
-  try{
-    var to=window._schedTo||localStorage.getItem('rv_email_to')||'';
-    _magNotifyParts();
-    var msg='Zaplanowany raport magazynu (stan + historia).\nWyslac teraz'+(to?(' na: '+to):'')+'?';
-    var ok=(typeof confirm==='function')?confirm(msg):false;
-    window._schedLastSent=key;_persistSched();
-    if(ok&&typeof magReportSend==='function')magReportSend();
-  }catch(e){}
+  try{ _magNotifyParts(); window._schedLastSent=key; if(typeof _persistSched==='function')_persistSched(); }catch(e){}
   window._schedBusy=false;
 }
 (function(){try{
