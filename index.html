@@ -328,7 +328,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.79</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.80</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -512,7 +512,7 @@ body.fluent [style*="linear-gradient(135deg,#007AFF,#5856D6)"]{background:#0078D
   <div style="padding:8px 12px 0">
     <div style="display:flex;gap:8px;margin-bottom:8px;overflow-x:auto;padding-bottom:2px" id="magBtns"><button onclick="goTab('raport')" style="background:#E5E5EA;color:#333;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap"><span class="ti"><span class="ic-ios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><span class="ic-ms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter"><path d="M15 5l-7 7 7 7"/></svg></span></span>Raport</button>
       <button onclick="magPrintQR()" style="background:#605E5C;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap"><span class="ti"><span class="ic-ios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V4h10v5"/><rect x="3.5" y="9" width="17" height="7" rx="2"/><path d="M7 14h10v6H7z"/></svg></span><span class="ic-ms"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3h10v4H7z"/><path d="M4.5 8h15A1.5 1.5 0 0 1 21 9.5V15a1 1 0 0 1-1 1h-2.5v-3.5h-11V16H4a1 1 0 0 1-1-1V9.5A1.5 1.5 0 0 1 4.5 8Z"/><path d="M7.5 13h9v7h-9z"/></svg></span></span>QR PDF</button>
-      <button onclick="openOrder()" style="background:#FF9500;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap"><span class="ti"><span class="ic-ios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.2"/><circle cx="17.5" cy="20" r="1.2"/><path d="M3 4h2l2.1 10.4a1 1 0 0 0 1 .8h8.5a1 1 0 0 0 1-.78L20 8H5.6"/></svg></span><span class="ic-ms"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 4a1 1 0 0 0 0 2h1.4l1.9 9.6A2 2 0 0 0 8.26 17H18a1 1 0 0 0 0-2H8.26l-.2-1h9.5a2 2 0 0 0 1.96-1.6L20.8 7.2A1 1 0 0 0 19.82 6H6.2l-.22-1.2A1 1 0 0 0 5 4Z"/><circle cx="9" cy="20" r="1.5"/><circle cx="17.5" cy="20" r="1.5"/></svg></span></span>Zamówienie</button>
+      <button onclick="openOrder()" style="background:#FF9500;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap"><span class="ti"><span class="ic-ios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.2"/><circle cx="17.5" cy="20" r="1.2"/><path d="M3 4h2l2.1 10.4a1 1 0 0 0 1 .8h8.5a1 1 0 0 0 1-.78L20 8H5.6"/></svg></span><span class="ic-ms"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 4a1 1 0 0 0 0 2h1.4l1.9 9.6A2 2 0 0 0 8.26 17H18a1 1 0 0 0 0-2H8.26l-.2-1h9.5a2 2 0 0 0 1.96-1.6L20.8 7.2A1 1 0 0 0 19.82 6H6.2l-.22-1.2A1 1 0 0 0 5 4Z"/><circle cx="9" cy="20" r="1.5"/><circle cx="17.5" cy="20" r="1.5"/></svg></span></span>Zamówienie</button><button onclick="openSched()" style="background:#5856D6;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap"><span class="ti"><span class="ic-ios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span class="ic-ms"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 10.4 3.2 2.1-.8 1.3L11 13V6h2Z"/></svg></span></span>Harmonogram</button>
       <button onclick="magHistOpen()" style="background:#34C759;color:#fff;border:none;border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap"><span class="ti"><span class="ic-ios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.5-5.8L4 8.5"/><path d="M4 4v4.5h4.5"/><path d="M12 8v4.3l3 1.7"/></svg></span><span class="ic-ms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="square" stroke-linejoin="miter"><path d="M4 12a8 8 0 1 0 2.5-5.8L4 8.5"/><path d="M4 4v4.5h4.5"/><path d="M12 8v4.3l3 1.7"/></svg></span></span>Historia</button>
     </div>
     <div style="display:flex;gap:8px;margin-bottom:8px">
@@ -2501,7 +2501,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.79",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.80",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -2817,7 +2817,16 @@ function restoreData(input){
     <div style="font-size:11px;font-weight:700;color:#A19F9D;margin:4px 0 6px">STYL TABELI W WIADOMOSCI (podglad)</div><div style="display:flex;gap:6px;margin-bottom:8px"><button class="stylebtn" data-s="1" onclick="setTblStyle('1')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Ramka</button><button class="stylebtn" data-s="2" onclick="setTblStyle('2')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Lekka</button><button class="stylebtn" data-s="3" onclick="setTblStyle('3')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Karty</button><button class="stylebtn" data-s="5" onclick="setTblStyle('5')" style="flex:1;padding:7px 4px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:#F0F0F5;color:#605E5C">Linia</button></div><pre id="ordPreview" style="background:#1C1C1E;color:#E5E5EA;border-radius:8px;padding:10px;font-size:10px;line-height:1.35;overflow-x:auto;white-space:pre;margin-bottom:12px;-webkit-overflow-scrolling:touch"></pre><button onclick="orderSend('email')" style="width:100%;padding:13px;margin-bottom:8px;background:#0078D4;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">&#9993;&#65039; E-mail (z tabela)</button>
     <button onclick="orderSend('whatsapp')" style="width:100%;padding:13px;margin-bottom:8px;background:#25D366;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">WhatsApp (tekst)</button>
     <button onclick="orderSend('teams')" style="width:100%;padding:13px;margin-bottom:8px;background:#5059C9;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Microsoft Teams (tekst)</button><button onclick="shareOrderImg()" style="width:100%;padding:13px;margin-bottom:8px;background:#34C759;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Tabela jako obraz (udostepnij)</button>
-    <div style="border-top:1px solid #EDEBE9;margin:14px 0 10px"></div><div style="font-size:11px;font-weight:700;color:#A19F9D;margin-bottom:6px">AUTO-RAPORT (HARMONOGRAM)</div><div style="font-size:12px;font-weight:700;color:#605E5C;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Harmonogram (auto-raport: stan + historia)</div>
+    <button class="sh-btn lt" onclick="closeOv('shOrder')">Zamknij</button>
+  </div>
+</div>
+<div class="ov" id="shSched" style="display:none" onclick="if(event.target===this)closeOv('shSched')">
+  <div class="sh" style="max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-size:17px;font-weight:800;color:#323130">Harmonogram raportu</div>
+      <button onclick="closeOv('shSched')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button>
+    </div>
+    <div style="font-size:11px;font-weight:700;color:#A19F9D;margin-bottom:6px">AUTO-RAPORT (HARMONOGRAM)</div><div style="font-size:12px;font-weight:700;color:#605E5C;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Harmonogram (auto-raport: stan + historia)</div>
     <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0 12px"><span style="font-size:14px;font-weight:600;color:#323130">Harmonogram aktywny</span><div id="mcSchedSwitch" onclick="magCfgSchedToggle()" style="width:46px;height:28px;border-radius:14px;background:#E5E5EA;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0"><div id="mcSchedKnob" style="position:absolute;top:2px;left:2px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:left .2s"></div></div></div>
     <select id="mcSchedFreq" onchange="magCfgFreqUI()" style="width:100%;padding:10px 12px;background:#F5F5F7;border:none;border-radius:10px;font-size:14px;font-family:inherit;outline:none;color:#323130;margin-bottom:8px">
       <option value="daily">Codziennie</option><option value="weekly">Co tydzien</option><option value="biweekly">Co 2 tygodnie</option><option value="monthly">Co miesiac</option>
@@ -2833,7 +2842,7 @@ function restoreData(input){
     <button onclick="magCfgSchedSave()" style="width:100%;padding:12px;background:#007AFF;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px">Zapisz harmonogram</button>
     <button onclick="magReportSend()" style="width:100%;padding:12px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Wyslij raport teraz</button>
     <div id="mcSchedStatus" style="font-size:12px;color:#A19F9D;margin-top:8px;text-align:center"></div>
-    <div style="font-size:11px;color:#8A6D3B;margin-top:10px;line-height:1.45;background:#FFF8E1;border-radius:8px;padding:9px 11px">Harmonogram dziala tylko gdy aplikacja jest otwarta o zaplanowanej porze. O wyznaczonym czasie aplikacja ZAPYTA o potwierdzenie przed wyslaniem — nic nie wychodzi samo bez Twojej zgody. Mozesz tez wyslac recznie przyciskiem ponizej.</div><div style="height:12px"></div><button class="sh-btn lt" onclick="closeOv('shOrder')">Zamknij</button>
+    <div style="font-size:11px;color:#8A6D3B;margin-top:10px;line-height:1.45;background:#FFF8E1;border-radius:8px;padding:9px 11px">Harmonogram dziala tylko gdy aplikacja jest otwarta o zaplanowanej porze. O wyznaczonym czasie aplikacja ZAPYTA o potwierdzenie przed wyslaniem — nic nie wychodzi samo bez Twojej zgody. Mozesz tez wyslac recznie przyciskiem ponizej.</div><div style="height:12px"></div><button class="sh-btn lt" onclick="closeOv('shSched')">Zamknij</button>
   </div>
 </div>
 <div class="ov" id="shMagHist" style="display:none" onclick="if(event.target===this)closeOv('shMagHist')">
@@ -9291,9 +9300,6 @@ function openOrder(){
   var sj=document.getElementById('ordSubj'); if(sj)sj.value=localStorage.getItem('rv_order_subj')||_orderDefSubj();
   var bd=document.getElementById('ordBody'); if(bd){var t=localStorage.getItem('rv_order_intro'); bd.value=(t===null?DEFAULT_ORDER_INTRO:t);}
   _orderRenderTable();
-  var dd=document.getElementById('mcSchedDay');if(dd&&window._schedDay!==null&&window._schedDay!==undefined&&!isNaN(window._schedDay))dd.value=window._schedDay;
-  var tt=document.getElementById('mcSchedTime');if(tt)tt.value=window._schedTime||'08:00';
-  if(typeof magCfgApplyUI==='function')magCfgApplyUI();
   if(typeof _styleBtnsUpd==='function')_styleBtnsUpd();
   if(typeof _orderPreview==='function')_orderPreview();
   if(typeof openSh==='function')openSh('shOrder');
@@ -10296,6 +10302,17 @@ function openMagCfg(){
     magCfgApplyUI();
   }catch(e){}
   if(typeof openSh==='function')openSh('shMagCfg');else{var o=document.getElementById('shMagCfg');if(o)o.style.display='flex';}
+}
+function openSched(){
+  try{
+    var fq=document.getElementById('mcSchedFreq');if(fq)fq.value=window._schedFreq||'weekly';
+    var dd=document.getElementById('mcSchedDay');if(dd&&window._schedDay!==null&&window._schedDay!==undefined&&!isNaN(window._schedDay))dd.value=window._schedDay;
+    var dm=document.getElementById('mcSchedDom');if(dm)dm.value=String(window._schedDom||1);
+    var tt=document.getElementById('mcSchedTime');if(tt)tt.value=window._schedTime||'08:00';
+    var sto=document.getElementById('mcSchedTo');if(sto)sto.value=window._schedTo||localStorage.getItem('rv_email_to')||'';
+    if(typeof magCfgApplyUI==='function')magCfgApplyUI();
+  }catch(e){}
+  if(typeof openSh==='function')openSh('shSched');else{var o=document.getElementById('shSched');if(o)o.style.display='flex';}
 }
 function magCfgFreqUI(){
   var f=(document.getElementById('mcSchedFreq')||{}).value||window._schedFreq||'weekly';
