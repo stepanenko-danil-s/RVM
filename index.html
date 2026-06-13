@@ -334,7 +334,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v10.93</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v10.94</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2507,7 +2507,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.93",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.94",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -9566,14 +9566,20 @@ function _chainFromName(name){
 function _normStr(s){return (''+s).toLowerCase().replace(/ul\.|al\.|ulica|aleja/g,'').replace(/[.,]/g,' ').replace(/[ąàä]/g,'a').replace(/[ćč]/g,'c').replace(/[ęè]/g,'e').replace(/ł/g,'l').replace(/ń/g,'n').replace(/[óö]/g,'o').replace(/ś/g,'s').replace(/[źż]/g,'z').replace(/\s+/g,' ').trim();}
 function _overpass(q){
   var enc=encodeURIComponent(q);
-  var u1='https://overpass-api.de/api/interpreter?data='+enc;
-  var u2='https://overpass.kumi.systems/api/interpreter?data='+enc;
-  return fetch(u1).then(function(r){if(!r.ok)throw 0;return r.json();}).catch(function(){return fetch(u2).then(function(r){return r.json();});}).catch(function(){return null;});
+  var urls=['https://overpass-api.de/api/interpreter?data='+enc,'https://overpass.kumi.systems/api/interpreter?data='+enc];
+  function tryFetch(u){
+    return new Promise(function(resolve){
+      var ctrl=(typeof AbortController!=='undefined')?new AbortController():null;
+      var to=setTimeout(function(){try{if(ctrl)ctrl.abort();}catch(e){}resolve(null);},6000);
+      fetch(u,ctrl?{signal:ctrl.signal}:{}).then(function(r){clearTimeout(to);if(!r||!r.ok){resolve(null);return;}r.json().then(resolve).catch(function(){resolve(null);});}).catch(function(){clearTimeout(to);resolve(null);});
+    });
+  }
+  return tryFetch(urls[0]).then(function(r){return r||tryFetch(urls[1]);}).catch(function(){return null;});
 }
 function _acquirePos(ok,err){
   if(!navigator.geolocation){if(err)err({code:2,message:'brak geolokalizacji'});return;}
   var best=null,done=false,id=null,t0=Date.now();
-  var STEPS=[{a:5,ms:800},{a:10,ms:2500},{a:15,ms:4000},{a:25,ms:5500},{a:50,ms:7000}],MAXMS=8000;
+  var STEPS=[{a:5,ms:800},{a:10,ms:2500},{a:15,ms:4000},{a:25,ms:5500},{a:50,ms:6000}],MAXMS=7000;
   function bestAcc(){return (best&&best.coords&&best.coords.accuracy)||9999;}
   function finish(){if(done)return;done=true;if(id!=null){try{navigator.geolocation.clearWatch(id);}catch(e){}}if(best)ok(best);else if(err)err({code:3,message:'przekroczono czas'});}
   function consider(){if(done)return;var el=Date.now()-t0,ba=bestAcc();for(var i=0;i<STEPS.length;i++){if(ba<=STEPS[i].a&&el>=STEPS[i].ms)return finish();}}
@@ -9601,7 +9607,7 @@ function gpsShop(){
     _toast('GPS: rozpoznaje sklep...');
     var nomUrl='https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&accept-language=pl&lat='+la+'&lon='+lo;
     var R=120;
-    var ovQ='[out:json][timeout:25];(node(around:'+R+','+la+','+lo+')[shop];way(around:'+R+','+la+','+lo+')[shop];node(around:'+R+','+la+','+lo+')[amenity=fuel];);out center tags 60;';
+    var ovQ='[out:json][timeout:10];(node(around:'+R+','+la+','+lo+')[shop];way(around:'+R+','+la+','+lo+')[shop];node(around:'+R+','+la+','+lo+')[amenity=fuel];);out center tags 60;';
     var pNom=fetch(nomUrl,{headers:{'Accept':'application/json'}}).then(function(r){return r.json();}).catch(function(){return null;});
     var pOv=_overpass(ovQ);
     Promise.all([pNom,pOv]).then(function(res){
