@@ -166,13 +166,6 @@ button:active{opacity:.7;transform:scale(.97)}
 /* TOAST */
 .toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.85);color:#fff;padding:11px 18px;border-radius:16px;font-size:14px;font-weight:600;z-index:9999;opacity:0;transition:.3s;pointer-events:none;max-width:calc(100vw - 32px);width:max-content;box-sizing:border-box;white-space:normal;word-break:break-word;text-align:center;line-height:1.35}
 .toast.show{opacity:1}
-.tsel{display:none !important}
-.tbtn{display:inline-flex;align-items:center;justify-content:center;min-width:44px;padding:7px 9px;background:#F2F2F7;border:1px solid #E5E5EA;border-radius:10px;font-size:15px;font-weight:700;color:#1C1C1E;font-family:inherit;cursor:pointer}
-body.fluent .tbtn{border-radius:2px}
-#tpickList .tpItem{padding:13px 16px;margin:1px 0;font-size:18px;font-weight:600;color:#1C1C1E;text-align:center;cursor:pointer;border-radius:10px}
-#tpickList .tpItem.sel{background:#007AFF;color:#fff;font-weight:800}
-body.fluent #tpickList .tpItem.sel{background:#0078D4;border-radius:2px}
-#tpickList .tpItem.dis{color:#C7C7CC;pointer-events:none}
 
 /* BOTTOM NAV */
 .bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-top:.5px solid rgba(0,0,0,.1);display:flex;z-index:200;padding-bottom:env(safe-area-inset-bottom)}
@@ -338,15 +331,10 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 </div>
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
-<div class="ov" id="tpick" style="display:none" onclick="if(event.target===this)closeOv('tpick')">
-  <div class="sh" style="max-width:280px;max-height:64vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px">
-    <div id="tpickList"></div>
-  </div>
-</div>
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v10.92</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v10.93</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2519,7 +2507,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.92",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.93",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -8455,33 +8443,6 @@ function loadState(){
   (function(){try{var n=ls('rv_shop_n',''),i=ls('rv_shop_i',''),a=ls('rv_shop_a','');var en=document.getElementById('shopName'),ei=document.getElementById('shopId'),ea=document.getElementById('shopAddr');if(en)en.value=n;if(ei)ei.value=(i===0||i)?(''+i):'';if(ea)ea.value=a;if(!n&&!i&&!a&&shopVal&&ea)ea.value=shopVal;}catch(e){}})();
 }
 
-function _buildTimeBtns(){
-  var sels=document.querySelectorAll('select.tsel');
-  for(var i=0;i<sels.length;i++){var s=sels[i]; if(s._tbtn)continue;
-    var b=document.createElement('button'); b.type='button'; b.className='tbtn'; b.setAttribute('data-for',s.id);
-    b.textContent=s.value||'00';
-    (function(sel,btn){btn.onclick=function(){_openTPick(sel,btn);};})(s,b);
-    s.parentNode.insertBefore(b,s.nextSibling); s._tbtn=b;
-  }
-  _syncTimeBtns();
-}
-function _syncTimeBtns(){var sels=document.querySelectorAll('select.tsel');for(var i=0;i<sels.length;i++){if(sels[i]._tbtn)sels[i]._tbtn.textContent=sels[i].value||'00';}}
-function _openTPick(sel,btn){
-  var list=document.getElementById('tpickList'); if(!list)return; list.innerHTML='';
-  for(var i=0;i<sel.options.length;i++){var o=sel.options[i];
-    var d=document.createElement('div');
-    d.className='tpItem'+(o.value===sel.value?' sel':'')+(o.disabled?' dis':'');
-    d.textContent=o.textContent;
-    if(!o.disabled){(function(val){d.onclick=function(){
-      sel.value=val; if(btn)btn.textContent=val;
-      if(typeof sel.onchange==='function')sel.onchange(); else {var ev=document.createEvent('HTMLEvents');ev.initEvent('change',true,false);sel.dispatchEvent(ev);}
-      _syncTimeBtns(); closeOv('tpick');
-    };})(o.value);}
-    list.appendChild(d);
-  }
-  if(typeof openSh==='function')openSh('tpick'); else {var ov=document.getElementById('tpick'); if(ov)ov.style.display='flex';}
-  setTimeout(function(){var s=list.querySelector('.tpItem.sel'); if(s&&s.scrollIntoView)s.scrollIntoView({block:'center'});},60);
-}
 function syncTimeInputs(){
   ['G','S'].forEach(function(sfx){
     var t=sfx==='G'?timeG:timeS;
@@ -8498,7 +8459,6 @@ function syncTimeInputs(){
     if(dm&&partsD[1])dm.value=('0'+Math.round(parseInt(partsD[1]||0)/5)*5).slice(-2);
     updateDuration(sfx);
   });
-  if(typeof _syncTimeBtns==='function')_syncTimeBtns();
 }
 
 function _setSelTime(sfx,od,dd){
@@ -8507,7 +8467,6 @@ function _setSelTime(sfx,od,dd){
   var oh=document.getElementById('odH_'+sfx),om=document.getElementById('odM_'+sfx),dh=document.getElementById('doH_'+sfx),dm=document.getElementById('doM_'+sfx);
   if(oh)oh.value=a[0]; if(om)om.value=('0'+Math.round(parseInt(a[1]||0)/5)*5).slice(-2);
   if(dh)dh.value=b[0]; if(dm)dm.value=('0'+Math.round(parseInt(b[1]||0)/5)*5).slice(-2);
-  if(typeof _syncTimeBtns==='function')_syncTimeBtns();
 }
 function _otherRange(sfx){
   var o=sfx==='G'?timeS:timeG;
@@ -9988,7 +9947,6 @@ function magPrintQR(){
 // ===== INIT APP =====
 (function(){
   initSelects();
-  if(typeof _buildTimeBtns==='function')_buildTimeBtns();
   loadState();
   applyTheme();
   syncTimeInputs();if(typeof _applyTimeUI==='function'){_applyTimeUI('G');_applyTimeUI('S');}
