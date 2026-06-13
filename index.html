@@ -334,7 +334,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.86</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:600;color:#A19F9D;vertical-align:middle">v10.87</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2507,7 +2507,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.86",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.87",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -2848,6 +2848,7 @@ function restoreData(input){
     <button onclick="magCfgSchedSave()" style="width:100%;padding:12px;background:#007AFF;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px">Zapisz harmonogram</button>
     <button onclick="magReportSend()" style="width:100%;padding:12px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Wyslij raport teraz</button>
     <div id="mcSchedStatus" style="font-size:12px;color:#A19F9D;margin-top:8px;text-align:center"></div>
+    <button onclick="_notify('RVM Raport','Powiadomienie testowe — jesli widzisz to na zegarku Hammer, dziala.')" style="width:100%;padding:11px;margin-top:8px;background:#F2F2F7;color:#3A3A3C;border:1px solid #D1D1D6;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Powiadomienie testowe (na zegarek)</button>
     <div style="font-size:11px;color:#8A6D3B;margin-top:10px;line-height:1.45;background:#FFF8E1;border-radius:8px;padding:9px 11px">Harmonogram dziala tylko gdy aplikacja jest otwarta o zaplanowanej porze. O wyznaczonym czasie aplikacja ZAPYTA o potwierdzenie przed wyslaniem — nic nie wychodzi samo bez Twojej zgody. Mozesz tez wyslac recznie przyciskiem ponizej.</div><div style="height:12px"></div><button class="sh-btn lt" onclick="closeOv('shSched')">Zamknij</button>
   </div>
 </div>
@@ -10398,10 +10399,26 @@ function magReportSend(){
   var subj='Raport magazynu RVM - '+new Date().toLocaleDateString('pl-PL');
   window.location.href='mailto:'+encodeURIComponent(to)+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(_magReportBody());
 }
+function _notify(title,body){
+  try{
+    if(typeof Notification==='undefined'){if(typeof _toast==='function')_toast('Powiadomienia nieobslugiwane na tym urzadzeniu');return;}
+    function fire(){
+      try{
+        if(navigator.serviceWorker&&navigator.serviceWorker.ready){
+          navigator.serviceWorker.ready.then(function(reg){try{reg.showNotification(title,{body:body,tag:'rvm-sched',renotify:true});}catch(e){try{new Notification(title,{body:body});}catch(_e){}}}).catch(function(){try{new Notification(title,{body:body});}catch(e){}});
+        }else{new Notification(title,{body:body});}
+      }catch(e){}
+    }
+    if(Notification.permission==='granted'){fire();}
+    else if(Notification.permission!=='denied'){Notification.requestPermission().then(function(p){if(p==='granted')fire();else if(typeof _toast==='function')_toast('Powiadomienia nie wlaczone');});}
+    else{if(typeof _toast==='function')_toast('Powiadomienia zablokowane — wlacz w Ustawieniach iPhone dla tej apki');}
+  }catch(e){}
+}
 function schedNotify(key){
   if(window._schedBusy)return;window._schedBusy=true;
   try{
     var to=window._schedTo||localStorage.getItem('rv_email_to')||'';
+    _notify('RVM Raport — Harmonogram','Czas wyslac raport magazynu'+(to?(' na '+to):'')+'.');
     var msg='Zaplanowany raport magazynu (stan + historia).\nWyslac teraz'+(to?(' na: '+to):'')+'?';
     var ok=(typeof confirm==='function')?confirm(msg):false;
     window._schedLastSent=key;_persistSched();
