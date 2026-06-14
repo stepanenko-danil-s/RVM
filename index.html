@@ -348,7 +348,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v10.96</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v10.97</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2522,7 +2522,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.96",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v10.97",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -9579,7 +9579,7 @@ function _chainFromName(name){
   return cleaned||(''+name);
 }
 function _normStr(s){return (''+s).toLowerCase().replace(/ul\.|al\.|ulica|aleja/g,'').replace(/[.,]/g,' ').replace(/[ąàä]/g,'a').replace(/[ćč]/g,'c').replace(/[ęè]/g,'e').replace(/ł/g,'l').replace(/ń/g,'n').replace(/[óö]/g,'o').replace(/ś/g,'s').replace(/[źż]/g,'z').replace(/\s+/g,' ').trim();}
-var _PHRASES_BASE=["Sprawdzenie sortera, kompaktorów, czytników EAN, skanera plomb.","Sprawdzenie poprawności działania maszyny.","Sprawdzenie czujników i fotokomórek.","Sprawdzenie taśmy transportującej i rolek.","Sprawdzenie układu napędowego.","Sprawdzenie połączeń elektrycznych.","Czyszczenie.","Czyszczenie sortera i kanałów podawczych.","Czyszczenie czytników EAN i skanera plomb.","Czyszczenie kompaktora.","Smarowanie elementów ruchomych.","Usunięcie zacięcia i pozostałości.","Wymiana śrub mocowania silnika kompaktora.","Wymiana paska napędowego.","Wymiana czujnika.","Wymiana czytnika EAN.","Wymiana rolki / łożyska.","Regulacja i kalibracja.","Dokręcenie poluzowanych połączeń.","Restart i test końcowy maszyny."];
+var _PHRASES_BASE=["Sprawdzenie poprawności działania maszyny.","Sprawdzenie sortera, kompaktorów, czytników EAN, skanera plomb.","Sprawdzenie czujników i fotokomórek.","Sprawdzenie taśmy transportującej i rolek.","Sprawdzenie układu napędowego.","Sprawdzenie kompaktora.","Sprawdzenie czytników kodów EAN.","Sprawdzenie skanera plomb.","Sprawdzenie połączeń i przewodów elektrycznych.","Sprawdzenie wyłącznika bezpieczeństwa.","Kontrola wizualna stanu maszyny.","Sprawdzenie stopnia zużycia podzespołów.","Czyszczenie.","Czyszczenie sortera i kanałów podawczych.","Czyszczenie czytników EAN i skanera plomb.","Czyszczenie kompaktora.","Czyszczenie czujników i fotokomórek.","Czyszczenie wnętrza i obudowy maszyny.","Usunięcie zacięcia i pozostałości.","Smarowanie elementów ruchomych.","Smarowanie prowadnic i rolek.","Smarowanie łożysk.","Smarowanie paska/łańcucha napędu.","Regulacja i kalibracja.","Regulacja czujników.","Regulacja taśmy transportującej.","Poprawienie ustawienia czytników.","Poprawienie i dokręcenie mocowań.","Dokręcenie poluzowanych śrub i połączeń.","Korekta położenia elementów.","Drobna regulacja mechaniczna.","Restart maszyny.","Test końcowy po serwisie.","Konserwacja okresowa."];
 function _he(s){return (''+s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function _getCustomPhrases(){try{var a=JSON.parse(localStorage.getItem('rv_phrases')||'null');if(Array.isArray(a))return a;}catch(e){}return [];}
 function _saveCustomPhrases(a){try{localStorage.setItem('rv_phrases',JSON.stringify(a));}catch(e){}}
