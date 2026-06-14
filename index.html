@@ -348,7 +348,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.6</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.7</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -389,9 +389,12 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
     <!-- Montaz / Demontaz sub-toggle -->
     <div id="mdSubRow" style="display:none;margin:8px 12px 0">
-      <div class="tgl-wrap" style="margin:0">
-        <button class="tgl on" id="mdMont" onclick="setMdSub('mont')">Montaż</button>
-        <button class="tgl" id="mdDemont" onclick="setMdSub('demont')">Demontaż</button>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div class="tgl-wrap" style="margin:0;flex:1 1 auto;min-width:0">
+          <button class="tgl on" id="mdMont" onclick="setMdSub('mont')">Montaż</button>
+          <button class="tgl" id="mdDemont" onclick="setMdSub('demont')">Demontaż</button>
+        </div>
+        <button onclick="resetCurReport()" title="Wyczysc raport" style="flex:0 0 auto;padding:9px 13px;border-radius:10px;border:1px solid #FFB3B3;background:#FFF0F0;color:#D11;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Reset</button>
       </div>
     </div>
 
@@ -2545,7 +2548,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.6",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.7",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -9650,8 +9653,23 @@ function setMdSub(s){
   if(m&&m.classList)m.classList.toggle('on',s==='mont');
   if(dd&&dd.classList)dd.classList.toggle('on',s==='demont');
   var pct=document.getElementById('phrCardTtl');
-  if(pct&&(window._workType==='montdemont'))pct.textContent='Gotowe frazy — '+(s==='mont'?'Montaż':'Demontaż');
   if(typeof renderSummary==='function')renderSummary();
+}
+function resetCurReport(){
+  if(typeof confirm==='function'&&!confirm('Wyczyscic raport tego typu?'))return;
+  entries=[];selKonG=[];selKonS=[];custParts={};
+  timeG={od:'',do:''};timeS={od:'',do:''};
+  SEL={el:'',def:[],sol:[],kon:[]};
+  try{ss('rv_e',entries);}catch(e){}
+  if(window._workType&&typeof _rstoreSave==='function')_rstoreSave(window._workType);
+  [['val1','Wybierz element'],['val2','Wybierz usterke'],['valS','Aktywnosci serwisowe'],['val3','Wybierz lub dodaj dzialanie']].forEach(function(p){var e=document.getElementById(p[0]);if(e){e.textContent=p[1];e.className='mod-val';}});
+  ['el','def','sol','kon'].forEach(function(c){if(typeof renderList==='function')renderList(c);});
+  if(typeof renderParts==='function')renderParts();
+  if(typeof syncTimeInputs==='function')syncTimeInputs();
+  if(typeof _applyTimeUI==='function'){_applyTimeUI('G');_applyTimeUI('S');}
+  if(typeof updateBadges==='function')updateBadges();
+  if(typeof renderSummary==='function')renderSummary();
+  if(typeof showToast==='function')showToast('Raport wyczyszczony');
 }
 function _rstoreGet(){try{var o=JSON.parse(localStorage.getItem('rv_rstore')||'{}');return (o&&typeof o==='object')?o:{};}catch(e){return {};}}
 function _rstoreSave(type){
