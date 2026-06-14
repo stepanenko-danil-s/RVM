@@ -348,7 +348,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.13</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.14</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2286,6 +2286,24 @@ function openInClaude(){
   if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(msg).then(go).catch(function(){if(typeof _fb==='function')_fb(msg);go();});}
   else{if(typeof _fb==='function')_fb(msg);go();}
 }
+function askClaude(kind){
+  var P={
+   check:'Sprawdź i popraw polską pisownię oraz gramatykę powyższego raportu serwisowego. Zwróć wyłącznie poprawioną wersję, gotową do skopiowania, bez komentarzy.',
+   tech:'Przeredaguj powyższy raport w zwięzłym stylu technicznym (rzeczowo, krótko), gotowy do wklejenia do CRM lub e-maila. Po polsku. Zachowaj wszystkie fakty, nie dodawaj nieistniejących.',
+   biz:'Przeredaguj powyższy raport w oficjalnym stylu biznesowym dla klienta (uprzejmy ton, pełne zdania), gotowy do wysłania e-mailem. Po polsku. Nie dodawaj nieistniejących informacji.',
+   struct:'Uporządkuj powyższy raport w przejrzystą strukturę z nagłówkami i punktami (sekcje: dane sklepu, wykonane czynności, usterki, użyte części, zalecenia). Po polsku, gotowe do e-maila lub skopiowania.',
+   en:'Przetłumacz powyższy raport na język angielski, zachowując strukturę.',
+   ru:'Przetłumacz powyższy raport na język rosyjski, zachowując strukturę.'
+  };
+  var instr=P[kind]||'';
+  if(typeof _commitEntry==='function')_commitEntry();
+  var raport=(typeof _aiFullReport==='function'&&_aiFullReport())||(typeof buildReport==='function'?buildReport():'');
+  if(!raport){showToast('Brak danych w raporcie');return;}
+  var msg='Jestem technikiem serwisowym RVM. Oto mój raport serwisowy:\n\n'+raport+'\n\nZADANIE: '+instr;
+  function go(){window.open('https://claude.ai/new?q='+encodeURIComponent(msg),'_blank');showToast('Raport skopiowany \u2014 jesli czat pusty, wklej');closeOv('shAI');}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(msg).then(go).catch(function(){if(typeof _fb==='function')_fb(msg);go();});}
+  else{if(typeof _fb==='function')_fb(msg);go();}
+}
 function _offlineAI(msg){
   var eG=entries.filter(function(e){return e.mode==="G";});
   var eS=entries.filter(function(e){return e.mode==="S";});
@@ -2548,7 +2566,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.13",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.14",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -10752,13 +10770,21 @@ function copyDiag(){
       <div style="font-size:17px;font-weight:800;color:#323130">Asystent</div>
       <button onclick="closeOv('shAI')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button>
     </div>
-    <div style="font-size:12px;color:#A19F9D;margin-bottom:10px">Dziala offline na podstawie Twojego raportu.</div>
+    <div style="font-size:12px;color:#A19F9D;margin-bottom:10px">Przyciski otwieraja Claude z Twoim raportem i gotowym poleceniem.</div>
+    <div style="font-size:11px;font-weight:700;color:#A19F9D;letter-spacing:.3px;margin-bottom:6px">SPRAWDŹ / PRZEFORMATUJ (Claude)</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-      <button onclick="runOffline('email')" style="padding:11px;background:#fff;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit">List do klienta</button>
-      <button onclick="runOffline('skrot')" style="padding:11px;background:#fff;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit">Krotkie podsumowanie</button>
-      <button onclick="runOffline('en')" style="padding:11px;background:#fff;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit">Tlumacz na EN</button>
-      <button onclick="runOffline('ru')" style="padding:11px;background:#fff;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit">Tlumacz na RU</button>
-      <button onclick="runOffline('priorytety')" style="grid-column:1/3;padding:11px;background:#fff;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit">Priorytety</button>
+      <button onclick="askClaude('check')" style="padding:11px;background:#fff;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit">Sprawdź pisownię</button>
+      <button onclick="askClaude('tech')" style="padding:11px;background:#fff;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit">Raport techniczny</button>
+      <button onclick="askClaude('biz')" style="padding:11px;background:#fff;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit">Raport biznesowy</button>
+      <button onclick="askClaude('struct')" style="padding:11px;background:#fff;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit">Raport strukturalny</button>
+      <button onclick="askClaude('en')" style="padding:11px;background:#fff;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit">Tłumacz na EN</button>
+      <button onclick="askClaude('ru')" style="padding:11px;background:#fff;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit">Tłumacz na RU</button>
+    </div>
+    <div style="font-size:11px;font-weight:700;color:#A19F9D;letter-spacing:.3px;margin-bottom:6px">OFFLINE (bez sieci)</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+      <button onclick="runOffline('email')" style="padding:11px 6px;background:#fff;border:1px solid #E5E5EA;border-radius:10px;font-size:12px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit">List klient</button>
+      <button onclick="runOffline('skrot')" style="padding:11px 6px;background:#fff;border:1px solid #E5E5EA;border-radius:10px;font-size:12px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit">Skrót</button>
+      <button onclick="runOffline('priorytety')" style="padding:11px 6px;background:#fff;border:1px solid #E5E5EA;border-radius:10px;font-size:12px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit">Priorytety</button>
     </div>
     <div id="offlineResult" style="display:none;font-size:13px;line-height:1.6;background:#F8F8F8;border-radius:10px;padding:12px;white-space:pre-wrap;margin-bottom:10px;max-height:240px;overflow-y:auto"></div>
     <div style="height:1px;background:#EDEBE9;margin:4px 0 12px"></div>
