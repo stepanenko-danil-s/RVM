@@ -348,7 +348,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.8</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.9</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2548,7 +2548,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.8",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.9",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -8998,7 +8998,7 @@ function _secParts(isG,ents,kon,sp,style){
   } else if(style==='czyt'){
     head.push('**'+label+'**');
     var _n=0;
-    ents.forEach(function(e){if(!e.el&&!_arr(e.def).length&&!_arr(e.sol).length)return;_n++;body.push('**'+_n+'. '+(e.el||'(bez elementu)')+'**');_arr(e.def).forEach(function(d){body.push('   Usterka:  '+d);});_arr(e.sol).forEach(function(s){body.push('   Wykonano: '+s);});body.push('');});
+    ents.forEach(function(e){if(!e.el&&!_arr(e.def).length&&!_arr(e.sol).length)return;_n++;body.push('**'+_n+'. '+(e.el||'(bez elementu)')+'**');_arr(e.def).forEach(function(d){body.push('   **Usterka:** '+d);});_arr(e.sol).forEach(function(s){body.push('   **Wykonano:** '+s);});body.push('');});
     if(kon.length){body.push('**Serwis:**');kon.forEach(function(k){body.push('   \u2013 '+k);});}
     if(sp.length){body.push('**Cz\u0119\u015bci:**');sp.forEach(function(p){body.push('   \u2013 '+p);});}
   } else {
@@ -9056,7 +9056,7 @@ function buildReport(){
   }
   if(d.hasG)add(true,d.eG,d.konG,d.spG,'G');
   if(d.hasS)add(false,d.eS,d.konS,d.spS,'S');
-  return lines.join('\n').trim();
+  return lines.join('\n').replace(/\*\*/g,'').trim();
 }
 
 function doCopy(){
