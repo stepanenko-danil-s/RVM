@@ -334,7 +334,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 <div class="ov" id="shPhrases" style="display:none" onclick="if(event.target===this)closeOv('shPhrases')">
   <div class="sh" style="max-width:400px;max-height:80vh;overflow-y:auto;-webkit-overflow-scrolling:touch">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-      <div style="font-size:17px;font-weight:800;color:#323130">Gotowe frazy</div>
+      <div style="font-size:17px;font-weight:800;color:#323130" id="phrHdr">Gotowe frazy</div>
       <button onclick="closeOv('shPhrases')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button>
     </div>
     <div style="font-size:12px;color:#8E8E93;margin-bottom:12px;line-height:1.4">Tapnij fraze, aby dodac ja do raportu (Wykonano). Ponowny tap usuwa. Mozesz dodawac i usuwac wlasne frazy.</div>
@@ -348,7 +348,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v10.99</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.0</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -378,8 +378,17 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
       <span class="alert-banner-n" id="stockAlertN">0</span>
     </div>
 
+    <!-- Typ pracy (modul 0) -->
+    <div style="margin:8px 12px 0">
+      <div style="display:flex;flex-wrap:wrap;gap:6px" id="wtRow">
+        <button id="wtSerwis" class="wt-btn on" onclick="setWorkType('serwis')" style="flex:1 1 28%;min-width:90px;padding:9px 6px;border-radius:10px;border:1px solid #C4CAD3;background:#fff;color:#1C1C1E;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Serwis</button>
+        <button id="wtMont" class="wt-btn" onclick="setWorkType('montdemont')" style="flex:1 1 28%;min-width:90px;padding:9px 6px;border-radius:10px;border:1px solid #C4CAD3;background:#fff;color:#1C1C1E;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Montaż / Demontaż</button>
+        <button id="wtSzkol" class="wt-btn" onclick="setWorkType('szkol')" style="flex:1 1 28%;min-width:90px;padding:9px 6px;border-radius:10px;border:1px solid #C4CAD3;background:#fff;color:#1C1C1E;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Szkolenie</button>
+      </div>
+    </div>
+
     <!-- G/NG toggle -->
-    <div style="display:flex;align-items:center;gap:8px;margin:8px 12px">
+    <div style="display:flex;align-items:center;gap:8px;margin:8px 12px" id="tglRow">
       <div class="tgl-wrap" style="margin:0;flex:1">
         <button class="tgl g on" id="tglG" onclick="setMode('G')">G</button>
         <button class="tgl s" id="tglNG" onclick="setMode('S')">NG</button>
@@ -460,7 +469,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
     </div>
 
     <!-- Czesci zamienne -->
-    <div class="acc-card">
+    <div class="acc-card" id="partsCard">
       <div class="acc-hdr" onclick="goTab('mag')">
         <span class="acc-hdr-t">Czesci zamienne</span>
         <span style="display:flex;align-items:center;gap:8px"><button onclick="event.stopPropagation();magScanQR()" style="background:#0078D4;color:#fff;border:none;border-radius:20px;padding:6px 13px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit"><span class="ti"><span class="ic-ios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8"/><path d="M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8"/><path d="M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16"/><path d="M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"/><rect x="8.3" y="8.3" width="3.2" height="3.2" rx="0.7"/><rect x="13" y="13" width="2.6" height="2.6" rx="0.5"/></svg></span><span class="ic-ms"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h6v6H4V4Zm2 2v2h2V6H6Z"/><path d="M14 4h6v6h-6V4Zm2 2v2h2V6h-2Z"/><path d="M4 14h6v6H4v-6Zm2 2v2h2v-2H6Z"/><path d="M13 13h3v3h-3zM17 13h3v2h-3zM13 17h2v3h-2zM16 17h4v3h-4z"/></svg></span></span>Skanuj QR</button><span id="partsArr" style="color:#C7C7CC;font-size:15px">&#8250;</span></span>
@@ -2494,7 +2503,7 @@ function doReset(){entries=[];custParts=[];selKonG=[];selKonS=[];timeG={od:"00:0
 ,{cat:"Interwencja",pl:"Uzupelnienie papieru",ru:"Заправка бумаги"}
 ,{cat:"Interwencja",pl:"Wznowienie pracy po awarii",ru:"Восстановление после аварии"}
 ,{cat:"Interwencja",pl:"Sprawdzenie polaczenia sieciowego",ru:"Проверка сети"}
-],_hidden:{}};lastDefCat="";[0,1,2].forEach(function(i){mOpen[i]=false;_applyMod(i);});[["val1","Wybierz element"],["val2","Wybierz usterke"],["valS","Aktywnosci serwisowe"],["val3","Wybierz lub dodaj dzialanie"]].forEach(function(p){var e=document.getElementById(p[0]);if(e){e.textContent=p[1];e.className="mod-val";}});partsOpen=false;var _pb=document.getElementById("partsBody");if(_pb)_pb.className="parts-body";var _pa=document.getElementById("partsArr");if(_pa)_pa.style.transform="none";var ed=document.getElementById("repEdit");if(ed){ed.removeAttribute("data-ue");}renderList("el");renderList("def");renderList("kon");renderList("sol");renderParts();renderSummary();curMode="G";var tGr=document.getElementById("tglG"),tSr=document.getElementById("tglNG"),twr=document.getElementById("tglWrap");if(tGr)tGr.className="tgl g on";if(tSr)tSr.className="tgl s";var twr2=document.getElementById("tglWrap");if(twr2)twr2.className="tgl-wrap";var tagR=document.getElementById("partsModeTag");if(tagR){tagR.innerHTML='<span style="width:6px;height:6px;border-radius:50%;background:#34C759;display:inline-block;flex-shrink:0"></span>Gwar.';tagR.style.background="rgba(52,199,89,.1)";tagR.style.color="#34C759";tagR.style.borderColor="rgba(52,199,89,.25)";}_syncTimeInputs();if(typeof _applyTimeUI==='function'){_applyTimeUI('G');_applyTimeUI('S');}showToast("&#8635; Zresetowano");}
+],_hidden:{}};lastDefCat="";[0,1,2].forEach(function(i){mOpen[i]=false;_applyMod(i);});[["val1","Wybierz element"],["val2","Wybierz usterke"],["valS","Aktywnosci serwisowe"],["val3","Wybierz lub dodaj dzialanie"]].forEach(function(p){var e=document.getElementById(p[0]);if(e){e.textContent=p[1];e.className="mod-val";}});partsOpen=false;var _pb=document.getElementById("partsBody");if(_pb)_pb.className="parts-body";var _pa=document.getElementById("partsArr");if(_pa)_pa.style.transform="none";var ed=document.getElementById("repEdit");if(ed){ed.removeAttribute("data-ue");}renderList("el");renderList("def");renderList("kon");renderList("sol");renderParts();renderSummary();curMode="G";var tGr=document.getElementById("tglG"),tSr=document.getElementById("tglNG"),twr=document.getElementById("tglWrap");if(tGr)tGr.className="tgl g on";if(tSr)tSr.className="tgl s";var twr2=document.getElementById("tglWrap");if(twr2)twr2.className="tgl-wrap";var tagR=document.getElementById("partsModeTag");if(tagR){tagR.innerHTML='<span style="width:6px;height:6px;border-radius:50%;background:#34C759;display:inline-block;flex-shrink:0"></span>Gwar.';tagR.style.background="rgba(52,199,89,.1)";tagR.style.color="#34C759";tagR.style.borderColor="rgba(52,199,89,.25)";}_syncTimeInputs();if(typeof _applyTimeUI==='function'){_applyTimeUI('G');_applyTimeUI('S');}if(typeof setWorkType==='function')setWorkType('serwis');showToast("&#8635; Zresetowano");}
 function _buildAIExp(){
   var _live=(typeof _liveEntry==='function')?_liveEntry():null;
   var _allE=_live?entries.concat([_live]):entries.slice();
@@ -2522,7 +2531,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v10.99",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.0",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -8962,7 +8971,7 @@ function _reportData(){
   return {eG:eG,eS:eS,konG:konG,konS:konS,spG:spG,spS:spS,hasG:hasG,hasS:hasS,any:hasG||hasS};
 }
 function _secParts(isG,ents,kon,sp,style){
-  var label=isG?'GWARANCYJNY':'NIE GWARANCYJNY';
+  var label=isG?'GWARANCYJNY':_sLabel();
   var head=[],body=[];
   if(style==='biz'){
     head.push("──────────────────────────");head.push('RAPORT SERWISOWY \u2014 '+label);head.push("──────────────────────────");
@@ -9581,10 +9590,16 @@ function _chainFromName(name){
 function _normStr(s){return (''+s).toLowerCase().replace(/ul\.|al\.|ulica|aleja/g,'').replace(/[.,]/g,' ').replace(/[ąàä]/g,'a').replace(/[ćč]/g,'c').replace(/[ęè]/g,'e').replace(/ł/g,'l').replace(/ń/g,'n').replace(/[óö]/g,'o').replace(/ś/g,'s').replace(/[źż]/g,'z').replace(/\s+/g,' ').trim();}
 var _PHRASES_BASE=["Sprawdzenie poprawności działania maszyny.","Sprawdzenie sortera, kompaktorów, czytników EAN, skanera plomb.","Sprawdzenie czujników i fotokomórek.","Sprawdzenie taśmy transportującej i rolek.","Sprawdzenie układu napędowego.","Sprawdzenie kompaktora.","Sprawdzenie czytników kodów EAN.","Sprawdzenie skanera plomb.","Sprawdzenie połączeń i przewodów elektrycznych.","Sprawdzenie wyłącznika bezpieczeństwa.","Kontrola wizualna stanu maszyny.","Sprawdzenie stopnia zużycia podzespołów.","Czyszczenie.","Czyszczenie sortera i kanałów podawczych.","Czyszczenie czytników EAN i skanera plomb.","Czyszczenie kompaktora.","Czyszczenie czujników i fotokomórek.","Czyszczenie wnętrza i obudowy maszyny.","Usunięcie zacięcia i pozostałości.","Smarowanie elementów ruchomych.","Smarowanie prowadnic i rolek.","Smarowanie łożysk.","Smarowanie paska/łańcucha napędu.","Regulacja i kalibracja.","Regulacja czujników.","Regulacja taśmy transportującej.","Poprawienie ustawienia czytników.","Poprawienie i dokręcenie mocowań.","Dokręcenie poluzowanych śrub i połączeń.","Korekta położenia elementów.","Drobna regulacja mechaniczna.","Restart maszyny.","Test końcowy po serwisie.","Konserwacja okresowa."];
 var _PHRASES_RU={"Sprawdzenie poprawności działania maszyny.":"Проверка правильности работы машины.","Sprawdzenie sortera, kompaktorów, czytników EAN, skanera plomb.":"Проверка сортера, компакторов, сканеров EAN, сканера пломб.","Sprawdzenie czujników i fotokomórek.":"Проверка датчиков и фотоэлементов.","Sprawdzenie taśmy transportującej i rolek.":"Проверка транспортёрной ленты и роликов.","Sprawdzenie układu napędowego.":"Проверка приводного механизма.","Sprawdzenie kompaktora.":"Проверка компактора.","Sprawdzenie czytników kodów EAN.":"Проверка сканеров штрихкодов EAN.","Sprawdzenie skanera plomb.":"Проверка сканера пломб.","Sprawdzenie połączeń i przewodów elektrycznych.":"Проверка соединений и электропроводки.","Sprawdzenie wyłącznika bezpieczeństwa.":"Проверка выключателя безопасности.","Kontrola wizualna stanu maszyny.":"Визуальный осмотр состояния машины.","Sprawdzenie stopnia zużycia podzespołów.":"Проверка степени износа узлов.","Czyszczenie.":"Чистка.","Czyszczenie sortera i kanałów podawczych.":"Чистка сортера и подающих каналов.","Czyszczenie czytników EAN i skanera plomb.":"Чистка сканеров EAN и сканера пломб.","Czyszczenie kompaktora.":"Чистка компактора.","Czyszczenie czujników i fotokomórek.":"Чистка датчиков и фотоэлементов.","Czyszczenie wnętrza i obudowy maszyny.":"Чистка внутренней части и корпуса машины.","Usunięcie zacięcia i pozostałości.":"Устранение заедания и остатков.","Smarowanie elementów ruchomych.":"Смазка подвижных элементов.","Smarowanie prowadnic i rolek.":"Смазка направляющих и роликов.","Smarowanie łożysk.":"Смазка подшипников.","Smarowanie paska/łańcucha napędu.":"Смазка ремня/цепи привода.","Regulacja i kalibracja.":"Регулировка и калибровка.","Regulacja czujników.":"Регулировка датчиков.","Regulacja taśmy transportującej.":"Регулировка транспортёрной ленты.","Poprawienie ustawienia czytników.":"Корректировка настройки сканеров.","Poprawienie i dokręcenie mocowań.":"Поправка и затяжка креплений.","Dokręcenie poluzowanych śrub i połączeń.":"Затяжка ослабленных винтов и соединений.","Korekta położenia elementów.":"Корректировка положения элементов.","Drobna regulacja mechaniczna.":"Мелкая механическая регулировка.","Restart maszyny.":"Перезапуск машины.","Test końcowy po serwisie.":"Финальный тест после сервиса.","Konserwacja okresowa.":"Периодическое обслуживание."};
+var _PHRASES_MONT=["Montaż maszyny i ustawienie w docelowym miejscu.","Poziomowanie i stabilizacja maszyny.","Podłączenie zasilania elektrycznego.","Podłączenie sieci LAN / internetu.","Montaż modułów i przenośników.","Montaż stołu na butelki / przenośnika skrzynek.","Uruchomienie i konfiguracja maszyny.","Kalibracja po montażu.","Test poprawności działania po montażu.","Demontaż maszyny.","Odłączenie zasilania i sieci.","Demontaż modułów i przenośników.","Zabezpieczenie maszyny do transportu.","Załadunek maszyny na transport.","Uprzątnięcie miejsca po demontażu.","Sprawdzenie kompletności urządzenia."];
+var _PHRASES_SZKOL=["Szkolenie personelu sklepu z obsługi maszyny.","Instruktaż przyjmowania opakowań / butelek.","Instruktaż wymiany worków i opróżniania pojemników.","Instruktaż wymiany papieru w drukarce.","Instruktaż usuwania zacięć.","Instruktaż czyszczenia maszyny.","Omówienie komunikatów i błędów na ekranie.","Instruktaż restartu maszyny.","Przekazanie kontaktu do serwisu.","Przekazanie instrukcji obsługi.","Szkolenie z zasad bezpieczeństwa (BHP).","Potwierdzenie odbioru szkolenia."];
+Object.assign(_PHRASES_RU,{"Montaż maszyny i ustawienie w docelowym miejscu.":"Монтаж машины и установка на месте.","Poziomowanie i stabilizacja maszyny.":"Выравнивание и стабилизация машины.","Podłączenie zasilania elektrycznego.":"Подключение электропитания.","Podłączenie sieci LAN / internetu.":"Подключение сети LAN / интернета.","Montaż modułów i przenośników.":"Монтаж модулей и конвейеров.","Montaż stołu na butelki / przenośnika skrzynek.":"Монтаж стола для бутылок / конвейера ящиков.","Uruchomienie i konfiguracja maszyny.":"Запуск и настройка машины.","Kalibracja po montażu.":"Калибровка после монтажа.","Test poprawności działania po montażu.":"Тест работоспособности после монтажа.","Demontaż maszyny.":"Демонтаж машины.","Odłączenie zasilania i sieci.":"Отключение питания и сети.","Demontaż modułów i przenośników.":"Демонтаж модулей и конвейеров.","Zabezpieczenie maszyny do transportu.":"Подготовка машины к транспортировке.","Załadunek maszyny na transport.":"Погрузка машины на транспорт.","Uprzątnięcie miejsca po demontażu.":"Уборка места после демонтажа.","Sprawdzenie kompletności urządzenia.":"Проверка комплектности устройства.","Szkolenie personelu sklepu z obsługi maszyny.":"Обучение персонала магазина работе с машиной.","Instruktaż przyjmowania opakowań / butelek.":"Инструктаж по приёму тары / бутылок.","Instruktaż wymiany worków i opróżniania pojemników.":"Инструктаж по замене мешков и опорожнению контейнеров.","Instruktaż wymiany papieru w drukarce.":"Инструктаж по замене бумаги в принтере.","Instruktaż usuwania zacięć.":"Инструктаж по устранению заминов.","Instruktaż czyszczenia maszyny.":"Инструктаж по чистке машины.","Omówienie komunikatów i błędów na ekranie.":"Разбор сообщений и ошибок на экране.","Instruktaż restartu maszyny.":"Инструктаж по перезапуску машины.","Przekazanie kontaktu do serwisu.":"Передача контактов сервиса.","Przekazanie instrukcji obsługi.":"Передача инструкции по эксплуатации.","Szkolenie z zasad bezpieczeństwa (BHP).":"Обучение правилам безопасности (BHP).","Potwierdzenie odbioru szkolenia.":"Подтверждение прохождения обучения."});
+function _curType(){return window._workType||'serwis';}
+function _baseLib(){var t=_curType();return t==='montdemont'?_PHRASES_MONT:t==='szkol'?_PHRASES_SZKOL:_PHRASES_BASE;}
+function _custKey(){return 'rv_ph_'+_curType();}
 function _he(s){return (''+s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function _getCustomPhrases(){try{var a=JSON.parse(localStorage.getItem('rv_phrases')||'null');if(Array.isArray(a))return a;}catch(e){}return [];}
-function _saveCustomPhrases(a){try{localStorage.setItem('rv_phrases',JSON.stringify(a));}catch(e){}}
-function _custList(){return _getCustomPhrases().filter(function(p){return _PHRASES_BASE.indexOf(p)<0;});}
+function _getCustomPhrases(){try{var a=JSON.parse(localStorage.getItem(_custKey())||'null');if(Array.isArray(a))return a;}catch(e){}if(_curType()==='serwis'){try{var o=JSON.parse(localStorage.getItem('rv_phrases')||'null');if(Array.isArray(o))return o;}catch(e){}}return [];}
+function _saveCustomPhrases(a){try{localStorage.setItem(_custKey(),JSON.stringify(a));}catch(e){}}
+function _custList(){var b=_baseLib();return _getCustomPhrases().filter(function(p){return b.indexOf(p)<0;});}
 function openPhrases(){_renderPhrases();if(typeof openSh==='function')openSh('shPhrases');else{var o=document.getElementById('shPhrases');if(o)o.style.display='flex';}}
 function _phInSel(p){return (typeof SEL!=='undefined'&&SEL.sol&&SEL.sol.indexOf(p)>=0);}
 function _phRow(p,onclickStr,delStr){
@@ -9597,17 +9612,36 @@ function _phRow(p,onclickStr,delStr){
 }
 function _renderPhrases(){
   var box=document.getElementById('phrList');if(!box)return;
+  var t=_curType();
+  var hdr=document.getElementById('phrHdr');
+  if(hdr)hdr.textContent=t==='montdemont'?'Frazy: Montaż / Demontaż':t==='szkol'?'Frazy: Szkolenie':'Frazy: Serwis';
   var cust=_custList();
   var h='<div style="font-size:11px;font-weight:700;color:#A19F9D;letter-spacing:.4px;margin:2px 0 8px">MOJE FRAZY</div>';
   if(!cust.length)h+='<div style="color:#999;font-size:12px;padding:0 2px 6px">Brak wlasnych fraz. Dodaj ponizej.</div>';
   cust.forEach(function(p,i){h+=_phRow(p,'_togPhrase(\'c\','+i+')','_delPhrase('+i+')');});
   h+='<div style="font-size:11px;font-weight:700;color:#A19F9D;letter-spacing:.4px;margin:14px 0 8px">BAZA FRAZ</div>';
-  _PHRASES_BASE.forEach(function(p,i){h+=_phRow(p,'_togPhrase(\'b\','+i+')',null);});
+  _baseLib().forEach(function(p,i){h+=_phRow(p,'_togPhrase(\'b\','+i+')',null);});
   box.innerHTML=h;
 }
-function _togPhrase(kind,i){var p=(kind==='b'?_PHRASES_BASE:_custList())[i];if(p==null||typeof SEL==='undefined')return;var k=SEL.sol.indexOf(p);if(k>=0)SEL.sol.splice(k,1);else SEL.sol.push(p);if(typeof _updV==='function')_updV('sol');if(typeof renderList==='function')renderList('sol');if(typeof renderSummary==='function')renderSummary();_renderPhrases();if(typeof _toast==='function')_toast(k>=0?'Usunieto z raportu':'Dodano do raportu');}
-function _addPhrase(){var inp=document.getElementById('phrInput');if(!inp)return;var v=(inp.value||'').trim();if(!v)return;var raw=_getCustomPhrases();if(raw.indexOf(v)<0&&_PHRASES_BASE.indexOf(v)<0){raw.unshift(v);_saveCustomPhrases(raw);}inp.value='';_renderPhrases();if(typeof _toast==='function')_toast('Dodano fraze');}
+function _togPhrase(kind,i){var p=(kind==='b'?_baseLib():_custList())[i];if(p==null||typeof SEL==='undefined')return;var k=SEL.sol.indexOf(p);if(k>=0)SEL.sol.splice(k,1);else SEL.sol.push(p);if(typeof _updV==='function')_updV('sol');if(typeof renderList==='function')renderList('sol');if(typeof renderSummary==='function')renderSummary();_renderPhrases();if(typeof _toast==='function')_toast(k>=0?'Usunieto z raportu':'Dodano do raportu');}
+function _addPhrase(){var inp=document.getElementById('phrInput');if(!inp)return;var v=(inp.value||'').trim();if(!v)return;var raw=_getCustomPhrases();if(raw.indexOf(v)<0&&_baseLib().indexOf(v)<0){raw.unshift(v);_saveCustomPhrases(raw);}inp.value='';_renderPhrases();if(typeof _toast==='function')_toast('Dodano fraze');}
 function _delPhrase(i){var p=_custList()[i];if(p==null)return;if(typeof confirm==='function'&&!confirm('Usunac te fraze z listy?'))return;var raw=_getCustomPhrases();var k=raw.indexOf(p);if(k>=0){raw.splice(k,1);_saveCustomPhrases(raw);}_renderPhrases();}
+function _sLabel(){var t=(window._workType||'serwis');return t==='montdemont'?'MONTA\u017b / DEMONTA\u017b':t==='szkol'?'SZKOLENIE':'NIE GWARANCYJNY';}
+function setWorkType(t){
+  if(t!=='serwis'&&t!=='montdemont'&&t!=='szkol')t='serwis';
+  window._workType=t;
+  try{localStorage.setItem('rv_worktype',t);}catch(e){}
+  var serwis=(t==='serwis');
+  [['wtSerwis','serwis'],['wtMont','montdemont'],['wtSzkol','szkol']].forEach(function(a){
+    var b=document.getElementById(a[0]);if(!b)return;var on=(a[1]===t);
+    b.style.background=on?'#0078D4':'#fff';b.style.color=on?'#fff':'#1C1C1E';b.style.borderColor=on?'#0078D4':'#C4CAD3';
+    if(b.classList)b.classList.toggle('on',on);
+  });
+  var show=function(id,vis){var e=document.getElementById(id);if(e)e.style.display=vis?'':'none';};
+  show('tglRow',serwis);show('mod1',serwis);show('mod2',serwis);show('mod3',serwis);show('modS',serwis);show('partsCard',serwis);
+  if(!serwis&&typeof curMode!=='undefined'&&curMode==='G'&&typeof setMode==='function')setMode('S');
+  if(typeof renderSummary==='function')renderSummary();
+}
 function _overpass(q){
   var enc=encodeURIComponent(q);
   var urls=['https://overpass-api.de/api/interpreter?data='+enc,'https://overpass.kumi.systems/api/interpreter?data='+enc];
@@ -10011,6 +10045,7 @@ function magPrintQR(){
   ['tech','biz','czyt'].forEach(function(k){var el=document.getElementById('sp-'+k);if(el)el.style.background=(rstStyle===k)?'rgba(0,122,255,.1)':'';});
   updateBadges();
   renderSummary();
+  if(typeof setWorkType==='function')setWorkType(ls('rv_worktype','serwis'));
   updateTmplCount();
   // Check stock alert
   if(!_magData)_magData=magLoad();
