@@ -348,7 +348,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.9</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.10</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -1349,7 +1349,7 @@ var D={el:[
 {cat:"Oprogramowanie",pl:"Wyczyszczono log błędów — zwolniono miejsce na dysku",ru:"Очищен лог ошибок — освобождено место"},
 {cat:"Oprogramowanie",pl:"Zaktualizowano firmware sterownika",ru:"Обновлена прошивка контроллера"}
 ],kon:[
-{cat:"Sprawdzenie",pl:"Sprawdzenie ogolne RVM",ru:"Общая проверка"},{cat:"Sprawdzenie",pl:"Sprawdzenie czujnika rozruchu",ru:"Проверка датчика"},{cat:"Sprawdzenie",pl:"Sprawdzenie sortownika ProLine",ru:"Проверка ProLine"},{cat:"Sprawdzenie",pl:"Sprawdzenie kompaktorow",ru:"Проверка компакторов"},{cat:"Sprawdzenie",pl:"Sprawdzenie kamery i lustra",ru:"Проверка камеры"},{cat:"Sprawdzenie",pl:"Sprawdzenie drukarki i papieru",ru:"Проверка принтера"},{cat:"Sprawdzenie",pl:"Sprawdzenie polaczenia sieciowego",ru:"Проверка сети"},{cat:"Czyszczenie",pl:"Program codziennego czyszczenia",ru:"Ежедневная очистка"},{cat:"Czyszczenie",pl:"Program cotygodniowego czyszczenia",ru:"Еженедельная очистка"},{cat:"Czyszczenie",pl:"Oczyszczenie otworu wejsciowego",ru:"Очистка входа"},{cat:"Czyszczenie",pl:"Oczyszczenie kamery / obiektywu",ru:"Очистка камеры"},{cat:"Konserwacja",pl:"Smarowanie mechanizmu",ru:"Смазка"},{cat:"Konserwacja",pl:"Napiecie pasow napedowych",ru:"Натяжка лент"},{cat:"Konfiguracja",pl:"Konfiguracja Wizard",ru:"Wizard"},{cat:"Konfiguracja",pl:"Aktualizacja oprogramowania",ru:"Обновление ПО"},{cat:"Konfiguracja",pl:"Kalibracja kamery",ru:"Калибровка"},
+{cat:"Sprawdzenie",pl:"Sprawdzenie ogolne RVM",ru:"Общая проверка"},{cat:"Sprawdzenie",pl:"Sprawdzenie czujnika rozruchu",ru:"Проверка датчика"},{cat:"Sprawdzenie",pl:"Sprawdzenie sortownika ProLine",ru:"Проверка ProLine"},{cat:"Sprawdzenie",pl:"Sprawdzenie kompaktorów",ru:"Проверка компакторов"},{cat:"Sprawdzenie",pl:"Sprawdzenie kamery i lustra",ru:"Проверка камеры"},{cat:"Sprawdzenie",pl:"Sprawdzenie drukarki i papieru",ru:"Проверка принтера"},{cat:"Sprawdzenie",pl:"Sprawdzenie polaczenia sieciowego",ru:"Проверка сети"},{cat:"Czyszczenie",pl:"Program codziennego czyszczenia",ru:"Ежедневная очистка"},{cat:"Czyszczenie",pl:"Program cotygodniowego czyszczenia",ru:"Еженедельная очистка"},{cat:"Czyszczenie",pl:"Oczyszczenie otworu wejsciowego",ru:"Очистка входа"},{cat:"Czyszczenie",pl:"Oczyszczenie kamery / obiektywu",ru:"Очистка камеры"},{cat:"Konserwacja",pl:"Smarowanie mechanizmu",ru:"Смазка"},{cat:"Konserwacja",pl:"Napiecie pasow napedowych",ru:"Натяжка лент"},{cat:"Konfiguracja",pl:"Konfiguracja Wizard",ru:"Wizard"},{cat:"Konfiguracja",pl:"Aktualizacja oprogramowania",ru:"Обновление ПО"},{cat:"Konfiguracja",pl:"Kalibracja kamery",ru:"Калибровка"},
 {cat:"Przeglad",pl:"Przeglad okresowy",ru:"Плановое ТО"},
 {cat:"Przeglad",pl:"Przeglad gwarancyjny",ru:"Гарантийное ТО"},
 {cat:"Przeglad",pl:"Przeglad techniczny ogolny",ru:"Общий техосмотр"},
@@ -2548,7 +2548,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.9",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.10",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
