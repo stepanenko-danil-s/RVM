@@ -1,13 +1,21 @@
-const C='rvm-cache-v1123';
+const C='rvm-cache-v1124';
 self.addEventListener('install',function(e){self.skipWaiting();});
-self.addEventListener('activate',function(e){e.waitUntil(self.clients.claim());});
+self.addEventListener('activate',function(e){
+  e.waitUntil(
+    caches.keys().then(function(ks){return Promise.all(ks.map(function(k){if(k!==C)return caches.delete(k);}));})
+    .then(function(){return self.clients.claim();})
+  );
+});
 self.addEventListener('fetch',function(e){
   if(e.request.method!=='GET')return;
   e.respondWith(
-    fetch(e.request).then(function(r){
-      try{var cc=r.clone();caches.open(C).then(function(c){c.put(e.request,cc);});}catch(_){}
-      return r;
-    }).catch(function(){return caches.match(e.request);})
+    caches.match(e.request).then(function(cached){
+      var net=fetch(e.request).then(function(r){
+        try{var cc=r.clone();caches.open(C).then(function(c){c.put(e.request,cc);});}catch(_){}
+        return r;
+      }).catch(function(){return cached;});
+      return cached||net;   /* cache-first: instant launch, sieć obnawia w tle */
+    })
   );
 });
 self.addEventListener('notificationclick',function(e){
