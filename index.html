@@ -348,7 +348,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.19</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.20</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2318,6 +2318,19 @@ function askClaude(kind){
   if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(msg).then(go).catch(function(){if(typeof _fb==='function')_fb(msg);go();});}
   else{if(typeof _fb==='function')_fb(msg);go();}
 }
+function chatAsk(kind){
+  var t=((document.getElementById('chatInput')||{}).value||'').trim();
+  if(!t){if(typeof showToast==='function')showToast('Wklej tekst');return;}
+  var P={
+    tr:'Przetłumacz poniższy tekst między polskim a rosyjskim (wykryj język źródłowy i przetłumacz na drugi). Podaj samo tłumaczenie.',
+    gram:'Sprawdź i popraw pisownię oraz gramatykę poniższego tekstu po polsku. Zwróć poprawioną wersję gotową do wysłania, bez komentarzy.',
+    reply:'To jest rozmowa/wiadomość z czatu. Oceń, czy moja odpowiedź jest poprawna gramatycznie i uprzejma po polsku, i zaproponuj lepszą wersję gotową do wysłania.',
+    write:'To jest wiadomość, którą otrzymałem. Napisz uprzejmą, poprawną odpowiedź po polsku, gotową do wysłania.'
+  };
+  var msg=(P[kind]||'')+'\n\n---\n'+t;
+  function go(){window.open('https://claude.ai/new?q='+encodeURIComponent(msg),'_blank');if(typeof showToast==='function')showToast('Tekst skopiowany \u2014 jesli czat pusty, wklej');}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(msg).then(go).catch(go);}else go();
+}
 function _offlineAI(msg){
   var eG=entries.filter(function(e){return e.mode==="G";});
   var eS=entries.filter(function(e){return e.mode==="S";});
@@ -2620,7 +2633,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.19",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.20",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -2876,6 +2889,17 @@ function restoreData(input){
 <div class="pg" id="pgWiedza">
   <div style="padding:12px 12px 0">
     <div style="font-size:20px;font-weight:800;color:#1C1C1E;margin:4px 4px 12px">Wiedza</div>
+    <div style="background:#fff;border-radius:14px;padding:14px;margin:0 4px 14px;box-shadow:0 1px 3px rgba(0,0,0,.06)">
+      <div style="font-size:16px;font-weight:800;color:#1C1C1E;margin-bottom:4px">Asystent czatu</div>
+      <div style="font-size:12px;color:#A19F9D;margin-bottom:10px">Wklej cudzą wiadomość lub swoją odpowiedź — Claude przetłumaczy lub sprawdzi (otwiera czat).</div>
+      <textarea id="chatInput" placeholder="Wklej tekst (PL lub RU)..." style="width:100%;min-height:90px;background:#F8F8F8;border:1px solid #E5E5EA;border-radius:10px;padding:11px;font-size:14px;font-family:inherit;outline:none;resize:vertical;margin-bottom:10px;box-sizing:border-box"></textarea>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <button onclick="chatAsk('tr')" style="padding:11px;background:#fff;border:1px solid #D9D7F1;border-radius:10px;font-size:13px;font-weight:600;color:#5856D6;cursor:pointer;font-family:inherit">Przetłumacz PL↔RU</button>
+        <button onclick="chatAsk('gram')" style="padding:11px;background:#fff;border:1px solid #D9D7F1;border-radius:10px;font-size:13px;font-weight:600;color:#5856D6;cursor:pointer;font-family:inherit">Sprawdź gramatykę</button>
+        <button onclick="chatAsk('reply')" style="padding:11px;background:#fff;border:1px solid #D9D7F1;border-radius:10px;font-size:13px;font-weight:600;color:#5856D6;cursor:pointer;font-family:inherit">Czy dobrze odpowiadam?</button>
+        <button onclick="chatAsk('write')" style="padding:11px;background:#fff;border:1px solid #D9D7F1;border-radius:10px;font-size:13px;font-weight:600;color:#5856D6;cursor:pointer;font-family:inherit">Napisz odpowiedź</button>
+      </div>
+    </div>
     <div id="kbList"></div>
   </div>
 </div>
