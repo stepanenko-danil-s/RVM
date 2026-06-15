@@ -348,7 +348,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.17</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.18</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -591,6 +591,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
       <button onclick="closeOv('shMagCat')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button>
     </div>
     <div style="font-size:12px;color:#A19F9D;margin-bottom:8px">Włącz część — pojawi się w głównym oknie Magazynu. W głównym oknie wyłączysz ją zieloną kropką.</div>
+    <button onclick="if(confirm('Zaimportowac moj stan z DANSTE (41 pozycji)? Ustawi aktywne czesci + ilosci.'))importDanste()" style="width:100%;padding:10px;background:#0078D4;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:10px">Importuj mój stan (DANSTE)</button>
     <input id="magCatSearch" placeholder="Szukaj w katalogu..." oninput="magCatSearch(this.value)" style="width:100%;background:#F8F8F8;border:1px solid #E5E5EA;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:8px">
     <div id="magCatList"></div>
   </div>
@@ -2619,7 +2620,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.17",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.18",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -10071,6 +10072,22 @@ function magCatRender(){
   box.innerHTML=h;
 }
 function magCatAdd(id){var d=magGet(id);d.active=true;magSave();magCatRender();magRender();if(typeof showToast==='function')showToast('Aktywowano \u2014 w Magazynie');}
+var DANSTE_IMPORT={matched:[{id:1,qty:4,min:2},{id:2,qty:3,min:1},{id:3,qty:2,min:1},{id:4,qty:1,min:1},{id:5,qty:1,min:1},{id:6,qty:2,min:1},{id:7,qty:1,min:1},{id:8,qty:3,min:1},{id:9,qty:1,min:1},{id:11,qty:1,min:1},{id:12,qty:1,min:1},{id:13,qty:1,min:1},{id:14,qty:10,min:3},{id:16,qty:1,min:1},{id:17,qty:1,min:1},{id:18,qty:1,min:1},{id:176,qty:1,min:1},{id:19,qty:4,min:2},{id:20,qty:2,min:1},{id:21,qty:2,min:1},{id:22,qty:2,min:1},{id:23,qty:2,min:1},{id:24,qty:3,min:1},{id:26,qty:1,min:1},{id:27,qty:2,min:1},{id:28,qty:1,min:1},{id:30,qty:1,min:1},{id:31,qty:1,min:1},{id:32,qty:1,min:1},{id:33,qty:1,min:1},{id:34,qty:1,min:1},{id:35,qty:1,min:1},{id:36,qty:1,min:1},{id:38,qty:1,min:1},{id:395,qty:1,min:1},{id:39,qty:2,min:1},{id:40,qty:1,min:1},{id:41,qty:2,min:1},{id:42,qty:1,min:1},{id:43,qty:10,min:3}],custom:[{n:"Kurtyna",k:"10030398",qty:1,min:1,cat:"Mój magazyn"}]};
+function importDanste(){
+  if(!_magData)_magData=magLoad();
+  if(typeof magLoadCust==='function')magLoadCust();
+  var n=0;
+  DANSTE_IMPORT.matched.forEach(function(it){var x=magGet(it.id);x.active=true;x.qty=it.qty;x.min=it.min;n++;});
+  DANSTE_IMPORT.custom.forEach(function(it){
+    var ex=(_magCustParts||[]).find(function(p){return (p.k||'').toLowerCase()===it.k.toLowerCase();});
+    var id; if(ex){id=ex.id;} else {id=1000+_magCustParts.length+1;_magCustParts.push({id:id,n:it.n,k:it.k,cat:it.cat});}
+    var x=magGet(id);x.active=true;x.qty=it.qty;x.min=it.min;n++;
+  });
+  if(typeof magSaveCust==='function')magSaveCust();
+  magSave();magRender();if(typeof magCatRender==='function')magCatRender();
+  if(typeof showToast==='function')showToast('Zaimportowano '+n+' części (DANSTE)');
+}
+
 
 function magRender(){
   if(!_magData)_magData=magLoad();
