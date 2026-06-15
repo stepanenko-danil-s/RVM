@@ -348,7 +348,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.20</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.21</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2318,6 +2318,25 @@ function askClaude(kind){
   if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(msg).then(go).catch(function(){if(typeof _fb==='function')_fb(msg);go();});}
   else{if(typeof _fb==='function')_fb(msg);go();}
 }
+var _PL_DIAC={"dzien":"dzień","dzis":"dziś","bede":"będę","bedzie":"będzie","bedziemy":"będziemy","beda":"będą","prosze":"proszę","dziekuje":"dziękuję","dzieki":"dzięki","czesc":"cześć","godzine":"godzinę","godzina":"godzina","pozniej":"później","wczesniej":"wcześniej","moge":"mogę","musze":"muszę","robie":"robię","zrobie":"zrobię","naprawe":"naprawę","naprawa":"naprawa","czesci":"części","juz":"już","milego":"miłego","troche":"trochę","wiecej":"więcej","sie":"się","prosba":"prośba","prosbe":"prośbę","sroda":"środa","srode":"środę","pieniadze":"pieniądze","zaplate":"zapłatę","zaplata":"zapłata","wlaczyc":"włączyć","wylaczyc":"wyłączyć","polaczyc":"połączyć","sprobuje":"spróbuję","przyjade":"przyjadę","bylem":"byłem","reke":"rękę","poludnie":"południe","niedziele":"niedzielę","skonczone":"skończone","zepsute":"zepsute","wymienic":"wymienić","sprawdzic":"sprawdzić","zamowic":"zamówić","czesciej":"częściej","powaznie":"poważnie","wlasnie":"właśnie","jesli":"jeśli","wiec":"więc","oczywiscie":"oczywiście","czekac":"czekać","zaczekac":"zaczekać","zadzwonie":"zadzwonię","oddzwonie":"oddzwonię","skonczylem":"skończyłem","skonczylam":"skończyłam","wroce":"wrócę","bedziesz":"będziesz","mozliwe":"możliwe","niestety":"niestety"};
+function chatLocal(){
+  var ta=document.getElementById('chatInput');var box=document.getElementById('chatLocalRes');
+  var t=((ta||{}).value||'').trim();
+  if(!t){if(typeof showToast==='function')showToast('Wklej tekst');return;}
+  var cyr=/[\u0400-\u04FF]/.test(t);
+  var corrected=t.replace(/[\p{L}]+/gu,function(w){var r=_PL_DIAC[w.toLowerCase()];if(!r)return w;if(w[0]===w[0].toUpperCase())r=r.charAt(0).toUpperCase()+r.slice(1);return r;});
+  var changed=corrected!==t;
+  window._chatCorrected=corrected;
+  var html='';
+  html+= cyr ? '<b>Język:</b> rosyjski (cyrylica) — pełne tłumaczenie zrób przez Claude.' : '<b>Język:</b> polski.';
+  if(changed){
+    html+='<br><br><b>Z polskimi znakami</b> (sprawdź — tylko częste słowa):<br>'+esc(corrected);
+    html+='<br><button onclick="(function(){var v=window._chatCorrected||\'\';if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(v);}var ta=document.getElementById(\'chatInput\');if(ta)ta.value=v;if(typeof showToast===\'function\')showToast(\'Skopiowano i wstawiono\');})()" style="margin-top:8px;padding:8px 14px;background:#34C759;color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Kopiuj i wstaw</button>';
+  } else {
+    html+='<br><br>Nie znaleziono częstych słów do poprawy. Pełną gramatykę sprawdzi Claude.';
+  }
+  box.innerHTML=html;box.style.display='block';
+}
 function chatAsk(kind){
   var t=((document.getElementById('chatInput')||{}).value||'').trim();
   if(!t){if(typeof showToast==='function')showToast('Wklej tekst');return;}
@@ -2633,7 +2652,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.20",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.21",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -2899,6 +2918,8 @@ function restoreData(input){
         <button onclick="chatAsk('reply')" style="padding:11px;background:#fff;border:1px solid #D9D7F1;border-radius:10px;font-size:13px;font-weight:600;color:#5856D6;cursor:pointer;font-family:inherit">Czy dobrze odpowiadam?</button>
         <button onclick="chatAsk('write')" style="padding:11px;background:#fff;border:1px solid #D9D7F1;border-radius:10px;font-size:13px;font-weight:600;color:#5856D6;cursor:pointer;font-family:inherit">Napisz odpowiedź</button>
       </div>
+      <button onclick="chatLocal()" style="width:100%;margin-top:8px;padding:11px;background:#fff;border:1px solid #34C759;border-radius:10px;font-size:13px;font-weight:700;color:#34C759;cursor:pointer;font-family:inherit">Polskie znaki + kontrola (offline)</button>
+      <div id="chatLocalRes" style="display:none;font-size:13px;line-height:1.5;background:#F4FBF6;border:1px solid #CDEBD6;border-radius:10px;padding:11px;white-space:pre-wrap;margin-top:8px"></div>
     </div>
     <div id="kbList"></div>
   </div>
