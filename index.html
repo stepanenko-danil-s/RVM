@@ -348,7 +348,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.25</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.26</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2319,6 +2319,7 @@ function askClaude(kind){
   else{if(typeof _fb==='function')_fb(msg);go();}
 }
 var _PL_DIAC={"dzien":"dzień","dzis":"dziś","bede":"będę","bedzie":"będzie","bedziemy":"będziemy","beda":"będą","prosze":"proszę","dziekuje":"dziękuję","dzieki":"dzięki","czesc":"cześć","godzine":"godzinę","godzina":"godzina","pozniej":"później","wczesniej":"wcześniej","moge":"mogę","musze":"muszę","robie":"robię","zrobie":"zrobię","naprawe":"naprawę","naprawa":"naprawa","czesci":"części","juz":"już","milego":"miłego","troche":"trochę","wiecej":"więcej","sie":"się","prosba":"prośba","prosbe":"prośbę","sroda":"środa","srode":"środę","pieniadze":"pieniądze","zaplate":"zapłatę","zaplata":"zapłata","wlaczyc":"włączyć","wylaczyc":"wyłączyć","polaczyc":"połączyć","sprobuje":"spróbuję","przyjade":"przyjadę","bylem":"byłem","reke":"rękę","poludnie":"południe","niedziele":"niedzielę","skonczone":"skończone","zepsute":"zepsute","wymienic":"wymienić","sprawdzic":"sprawdzić","zamowic":"zamówić","czesciej":"częściej","powaznie":"poważnie","wlasnie":"właśnie","jesli":"jeśli","wiec":"więc","oczywiscie":"oczywiście","czekac":"czekać","zaczekac":"zaczekać","zadzwonie":"zadzwonię","oddzwonie":"oddzwonię","skonczylem":"skończyłem","skonczylam":"skończyłam","wroce":"wrócę","bedziesz":"będziesz","mozliwe":"możliwe","niestety":"niestety"};
+function wkbTgl(id){var b=document.getElementById(id);if(!b)return;var open=b.style.display!=='none';b.style.display=open?'none':'block';var a=document.getElementById(id+'_a');if(a)a.style.transform=open?'rotate(0deg)':'rotate(90deg)';}
 function chatLocal(){
   var ta=document.getElementById('chatInput');var box=document.getElementById('chatLocalRes');
   var t=((ta||{}).value||'').trim();
@@ -2653,7 +2654,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.25",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.26",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -2923,6 +2924,93 @@ function restoreData(input){
       <button onclick="chatLocal()" style="width:100%;margin-top:8px;padding:9px;background:#F8F8F8;border:1px solid #E5E5EA;border-radius:10px;font-size:12px;font-weight:600;color:#8E8E93;cursor:pointer;font-family:inherit">Tylko polskie znaki (offline, częste słowa)</button>
       <div id="chatLocalRes" style="display:none;font-size:13px;line-height:1.5;background:#F4FBF6;border:1px solid #CDEBD6;border-radius:10px;padding:11px;white-space:pre-wrap;margin-top:8px"></div>
     </div>
+    <div style="font-size:13px;font-weight:800;color:#8E8E93;letter-spacing:.04em;margin:6px 4px 8px;text-transform:uppercase">Ściągi / Pamiętki</div>
+
+    <div style="background:#fff;border-radius:14px;margin:0 4px 10px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden">
+      <div onclick="wkbTgl('wkb1')" style="display:flex;align-items:center;gap:8px;padding:14px;cursor:pointer">
+        <span id="wkb1_a" style="color:#8E8E93;transition:transform .15s">&#9656;</span>
+        <span style="font-size:15px;font-weight:700;color:#1C1C1E">AC / DC i symbole elektryczne</span>
+      </div>
+      <div id="wkb1" style="display:none;padding:0 14px 14px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px;background:#F8F8F8;border-radius:10px;padding:10px">
+            <svg viewBox="0 0 40 24" width="40" height="24"><path d="M2 12 Q9 1 16 12 T30 12 Q34 7 38 12" fill="none" stroke="#1C1C1E" stroke-width="2"/></svg>
+            <div><div style="font-weight:700;font-size:13px">AC ~</div><div style="font-size:11px;color:#8E8E93">prąd przemienny · переменный</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;background:#F8F8F8;border-radius:10px;padding:10px">
+            <svg viewBox="0 0 40 24" width="40" height="24"><line x1="8" y1="9" x2="32" y2="9" stroke="#1C1C1E" stroke-width="2"/><line x1="8" y1="16" x2="32" y2="16" stroke="#1C1C1E" stroke-width="2" stroke-dasharray="4 3"/></svg>
+            <div><div style="font-weight:700;font-size:13px">DC &#9143;</div><div style="font-size:11px;color:#8E8E93">prąd stały · постоянный</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;background:#F8F8F8;border-radius:10px;padding:10px">
+            <svg viewBox="0 0 40 28" width="40" height="28"><line x1="20" y1="3" x2="20" y2="13" stroke="#1C1C1E" stroke-width="2"/><line x1="9" y1="13" x2="31" y2="13" stroke="#1C1C1E" stroke-width="2"/><line x1="13" y1="18" x2="27" y2="18" stroke="#1C1C1E" stroke-width="2"/><line x1="16" y1="23" x2="24" y2="23" stroke="#1C1C1E" stroke-width="2"/></svg>
+            <div><div style="font-weight:700;font-size:13px">PE / &#9173;</div><div style="font-size:11px;color:#8E8E93">uziemienie · земля</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;background:#F8F8F8;border-radius:10px;padding:10px">
+            <div style="font-size:20px;font-weight:800;width:40px;text-align:center">+ &minus;</div>
+            <div><div style="font-weight:700;font-size:13px">Bieguny DC</div><div style="font-size:11px;color:#8E8E93">+ plus · &minus; minus</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;background:#F8F8F8;border-radius:10px;padding:10px">
+            <div style="font-size:17px;font-weight:800;width:40px;text-align:center">V</div>
+            <div><div style="font-weight:700;font-size:13px">Napięcie</div><div style="font-size:11px;color:#8E8E93">напряжение · wolt</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;background:#F8F8F8;border-radius:10px;padding:10px">
+            <div style="font-size:17px;font-weight:800;width:40px;text-align:center">A</div>
+            <div><div style="font-weight:700;font-size:13px">Prąd</div><div style="font-size:11px;color:#8E8E93">ток · amper</div></div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:#A19F9D;margin-top:8px">Multimetr: ~ = pomiar AC, &#9143;/= = pomiar DC.</div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border-radius:14px;margin:0 4px 10px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden">
+      <div onclick="wkbTgl('wkb2')" style="display:flex;align-items:center;gap:8px;padding:14px;cursor:pointer">
+        <span id="wkb2_a" style="color:#8E8E93;transition:transform .15s">&#9656;</span>
+        <span style="font-size:15px;font-weight:700;color:#1C1C1E">Kolory przewodów (UE/IEC)</span>
+      </div>
+      <div id="wkb2" style="display:none;padding:0 14px 14px">
+        <div style="font-size:11px;font-weight:800;color:#8E8E93;margin-bottom:6px">AC ~ (230/400V)</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><span style="width:34px;height:18px;border-radius:5px;background:repeating-linear-gradient(45deg,#2E7D32 0 6px,#FFEB3B 6px 12px);flex:0 0 auto;border:1px solid #ccc"></span><div style="font-size:13px"><b>PE</b> — żółto-zielony · <span style="color:#8E8E93">земля/защитный</span></div></div>
+        <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><span style="width:34px;height:18px;border-radius:5px;background:#1E73BE;flex:0 0 auto;border:1px solid #ccc"></span><div style="font-size:13px"><b>N</b> — niebieski · <span style="color:#8E8E93">нейтраль</span></div></div>
+        <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><span style="width:34px;height:18px;border-radius:5px;background:#6D4C41;flex:0 0 auto;border:1px solid #ccc"></span><div style="font-size:13px"><b>L</b> — brązowy · <span style="color:#8E8E93">фаза</span></div></div>
+        <div style="font-size:11px;font-weight:800;color:#8E8E93;margin:8px 0 6px">3-fazowy: L1/L2/L3</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span style="display:flex;align-items:center;gap:6px;font-size:12px"><span style="width:22px;height:14px;border-radius:4px;background:#6D4C41;border:1px solid #ccc"></span>L1 brąz.</span>
+          <span style="display:flex;align-items:center;gap:6px;font-size:12px"><span style="width:22px;height:14px;border-radius:4px;background:#222;border:1px solid #ccc"></span>L2 czarny</span>
+          <span style="display:flex;align-items:center;gap:6px;font-size:12px"><span style="width:22px;height:14px;border-radius:4px;background:#9E9E9E;border:1px solid #ccc"></span>L3 szary</span>
+        </div>
+        <div style="font-size:11px;font-weight:800;color:#8E8E93;margin:10px 0 6px">DC &#9143;</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:5px 0"><span style="width:34px;height:18px;border-radius:5px;background:#D32F2F;flex:0 0 auto;border:1px solid #ccc"></span><div style="font-size:13px"><b>+</b> czerwony · <span style="color:#8E8E93">плюс</span></div></div>
+        <div style="display:flex;align-items:center;gap:10px;padding:5px 0"><span style="width:34px;height:18px;border-radius:5px;background:#222;flex:0 0 auto;border:1px solid #ccc"></span><div style="font-size:13px"><b>&minus;</b> czarny · <span style="color:#8E8E93">минус</span></div></div>
+        <div style="font-size:11px;color:#A19F9D;margin-top:8px">Справочно (стандарт UE/IEC). DC-цвета бывают разные — <b>сверяй с конкретной машiną RVM</b>.</div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border-radius:14px;margin:0 4px 14px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden">
+      <div onclick="wkbTgl('wkb3')" style="display:flex;align-items:center;gap:8px;padding:14px;cursor:pointer">
+        <span id="wkb3_a" style="color:#8E8E93;transition:transform .15s">&#9656;</span>
+        <span style="font-size:15px;font-weight:700;color:#1C1C1E">Złącza / piny RVM</span>
+      </div>
+      <div id="wkb3" style="display:none;padding:0 14px 14px">
+        <div style="font-size:12px;font-weight:800;color:#1C1C1E;margin-bottom:6px">Przekaźnik bezpieczeństwa OMRON G9SB-301-B</div>
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:6px 10px;font-size:12.5px;align-items:center">
+          <span style="font-family:monospace;font-weight:700;background:#FFF3E0;color:#E65100;padding:2px 6px;border-radius:5px">A1 / A2</span><span>zasilanie 24V (A1 = <b>+</b>, A2 = <b>&minus;</b> dla DC)</span>
+          <span style="font-family:monospace;font-weight:700;background:#E3F2FD;color:#1565C0;padding:2px 6px;border-radius:5px">T11 / T12</span><span>wejście bezpieczeństwa 1 (kanał 1)</span>
+          <span style="font-family:monospace;font-weight:700;background:#E3F2FD;color:#1565C0;padding:2px 6px;border-radius:5px">T21 / T22</span><span>wejście bezpieczeństwa 2 (kanał 2)</span>
+          <span style="font-family:monospace;font-weight:700;background:#E8F5E9;color:#2E7D32;padding:2px 6px;border-radius:5px">T31 / T32</span><span>reset / feedback (musi być zamknięte → wyjścia ON)</span>
+          <span style="font-family:monospace;font-weight:700;background:#F3E5F5;color:#6A1B9A;padding:2px 6px;border-radius:5px">13-14 23-24 33-34</span><span>wyjścia bezpieczeństwa NO</span>
+          <span style="font-family:monospace;font-weight:700;background:#FCE4EC;color:#AD1457;padding:2px 6px;border-radius:5px">41-42</span><span>wyjście pomocnicze NC</span>
+        </div>
+        <div style="font-size:11.5px;color:#605E5C;margin-top:8px;background:#F8F8F8;border-radius:8px;padding:8px">
+          • 1 kanał (model -B): zewrzeć <b>T12</b> i <b>T22</b>.<br>
+          • Wyjścia ON tylko gdy oba wejścia (T11-T12 i T21-T22) <b>oraz</b> reset T31-T32 są zamknięte.<br>
+          • Otwarcie pętli T21-T22 (np. czujnik MS5) → wyłączenie wyjść.
+        </div>
+        <div style="font-size:11px;font-weight:800;color:#8E8E93;margin:10px 0 4px">Liczenie pinów (Dupont / Molex)</div>
+        <div style="font-size:12px;color:#323130">Pin 1 = strona z oznaczeniem (▲/kwadrat/strzałka na obudowie). Licz wzdłuż rzędu od pinu 1.</div>
+        <div style="font-size:11px;color:#A19F9D;margin-top:8px">Справочно по даташиту OMRON. <b>Перед работой сверяй с конкретной машиной/схемой.</b></div>
+      </div>
+    </div>
+
     <div id="kbList"></div>
   </div>
 </div>
