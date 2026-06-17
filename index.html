@@ -348,7 +348,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.34</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.35</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2660,7 +2660,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.34",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.35",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -9054,6 +9054,23 @@ function toggleParts(){
   if(partsOpen)renderParts();
 }
 
+function _normP(s){
+  s=(s||'').toLowerCase();
+  var d={'\u0105':'a','\u0107':'c','\u0119':'e','\u0142':'l','\u0144':'n','\u00f3':'o','\u015b':'s','\u017a':'z','\u017c':'z'};
+  s=s.replace(/[\u0105\u0107\u0119\u0142\u0144\u00f3\u015b\u017a\u017c]/g,function(c){return d[c]||c;});
+  s=s.replace(/[-_/]/g,' ').replace(/(\d)\s*pin\w*/g,'$1pin').replace(/\s+/g,' ').trim();
+  return s;
+}
+var _PSYN={
+  'infeed':['wejsciow','wlot','podajnik','infeed'],
+  'wejsciowy':['wejsciow','infeed'],
+  'czujnik':['czujnik','fotokomork','sensor'],
+  'sensor':['czujnik','fotokomork','sensor'],
+  'fotokomorka':['fotokomork','czujnik'],
+  'plyta':['plyta','pcba','pcb'],
+  'zasilacz':['zasilacz','zasil'],
+  'kurtyna':['kurtyna','wlot']
+};
 function _stockBadge(id){
   try{
     if(typeof magActive!=='function'||typeof magGet!=='function')return '';
@@ -9089,16 +9106,22 @@ var _partsQ='';
 function renderPartsSearch(q){
   _partsQ=q||'';
   var res=document.getElementById('partsSrchRes');if(!res)return;
-  var ql=(q||'').toLowerCase().trim();
+  var ql=_normP(q);
   if(!ql){res.innerHTML='<div style="font-size:12px;color:#A19F9D;padding:8px 2px">Wpisz pierwsze litery nazwy lub kod\u2026</div>';return;}
   var all=(typeof magGetAll==='function')?magGetAll():MAG_PARTS;
-  var f=all.filter(function(p){return (p.n+' '+(p.k||'')).toLowerCase().indexOf(ql)>=0;});
+  var toks=ql.split(' ').filter(Boolean);
+  var f=all.filter(function(p){
+    var txt=_normP(p.n+' '+(p.k||''));
+    return toks.every(function(t){
+      var syn=_PSYN[t]||[t];
+      return syn.some(function(s){return txt.indexOf(s)>=0;});
+    });
+  });
   f.sort(function(a,b){
-    function sc(p){var n=p.n.toLowerCase(),k=(p.k||'').toLowerCase();
-      if(n.indexOf(ql)===0)return 0;
-      if((' '+n).indexOf(' '+ql)>=0)return 1;
-      if(k.indexOf(ql)===0)return 2;
-      return 3;}
+    function sc(p){var n=_normP(p.n);
+      if(n.indexOf(toks[0])===0)return 0;
+      if((' '+n).indexOf(' '+toks[0])>=0)return 1;
+      return 2;}
     return sc(a)-sc(b)||a.n.localeCompare(b.n);
   });
   var lim=40;
