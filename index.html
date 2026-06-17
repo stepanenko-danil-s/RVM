@@ -348,7 +348,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.32</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.33</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -487,7 +487,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
     <!-- Części zamienne -->
     <div class="acc-card" id="partsCard">
-      <div class="acc-hdr" onclick="goTab('mag')">
+      <div class="acc-hdr" onclick="toggleParts()">
         <span class="acc-hdr-t">Części zamienne</span>
         <span style="display:flex;align-items:center;gap:8px"><button onclick="event.stopPropagation();magScanQR()" style="background:#0078D4;color:#fff;border:none;border-radius:20px;padding:6px 13px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit"><span class="ti"><span class="ic-ios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8"/><path d="M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8"/><path d="M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16"/><path d="M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"/><rect x="8.3" y="8.3" width="3.2" height="3.2" rx="0.7"/><rect x="13" y="13" width="2.6" height="2.6" rx="0.5"/></svg></span><span class="ic-ms"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h6v6H4V4Zm2 2v2h2V6H6Z"/><path d="M14 4h6v6h-6V4Zm2 2v2h2V6h-2Z"/><path d="M4 14h6v6H4v-6Zm2 2v2h2v-2H6Z"/><path d="M13 13h3v3h-3zM17 13h3v2h-3zM13 17h2v3h-2zM16 17h4v3h-4z"/></svg></span></span>Skanuj QR</button><span id="partsArr" style="color:#C7C7CC;font-size:15px">&#8250;</span></span>
       </div>
@@ -2660,7 +2660,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.32",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.33",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
