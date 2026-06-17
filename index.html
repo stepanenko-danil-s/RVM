@@ -348,7 +348,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.35</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.37</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2660,7 +2660,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.35",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.37",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -9062,15 +9062,23 @@ function _normP(s){
   return s;
 }
 var _PSYN={
-  'infeed':['wejsciow','wlot','podajnik','infeed'],
+  'infeed':['infeed','wejsciow','wlot','podajnik','rozruch','fotokomork'],
   'wejsciowy':['wejsciow','infeed'],
+  'ruch':['ruch','rozruch','fotokomork'],
   'czujnik':['czujnik','fotokomork','sensor'],
   'sensor':['czujnik','fotokomork','sensor'],
-  'fotokomorka':['fotokomork','czujnik'],
+  'fotokomorka':['fotokomork','czujnik','rozruch'],
+  'przenosnik':['przenos','podajnik'],
+  'podajnik':['podajnik','wejsciow'],
   'plyta':['plyta','pcba','pcb'],
   'zasilacz':['zasilacz','zasil'],
   'kurtyna':['kurtyna','wlot']
 };
+function _synFor(t){
+  if(_PSYN[t])return _PSYN[t];
+  for(var k in _PSYN){if(t.indexOf(k)===0||(k.length>=4&&k.indexOf(t)===0))return _PSYN[k];}
+  return [t];
+}
 function _stockBadge(id){
   try{
     if(typeof magActive!=='function'||typeof magGet!=='function')return '';
@@ -9113,7 +9121,7 @@ function renderPartsSearch(q){
   var f=all.filter(function(p){
     var txt=_normP(p.n+' '+(p.k||''));
     return toks.every(function(t){
-      var syn=_PSYN[t]||[t];
+      var syn=_synFor(t);
       return syn.some(function(s){return txt.indexOf(s)>=0;});
     });
   });
