@@ -348,7 +348,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.33</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.34</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2660,7 +2660,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.33",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.34",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -9090,10 +9090,18 @@ function renderPartsSearch(q){
   _partsQ=q||'';
   var res=document.getElementById('partsSrchRes');if(!res)return;
   var ql=(q||'').toLowerCase().trim();
+  if(!ql){res.innerHTML='<div style="font-size:12px;color:#A19F9D;padding:8px 2px">Wpisz pierwsze litery nazwy lub kod\u2026</div>';return;}
   var all=(typeof magGetAll==='function')?magGetAll():MAG_PARTS;
-  var f=ql?all.filter(function(p){return (p.n+' '+(p.k||'')).toLowerCase().indexOf(ql)>=0;}):all.slice();
-  if(ql)f.sort(function(a,b){return (a.n.toLowerCase().indexOf(ql)===0?0:1)-(b.n.toLowerCase().indexOf(ql)===0?0:1);});
-  var lim=ql?40:all.length;
+  var f=all.filter(function(p){return (p.n+' '+(p.k||'')).toLowerCase().indexOf(ql)>=0;});
+  f.sort(function(a,b){
+    function sc(p){var n=p.n.toLowerCase(),k=(p.k||'').toLowerCase();
+      if(n.indexOf(ql)===0)return 0;
+      if((' '+n).indexOf(' '+ql)>=0)return 1;
+      if(k.indexOf(ql)===0)return 2;
+      return 3;}
+    return sc(a)-sc(b)||a.n.localeCompare(b.n);
+  });
+  var lim=40;
   var h='';
   f.slice(0,lim).forEach(function(p){
     h+='<div onclick="adjPart(\''+p.id+'\',\''+curMode+'\',1)" style="display:flex;gap:8px;align-items:center;padding:8px 6px;border-bottom:1px solid #F2F2F7;cursor:pointer"><span style="color:#007A7A;font-weight:700;font-size:16px">+</span><div style="flex:1;min-width:0"><div style="font-size:13px;color:#1C1C1E">'+esc(p.n)+'</div>'+(p.k?'<div style="font-size:10px;color:#A19F9D">'+esc(p.k)+'</div>':'')+(_stockBadge(p.id)?'<div style="margin-top:1px">'+_stockBadge(p.id)+'</div>':'')+'</div></div>';
