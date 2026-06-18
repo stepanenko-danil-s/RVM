@@ -353,7 +353,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.38</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.39</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2665,7 +2665,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.38",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.39",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -2948,7 +2948,7 @@ function restoreData(input){
 <!-- BOTTOM NAV -->
 <div class="bnav">
   <button class="bnav-btn on" id="navRaport" onclick="goTab('raport')" title="Raport" aria-label="Raport"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:27px;height:27px"><path d="M13 3H7a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V8z"/><path d="M13 3v5h5"/><path d="M9 13h6M9 17h6"/></svg></button>
-  <button class="bnav-btn" id="navMag" onclick="goTab('mag')" title="Magazyn" aria-label="Magazyn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:27px;height:27px"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg></button>
+  <button class="bnav-btn" id="navMag" onclick="goTab('mag')" title="Magazyn" aria-label="Magazyn" style="position:relative"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:27px;height:27px"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg><span id="magBadge" style="display:none;position:absolute;top:1px;left:calc(50% + 5px);min-width:16px;height:16px;padding:0 4px;background:#FF3B30;color:#fff;font-size:10px;font-weight:800;border-radius:9px;align-items:center;justify-content:center;line-height:1;box-sizing:border-box">0</span></button>
   <button class="bnav-btn" id="navWiedza" onclick="goTab('wiedza')" title="Wiedza" aria-label="Wiedza"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:27px;height:27px"><path d="M5 4a1 1 0 0 1 1-1h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M19 19H6a2 2 0 0 0-2 2"/><path d="M9 7h7"/></svg></button>
 </div>
 <div class="ov" id="shPick" style="display:none" onclick="if(event.target===this)closeOv('shPick')"><div class="sh" style="max-height:80vh;overflow-y:auto;-webkit-overflow-scrolling:touch"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div style="font-size:16px;font-weight:800;color:#323130">Wybierz sklep (do 60 m)</div><button onclick="closeOv('shPick')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button></div><div id="pickList"></div></div></div>
@@ -8747,6 +8747,7 @@ function goTab(t){
   if(bn)bn.classList.add('on');
   if(t==='mag'){if(!_magData)_magData=magLoad();setTimeout(magRender,50);}
   if(t==='wiedza'){try{kbRender();}catch(e){}}
+  if(typeof _updMagBadge==='function')_updMagBadge();
 }
 
 // ===== SETTINGS =====
@@ -9116,34 +9117,37 @@ function renderParts(){
   renderPartsSearch(_partsQ);
 }
 var _partsQ='';
+function _partRow(p){
+  var ph='';
+  try{var d=magGet(p.id)||{};if(d.photo)ph='<img src="'+d.photo+'" style="width:40px;height:40px;border-radius:8px;object-fit:cover;flex:0 0 auto">';}catch(e){}
+  if(!ph)ph='<div style="width:40px;height:40px;border-radius:8px;background:#F0F0F5;flex:0 0 auto;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 26 26" fill="none" stroke="#C8C6C4" stroke-width="1.3" stroke-linecap="round"><rect x="2" y="5" width="22" height="16" rx="3"/><circle cx="13" cy="13" r="4"/><path d="M8 5l1.5-3h7L18 5"/></svg></div>';
+  return '<div onclick="adjPart(\''+p.id+'\',\''+curMode+'\',1)" style="display:flex;gap:9px;align-items:center;padding:8px 6px;border-bottom:1px solid #F2F2F7;cursor:pointer">'+ph+'<div style="flex:1;min-width:0"><div style="font-size:13px;color:#1C1C1E">'+esc(p.n)+'</div>'+(p.k?'<div style="font-size:10px;color:#A19F9D">'+esc(p.k)+'</div>':'')+(_stockBadge(p.id)?'<div style="margin-top:1px">'+_stockBadge(p.id)+'</div>':'')+'</div><span style="color:#007A7A;font-weight:700;font-size:20px;flex:0 0 auto">+</span></div>';
+}
 function renderPartsSearch(q){
   _partsQ=q||'';
   var res=document.getElementById('partsSrchRes');if(!res)return;
+  if(typeof magLoad==='function'&&!_magData)_magData=magLoad();
   var ql=_normP(q);
-  if(!ql){res.innerHTML='<div style="font-size:12px;color:#A19F9D;padding:8px 2px">Wpisz pierwsze litery nazwy lub kod\u2026</div>';return;}
   var all=(typeof magGetAll==='function')?magGetAll():MAG_PARTS;
+  var f;
+  if(!ql){
+    f=all.filter(function(p){return magActive(p.id);});
+    f.sort(function(a,b){return (a.n||'').localeCompare(b.n||'');});
+    if(!f.length){res.innerHTML='<div style="font-size:12px;color:#A19F9D;padding:8px 2px">Brak aktywnych części — aktywuj w Magazynie</div>';return;}
+    res.innerHTML=f.map(_partRow).join('');
+    return;
+  }
   var toks=ql.split(' ').filter(Boolean);
-  var f=all.filter(function(p){
+  f=all.filter(function(p){
     var txt=_normP(p.n+' '+(p.k||''));
-    return toks.every(function(t){
-      var syn=_synFor(t);
-      return syn.some(function(s){return txt.indexOf(s)>=0;});
-    });
+    return toks.every(function(t){var syn=_synFor(t);return syn.some(function(s){return txt.indexOf(s)>=0;});});
   });
   f.sort(function(a,b){
-    function sc(p){var n=_normP(p.n);
-      if(n.indexOf(toks[0])===0)return 0;
-      if((' '+n).indexOf(' '+toks[0])>=0)return 1;
-      return 2;}
+    function sc(p){var n=_normP(p.n);if(n.indexOf(toks[0])===0)return 0;if((' '+n).indexOf(' '+toks[0])>=0)return 1;return 2;}
     return sc(a)-sc(b)||a.n.localeCompare(b.n);
   });
-  var lim=40;
-  var h='';
-  f.slice(0,lim).forEach(function(p){
-    h+='<div onclick="adjPart(\''+p.id+'\',\''+curMode+'\',1)" style="display:flex;gap:8px;align-items:center;padding:8px 6px;border-bottom:1px solid #F2F2F7;cursor:pointer"><span style="color:#007A7A;font-weight:700;font-size:16px">+</span><div style="flex:1;min-width:0"><div style="font-size:13px;color:#1C1C1E">'+esc(p.n)+'</div>'+(p.k?'<div style="font-size:10px;color:#A19F9D">'+esc(p.k)+'</div>':'')+(_stockBadge(p.id)?'<div style="margin-top:1px">'+_stockBadge(p.id)+'</div>':'')+'</div></div>';
-  });
-  if(!f.length)h='<div style="font-size:12px;color:#A19F9D;padding:6px 2px">Nie znaleziono</div>';
-  res.innerHTML=h;
+  if(!f.length){res.innerHTML='<div style="font-size:12px;color:#A19F9D;padding:6px 2px">Nie znaleziono</div>';return;}
+  res.innerHTML=f.slice(0,40).map(_partRow).join('');
 }
 
 function adjPart(id,mode,d){
@@ -9911,6 +9915,8 @@ function _rstoreLoad(type){
   if(typeof _applyTimeUI==='function'){_applyTimeUI('G');_applyTimeUI('S');}
   if(typeof updateBadges==='function')updateBadges();
 }
+function _lowCount(){try{if(typeof magLoad==='function'&&!_magData)_magData=magLoad();var n=0;(typeof magGetAll==='function'?magGetAll():MAG_PARTS).forEach(function(p){if(magActive(p.id)&&magSt(p.id)!=='ok')n++;});return n;}catch(e){return 0;}}
+function _updMagBadge(){var b=document.getElementById('magBadge');if(!b)return;var n=_lowCount();if(n>0){b.textContent=n>99?'99+':String(n);b.style.display='flex';}else{b.style.display='none';}}
 function _gnIsOff(){try{return localStorage.getItem('rv_gn_off')==='1';}catch(e){return false;}}
 function _gnOffActive(){return ((window._workType||'serwis')==='serwis')&&_gnIsOff();}
 function _applyGnUI(){var serwis=((window._workType||'serwis')==='serwis');var off=_gnIsOff();var e=document.getElementById('tglRow');if(e)e.style.display=(serwis&&!off)?'':'none';var c=document.getElementById('gnOffChk');if(c)c.checked=off;}
@@ -10228,16 +10234,10 @@ function magRender(){
   _all.forEach(function(p){if(!magActive(p.id))return;var s=magSt(p.id);if(s==='empty')empty++;else if(s==='warn')warn++;});
   var tot=document.getElementById('magTotal'),w=document.getElementById('magWarn'),e=document.getElementById('magEmpty');
   if(tot)tot.textContent=_all.filter(function(p){return magActive(p.id);}).length;if(w)w.textContent=warn;if(e)e.textContent=empty;
-  // Update alert banner
+  // Red banner removed — count shown as badge over Magazyn nav icon
   var banner=document.getElementById('stockAlert');
-  if(banner){
-    var n=warn+empty;
-    banner.style.display=n>0?'flex':'none';
-    var txt=document.getElementById('stockAlertTxt');
-    var num=document.getElementById('stockAlertN');
-    if(txt)txt.textContent=empty>0?'Brak części - wymagane zamówienie':'Niski stan części';
-    if(num)num.textContent=n;
-  }
+  if(banner)banner.style.display='none';
+  if(typeof _updMagBadge==='function')_updMagBadge();
   if(!parts.length){grid.innerHTML='<div style="padding:20px;text-align:center;color:#8E8E93;font-size:13px">Brak wynikow</div>';return;}
   var h='',lastCat='';
   parts.forEach(function(p){
@@ -10392,17 +10392,11 @@ function magPrintQR(){
   if(typeof setWorkType==='function')setWorkType(ls('rv_worktype','serwis'));
   if(typeof _applyGnUI==='function')_applyGnUI();
   updateTmplCount();
-  // Check stock alert
+  // Check stock — show as badge over Magazyn nav icon (no red banner)
   if(!_magData)_magData=magLoad();
-  var n=0;
-  MAG_PARTS.forEach(function(p){if(!magActive(p.id))return;var s=magSt(p.id);if(s!=='ok')n++;});
   var banner=document.getElementById('stockAlert');
-  if(banner&&n>0){
-    banner.style.display='flex';
-    var empty=MAG_PARTS.filter(function(p){return magActive(p.id)&&magSt(p.id)==='empty';}).length;
-    document.getElementById('stockAlertTxt').textContent=empty>0?'Brak części - wymagane zamówienie':'Niski stan części';
-    document.getElementById('stockAlertN').textContent=n;
-  }
+  if(banner)banner.style.display='none';
+  if(typeof _updMagBadge==='function')_updMagBadge();
 })();
 </script>
 
