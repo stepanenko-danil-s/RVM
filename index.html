@@ -348,7 +348,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.41</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.42</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -399,12 +399,12 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
     </div>
 
     <!-- G/NG toggle -->
-    <div style="display:flex;align-items:center;gap:7px;margin:8px 12px;flex-wrap:nowrap" id="tglRow">
-      <div class="tgl-wrap" style="margin:0;flex:1 1 auto;min-width:0">
+    <div id="tglRow" style="margin:8px 12px">
+      <div class="tgl-wrap" style="margin:0;align-items:center">
         <button class="tgl g on" id="tglG" onclick="setMode('G')">G</button>
         <button class="tgl s" id="tglNG" onclick="setMode('S')">NG</button>
+        <label style="display:flex;align-items:center;gap:4px;flex:0 0 auto;font-size:10.5px;line-height:1;color:#6E6E73;padding:0 9px 0 5px;cursor:pointer;white-space:nowrap"><input type="checkbox" id="gnDisChk" onchange="setGnOff(this.checked)" style="width:19px;height:19px;-webkit-appearance:auto;appearance:auto;accent-color:#0078D4;margin:0">bez<br>G/NG</label>
       </div>
-      <label style="display:flex;flex-direction:column;align-items:center;gap:1px;font-size:9.5px;line-height:1.05;color:#8E8E93;cursor:pointer;flex:0 0 auto;text-align:center"><input type="checkbox" id="gnDisChk" onchange="setGnOff(this.checked)" style="width:22px;height:22px;-webkit-appearance:auto;appearance:auto;accent-color:#0078D4;margin:0"><span>bez<br>G/NG</span></label>
     </div>
 
     <!-- Gotowe frazy card (Montaz/Szkolenie) -->
@@ -2661,7 +2661,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.41",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.42",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
