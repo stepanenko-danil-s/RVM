@@ -348,7 +348,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.49</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.50</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -508,6 +508,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
       <div class="rep-hdr">
         <div class="rep-hdr-t" id="repHdrT">Raport</div>
         <div style="display:flex;align-items:center;gap:6px">
+          <button onclick="toggleRepEdit()" id="repEditBtn" style="background:none;border:none;padding:6px 8px;border-radius:8px;cursor:pointer;color:#8E8E93;display:flex;align-items:center;justify-content:center"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2.5a2.12 2.12 0 0 1 3 3L6 17l-4 1 1-4Z"/></svg></button>
           <button class="style-btn" id="styleBtn" onclick="toggleStylePicker()">
             <span id="styleLbl">Techniczny</span> &#9660;
           </button>
@@ -547,13 +548,10 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
       </div>
       <div style="padding:0 14px 6px"><button onclick="openPhrases()" style="width:100%;padding:11px;background:#EAF6FF;color:#0A6CCB;border:1px solid #BFE0FB;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Gotowe frazy (Wykonano)</button></div>
       <div style="display:flex;gap:8px;padding:0 14px 6px"><button onclick="visitSave()" style="flex:1;padding:11px;background:#FF9500;color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Zapisz wizytę</button><button onclick="visitsOpen()" style="flex:1;padding:11px;background:#5856D6;color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Wizyty (<span id="visitsCount">0</span>)</button></div>
-      <div style="padding:0 14px 6px">
-        <button onclick="toggleRepEdit()" id="repEditBtn" style="width:100%;padding:10px 14px;background:#F5F5F7;color:#3A3A3C;border:none;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2.5a2.12 2.12 0 0 1 3 3L6 17l-4 1 1-4Z"/></svg>Korekta tekstu</button>
-        <div id="repEditWrap" style="display:none;margin-top:6px">
+      <div id="repEditWrap" style="display:none;padding:0 14px 6px">
           <textarea id="repEdit" placeholder="Tekst raportu do edycji..." style="width:100%;min-height:170px;background:#F9F9F9;border:1px solid #E0E0E0;border-radius:10px;padding:11px;font-size:13px;font-family:inherit;line-height:1.5;outline:none;resize:vertical;box-sizing:border-box"></textarea>
           <button onclick="repEditReload()" style="width:100%;margin-top:5px;padding:9px;background:#F5F5F7;color:#605E5C;border:none;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">↺ Wczytaj z formularza</button>
           <div style="font-size:10.5px;color:#9C9AA0;margin-top:5px">Poprawiony tekst skopiuje przycisk „Kopiuj". „Wczytaj z formularza" nadpisze go tekstem z wyboru.</div>
-        </div>
       </div>
       <div style="display:flex;gap:8px;padding:0 14px 14px">
         <button class="btn-ai" onclick="openAIPanel()">AI</button>
@@ -2683,7 +2681,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.49",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.50",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -9330,8 +9328,8 @@ function toggleRepEdit(){
   window._repEditOn=(w.style.display==='none'||w.style.display==='');
   w.style.display=window._repEditOn?'block':'none';
   var btn=document.getElementById('repEditBtn');
-  if(window._repEditOn){ repEditReload(); if(btn){btn.style.background='#E8F4FF';btn.style.color='#0A6CCB';btn.innerHTML='<svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d=\'M14.5 2.5a2.12 2.12 0 0 1 3 3L6 17l-4 1 1-4Z\'/></svg>Korekta tekstu (wł.)';} }
-  else if(btn){ btn.style.background='#F5F5F7';btn.style.color='#3A3A3C'; btn.innerHTML='<svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d=\'M14.5 2.5a2.12 2.12 0 0 1 3 3L6 17l-4 1 1-4Z\'/></svg>Korekta tekstu'; }
+  if(window._repEditOn){ repEditReload(); if(btn){btn.style.color='#007AFF';} }
+  else if(btn){ btn.style.color='#8E8E93'; }
 }
 function repEditReload(){
   if(SEL.el||SEL.def.length||SEL.sol.length||SEL.kon.length)commitEntry();
