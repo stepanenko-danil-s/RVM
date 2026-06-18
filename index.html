@@ -348,7 +348,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.45</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.46</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -1295,6 +1295,13 @@ var D={el:[
 {cat:"Wymiana",pl:"Wymieniono papier w drukarce paragonów",ru:"Заменена бумага"},
 {cat:"Wymiana",pl:"Wymieniono łańcuch napędowy",ru:"Заменён приводной цепь"},
 {cat:"Wymiana",pl:"Wymieniono cały element na nowy",ru:"Заменён весь элемент"},
+{cat:"Naprawa",pl:"Naprawa sortera",ru:"Ремонт сортировщика"},
+{cat:"Wymiana",pl:"Wymiana czujnika rozruchu",ru:"Замена датчика запуска"},
+{cat:"Wymiana",pl:"Wymiana czujnika przepełnienia kosza",ru:"Замена датчика переполнения корзины"},
+{cat:"Wymiana",pl:"Założenie paska klinowego tylnego podajnika",ru:"Установка клинового ремня заднего податчика"},
+{cat:"Wymiana",pl:"Wymiana śrub mocujących silnik kompaktorów",ru:"Замена винтов крепления двигателя компакторов"},
+{cat:"Naprawa",pl:"Bezpośrednie podłączenie sieci LAN",ru:"Прямое подключение сети LAN"},
+{cat:"Sprawdzenie",pl:"Sprawdzenie sortera, kompaktorów, czytników EAN i skanera plomb",ru:"Проверка сортировщика, компакторов, считывателей EAN и сканера пломб"},
 {cat:"Regulacja / Kalibracja",pl:"Napięto / naciągnięto pas napędowy",ru:"Натянут приводной ремень"},
 {cat:"Regulacja / Kalibracja",pl:"Skalibrowano kamerę — sprawdzono odczyt",ru:"Откалибрована камера"},
 {cat:"Regulacja / Kalibracja",pl:"Wyregulowano pozycję elementu",ru:"Отрегулировано положение"},
@@ -2665,7 +2672,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.45",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.46",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
