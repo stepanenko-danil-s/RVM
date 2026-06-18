@@ -87,7 +87,7 @@ button:active{opacity:.7;transform:scale(.97)}
 .rep-edit:focus{outline:none}
 .rep-sec{padding:2px 0}
 .rep-head{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:12px;line-height:1.5;white-space:pre-wrap;padding:6px 14px 0;color:#1C1C1E}
-.rep-body{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:12px;line-height:1.55;white-space:pre-wrap;padding:2px 14px 10px;color:#1C1C1E}
+.rep-body{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:12px;line-height:1.55;white-space:pre-wrap;padding:2px 14px 10px;color:#1C1C1E;outline:none;border-radius:6px;cursor:text}.rep-body:focus{background:rgba(0,122,255,.04)}
 .rep-picker{display:flex;align-items:center;gap:5px;flex-wrap:wrap;padding:6px 14px}
 .tsel{background:#F8F8F8;border:1.5px solid rgba(120,120,128,.3);border-radius:8px;padding:5px 6px;font-size:13px;font-weight:700;font-family:monospace}
 .tsel.tg{border-color:rgba(52,199,89,.4);color:#34C759}
@@ -348,7 +348,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.50</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.51</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -528,7 +528,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
           <span id="thintG" class="thint">⏱ Ustaw czas</span><span id="durG" class="tdur"></span>
           <button onclick="timeMic('G')" class="tmic" style="background:#34C759"><svg width="13" height="13" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/></svg></button><button onclick="event.stopPropagation();resetTime('G')" class="trst" title="Reset czasu">↺</button>
         </div>
-        <div id="repBodyG" class="rep-body"></div>
+        <div id="repBodyG" class="rep-body" contenteditable="true" spellcheck="false"></div>
       </div>
       <div id="repSecS" class="rep-sec" style="display:none">
         <div id="repHeadS" class="rep-head"></div>
@@ -537,7 +537,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
           <span id="thintS" class="thint">⏱ Ustaw czas</span><span id="durS" class="tdur"></span>
           <button onclick="timeMic('S')" class="tmic" style="background:#007A7A"><svg width="13" height="13" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/></svg></button><button onclick="event.stopPropagation();resetTime('S')" class="trst" title="Reset czasu">↺</button>
         </div>
-        <div id="repBodyS" class="rep-body"></div>
+        <div id="repBodyS" class="rep-body" contenteditable="true" spellcheck="false"></div>
       </div>
       <div class="rep-btns">
         <button class="btn-tmpl" onclick="openTmpl()">
@@ -2681,7 +2681,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.50",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.51",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -9249,6 +9249,12 @@ function _gnMerge(d){
   var sp=d.spG.concat(d.spS.filter(function(s){return d.spG.indexOf(s)<0;}));
   return {e:e,kon:kon,sp:sp};
 }
+function _initRepBodyEdit(){
+  ['repBodyG','repBodyS'].forEach(function(id){
+    var el=document.getElementById(id); if(!el)return;
+    el.addEventListener('input',function(){el._userEdited=true;});
+  });
+}
 function renderSummary(){
   _updRepHdr();
   var d=_reportData();
@@ -9279,7 +9285,7 @@ function renderSummary(){
     var _bl=(_ct?[_czasPrefix(style)+_ct]:[]).concat(p.body);
     var head=document.getElementById('repHead'+sfx), body=document.getElementById('repBody'+sfx);
     if(head)head.innerHTML=_fmtTxt(p.head.join('\n'));
-    if(body)body.innerHTML=_fmtTxt(_bl.join('\n'));
+    if(body){if(!body._userEdited)body.innerHTML=_fmtTxt(_bl.join('\n'));}
   });
 }
 function buildReport(){
@@ -9337,10 +9343,15 @@ function repEditReload(){
   var ta=document.getElementById('repEdit'); if(ta)ta.value=t;
   if(!t)showToast('Brak danych — najpierw dodaj pozycje');
 }
+function _getEditedBody(){
+  var bG=document.getElementById('repBodyG'),bS=document.getElementById('repBodyS');
+  var tG=bG&&bG._userEdited?bG.innerText.trim():'';
+  var tS=bS&&bS._userEdited?bS.innerText.trim():'';
+  return (tG||tS)?(tG+(tS?'\n\n'+tS:'')):null;
+}
 function doCopy(){
   if(SEL.el||SEL.def.length||SEL.sol.length||SEL.kon.length)commitEntry();
-  var ta=document.getElementById('repEdit');
-  var edited=(window._repEditOn&&ta&&ta.value.trim())?ta.value:null;
+  var edited=_getEditedBody();
   var txt=edited!=null?edited:buildReport();
   if(!txt){showToast('Brak danych do kopiowania');return;}
   var warns=(typeof _preSendCheck==='function')?_preSendCheck(txt):[];
@@ -11324,8 +11335,8 @@ function shopsExport(){
       importDanste();
     }catch(e){}
   }
-  if(document.readyState==='complete'||document.readyState==='interactive'){setTimeout(_autoDanste,800);}
-  else{window.addEventListener('load',function(){setTimeout(_autoDanste,800);});}
+  if(document.readyState==='complete'||document.readyState==='interactive'){setTimeout(_autoDanste,800);setTimeout(_initRepBodyEdit,500);}
+  else{window.addEventListener('load',function(){setTimeout(_autoDanste,800);setTimeout(_initRepBodyEdit,500);});}
 })();
 </script>
 </body>
