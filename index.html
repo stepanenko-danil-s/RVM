@@ -348,7 +348,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.47</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.48</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -547,6 +547,14 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
       </div>
       <div style="padding:0 14px 8px"><button onclick="openPhrases()" style="width:100%;padding:11px;background:#EAF6FF;color:#0A6CCB;border:1px solid #BFE0FB;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Gotowe frazy (Wykonano)</button></div>
       <div style="display:flex;gap:8px;padding:0 14px 8px"><button onclick="visitSave()" style="flex:1;padding:12px;background:#FF9500;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Zapisz wizytę</button><button onclick="visitsOpen()" style="flex:1;padding:12px;background:#5856D6;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Wizyty (<span id="visitsCount">0</span>)</button></div>
+      <div style="padding:0 14px 8px">
+        <button onclick="toggleRepEdit()" id="repEditBtn" style="width:100%;padding:11px;background:#FFF4E5;color:#B25E00;border:1px solid #FFE0B2;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">&#9998; Korekta tekstu raportu</button>
+        <div id="repEditWrap" style="display:none;margin-top:8px">
+          <textarea id="repEdit" placeholder="Tekst raportu do edycji..." style="width:100%;min-height:170px;background:#FFFDF7;border:1px solid #FFE0B2;border-radius:10px;padding:11px;font-size:13px;font-family:inherit;line-height:1.5;outline:none;resize:vertical;box-sizing:border-box"></textarea>
+          <button onclick="repEditReload()" style="width:100%;margin-top:6px;padding:9px;background:#F5F5F7;color:#605E5C;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">&#8635; Wczytaj z formularza</button>
+          <div style="font-size:10.5px;color:#9C9AA0;margin-top:5px">Poprawiony tekst skopiuje przycisk &#8222;Kopiuj&#8221;. &#8222;Wczytaj z formularza&#8221; nadpisze go tekstem z wyboru.</div>
+        </div>
+      </div>
       <div style="display:flex;gap:8px;padding:0 14px 14px">
         <button class="btn-ai" onclick="openAIPanel()">AI</button>
         <button class="btn-copy" onclick="doCopy()">Kopiuj</button>
@@ -2675,7 +2683,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.47",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.48",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -9316,15 +9324,32 @@ function _preSendCheck(txt){
   if(dup)w.push('Powtórzone pozycje w raporcie (duplikaty).');
   return w;
 }
+window._repEditOn=false;
+function toggleRepEdit(){
+  var w=document.getElementById('repEditWrap'); if(!w)return;
+  window._repEditOn=(w.style.display==='none'||w.style.display==='');
+  w.style.display=window._repEditOn?'block':'none';
+  var btn=document.getElementById('repEditBtn');
+  if(window._repEditOn){ repEditReload(); if(btn){btn.style.background='#FFE0B2';btn.innerHTML='&#9998; Korekta tekstu (wł.)';} }
+  else if(btn){ btn.style.background='#FFF4E5'; btn.innerHTML='&#9998; Korekta tekstu raportu'; }
+}
+function repEditReload(){
+  if(SEL.el||SEL.def.length||SEL.sol.length||SEL.kon.length)commitEntry();
+  var t=buildReport()||'';
+  var ta=document.getElementById('repEdit'); if(ta)ta.value=t;
+  if(!t)showToast('Brak danych — najpierw dodaj pozycje');
+}
 function doCopy(){
   if(SEL.el||SEL.def.length||SEL.sol.length||SEL.kon.length)commitEntry();
-  var txt=buildReport();
+  var ta=document.getElementById('repEdit');
+  var edited=(window._repEditOn&&ta&&ta.value.trim())?ta.value:null;
+  var txt=edited!=null?edited:buildReport();
   if(!txt){showToast('Brak danych do kopiowania');return;}
   var warns=(typeof _preSendCheck==='function')?_preSendCheck(txt):[];
   if(warns.length&&typeof confirm==='function'){
     if(!confirm('Uwaga przed kopiowaniem:\n\n\u2022 '+warns.join('\n\u2022 ')+'\n\nSkopiowac mimo to?'))return;
   }
-  function ok(){showToast(warns.length?'Skopiowano (z uwagami)':'\u2713 Sprawdzono \u2014 skopiowano');}
+  function ok(){showToast(warns.length?'Skopiowano (z uwagami)':(edited!=null?'\u2713 Skopiowano (poprawiony)':'\u2713 Sprawdzono \u2014 skopiowano'));}
   navigator.clipboard?navigator.clipboard.writeText(txt).then(ok):ok();
 }
 
