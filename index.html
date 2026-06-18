@@ -348,7 +348,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.42</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.43</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2270,8 +2270,12 @@ function _aiFullReport(){
     if(kon.length)L.push('   Serwis: '+kon.join(', '));
     if(sp.length)L.push('   Części zamienne: '+sp.join(', '));
   }
-  sec('GWARANCYJNY (G)',eG,konG,spG);
-  sec('NIE GWARANCYJNY / SERWIS (NG)',eS,konS,spS);
+  if(_gnOffActive()){
+    sec('',eG.concat(eS),konG.concat(konS.filter(function(k){return konG.indexOf(k)<0;})),spG.concat(spS.filter(function(s){return spG.indexOf(s)<0;})));
+  }else{
+    sec('GWARANCYJNY (G)',eG,konG,spG);
+    sec('NIE GWARANCYJNY / SERWIS (NG)',eS,konS,spS);
+  }
   return L.join('\n').trim();
 }
 function openInClaude(){
@@ -2661,7 +2665,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.42",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.43",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -9208,6 +9212,12 @@ function _updRepHdr(){
   var ti=[sn,si].filter(function(x){return x;}).join(' ');
   var h=document.getElementById('repHdrT'); if(h)h.textContent=ti?('Raport \u2014 '+ti):'Raport';
 }
+function _gnMerge(d){
+  var e=d.eG.concat(d.eS);
+  var kon=d.konG.concat(d.konS.filter(function(k){return d.konG.indexOf(k)<0;}));
+  var sp=d.spG.concat(d.spS.filter(function(s){return d.spG.indexOf(s)<0;}));
+  return {e:e,kon:kon,sp:sp};
+}
 function renderSummary(){
   _updRepHdr();
   var d=_reportData();
@@ -9218,9 +9228,21 @@ function renderSummary(){
   if(ph)ph.style.display='none';
   var _nonSrw=(typeof window!=='undefined'&&window._workType&&window._workType!=='serwis');
   var _gnoff=_gnOffActive();
+  if(_gnoff){
+    if(sS)sS.style.display='none';
+    if(sG)sG.style.display='block';
+    var m=_gnMerge(d);
+    var p=_secParts(true,m.e,m.kon,m.sp,style);
+    var _t=timeG; var _ct=(((window._workType||'serwis')==='serwis')&&_t&&_t._on)?_tFmt(_liveTime('G')):'';
+    var _bl=(_ct?[_czasPrefix(style)+_ct]:[]).concat(p.body);
+    var headG=document.getElementById('repHeadG'),bodyG=document.getElementById('repBodyG');
+    if(headG)headG.innerHTML=_fmtTxt(p.head.join('\n'));
+    if(bodyG)bodyG.innerHTML=_fmtTxt(_bl.join('\n'));
+    return;
+  }
   [['G',true],['S',false]].forEach(function(a){
     var sfx=a[0],isG=a[1];
-    var sec=document.getElementById('repSec'+sfx); if(sec)sec.style.display=((isG&&_nonSrw)||(!isG&&_gnoff))?'none':'block';
+    var sec=document.getElementById('repSec'+sfx); if(sec)sec.style.display=(isG&&_nonSrw)?'none':'block';
     var p=_secParts(isG, isG?d.eG:d.eS, isG?d.konG:d.konS, isG?d.spG:d.spS, style);
     var _t=(isG?timeG:timeS); var _ct=(((window._workType||'serwis')==='serwis')&&_t&&_t._on)?_tFmt(_liveTime(sfx)):'';
     var _bl=(_ct?[_czasPrefix(style)+_ct]:[]).concat(p.body);
@@ -9246,8 +9268,8 @@ function buildReport(){
     lines.push('');
   }
   var _gnoff=_gnOffActive();
-  if(d.hasG)add(true,d.eG,d.konG,d.spG,'G');
-  if(d.hasS&&!_gnoff)add(false,d.eS,d.konS,d.spS,'S');
+  if(_gnoff){var m=_gnMerge(d);if(m.e.length||m.kon.length||m.sp.length)add(true,m.e,m.kon,m.sp,'G');}
+  else{if(d.hasG)add(true,d.eG,d.konG,d.spG,'G');if(d.hasS)add(false,d.eS,d.konS,d.spS,'S');}
   return lines.join('\n').replace(/\*\*/g,'').trim();
 }
 
