@@ -350,7 +350,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.56</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.57</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2683,7 +2683,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.56",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.57",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -9904,7 +9904,73 @@ function _chainFromName(name){
   return cleaned||(''+name);
 }
 function _normStr(s){return (''+s).toLowerCase().replace(/ul\.|al\.|ulica|aleja/g,'').replace(/[.,]/g,' ').replace(/[ąàä]/g,'a').replace(/[ćč]/g,'c').replace(/[ęè]/g,'e').replace(/ł/g,'l').replace(/ń/g,'n').replace(/[óö]/g,'o').replace(/ś/g,'s').replace(/[źż]/g,'z').replace(/\s+/g,' ').trim();}
-var _PHRASES_BASE=["Sprawdzenie poprawności działania maszyny.","Sprawdzenie sortera, kompaktorów, czytników EAN, skanera plomb.","Sprawdzenie czujników i fotokomórek.","Sprawdzenie taśmy transportującej i rolek.","Sprawdzenie układu napędowego.","Sprawdzenie kompaktora.","Sprawdzenie czytników kodów EAN.","Sprawdzenie skanera plomb.","Sprawdzenie połączeń i przewodów elektrycznych.","Sprawdzenie wyłącznika bezpieczeństwa.","Kontrola wizualna stanu maszyny.","Sprawdzenie stopnia zużycia podzespołów.","Czyszczenie.","Czyszczenie sortera i kanałów podawczych.","Czyszczenie czytników EAN i skanera plomb.","Czyszczenie kompaktora.","Czyszczenie czujników i fotokomórek.","Czyszczenie wnętrza i obudowy maszyny.","Usunięcie zacięcia i pozostałości.","Smarowanie elementów ruchomych.","Smarowanie prowadnic i rolek.","Smarowanie łożysk.","Smarowanie paska/łańcucha napędu.","Regulacja i kalibracja.","Regulacja czujników.","Regulacja taśmy transportującej.","Poprawienie ustawienia czytników.","Poprawienie i dokręcenie mocowań.","Dokręcenie poluzowanych śrub i połączeń.","Korekta położenia elementów.","Drobna regulacja mechaniczna.","Restart maszyny.","Test końcowy po serwisie.","Konserwacja okresowa."];
+var _PHRASES_BASE=[
+"Sprawdzenie poprawności działania maszyny.",
+"Kontrola wizualna stanu maszyny.",
+"Test końcowy po serwisie.",
+"Restart maszyny.",
+"Konserwacja okresowa.",
+"Sprawdzenie sortera.",
+"Sprawdzenie czujnika rozruchu sortera.",
+"Sprawdzenie czujnika przepełnienia sortera.",
+"Sprawdzenie silnika sortera.",
+"Sprawdzenie kanałów podawczych sortera.",
+"Sprawdzenie paska klinowego sortera.",
+"Sprawdzenie kompaktora.",
+"Sprawdzenie silnika kompaktora.",
+"Sprawdzenie śrub mocujących silnik kompaktora.",
+"Sprawdzenie paska klinowego kompaktora.",
+"Sprawdzenie czujnika przepełnienia kosza.",
+"Sprawdzenie czujnika pozycji tłoka.",
+"Sprawdzenie podajnika tylnego.",
+"Sprawdzenie paska klinowego tylnego podajnika.",
+"Sprawdzenie rolek podajnika.",
+"Sprawdzenie taśmy transportującej.",
+"Sprawdzenie rolek taśmy transportującej.",
+"Sprawdzenie napędu taśmy.",
+"Sprawdzenie czytników EAN.",
+"Sprawdzenie skanera plomb.",
+"Sprawdzenie kamery.",
+"Sprawdzenie oświetlenia komory.",
+"Sprawdzenie czujników i fotokomórek.",
+"Sprawdzenie czujnika rozruchu.",
+"Sprawdzenie wyłącznika bezpieczeństwa.",
+"Sprawdzenie przekaźnika bezpieczeństwa.",
+"Sprawdzenie połączeń elektrycznych.",
+"Sprawdzenie przewodów i wiązek kablowych.",
+"Sprawdzenie zasilacza.",
+"Sprawdzenie drukarki.",
+"Sprawdzenie ekranu / wyświetlacza.",
+"Czyszczenie sortera i kanałów podawczych.",
+"Czyszczenie kompaktora.",
+"Czyszczenie czytników EAN.",
+"Czyszczenie skanera plomb.",
+"Czyszczenie kamery.",
+"Czyszczenie czujników i fotokomórek.",
+"Czyszczenie wnętrza i obudowy maszyny.",
+"Czyszczenie drukarki.",
+"Usunięcie zacięcia w sorterze.",
+"Usunięcie zacięcia w kompaktorze.",
+"Usunięcie zacięcia na taśmie.",
+"Smarowanie rolek i prowadnic.",
+"Smarowanie łożysk.",
+"Smarowanie paska napędowego.",
+"Wymiana paska klinowego sortera.",
+"Wymiana paska klinowego kompaktora.",
+"Wymiana paska klinowego tylnego podajnika.",
+"Wymiana czujnika rozruchu.",
+"Wymiana czujnika przepełnienia kosza.",
+"Wymiana śrub mocujących silnik kompaktora.",
+"Regulacja czujników.",
+"Regulacja taśmy transportującej.",
+"Regulacja ustawienia czytników EAN.",
+"Regulacja kamery.",
+"Dokręcenie poluzowanych śrub i połączeń.",
+"Bezpośrednie podłączenie sieci LAN.",
+"Naprawa sortera.",
+"Naprawa kompaktora.",
+"Naprawa podajnika."
+];
 var _PHRASES_RU={"Sprawdzenie poprawności działania maszyny.":"Проверка правильности работы машины.","Sprawdzenie sortera, kompaktorów, czytników EAN, skanera plomb.":"Проверка сортера, компакторов, сканеров EAN, сканера пломб.","Sprawdzenie czujników i fotokomórek.":"Проверка датчиков и фотоэлементов.","Sprawdzenie taśmy transportującej i rolek.":"Проверка транспортёрной ленты и роликов.","Sprawdzenie układu napędowego.":"Проверка приводного механизма.","Sprawdzenie kompaktora.":"Проверка компактора.","Sprawdzenie czytników kodów EAN.":"Проверка сканеров штрихкодов EAN.","Sprawdzenie skanera plomb.":"Проверка сканера пломб.","Sprawdzenie połączeń i przewodów elektrycznych.":"Проверка соединений и электропроводки.","Sprawdzenie wyłącznika bezpieczeństwa.":"Проверка выключателя безопасности.","Kontrola wizualna stanu maszyny.":"Визуальный осмотр состояния машины.","Sprawdzenie stopnia zużycia podzespołów.":"Проверка степени износа узлов.","Czyszczenie.":"Чистка.","Czyszczenie sortera i kanałów podawczych.":"Чистка сортера и подающих каналов.","Czyszczenie czytników EAN i skanera plomb.":"Чистка сканеров EAN и сканера пломб.","Czyszczenie kompaktora.":"Чистка компактора.","Czyszczenie czujników i fotokomórek.":"Чистка датчиков и фотоэлементов.","Czyszczenie wnętrza i obudowy maszyny.":"Чистка внутренней части и корпуса машины.","Usunięcie zacięcia i pozostałości.":"Устранение заедания и остатков.","Smarowanie elementów ruchomych.":"Смазка подвижных элементов.","Smarowanie prowadnic i rolek.":"Смазка направляющих и роликов.","Smarowanie łożysk.":"Смазка подшипников.","Smarowanie paska/łańcucha napędu.":"Смазка ремня/цепи привода.","Regulacja i kalibracja.":"Регулировка и калибровка.","Regulacja czujników.":"Регулировка датчиков.","Regulacja taśmy transportującej.":"Регулировка транспортёрной ленты.","Poprawienie ustawienia czytników.":"Корректировка настройки сканеров.","Poprawienie i dokręcenie mocowań.":"Поправка и затяжка креплений.","Dokręcenie poluzowanych śrub i połączeń.":"Затяжка ослабленных винтов и соединений.","Korekta położenia elementów.":"Корректировка положения элементов.","Drobna regulacja mechaniczna.":"Мелкая механическая регулировка.","Restart maszyny.":"Перезапуск машины.","Test końcowy po serwisie.":"Финальный тест после сервиса.","Konserwacja okresowa.":"Периодическое обслуживание."};
 var _PHRASES_MONT=["Montaż maszyny i ustawienie w docelowym miejscu.","Poziomowanie i stabilizacja maszyny.","Podłączenie zasilania elektrycznego.","Podłączenie sieci LAN / internetu.","Montaż modułów i przenośników.","Montaż stołu na butelki / przenośnika skrzynek.","Uruchomienie i konfiguracja maszyny.","Kalibracja po montażu.","Test poprawności działania po montażu.","Sprawdzenie kompletności urządzenia.","Szkolenie obsługi po montażu."];
 var _PHRASES_DEMONT=["Sprawdzenie stanu maszyny przed demontażem.","Odłączenie zasilania i sieci.","Demontaż modułów i przenośników.","Demontaż stołu na butelki / przenośnika skrzynek.","Demontaż maszyny.","Zabezpieczenie maszyny do transportu.","Załadunek maszyny na transport.","Uprzątnięcie miejsca po demontażu."];
