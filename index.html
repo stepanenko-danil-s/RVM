@@ -250,7 +250,8 @@ body.fluent button{font-weight:600 !important}
 body.fluent .sh-act-btn{border-radius:2px !important}
 /* iOS (domyslny): bardziej miekki/zaokraglony dla kontrastu ze stylem Fluent */
 body:not(.fluent) .sh-act-btn{border-radius:14px}
-body:not(.fluent) .nav{background:#1C1C1E !important;box-shadow:none}
+body:not(.fluent) .nav{background:#1C1C1E;box-shadow:none}
+body:not(.fluent) .bnav{background:rgba(255,255,255,.95)}
 </style>
 <script src="shops.js"></script>
 </head>
@@ -371,7 +372,7 @@ body:not(.fluent) .nav{background:#1C1C1E !important;box-shadow:none}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.76</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.77</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2706,7 +2707,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.76",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.77",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
