@@ -7372,11 +7372,17 @@ function togItem(col,pl){
   if(col==='el'){
     _showAll.def=false;_showAll.sol=false;
     renderList('def'); renderList('sol');
-    if(SEL.el){ openMod(2); setTimeout(function(){_scrollMod(2);},80); }
+    if(SEL.el){
+      toggleMod(1); // закрыть мод 1
+      setTimeout(function(){openMod(2);_scrollMod(2);},80); // открыть мод 2
+    }
   } else if(col==='def'){
     _showAll.sol=false;
     renderList('sol');
-    if(SEL.def.indexOf(pl)>=0){ openMod(3); setTimeout(function(){_scrollMod(3);},80); }
+    if(SEL.def.indexOf(pl)>=0){
+      toggleMod(2); // закрыть мод 2
+      setTimeout(function(){openMod(3);_scrollMod(3);},80); // открыть мод 3
+    }
   }
   updateBadges();
   renderSummary();
