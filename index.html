@@ -368,7 +368,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.79</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.80</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2608,6 +2608,10 @@ function loadTmpl(i){
   SEL={el:[],def:[],sol:[],kon:[],mode:""};
   [0,1,2].forEach(function(j){mOpen[j]=false;_applyMod(j);});
   [["val1","Wybierz element"],["val2","Wybierz usterke"],["val3","Asystent zaproponuje rozwiazania"]].forEach(function(p){var e=document.getElementById(p[0]);if(e){e.textContent=p[1];e.className="mod-val";}});
+  // Restore parts
+  if(t.spG){selPartsG={};t.spG.forEach(function(p){selPartsG[p.id]={qty:p.qty};});ss("rv_spG",selPartsG);}
+  if(t.spS){selPartsS={};t.spS.forEach(function(p){selPartsS[p.id]={qty:p.qty};});ss("rv_spS",selPartsS);}
+  if(typeof renderParts==="function")renderParts();
   // Restore style if saved with template
   if(t.style){rstStyle=t.style;ss("rv_rst",rstStyle);setRst(t.style);}
   renderList("el");renderList("def");renderList("kon");renderList("sol");
@@ -2703,7 +2707,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.79",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.80",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
