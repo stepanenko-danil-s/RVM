@@ -176,7 +176,7 @@ button:active{opacity:.7;transform:scale(.97)}
 /* PAGES */
 .pg{display:none}
 .pg.on{display:block;padding-bottom:88px}
-#pgMag.on{display:flex;flex-direction:column;padding-bottom:0;position:fixed;top:0;left:0;right:0;bottom:56px;overflow:hidden;z-index:1}
+#pgMag.on{display:flex;flex-direction:column;padding-bottom:80px;overflow:hidden}
 
 /* TEMPLATE LIST */
 .tmpl-item{background:#F8F8F8;border-radius:10px;padding:11px 13px;margin-bottom:6px;display:flex;align-items:center;gap:10px;cursor:pointer}
@@ -567,7 +567,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- PAGE: MAGAZYN -->
 <div class="pg" id="pgMag">
-  <div id="magHead" style="padding:8px 12px 0;flex-shrink:0;background:var(--bg,#F2F2F7)">
+  <div id="magHead" style="padding:8px 12px 0;flex-shrink:0;background:#F2F2F7;position:sticky;top:0;z-index:10">
     <div style="display:flex;gap:6px;margin-bottom:8px;align-items:center" id="magBtns">
       <button onclick="magPrintQR()" style="background:#605E5C;color:#fff;border:none;border-radius:10px;padding:9px 4px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex:1 1 0;min-width:0;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:4px"><span class="ti"><span class="ic-ios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V4h10v5"/><rect x="3.5" y="9" width="17" height="7" rx="2"/><path d="M7 14h10v6H7z"/></svg></span><span class="ic-ms"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3h10v4H7z"/><path d="M4.5 8h15A1.5 1.5 0 0 1 21 9.5V15a1 1 0 0 1-1 1h-2.5v-3.5h-11V16H4a1 1 0 0 1-1-1V9.5A1.5 1.5 0 0 1 4.5 8Z"/><path d="M7.5 13h9v7h-9z"/></svg></span></span>QR PDF</button>
       <button onclick="openOrder()" style="background:#FF9500;color:#fff;border:none;border-radius:10px;padding:9px 4px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex:1 1 0;min-width:0;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:4px"><span class="ti"><span class="ic-ios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.2"/><circle cx="17.5" cy="20" r="1.2"/><path d="M3 4h2l2.1 10.4a1 1 0 0 0 1 .8h8.5a1 1 0 0 0 1-.78L20 8H5.6"/></svg></span><span class="ic-ms"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 4a1 1 0 0 0 0 2h1.4l1.9 9.6A2 2 0 0 0 8.26 17H18a1 1 0 0 0 0-2H8.26l-.2-1h9.5a2 2 0 0 0 1.96-1.6L20.8 7.2A1 1 0 0 0 19.82 6H6.2l-.22-1.2A1 1 0 0 0 5 4Z"/><circle cx="9" cy="20" r="1.5"/><circle cx="17.5" cy="20" r="1.5"/></svg></span></span>Zamów</button>
