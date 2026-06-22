@@ -87,6 +87,12 @@ button:active{opacity:.7;transform:scale(.97)}
 .rep-edit:focus{outline:none}
 .rep-sec{padding:2px 0}
 .rep-head{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:12px;line-height:1.5;white-space:pre-wrap;padding:6px 14px 0;color:#1C1C1E}
+.set-btn{width:100%;padding:13px 14px;margin-bottom:6px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;border:1.5px solid #E5E5EA;background:#fff;color:#1C1C1E;text-align:left;display:flex;justify-content:space-between;align-items:center}
+.set-btn-primary{background:#1C1C1E;color:#fff;border-color:#1C1C1E}
+.set-arr{color:#C7C7CC;font-size:14px}
+.set-btn-primary .set-arr{display:none}
+body.fluent .set-btn{border-radius:2px;border-color:#C8C6C4;background:#F3F2F1;color:#201F1E}
+body.fluent .set-btn-primary{background:#0078D4;color:#fff;border-color:#0078D4}
 .rep-sm-btn{padding:6px 10px;border-radius:8px;font-size:12px;font-weight:600;color:#3A3A3C;background:none;border:1px solid #C7C7CC;cursor:pointer;font-family:inherit;white-space:nowrap}
 body.fluent .rep-sm-btn{border-radius:2px;border-color:#A19F9D;color:#201F1E}
 body.fluent #repFieldWrap{border-radius:2px;border-color:#201F1E}
@@ -260,7 +266,13 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
       <button class="sh-theme-btn" id="thBtn2" onclick="setTheme(2)">Microsoft</button>
     </div>
     <div class="sh-sec">Diagnostyka i AI</div>
-    <div style="display:flex;gap:8px;margin-bottom:8px"><button class="sh-act-btn" style="flex:1;min-width:0;margin:0;padding:11px 4px;font-size:12px;background:#FF9500;color:#fff" onclick="runDiag()">Diagnostyka</button><button class="sh-act-btn" style="flex:1;min-width:0;margin:0;padding:11px 4px;font-size:12px;background:#34C759;color:#fff" onclick="copyFullCode()">Kod (AI)</button><button class="sh-act-btn" style="flex:1;min-width:0;margin:0;padding:11px 4px;font-size:12px;background:#007AFF;color:#fff" onclick="doBackup()">Kopia danych</button></div><div class="sh-sec">Aplikacja</div><button class="sh-act-btn" style="background:#5856D6;color:#fff" onclick="appUpdate()">Aktualizuj wersje (pobierz najnowsza)</button><div style="font-size:11px;color:#A19F9D;margin-top:6px;line-height:1.4">Czyści pamięć podręczną i pobiera najnowszą wersje bez dodawania na ekran poczatkowy.</div><button class="sh-act-btn" style="background:#0078D4;color:#fff" onclick="selfTestGPS()">Autotest GPS (samodiagnostyka)</button>
+    <button class="set-btn" onclick="runDiag()">Diagnostyka <span class="set-arr">›</span></button>
+    <button class="set-btn" onclick="copyFullCode()">Kod (AI) <span class="set-arr">›</span></button>
+    <button class="set-btn" onclick="doBackup()">Kopia danych <span class="set-arr">›</span></button>
+    <div class="sh-sec">Aplikacja</div>
+    <button class="set-btn set-btn-primary" onclick="appUpdate()">Aktualizuj wersję</button>
+    <div style="font-size:11px;color:#A19F9D;margin:4px 0 8px;line-height:1.4">Czyści pamięć podręczną i pobiera najnowszą wersje bez dodawania na ekran poczatkowy.</div>
+    <button class="set-btn" onclick="selfTestGPS()">Autotest GPS <span class="set-arr">›</span></button>
   </div>
 </div>
 
@@ -355,7 +367,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.74</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.75</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2690,7 +2702,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.74",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.75",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
