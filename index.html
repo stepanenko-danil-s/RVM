@@ -97,6 +97,9 @@ body.fluent .set-btn-primary{background:#0078D4;color:#fff;border-color:#0078D4}
 body.fluent .rep-sm-btn{border-radius:2px;border-color:#A19F9D;color:#201F1E}
 body.fluent #repFieldWrap{border-radius:2px;border-color:#201F1E}
 .rep-body{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:12px;line-height:1.55;white-space:pre-wrap;padding:10px 12px;color:#1C1C1E;outline:none;cursor:text}.rep-body:focus{background:transparent}
+.rep-body.czyt-mode{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:13.5px;line-height:1.65;white-space:normal}
+.rep-body.czyt-mode b{font-weight:700;color:#1C1C1E}
+body.fluent .rep-body.czyt-mode{font-family:'Segoe UI',system-ui,sans-serif}
 .rep-picker{display:flex;align-items:center;gap:5px;flex-wrap:wrap;padding:6px 14px}
 .tsel{background:#F8F8F8;border:1.5px solid rgba(120,120,128,.3);border-radius:8px;padding:5px 6px;font-size:13px;font-weight:700;font-family:monospace}
 .tsel.tg{border-color:rgba(52,199,89,.4);color:#34C759}
@@ -368,7 +371,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.81</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.82</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2709,7 +2712,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.81",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.82",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -7614,6 +7617,8 @@ function renderSummary(){
   _updRepHdr();
   var d=_reportData();
   var style=rstStyle||'tech';
+  // czyt-mode class
+  ['repBodyG','repBodyS'].forEach(function(id){var el=document.getElementById(id);if(el){if(style==='czyt')el.classList.add('czyt-mode');else el.classList.remove('czyt-mode');}});
   var ph=document.getElementById('repPlaceholder');
   var sG=document.getElementById('repSecG'),sS=document.getElementById('repSecS');
   if(!d.any){ if(ph)ph.style.display='block'; if(sG)sG.style.display='none'; if(sS)sS.style.display='none'; return; }
