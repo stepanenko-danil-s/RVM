@@ -355,7 +355,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.73</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.74</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2690,7 +2690,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.73",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.74",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -6406,7 +6406,7 @@ function _overpass(q){
 function _acquirePos(ok,err){
   if(!navigator.geolocation){if(err)err({code:2,message:'brak geolokalizacji'});return;}
   var best=null,done=false,id=null,t0=Date.now();
-  var STEPS=[{a:5,ms:800},{a:10,ms:2500},{a:15,ms:4000},{a:25,ms:5500},{a:50,ms:6000}],MAXMS=7000;
+  var STEPS=[{a:10,ms:500},{a:20,ms:1500},{a:50,ms:3000}],MAXMS=4000;
   function bestAcc(){return (best&&best.coords&&best.coords.accuracy)||9999;}
   function finish(){if(done)return;done=true;if(id!=null){try{navigator.geolocation.clearWatch(id);}catch(e){}}if(best)ok(best);else if(err)err({code:3,message:'przekroczono czas'});}
   function consider(){if(done)return;var el=Date.now()-t0,ba=bestAcc();for(var i=0;i<STEPS.length;i++){if(ba<=STEPS[i].a&&el>=STEPS[i].ms)return finish();}}
@@ -6417,8 +6417,8 @@ function _acquirePos(ok,err){
       if(!best||ac<bestAcc())best=p;
       if(typeof _toast==='function')_toast('GPS: dokladnosc +-'+Math.round(bestAcc())+' m...');
       consider();
-    },function(e){if(!best){done=true;if(id!=null){try{navigator.geolocation.clearWatch(id);}catch(_e){}}if(err)err(e);}},{enableHighAccuracy:true,timeout:MAXMS,maximumAge:0});
-  }catch(e){navigator.geolocation.getCurrentPosition(ok,err,{enableHighAccuracy:true,timeout:MAXMS,maximumAge:0});return;}
+    },function(e){if(!best){done=true;if(id!=null){try{navigator.geolocation.clearWatch(id);}catch(_e){}}if(err)err(e);}},{enableHighAccuracy:false,timeout:MAXMS,maximumAge:60000});
+  }catch(e){navigator.geolocation.getCurrentPosition(ok,err,{enableHighAccuracy:false,timeout:MAXMS,maximumAge:60000});return;}
   setTimeout(finish,MAXMS);
 }
 function gpsShop(){
@@ -6473,7 +6473,7 @@ function gpsShop(){
     }).catch(function(){
       var fb=la.toFixed(5)+', '+lo.toFixed(5);_setShopFields('','',fb);_toast('Błąd sieci — współrzędne GPS');
     });
-  },function(err){var c=err&&err.code,msg=(err&&err.message)?err.message:'blad';if(c===1)msg='brak zgody na lokalizację \u2014 włącz w Ustawieniach iPhone';else if(c===2)msg='lokalizacja niedostepna';else if(c===3)msg='przekroczono czas (sprobuj jeszcze raz)';_toast('GPS: '+msg);var ae=document.getElementById('shopAddr');if(ae)ae.value='GPS: '+msg;},{enableHighAccuracy:true,timeout:15000,maximumAge:30000});
+  },function(err){var c=err&&err.code,msg=(err&&err.message)?err.message:'blad';if(c===1)msg='brak zgody na lokalizację \u2014 włącz w Ustawieniach iPhone';else if(c===2)msg='lokalizacja niedostepna';else if(c===3)msg='przekroczono czas (sprobuj jeszcze raz)';_toast('GPS: '+msg);var ae=document.getElementById('shopAddr');if(ae)ae.value='GPS: '+msg;},{enableHighAccuracy:false,timeout:6000,maximumAge:60000});
 }
 function _matchShopId(chain){
   var road=_normStr(window._gpsRoad||''), num=_normStr(window._gpsNum||''), city=_normStr(window._gpsCity||''), zip=(window._gpsZip||'').trim();
@@ -7054,7 +7054,7 @@ function shopGPS(){
   },function(err){
     if(status)status.textContent='Blad GPS: '+err.message;
     _toast('GPS: '+err.message);
-  },{enableHighAccuracy:true,timeout:12000});
+  },{enableHighAccuracy:false,timeout:6000,maximumAge:60000});
 }
 
 /* ---- restore persisted settings + hook synonym render into settings open ---- */
