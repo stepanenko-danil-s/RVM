@@ -372,7 +372,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.85</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.86</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2664,7 +2664,7 @@ function renderTmplList(){
 
 function openCust(col){custTarget=col;var t={el:"wlasny element",def:"wlasna usterke",sol:"wlasne dzialanie",kon:"własny przegląd"};document.getElementById("custTitle").textContent="Dodaj "+t[col];document.getElementById("custPl").value="";var _cr=document.getElementById("custRu");if(_cr)_cr.value="";openSh("shCust");}
 function saveCust(){var pl=document.getElementById("custPl").value.trim();if(!pl)return;var cr2=document.getElementById("custRu");var ru=cr2?cr2.value.trim():"";if(!custom[custTarget])custom[custTarget]=[];custom[custTarget].push({pl:pl,ru:ru});ss("rv_c",custom);closeOv("shCust");renderList(custTarget);renderList("sol");showToast("&#10003; Dodano");}
-function doReset(){entries=[];custParts=[];selKonG=[];selKonS=[];timeG={od:"00:00",do:"00:00",_set:false};timeS={od:"00:00",do:"00:00",_set:false};custom={el:[],def:[],sol:[],kon:[]};selPartsG={};selPartsS={};partQtyG={};partQtyS={};["rv_e","rv_cp","rv_c","rv_mode","rv_sp","rv_pq","rv_spG","rv_spS","rv_pqG","rv_pqS"].forEach(function(k){localStorage.removeItem(k);});SEL={el:[],def:[],sol:[],kon:[],mode:""};editMode={el:false,def:false,sol:false,kon:false};mOpenS=false;custom={el:[],def:[],sol:[],kon:[
+function doReset(){entries=[];custParts=[];selKonG=[];selKonS=[];timeG={od:"00:00",do:"00:00",_set:false};timeS={od:"00:00",do:"00:00",_set:false};custom={el:[],def:[],sol:[],kon:[]};selPartsG={};selPartsS={};partQtyG={};partQtyS={};["rv_e","rv_cp","rv_c","rv_mode","rv_sp","rv_pq","rv_spG","rv_spS","rv_pqG","rv_pqS"].forEach(function(k){localStorage.removeItem(k);});var uw=document.getElementById("uwagiField");if(uw)uw.value="";SEL={el:[],def:[],sol:[],kon:[],mode:""};editMode={el:false,def:false,sol:false,kon:false};mOpenS=false;custom={el:[],def:[],sol:[],kon:[
 {cat:"Przegląd",pl:"Przegląd okresowy",ru:"Плановое ТО"}
 ,{cat:"Przegląd",pl:"Przegląd gwarancyjny",ru:"Гарантийное ТО"}
 ,{cat:"Przegląd",pl:"Przegląd techniczny ogólny",ru:"Общий техосмотр"}
@@ -2730,7 +2730,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.85",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.86",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
