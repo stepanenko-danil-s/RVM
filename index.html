@@ -7725,6 +7725,8 @@ function doCopy(){
   if(warns.length&&typeof confirm==='function'){
     if(!confirm('Uwaga przed kopiowaniem:\n\n\u2022 '+warns.join('\n\u2022 ')+'\n\nSkopiowac mimo to?'))return;
   }
+  var uw=(document.getElementById('uwagiField')||{}).value||'';
+  if(uw.trim())txt+='\n\nUwagi: '+uw.trim();
   function ok(){showToast(warns.length?'Skopiowano (z uwagami)':(edited!=null?'\u2713 Skopiowano (poprawiony)':'\u2713 Sprawdzono \u2014 skopiowano'));}
   navigator.clipboard?navigator.clipboard.writeText(txt).then(ok):ok();
 }
