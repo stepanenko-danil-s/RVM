@@ -372,7 +372,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.89</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.90</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2702,7 +2702,7 @@ function doReset(){entries=[];custParts=[];selKonG=[];selKonS=[];timeG={od:"00:0
 ,{cat:"Interwencja",pl:"Uzupełnienie papieru",ru:"Заправка бумаги"}
 ,{cat:"Interwencja",pl:"Wznowienie pracy po awarii",ru:"Восстановление после аварии"}
 ,{cat:"Interwencja",pl:"Sprawdzenie połączenia sieciowego",ru:"Проверка сети"}
-],_hidden:{}};lastDefCat="";[0,1,2].forEach(function(i){mOpen[i]=false;_applyMod(i);});[["val1","Wybierz element"],["val2","Wybierz usterke"],["valS","Aktywności serwisowe"],["val3","Wybierz lub dodaj dzialanie"]].forEach(function(p){var e=document.getElementById(p[0]);if(e){e.textContent=p[1];e.className="mod-val";}});partsOpen=false;var _pb=document.getElementById("partsBody");if(_pb)_pb.className="parts-body";var _pa=document.getElementById("partsArr");if(_pa)_pa.style.transform="none";var ed=document.getElementById("repEdit");if(ed){ed.removeAttribute("data-ue");}renderList("el");renderList("def");renderList("kon");renderList("sol");renderParts();renderSummary();curMode="G";var tGr=document.getElementById("tglG"),tSr=document.getElementById("tglNG"),twr=document.getElementById("tglWrap");if(tGr)tGr.className="tgl g on";if(tSr)tSr.className="tgl s";var twr2=document.getElementById("tglWrap");if(twr2)twr2.className="tgl-wrap";var tagR=document.getElementById("partsModeTag");if(tagR){tagR.innerHTML='<span style="width:6px;height:6px;border-radius:50%;background:#34C759;display:inline-block;flex-shrink:0"></span>Gwar.';tagR.style.background="rgba(52,199,89,.1)";tagR.style.color="#34C759";tagR.style.borderColor="rgba(52,199,89,.25)";}_syncTimeInputs();if(typeof _applyTimeUI==='function'){_applyTimeUI('G');_applyTimeUI('S');}if(typeof setWorkType==='function')setWorkType('serwis');['S',1,2,3].forEach(function(x){var b=document.getElementById(x==='S'?'bodyS':'body'+x);var a=document.getElementById(x==='S'?'arrS':'arr'+x);if(b)b.classList.remove('open');if(a)a.classList.remove('open');});var _uw2=document.getElementById('uwagiField');if(_uw2)_uw2.value='';showToast("&#8635; Zresetowano");}
+],_hidden:{}};lastDefCat="";[0,1,2].forEach(function(i){mOpen[i]=false;_applyMod(i);});[["val1","Wybierz element"],["val2","Wybierz usterke"],["valS","Aktywności serwisowe"],["val3","Wybierz lub dodaj dzialanie"]].forEach(function(p){var e=document.getElementById(p[0]);if(e){e.textContent=p[1];e.className="mod-val";}});partsOpen=false;var _pb=document.getElementById("partsBody");if(_pb)_pb.className="parts-body";var _pa=document.getElementById("partsArr");if(_pa)_pa.style.transform="none";var ed=document.getElementById("repEdit");if(ed){ed.removeAttribute("data-ue");}renderList("el");renderList("def");renderList("kon");renderList("sol");renderParts();renderSummary();curMode="G";var tGr=document.getElementById("tglG"),tSr=document.getElementById("tglNG"),twr=document.getElementById("tglWrap");if(tGr)tGr.className="tgl g on";if(tSr)tSr.className="tgl s";var twr2=document.getElementById("tglWrap");if(twr2)twr2.className="tgl-wrap";var tagR=document.getElementById("partsModeTag");if(tagR){tagR.innerHTML='<span style="width:6px;height:6px;border-radius:50%;background:#34C759;display:inline-block;flex-shrink:0"></span>Gwar.';tagR.style.background="rgba(52,199,89,.1)";tagR.style.color="#34C759";tagR.style.borderColor="rgba(52,199,89,.25)";}_syncTimeInputs();if(typeof _applyTimeUI==='function'){_applyTimeUI('G');_applyTimeUI('S');}if(typeof setWorkType==='function')setWorkType('serwis');['S',1,2,3].forEach(function(x){var b=document.getElementById(x==='S'?'bodyS':'body'+x);var a=document.getElementById(x==='S'?'arrS':'arr'+x);if(b)b.classList.remove('open');if(a)a.classList.remove('open');});var _uw2=document.getElementById('uwagiField');if(_uw2){_uw2.value='';_uw2.innerHTML='';}showToast("&#8635; Zresetowano");}
 function _buildAIExp(){
   var _live=(typeof _liveEntry==='function')?_liveEntry():null;
   var _allE=_live?entries.concat([_live]):entries.slice();
@@ -2730,7 +2730,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.89",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.90",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
