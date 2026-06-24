@@ -374,7 +374,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.95</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.96</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2732,7 +2732,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.95",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.96",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -4498,17 +4498,21 @@ function aiSendCustom(){
 function aiStartVoice(){
   var SRec=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SRec){showToast('Mikrofon niedostępny');return;}
-  var r=new SRec();r.lang='pl-PL';r.interimResults=false;
+  var sel=document.getElementById('aiLangSel');
+  var lang=sel?sel.value:'';
+  var r=new SRec();
+  r.lang=lang||'';
+  r.interimResults=false;
+  r.maxAlternatives=1;
   var btn=document.getElementById('aiMicBtn');
-  if(btn)btn.style.background='#FFE0E0';
+  if(btn){btn.style.background='#FFE0E0';btn.innerHTML='<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#FF3B30" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/></svg>';}
   r.onresult=function(e){
     var t=e.results[0][0].transcript;
     var inp=document.getElementById('aiCustomInput');
     if(inp)inp.value=t;
-    if(btn)btn.style.background='#F2F2F7';
   };
-  r.onerror=function(){if(btn)btn.style.background='#F2F2F7';showToast('Błąd mikrofonu');};
-  r.onend=function(){if(btn)btn.style.background='#F2F2F7';};
+  r.onerror=function(){showToast('Błąd mikrofonu');};
+  r.onend=function(){if(btn){btn.style.background='#F2F2F7';btn.innerHTML='<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#3A3A3C" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/></svg>';}};
   r.start();
 }
 function runOffline(cmd){
@@ -5116,7 +5120,15 @@ function restoreData(input){
       <button onclick="aiSendAction('Na podstawie raportu napisz profesjonalny e-mail do klienta po polsku.')" class="ai-act-btn">📧 Napisz e-mail do klienta</button>
       <button onclick="aiSendAction('Przeanalizuj raport i zaproponuj dodatkowe czynności serwisowe które warto wykonać.')" class="ai-act-btn">🔧 Zaproponuj dodatkowe czynności</button>
     </div>
-    <div style="font-size:12px;color:#8E8E93;margin-bottom:8px">Lub wpisz własne polecenie:</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div style="font-size:12px;color:#8E8E93">Lub wpisz własne polecenie:</div>
+      <select id="aiLangSel" style="font-size:11px;border:1px solid #E5E5EA;border-radius:7px;padding:3px 6px;color:#3A3A3C;background:#F2F2F7;outline:none;font-family:inherit">
+        <option value="">🌐 Auto</option>
+        <option value="pl-PL">🇵🇱 PL</option>
+        <option value="ru-RU">🇷🇺 RU</option>
+        <option value="en-US">🇬🇧 EN</option>
+      </select>
+    </div>
     <div style="display:flex;gap:8px;align-items:center">
       <input id="aiCustomInput" placeholder="Np. przetłumacz na angielski..." style="flex:1;padding:10px 12px;border:1.5px solid #E5E5EA;border-radius:10px;font-size:13px;font-family:inherit;outline:none" />
       <button onclick="aiStartVoice()" id="aiMicBtn" style="background:#F2F2F7;border:none;border-radius:10px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">
