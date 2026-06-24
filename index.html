@@ -372,7 +372,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.93</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v11.94</span></div>
   <div style="display:flex;gap:6px">
     <button class="nav-btn" onclick="doReset()" title="Reset">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 10a7 7 0 0 1 11.9-5"/><polyline points="15,2 15,7 10,7"/></svg>
@@ -2730,7 +2730,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v11.93",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v11.94",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -4476,7 +4476,8 @@ function openAIPanel(){
   _commitEntry();
   var txt=(typeof _aiFullReport==='function')?_aiFullReport():buildReport();
   if(!txt){showToast('Brak danych do raportu');return;}
-  var url='https://claude.ai/new?q='+encodeURIComponent(txt);
+  var prompt=txt+'\n\n---\nMam powyższy raport serwisowy RVM. Zaproponuj mi opcje co mogę z nim zrobić — pokaż mi listę możliwości do wyboru (np. tłumaczenie na rosyjski, korekta językowa, skrócenie, wersja e-mail do klienta itp.) i czekaj na mój wybór.';
+  var url='https://claude.ai/new?q='+encodeURIComponent(prompt);
   window.open(url,'_blank');
 }
 function runOffline(cmd){
