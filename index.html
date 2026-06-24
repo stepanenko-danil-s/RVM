@@ -8657,6 +8657,20 @@ function gpsShop(){
       var fb=la.toFixed(5)+', '+lo.toFixed(5);_setShopFields('','',fb);_toast('Błąd sieci — współrzędne GPS');
     });
   },function(err){var c=err&&err.code,msg=(err&&err.message)?err.message:'blad';if(c===1)msg='brak zgody na lokalizację \u2014 włącz w Ustawieniach iPhone';else if(c===2)msg='lokalizacja niedostepna';else if(c===3)msg='przekroczono czas (sprobuj jeszcze raz)';_toast('GPS: '+msg);var ae=document.getElementById('shopAddr');if(ae)ae.value='GPS: '+msg;},{enableHighAccuracy:false,timeout:4000,maximumAge:300000});
+  // Фаза 2 — уточнение через GPS чип
+  setTimeout(function(){
+    if(!navigator.geolocation)return;
+    navigator.geolocation.getCurrentPosition(function(pos2){
+      var la2=pos2.coords.latitude,lo2=pos2.coords.longitude,acc2=pos2.coords.accuracy||999;
+      if(acc2>50)return;
+      var prevLa=window._myLat,prevLo=window._myLon;
+      if(!prevLa||!prevLo)return;
+      if(typeof _dist==='function'&&_dist(la2,lo2,prevLa,prevLo)<20)return;
+      _toast('GPS: uściślono ±'+Math.round(acc2)+'m, aktualizuję...');
+      window._myLat=la2;window._myLon=lo2;window._gpsAcc=Math.round(acc2);
+      gpsShop();
+    },function(){},{enableHighAccuracy:true,timeout:10000,maximumAge:0});
+  },300);
 }
 function _matchShopId(chain){
   var road=_normStr(window._gpsRoad||''), num=_normStr(window._gpsNum||''), city=_normStr(window._gpsCity||''), zip=(window._gpsZip||'').trim();
