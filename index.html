@@ -374,7 +374,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.05</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.06</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -2732,7 +2732,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.05",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.06",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -8657,20 +8657,6 @@ function gpsShop(){
       var fb=la.toFixed(5)+', '+lo.toFixed(5);_setShopFields('','',fb);_toast('Błąd sieci — współrzędne GPS');
     });
   },function(err){var c=err&&err.code,msg=(err&&err.message)?err.message:'blad';if(c===1)msg='brak zgody na lokalizację \u2014 włącz w Ustawieniach iPhone';else if(c===2)msg='lokalizacja niedostepna';else if(c===3)msg='przekroczono czas (sprobuj jeszcze raz)';_toast('GPS: '+msg);var ae=document.getElementById('shopAddr');if(ae)ae.value='GPS: '+msg;},{enableHighAccuracy:true,timeout:8000,maximumAge:30000});
-  // Фаза 2 — уточнение через GPS чип
-  setTimeout(function(){
-    if(!navigator.geolocation)return;
-    navigator.geolocation.getCurrentPosition(function(pos2){
-      var la2=pos2.coords.latitude,lo2=pos2.coords.longitude,acc2=pos2.coords.accuracy||999;
-      if(acc2>50)return;
-      var prevLa=window._myLat,prevLo=window._myLon;
-      if(!prevLa||!prevLo)return;
-      if(typeof _dist==='function'&&_dist(la2,lo2,prevLa,prevLo)<20)return;
-      _toast('GPS: uściślono ±'+Math.round(acc2)+'m, aktualizuję...');
-      window._myLat=la2;window._myLon=lo2;window._gpsAcc=Math.round(acc2);
-      gpsShop();
-    },function(){},{enableHighAccuracy:true,timeout:10000,maximumAge:0});
-  },300);
 }
 function _matchShopId(chain){
   var road=_normStr(window._gpsRoad||''), num=_normStr(window._gpsNum||''), city=_normStr(window._gpsCity||''), zip=(window._gpsZip||'').trim();
