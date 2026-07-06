@@ -95,6 +95,11 @@ body.fluent .set-btn{border-radius:2px;border-color:#C8C6C4;background:#F3F2F1;c
 body.fluent .set-btn-primary{background:#0078D4;color:#fff;border-color:#0078D4}
 .ai-act-btn{width:100%;padding:12px 14px;border-radius:10px;font-size:13px;font-weight:600;color:#1C1C1E;background:#F2F2F7;border:1px solid #E5E5EA;cursor:pointer;font-family:inherit;text-align:left}
 body.fluent .ai-act-btn{border-radius:2px;border-color:#C8C6C4}
+.li-edit-btn,.li-del-btn{background:none;border:none;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0;border-radius:8px;transition:background .15s}
+.li-edit-btn{color:#007AFF}.li-edit-btn:active{background:rgba(0,122,255,.1)}
+.li-del-btn{color:#FF3B30}.li-del-btn:active{background:rgba(255,59,48,.1)}
+body.fluent .li-edit-btn{color:#0078D4;border-radius:2px}.body.fluent .li-edit-btn:active{background:rgba(0,120,212,.1)}
+body.fluent .li-del-btn{color:#A4262C;border-radius:2px}.body.fluent .li-del-btn:active{background:rgba(164,38,44,.1)}
 .rep-sm-btn{padding:6px 10px;border-radius:8px;font-size:12px;font-weight:600;color:#3A3A3C;background:none;border:1px solid #C7C7CC;cursor:pointer;font-family:inherit;white-space:nowrap}
 body.fluent .rep-sm-btn{border-radius:2px;border-color:#A19F9D;color:#201F1E}
 body.fluent #repFieldWrap{border-radius:2px;border-color:#201F1E}
@@ -374,7 +379,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.12</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.13</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -1557,12 +1562,10 @@ function _liH(it,col,sel,isSug,isCustom){
     +'<div class="ck">'+(on?"&#10003;":"")+"</div>"
     +'<div class="li-t" style="flex:1;min-width:0"><div class="li-pl">'+esc(it.pl)+"</div>"+ru+"</div>"
     +dot
-    +'<button onclick="event.stopPropagation();startInlineEdit(this)" data-col="'+col+'" data-pl="'+qs+'" '
-    +'style="background:none;border:none;color:#007AFF;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0">'
+    +'<button onclick="event.stopPropagation();startInlineEdit(this)" data-col="'+col+'" data-pl="'+qs+'" class="li-edit-btn">'
     +'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg>'
     +'</button>'
-    +'<button onclick="event.stopPropagation();delAnyItem(this)" data-col="'+col+'" data-pl="'+qs+'" '
-    +'style="background:none;border:none;color:#FF3B30;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0">'
+    +'<button onclick="event.stopPropagation();delAnyItem(this)" data-col="'+col+'" data-pl="'+qs+'" class="li-del-btn">'
     +'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>'
     +'</button>'
     +"</div>";
@@ -2745,7 +2748,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.12",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.13",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -3830,12 +3833,10 @@ function _liH(it,col,sel,isSug,isCustom){
     +'<div class="ck">'+(on?"&#10003;":"")+"</div>"
     +'<div class="li-t" style="flex:1;min-width:0"><div class="li-pl">'+esc(it.pl)+"</div>"+ru+"</div>"
     +dot
-    +'<button onclick="event.stopPropagation();startInlineEdit(this)" data-col="'+col+'" data-pl="'+qs+'" '
-    +'style="background:none;border:none;color:#007AFF;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0">'
+    +'<button onclick="event.stopPropagation();startInlineEdit(this)" data-col="'+col+'" data-pl="'+qs+'" class="li-edit-btn">'
     +'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg>'
     +'</button>'
-    +'<button onclick="event.stopPropagation();delAnyItem(this)" data-col="'+col+'" data-pl="'+qs+'" '
-    +'style="background:none;border:none;color:#FF3B30;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0">'
+    +'<button onclick="event.stopPropagation();delAnyItem(this)" data-col="'+col+'" data-pl="'+qs+'" class="li-del-btn">'
     +'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>'
     +'</button>'
     +"</div>";
