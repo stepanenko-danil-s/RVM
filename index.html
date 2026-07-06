@@ -374,7 +374,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.07</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.08</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -1549,10 +1549,15 @@ function _liH(it,col,sel,isSug,isCustom){
       +"</div>";
   }
   var dot=isSug&&!on?'<div class="sug-dot"></div>':"";
-  return '<div class="'+cls+'" data-col="'+col+'" data-pl="'+qs+'" onclick="togIt(this)">'
+  return '<div class="'+cls+'" data-col="'+col+'" data-pl="'+qs+'" onclick="togIt(this)" style="display:flex;align-items:center;gap:4px">'
     +'<div class="ck">'+(on?"&#10003;":"")+"</div>"
-    +'<div class="li-t"><div class="li-pl">'+esc(it.pl)+"</div>"+ru+"</div>"
-    +dot+"</div>";
+    +'<div class="li-t" style="flex:1;min-width:0"><div class="li-pl">'+esc(it.pl)+"</div>"+ru+"</div>"
+    +dot
+    +'<button onclick="event.stopPropagation();startInlineEdit(this)" data-col="'+col+'" data-pl="'+qs+'" '
+      +'style="background:none;border:none;color:rgba(60,60,67,.35);font-size:16px;padding:4px 6px;cursor:pointer;flex-shrink:0;line-height:1">&#9998;</button>'
+    +'<button onclick="event.stopPropagation();delAnyItem(this)" data-col="'+col+'" data-pl="'+qs+'" '
+      +'style="background:none;border:none;color:rgba(220,50,50,.5);font-size:20px;line-height:1;padding:4px 6px;cursor:pointer;flex-shrink:0">&times;</button>'
+    +"</div>";
 }
 function _commitEntry(){
   if(typeof commitEntry==='function')return commitEntry();
@@ -2732,7 +2737,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.07",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.08",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -3750,10 +3755,15 @@ function _liH(it,col,sel,isSug,isCustom){
       +"</div>";
   }
   var dot=isSug&&!on?'<div class="sug-dot"></div>':"";
-  return '<div class="'+cls+'" data-col="'+col+'" data-pl="'+qs+'" onclick="togIt(this)">'
+  return '<div class="'+cls+'" data-col="'+col+'" data-pl="'+qs+'" onclick="togIt(this)" style="display:flex;align-items:center;gap:4px">'
     +'<div class="ck">'+(on?"&#10003;":"")+"</div>"
-    +'<div class="li-t"><div class="li-pl">'+esc(it.pl)+"</div>"+ru+"</div>"
-    +dot+"</div>";
+    +'<div class="li-t" style="flex:1;min-width:0"><div class="li-pl">'+esc(it.pl)+"</div>"+ru+"</div>"
+    +dot
+    +'<button onclick="event.stopPropagation();startInlineEdit(this)" data-col="'+col+'" data-pl="'+qs+'" '
+      +'style="background:none;border:none;color:rgba(60,60,67,.35);font-size:16px;padding:4px 6px;cursor:pointer;flex-shrink:0;line-height:1">&#9998;</button>'
+    +'<button onclick="event.stopPropagation();delAnyItem(this)" data-col="'+col+'" data-pl="'+qs+'" '
+      +'style="background:none;border:none;color:rgba(220,50,50,.5);font-size:20px;line-height:1;padding:4px 6px;cursor:pointer;flex-shrink:0">&times;</button>'
+    +"</div>";
 }
 function _commitEntry(){
   if(!SEL.el.length&&!SEL.kon.length)return;
