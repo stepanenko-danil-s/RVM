@@ -379,7 +379,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.19</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.20</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -2748,7 +2748,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.19",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.20",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -7919,7 +7919,7 @@ function saveTmpl(){
   var _sn=((document.getElementById('shopName')||{}).value||'').trim();
   var _si=((document.getElementById('shopId')||{}).value||'').trim();
   var _sa=((document.getElementById('shopAddr')||{}).value||'').trim();
-  repTmpls.push({name:name.trim(),entries:JSON.parse(JSON.stringify(entries)),timeG:Object.assign({},timeG),timeS:Object.assign({},timeS),spG:JSON.parse(JSON.stringify(selPartsG)),spS:JSON.parse(JSON.stringify(selPartsS)),pqG:JSON.parse(JSON.stringify(partQtyG)),pqS:JSON.parse(JSON.stringify(partQtyS)),style:rstStyle,shopN:_sn,shopI:_si,shopA:_sa});
+  repTmpls.push({name:name.trim(),entries:JSON.parse(JSON.stringify(entries)),timeG:Object.assign({},timeG),timeS:Object.assign({},timeS),custParts:JSON.parse(JSON.stringify(custParts||{})),style:rstStyle,shopN:_sn,shopI:_si,shopA:_sa});
   ss('rv_rt',repTmpls);
   showToast('Zapisano: '+name.trim());
   updateTmplCount();
@@ -7942,11 +7942,17 @@ function loadTmpl(i){
   entries=JSON.parse(JSON.stringify(t.entries));
   if(t.timeG)timeG=Object.assign({},t.timeG);
   if(t.timeS)timeS=Object.assign({},t.timeS);
-  // Запчасти
-  if(t.spG){selPartsG=JSON.parse(JSON.stringify(t.spG));ss('rv_spG',selPartsG);}
-  if(t.spS){selPartsS=JSON.parse(JSON.stringify(t.spS));ss('rv_spS',selPartsS);}
-  if(t.pqG){partQtyG=JSON.parse(JSON.stringify(t.pqG));ss('rv_pqG',partQtyG);}
-  if(t.pqS){partQtyS=JSON.parse(JSON.stringify(t.pqS));ss('rv_pqS',partQtyS);}
+  // Запчасти — custParts формат
+  if(t.custParts){
+    custParts=JSON.parse(JSON.stringify(t.custParts));
+    ss('rv_cp',custParts);
+  } else if(t.spG||t.spS){
+    // Старый формат selPartsG/S — конвертируем
+    if(!custParts)custParts={};
+    if(t.spG&&Object.keys(t.spG).length){custParts['G']=t.spG;if(t.pqG)Object.assign(custParts['G'],t.pqG);}
+    if(t.spS&&Object.keys(t.spS).length){custParts['S']=t.spS;if(t.pqS)Object.assign(custParts['S'],t.pqS);}
+    ss('rv_cp',custParts);
+  }
   // Магазин
   if(t.shopN||t.shopI||t.shopA){
     var sn=document.getElementById('shopName'),si=document.getElementById('shopId'),sa=document.getElementById('shopAddr');
@@ -7957,7 +7963,7 @@ function loadTmpl(i){
   }
   ss('rv_e',entries);
   syncTimeInputs();if(typeof _applyTimeUI==='function'){_applyTimeUI('G');_applyTimeUI('S');}
-  if(typeof renderParts==='function')setTimeout(function(){renderParts();},100);
+  setTimeout(function(){if(typeof renderParts==='function')renderParts();},100);
   updateBadges();
   renderSummary();
   closeTmpl();
