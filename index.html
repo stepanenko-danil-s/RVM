@@ -381,7 +381,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.34</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.35</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -2754,7 +2754,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.34",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.35",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -8791,7 +8791,7 @@ function gpsShop(){
       var fb=la.toFixed(5)+', '+lo.toFixed(5);
       _setShopFields('','',fb);
       _toast('GPS: '+fb+' — wybierz sklep w Bazie');
-      // Попробовать найти магазин только по координатам из SHOPS_DB
+      // Поиск в SHOPS_DB по координатам
       if(typeof SHOPS_DB!=='undefined'){
         var best=null,bestD=999999;
         SHOPS_DB.forEach(function(s){
@@ -8803,8 +8803,11 @@ function gpsShop(){
           _setShopFields(best.chain||'Biedronka',''+best.id,(best.addr||'')+(best.city?', '+best.city:''));
           window._shopPin=best.pin||'';
           _toast('Sklep: '+(best.chain||'Biedronka')+' '+(best.id||'')+' ('+Math.round(bestD)+'m)');
+          return;
         }
       }
+      // Автоматически открыть Baza
+      setTimeout(function(){if(typeof openPlaces==='function')openPlaces();},800);
     });
   },function(err){var c=err&&err.code,msg=(err&&err.message)?err.message:'blad';if(c===1)msg='brak zgody na lokalizację \u2014 włącz w Ustawieniach iPhone';else if(c===2)msg='lokalizacja niedostepna';else if(c===3)msg='przekroczono czas (sprobuj jeszcze raz)';_toast('GPS: '+msg);var ae=document.getElementById('shopAddr');if(ae)ae.value='GPS: '+msg;},{enableHighAccuracy:true,timeout:8000,maximumAge:30000});
 }
