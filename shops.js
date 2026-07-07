@@ -1079,7 +1079,7 @@ var SHOPS_DB = [
 {id:3004,chain:"Biedronka",city:"Limanowa",addr:"Piłsudskiego 24A",zip:"34-600"},
 {id:3005,chain:"Biedronka",city:"Mielec",addr:"ul. Piaskowa 2",pin:"9176"},
 {id:3006,chain:"Biedronka",city:"Przemyśl",addr:"ul. 3 Maja 19",pin:"9551"},
-{id:3007,chain:"Biedronka",city:"Jastrzębie-Zdrój",addr:"ul. Marusarzówny 28",pin:"5451"},
+{id:3007,chain:"Biedronka",city:"Jastrzębie-Zdrój",addr:"ul. Marusarzówny 28",pin:"5451",lat:49.94389,lon:18.58041},
 {id:3008,chain:"Biedronka",city:"Stargard Szczeciński",addr:"Ul. Czeska 10",pin:"7688"},
 {id:3009,chain:"Biedronka",city:"Zielona Góra",addr:"ul. Sulechowska 38",pin:"3361"},
 {id:3010,chain:"Biedronka",city:"Kalisz",addr:"Wyszyńskiego 42a",pin:"1153"},
