@@ -381,7 +381,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.42</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.43</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -2754,7 +2754,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.42",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.43",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -5242,6 +5242,7 @@ function restoreData(input){
         <input id="addShCity" placeholder="Miasto" style="flex:1 1 100%;box-sizing:border-box;background:#F5F5F7;border:none;border-radius:10px;padding:9px;font-size:13px;font-family:inherit">
         <input id="addShAddr" placeholder="Ulica i nr" style="flex:1 1 100%;box-sizing:border-box;background:#F5F5F7;border:none;border-radius:10px;padding:9px;font-size:13px;font-family:inherit">
         <input id="addShZip" placeholder="Kod (43-400)" style="flex:1 1 100%;box-sizing:border-box;background:#F5F5F7;border:none;border-radius:10px;padding:9px;font-size:13px;font-family:inherit">
+        <input id="addShPin" placeholder="PIN (4 cyfry)" inputmode="numeric" maxlength="4" style="flex:1 1 100%;box-sizing:border-box;background:#F5F5F7;border:none;border-radius:10px;padding:9px;font-size:13px;font-family:inherit">
         <button onclick="addShopManual()" style="flex:1 1 100%;padding:11px;background:#34C759;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Dodaj do bazy</button>
       </div>
     </details>
@@ -8452,7 +8453,7 @@ function placesRender(){
   }
   var c=document.getElementById('shopsCount');if(c)c.textContent=((window._customShops||[]).length)+' wlasnych + '+(typeof SHOPS_DB!=='undefined'?SHOPS_DB.length:0)+' wbudowanych';
 }
-function placeLoad(i){var p=_places()[i];if(!p)return;_setShopFields(p.name||'',p.id||'',p.addr||'');window._myLat=p.lat;window._myLon=p.lon;closeOv('shPlaces');_toast('Zaladowano: '+(p.name||p.addr||''));}
+function placeLoad(i){var p=_places()[i];if(!p)return;_setShopFields(p.name||'',p.id||'',p.addr||'');window._myLat=p.lat;window._myLon=p.lon;window._shopPin=p.pin||'';var pv=document.getElementById('pinPillVal');if(pv)pv.textContent=p.pin||'\u2014';var pill=document.getElementById('pinPill');if(pill)pill.style.color=p.pin?'#1C1C1E':'#8E8E93';closeOv('shPlaces');_toast('Zaladowano: '+(p.name||p.addr||'')+(p.pin?' | PIN '+p.pin:''));}
 function placeDel(i){var a=_places();if(i<0||i>=a.length)return;a.splice(i,1);_placesSave(a);placesRender();}
 function openPlaces(){var b=document.getElementById('shopsSearchBox');if(b)b.value='';placesRender();if(typeof shopsSearch==='function')shopsSearch('');openSh('shPlaces');}
 function importShopsCSV(text){
@@ -10020,8 +10021,11 @@ function shopsSearch(q){
 function shopPickIdx(i){var s=(window.__shopsView||[])[i]; if(!s)return;
   var addr=(s.addr||'')+(s.city?', '+s.city:'');
   if(typeof _setShopFields==='function')_setShopFields(s.chain||'',(s.id!=null?(''+s.id):''),addr);
+  window._shopPin=s.pin||'';
+  var pv=document.getElementById('pinPillVal');if(pv)pv.textContent=s.pin||'\u2014';
+  var pill=document.getElementById('pinPill');if(pill)pill.style.color=s.pin?'#1C1C1E':'#8E8E93';
   if(typeof closeOv==='function')closeOv('shPlaces');
-  if(typeof _toast==='function')_toast('Sklep: '+(s.chain||'')+(s.id?' '+s.id:''));
+  if(typeof _toast==='function')_toast('Sklep: '+(s.chain||'')+(s.id?' '+s.id:'')+(s.pin?' | PIN '+s.pin:''));
 }
 function shopDelIdx(i){var s=(window.__shopsView||[])[i]; if(!s||!s.custom)return;
   if(!confirm('Usun\u0105\u0107 '+(s.chain||'')+' '+(s.city||'')+'?'))return;
@@ -10031,14 +10035,14 @@ function shopDelIdx(i){var s=(window.__shopsView||[])[i]; if(!s||!s.custom)retur
   shopsSearch(_shVal('shopsSearchBox')); if(typeof _toast==='function')_toast('Usuni\u0119to');
 }
 function addShopManual(){
-  var id=_shVal('addShId'), chain=_shVal('addShChain')||'Biedronka', city=_shVal('addShCity'), addr=_shVal('addShAddr'), zip=_shVal('addShZip').replace(/\s+/g,'');
+  var id=_shVal('addShId'), chain=_shVal('addShChain')||'Biedronka', city=_shVal('addShCity'), addr=_shVal('addShAddr'), zip=_shVal('addShZip').replace(/\s+/g,''), pin=_shVal('addShPin').trim();
   if(!city&&!addr){if(typeof _toast==='function')_toast('Wpisz miasto i adres');return;}
   if(typeof shopLoadCustom==='function'&&!window._customShops)shopLoadCustom();
   if(!window._customShops)window._customShops=[];
-  window._customShops.unshift({id:id,chain:chain,city:city,addr:addr,zip:zip,custom:true});
+  window._customShops.unshift({id:id,chain:chain,city:city,addr:addr,zip:zip,pin:pin||undefined,custom:true});
   if(typeof shopSaveCustom==='function')shopSaveCustom();
-  ['addShId','addShCity','addShAddr','addShZip'].forEach(function(x){var e=document.getElementById(x);if(e)e.value='';});
-  if(typeof _toast==='function')_toast('Dodano do bazy: '+chain+(id?' '+id:'')+(city?' '+city:''));
+  ['addShId','addShCity','addShAddr','addShZip','addShPin'].forEach(function(x){var e=document.getElementById(x);if(e)e.value='';});
+  if(typeof _toast==='function')_toast('Dodano do bazy: '+chain+(id?' '+id:'')+(city?' '+city:'')+(pin?' | PIN '+pin:''));
   shopsSearch(_shVal('shopsSearchBox'));
 }
 function _nearestSavedShop(la,lo,acc){var radius=Math.max(500,Math.round((acc||100)*3));var best=null,bd=radius;try{(typeof _allShops==='function'?_allShops():[]).forEach(function(s){if(typeof s.lat==='number'&&typeof s.lon==='number'){var d=_dist(la,lo,s.lat,s.lon);if(d<bd){bd=d;best=s;}}});}catch(e){}return best;}
