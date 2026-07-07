@@ -381,7 +381,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.31</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.32</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -580,6 +580,10 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
       <div style="margin:0 12px 12px;border:2px solid #1C1C1E;border-radius:10px;overflow:hidden">
         <textarea id="uwagiField" placeholder="Dodatkowe uwagi..." rows="2" style="width:100%;padding:10px 12px;font-size:13px;font-family:inherit;border:none;outline:none;resize:none;background:transparent;color:#1C1C1E;box-sizing:border-box"></textarea>
       </div>
+      <button onclick="aiOpenStyles()" style="display:flex;align-items:center;justify-content:center;gap:6px;width:calc(100% - 24px);margin:0 12px 8px;padding:11px;background:#F2F2F7;border:1.5px solid #D1D1D6;border-radius:10px;font-size:13px;font-weight:600;color:#1C1C1E;cursor:pointer;font-family:inherit">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        Sprawdź styl raportu (AI)
+      </button>
       <div style="display:flex;flex-wrap:wrap;gap:5px;padding:0 12px 10px">
         <button onclick="openTmpl()" class="rep-sm-btn">Szablony <span id="tmplCount" style="background:#3A3A3C;color:#fff;border-radius:5px;padding:1px 5px;font-size:10px">0</span></button>
         <button onclick="saveTmpl()" class="rep-sm-btn" style="border-style:dashed">+ Zapisz</button>
@@ -2750,7 +2754,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.31",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.32",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -4543,6 +4547,14 @@ function resetAI(){
   var cl=document.getElementById("aiChatList");if(cl)cl.innerHTML="";
   var ql=document.getElementById("onlineResult");if(ql){ql.style.display="none";ql.innerHTML="";}
 }
+function aiOpenStyles(){
+  var txt=buildReport?buildReport():'';
+  var prompt='Mam raport serwisowy. Sprawdz gramatykę i pokaz mi 4 wersje tego samego tekstu: 1) Poprawiona gramatyka 2) Styl techniczny 3) Styl biznesowy 4) Styl rozmowny. Kazda wersja w osobnym bloku z nagłówkiem.
+
+Raport:
+'+(txt||'(brak raportu - sprawdz gramatykę przykładowego zdania)');
+  window.open('https://claude.ai/new?q='+encodeURIComponent(prompt),'_blank');
+}
 function openAIPanel(){
   if(SEL.el||SEL.def.length||SEL.sol.length||SEL.kon.length)commitEntry();
   _commitEntry();
@@ -5209,21 +5221,11 @@ function restoreData(input){
   </div>
 </div>
 
-<div id="pgAI" style="display:none;flex-direction:column;padding:14px;gap:10px;overflow-y:auto;padding-bottom:80px">
-  <div style="padding:14px;display:flex;flex-direction:column;gap:10px;overflow-y:auto;padding-bottom:80px">
-    <div style="font-size:11px;font-weight:700;color:#8E8E93;letter-spacing:.05em">ASYSTENT JĘZYKOWY</div>
-    <textarea id="aiCheckInp" rows="4" placeholder="Wklej lub wpisz tekst po polsku lub rosyjsku..." style="width:100%;border:2px solid #1C1C1E;border-radius:10px;padding:12px;font-size:14px;font-family:inherit;outline:none;resize:none;line-height:1.5;box-sizing:border-box"></textarea>
-    <button onclick="aiCheckAll()" style="width:100%;padding:13px;background:#1C1C1E;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Sprawdź i pokaż wszystkie style</button>
-    <div id="aiCheckResults" style="display:none;flex-direction:column;gap:8px"></div>
-    <button onclick="document.getElementById('aiCheckInp').value='';document.getElementById('aiCheckResults').style.display='none';" style="background:none;border:none;color:#8E8E93;font-size:12px;cursor:pointer;font-family:inherit;padding:4px;text-align:center">Wyczyść</button>
-  </div>
-</div>
 
 <!-- BOTTOM NAV -->
 <div class="bnav">
   <button class="bnav-btn on" id="navRaport" onclick="goTab('raport')" title="Raport" aria-label="Raport"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:27px;height:27px"><path d="M13 3H7a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V8z"/><path d="M13 3v5h5"/><path d="M9 13h6M9 17h6"/></svg></button>
   <button class="bnav-btn" id="navMag" onclick="goTab('mag')" title="Magazyn" aria-label="Magazyn" style="position:relative"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:27px;height:27px"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg><span id="magBadge" style="display:none;position:absolute;top:1px;left:calc(50% + 5px);min-width:16px;height:16px;padding:0 4px;background:#FF3B30;color:#fff;font-size:10px;font-weight:800;border-radius:9px;align-items:center;justify-content:center;line-height:1;box-sizing:border-box">0</span></button>
-  <button class="bnav-btn" id="navAI" onclick="goTab('ai')" title="AI Chat" aria-label="AI Chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>AI</span></button>
   <button class="bnav-btn" id="navWiedza" onclick="goTab('wiedza')" title="Wiedza" aria-label="Wiedza"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:27px;height:27px"><path d="M5 4a1 1 0 0 1 1-1h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M19 19H6a2 2 0 0 0-2 2"/><path d="M9 7h7"/></svg></button>
 </div>
 <div class="ov" id="shPick" style="display:none" onclick="if(event.target===this)closeOv('shPick')"><div class="sh" style="max-height:80vh;overflow-y:auto;-webkit-overflow-scrolling:touch"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div style="font-size:16px;font-weight:800;color:#323130">Wybierz sklep (do 60 m)</div><button onclick="closeOv('shPick')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button></div><div id="pickList"></div></div></div>
