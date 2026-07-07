@@ -381,7 +381,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.33</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.34</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -2754,7 +2754,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.33",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.34",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -8737,11 +8737,22 @@ function gpsShop(){
     if(_bs){var _bd=Math.round(_dist(la,lo,_bs.lat,_bs.lon));_diag('GPS '+la.toFixed(5)+', '+lo.toFixed(5)+'\n=> z ZAPISANYCH (~'+_bd+'m): '+((_bs.chain||_bs.name||'')+' #'+(_bs.id!=null?_bs.id:'?')));_setShopFields(_bs.chain||_bs.name||'',(_bs.id!=null?(''+_bs.id):''),(_bs.addr||'')+(_bs.city?', '+_bs.city:''));_toast('Z bazy: '+((_bs.chain||_bs.name||'')+(_bs.id?' '+_bs.id:'')));return;}
     var _rp=_findPlace(la,lo);
     if(_rp){_diag('GPS '+la.toFixed(5)+', '+lo.toFixed(5)+'\n=> ZAPAMIETANE MIEJSCE: '+((_rp.name||'')+' #'+(_rp.id||'?')));_setShopFields(_rp.name||'',_rp.id||'',_rp.addr||'');_toast('Zapamietane: '+((_rp.name||'')+(_rp.id?' '+_rp.id:'')||'miejsce'));return;}
-    _toast('GPS: rozpoznaje sklep...');
+    _toast('GPS: rozpoznaje adres...');
     var nomUrl='https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&accept-language=pl&lat='+la+'&lon='+lo;
     var R=120;
     var ovQ='[out:json][timeout:10];(node(around:'+R+','+la+','+lo+')[shop];way(around:'+R+','+la+','+lo+')[shop];node(around:'+R+','+la+','+lo+')[amenity=fuel];);out center tags 60;';
-    var pNom=fetch(nomUrl,{headers:{'Accept':'application/json'}}).then(function(r){return r.json();}).catch(function(){return null;});
+    // Использовать XMLHttpRequest вместо fetch для обхода iOS PWA ограничений
+    function xhrGet(url,cb){
+      var x=new XMLHttpRequest();
+      x.open('GET',url,true);
+      x.setRequestHeader('Accept','application/json');
+      x.timeout=8000;
+      x.onload=function(){try{cb(null,JSON.parse(x.responseText));}catch(e){cb(e,null);}};
+      x.onerror=function(){cb(new Error('network'),null);};
+      x.ontimeout=function(){cb(new Error('timeout'),null);};
+      x.send();
+    }
+    var pNom=new Promise(function(res){xhrGet(nomUrl,function(e,d){res(e?null:d);});});
     var pOv=_overpass(ovQ);
     Promise.all([pNom,pOv]).then(function(res){
       var d=res[0]||{}, ov=res[1];
