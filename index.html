@@ -381,7 +381,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.39</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.40</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -399,7 +399,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
     <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#C7C7CC" stroke-width="1.8" style="flex:0 0 auto"><circle cx="10" cy="8" r="4"/><path d="M4 18c0-4 12-4 12 0"/></svg>
     <input id="shopName" placeholder="Sklep" oninput="shopSync()" autocomplete="off" style="flex:1 1 auto;min-width:0;background:#F2F2F7;border-radius:14px;padding:6px 11px;font-size:13px;color:#1C1C1E">
     <input id="shopId" placeholder="ID" oninput="shopSync();if(typeof _refreshPin==='function')_refreshPin()" autocomplete="off" inputmode="numeric" style="flex:0 0 70px;width:70px;background:#F2F2F7;border-radius:14px;padding:6px 8px;font-size:13px;color:#1C1C1E;text-align:center">
-    <div style="flex:1 1 100%;height:0"></div><input id="shopAddr" placeholder="Adres" oninput="shopSync()" autocomplete="off" style="flex:1 1 auto;min-width:0;background:#F2F2F7;border-radius:14px;padding:6px 11px;font-size:13px;color:#1C1C1E"><div id="pinPill" onclick="_copyPin()" style="flex:0 0 auto;margin:0;background:#F2F2F7;border:1px solid #E5E5EA;border-radius:14px;padding:6px 12px;font-size:13px;font-weight:700;color:#8E8E93;cursor:pointer;display:flex;align-items:center">PIN <span id="pinPillVal" style="margin-left:4px">&mdash;</span><span id="pinPillHint" style="display:none"></span></div><div style="flex:1 1 100%;height:0"></div><button onclick="gpsShop()" style="background:#007AFF;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">GPS</button><button onclick="shopSaveToBase()" style="background:#34C759;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">Zapisz</button><button onclick="openPlaces()" style="background:#8E8E93;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">Baza</button><div style="flex:1 1 100%;height:0"></div><div id="gpsDiag" onclick="if(this.textContent){try{navigator.clipboard&&navigator.clipboard.writeText(this.textContent);}catch(e){} if(typeof _toast==='function')_toast('Skopiowano');}" style="flex:1 1 100%;font-size:10px;line-height:1.35;color:#8E8E93;white-space:pre-wrap;word-break:break-word;margin-top:2px;cursor:pointer"></div>
+    <div style="flex:1 1 100%;height:0"></div><input id="shopAddr" placeholder="Adres" oninput="shopSync()" autocomplete="off" style="flex:1 1 auto;min-width:0;background:#F2F2F7;border-radius:14px;padding:6px 11px;font-size:13px;color:#1C1C1E"><div id="pinPill" onclick="_editPin()" style="flex:0 0 auto;margin:0;background:#F2F2F7;border:1px solid #E5E5EA;border-radius:14px;padding:6px 12px;font-size:13px;font-weight:700;color:#8E8E93;cursor:pointer;display:flex;align-items:center">PIN <span id="pinPillVal" style="margin-left:4px">&mdash;</span><span id="pinPillHint" style="display:none"></span></div><div style="flex:1 1 100%;height:0"></div><button onclick="gpsShop()" style="background:#007AFF;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">GPS</button><button onclick="shopSaveToBase()" style="background:#34C759;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">Zapisz</button><button onclick="openPlaces()" style="background:#8E8E93;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">Baza</button><div style="flex:1 1 100%;height:0"></div><div id="gpsDiag" onclick="if(this.textContent){try{navigator.clipboard&&navigator.clipboard.writeText(this.textContent);}catch(e){} if(typeof _toast==='function')_toast('Skopiowano');}" style="flex:1 1 100%;font-size:10px;line-height:1.35;color:#8E8E93;white-space:pre-wrap;word-break:break-word;margin-top:2px;cursor:pointer"></div>
     
   </div>
 
@@ -2754,7 +2754,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.39",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.40",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -9938,6 +9938,18 @@ function _refreshPin(){
     pill.style.background='#F2F2F7';pill.style.borderColor='#E5E5EA';pill.style.color='#8E8E93';
     window._shopPin='';
   }
+}
+function _editPin(){
+  var cur=window._shopPin||'';
+  var v=prompt('Wpisz PIN (4 cyfry):',cur);
+  if(v===null)return;
+  v=v.trim();
+  window._shopPin=v;
+  var pv=document.getElementById('pinPillVal');
+  if(pv)pv.textContent=v||'—';
+  var pill=document.getElementById('pinPill');
+  if(pill)pill.style.color=v?'#1C1C1E':'#8E8E93';
+  if(v)_toast('PIN: '+v+' — zapisz sklep przyciskiem Zapisz');
 }
 function _copyPin(){var p=(window._shopPin||'');if(!p)return;try{navigator.clipboard&&navigator.clipboard.writeText(p);}catch(e){}if(typeof _toast==='function')_toast('PIN skopiowany: '+p);}
 function selfTestGPS(){
