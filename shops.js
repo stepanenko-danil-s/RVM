@@ -2457,7 +2457,7 @@ var SHOPS_DB = [
 {id:5220,chain:"Biedronka",city:"Białystok",addr:"Ul. Kaczorowskiego 7",pin:"5529"},
 {id:5221,chain:"Biedronka",city:"Elbląg",addr:"ul. Pułaskiego 2A",pin:"2160"},
 {id:5222,chain:"Biedronka",city:"Katowice",addr:"ul. Dąbrówki 13",pin:"5799"},
-{id:5224,chain:"Biedronka",city:"Syrynia",addr:"ul. Raciborska 2G",pin:"3998"},
+{id:5224,chain:"Biedronka",city:"Syrynia",addr:"ul. Raciborska 2G",pin:"3998",lat:50.01649,lon:18.33020},
 {id:5226,chain:"Biedronka",city:"Kraków",addr:"POLONIJNA 13",zip:"30-668"},
 {id:5228,chain:"Biedronka",city:"Szczecin",addr:"ul. Botaniczna 29",pin:"3957"},
 {id:5235,chain:"Biedronka",city:"Bytom",addr:"Ul. Sandomierska 10",pin:"9382"},
