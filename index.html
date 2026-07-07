@@ -381,7 +381,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.46</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.47</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -399,7 +399,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
     <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#C7C7CC" stroke-width="1.8" style="flex:0 0 auto"><circle cx="10" cy="8" r="4"/><path d="M4 18c0-4 12-4 12 0"/></svg>
     <input id="shopName" placeholder="Sklep" oninput="shopSync()" autocomplete="off" style="flex:1 1 auto;min-width:0;background:#F2F2F7;border-radius:14px;padding:6px 11px;font-size:13px;color:#1C1C1E">
     <input id="shopId" placeholder="ID" oninput="shopSync();if(typeof _refreshPin==='function')_refreshPin()" autocomplete="off" inputmode="numeric" style="flex:0 0 70px;width:70px;background:#F2F2F7;border-radius:14px;padding:6px 8px;font-size:13px;color:#1C1C1E;text-align:center">
-    <div style="flex:1 1 100%;height:0"></div><input id="shopAddr" placeholder="Adres" oninput="shopSync()" autocomplete="off" style="flex:1 1 auto;min-width:0;background:#F2F2F7;border-radius:14px;padding:6px 11px;font-size:13px;color:#1C1C1E"><div id="pinPill" onclick="_editPin()" style="flex:0 0 auto;margin:0;background:#F2F2F7;border:1px solid #E5E5EA;border-radius:14px;padding:6px 12px;font-size:13px;font-weight:700;color:#8E8E93;cursor:pointer;display:flex;align-items:center">PIN <span id="pinPillVal" style="margin-left:4px">&mdash;</span><span id="pinPillHint" style="display:none"></span></div><div style="flex:1 1 100%;height:0"></div><button onclick="gpsShop()" style="background:#007AFF;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">GPS</button><button onclick="shopSaveToBase()" style="background:#34C759;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">Zapisz</button><button onclick="openPlaces()" style="background:#8E8E93;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">Baza</button><div style="flex:1 1 100%;height:0"></div><div id="gpsDiag" onclick="if(this.textContent){try{navigator.clipboard&&navigator.clipboard.writeText(this.textContent);}catch(e){} if(typeof _toast==='function')_toast('Skopiowano');}" style="flex:1 1 100%;font-size:10px;line-height:1.35;color:#8E8E93;white-space:pre-wrap;word-break:break-word;margin-top:2px;cursor:pointer"></div>
+    <div style="flex:1 1 100%;height:0"></div><input id="shopAddr" placeholder="Adres" oninput="shopSync()" autocomplete="off" style="flex:1 1 auto;min-width:0;background:#F2F2F7;border-radius:14px;padding:6px 11px;font-size:13px;color:#1C1C1E"><div id="pinPill" onclick="_copyPin()" style="flex:0 0 auto;margin:0;background:#F2F2F7;border:1px solid #E5E5EA;border-radius:14px;padding:6px 12px;font-size:13px;font-weight:700;color:#8E8E93;cursor:pointer;display:flex;align-items:center">PIN <span id="pinPillVal" style="margin-left:4px">&mdash;</span><span id="pinPillHint" style="display:none"></span></div><div style="flex:1 1 100%;height:0"></div><button onclick="gpsShop()" style="background:#007AFF;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">GPS</button><button onclick="shopSaveToBase()" style="background:#34C759;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">Zapisz</button><button onclick="openPlaces()" style="background:#8E8E93;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">Baza</button><div style="flex:1 1 100%;height:0"></div><div id="gpsDiag" onclick="if(this.textContent){try{navigator.clipboard&&navigator.clipboard.writeText(this.textContent);}catch(e){} if(typeof _toast==='function')_toast('Skopiowano');}" style="flex:1 1 100%;font-size:10px;line-height:1.35;color:#8E8E93;white-space:pre-wrap;word-break:break-word;margin-top:2px;cursor:pointer"></div>
     
   </div>
 
@@ -2754,7 +2754,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.46",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.47",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -8453,7 +8453,7 @@ function placesRender(){
   }
   var c=document.getElementById('shopsCount');if(c)c.textContent=((window._customShops||[]).length)+' wlasnych + '+(typeof SHOPS_DB!=='undefined'?SHOPS_DB.length:0)+' wbudowanych';
 }
-function placeLoad(i){var p=_places()[i];if(!p)return;_setShopFields(p.name||'',p.id||'',p.addr||'');window._myLat=p.lat;window._myLon=p.lon;window._shopPin=p.pin||'';var pv=document.getElementById('pinPillVal');if(pv)pv.textContent=p.pin||'\u2014';var pill=document.getElementById('pinPill');if(pill)pill.style.color=p.pin?'#1C1C1E':'#8E8E93';closeOv('shPlaces');_toast('Zaladowano: '+(p.name||p.addr||'')+(p.pin?' | PIN '+p.pin:''));}
+function placeLoad(i){var p=_places()[i];if(!p)return;_setShopFields(p.name||'',p.id||'',p.addr||'');window._myLat=p.lat;window._myLon=p.lon;closeOv('shPlaces');_toast('Zaladowano: '+(p.name||p.addr||''));}
 function placeDel(i){var a=_places();if(i<0||i>=a.length)return;a.splice(i,1);_placesSave(a);placesRender();}
 function openPlaces(){var b=document.getElementById('shopsSearchBox');if(b)b.value='';placesRender();if(typeof shopsSearch==='function')shopsSearch('');openSh('shPlaces');}
 function importShopsCSV(text){
@@ -8785,36 +8785,24 @@ function gpsShop(){
     }).catch(function(){
       var fb=la.toFixed(5)+', '+lo.toFixed(5);
       _setShopFields('','',fb);
-      // Найти ближайшие магазины из базы
+      _toast('GPS: '+fb+' — wybierz sklep w Bazie');
+      // Поиск в SHOPS_DB по координатам
       if(typeof SHOPS_DB!=='undefined'){
-        var nearby=[];
+        var best=null,bestD=999999;
         SHOPS_DB.forEach(function(s){
           if(!s.lat||!s.lon)return;
           var d=_dist(la,lo,s.lat,s.lon);
-          if(d<3000)nearby.push({s:s,d:d});
+          if(d<bestD){bestD=d;best=s;}
         });
-        nearby.sort(function(a,b){return a.d-b.d;});
-        if(nearby.length){
-          var best=nearby[0];
-          if(best.d<500){
-            // Точное совпадение
-            var s=best.s;
-            _setShopFields(s.chain||'Biedronka',''+s.id,(s.addr||'')+(s.city?', '+s.city:''));
-            window._shopPin=s.pin||'';
-            var pv=document.getElementById('pinPillVal');if(pv)pv.textContent=s.pin||'—';
-            var pill=document.getElementById('pinPill');if(pill)pill.style.color=s.pin?'#1C1C1E':'#8E8E93';
-            _toast((s.chain||'Biedronka')+' '+s.id+' — '+Math.round(best.d)+'m');
-          } else {
-            // Показать список ближайших
-            var lines=nearby.slice(0,5).map(function(x){return (x.s.chain||'Biedronka')+' '+x.s.id+' ('+Math.round(x.d)+'m)';}).join('
-');
-            _toast('GPS ±'+Math.round(window._gpsAcc||0)+'m. Blisko:
-'+lines);
-          }
+        if(best&&bestD<500){
+          _setShopFields(best.chain||'Biedronka',''+best.id,(best.addr||'')+(best.city?', '+best.city:''));
+          window._shopPin=best.pin||'';
+          _toast('Sklep: '+(best.chain||'Biedronka')+' '+(best.id||'')+' ('+Math.round(bestD)+'m)');
           return;
         }
       }
-      _toast('GPS: ±'+Math.round(window._gpsAcc||0)+'m');
+      // Автоматически открыть Baza
+      setTimeout(function(){if(typeof openPlaces==='function')openPlaces();},800);
     });
   },function(err){var c=err&&err.code,msg=(err&&err.message)?err.message:'blad';if(c===1)msg='brak zgody na lokalizację \u2014 włącz w Ustawieniach iPhone';else if(c===2)msg='lokalizacja niedostepna';else if(c===3)msg='przekroczono czas (sprobuj jeszcze raz)';_toast('GPS: '+msg);var ae=document.getElementById('shopAddr');if(ae)ae.value='GPS: '+msg;},{enableHighAccuracy:true,timeout:8000,maximumAge:30000});
 }
@@ -9952,37 +9940,6 @@ function _refreshPin(){
     window._shopPin='';
   }
 }
-function _editPin(){
-  var cur=window._shopPin||'';
-  var ov=document.getElementById('pinEditOv');
-  if(!ov){
-    ov=document.createElement('div');
-    ov.id='pinEditOv';
-    ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center';
-    ov.innerHTML='<div style="background:#fff;border-radius:16px;padding:20px;width:260px;box-shadow:0 8px 32px rgba(0,0,0,.2)">'
-      +'<div style="font-size:16px;font-weight:700;color:#1C1C1E;margin-bottom:12px;text-align:center">Wpisz PIN</div>'
-      +'<input id="pinEditInp" type="number" maxlength="4" placeholder="1234" style="width:100%;border:2px solid #1C1C1E;border-radius:10px;padding:10px 12px;font-size:20px;font-weight:700;text-align:center;outline:none;box-sizing:border-box;margin-bottom:12px;font-family:inherit">'
-      +'<div style="display:flex;gap:8px">'
-      +'<button onclick="document.getElementById('pinEditOv').remove()" style="flex:1;padding:10px;background:#F2F2F7;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Anuluj</button>'
-      +'<button onclick="_savePinEdit()" style="flex:1;padding:10px;background:#1C1C1E;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">OK</button>'
-      +'</div></div>';
-    document.body.appendChild(ov);
-  }
-  var inp=document.getElementById('pinEditInp');
-  if(inp){inp.value=cur;ov.style.display='flex';setTimeout(function(){inp.focus();},200);}
-}
-function _savePinEdit(){
-  var inp=document.getElementById('pinEditInp');
-  var v=(inp?inp.value:'').toString().trim();
-  window._shopPin=v;
-  var pv=document.getElementById('pinPillVal');
-  if(pv)pv.textContent=v||'—';
-  var pill=document.getElementById('pinPill');
-  if(pill)pill.style.color=v?'#1C1C1E':'#8E8E93';
-  var ov=document.getElementById('pinEditOv');
-  if(ov)ov.remove();
-  if(v&&typeof _toast==='function')_toast('PIN: '+v);
-}
 function _copyPin(){var p=(window._shopPin||'');if(!p)return;try{navigator.clipboard&&navigator.clipboard.writeText(p);}catch(e){}if(typeof _toast==='function')_toast('PIN skopiowany: '+p);}
 function selfTestGPS(){
   var box=document.getElementById('testList');var rows=[];
@@ -10033,9 +9990,7 @@ function shopsSearch(q){
 function shopPickIdx(i){var s=(window.__shopsView||[])[i]; if(!s)return;
   var addr=(s.addr||'')+(s.city?', '+s.city:'');
   if(typeof _setShopFields==='function')_setShopFields(s.chain||'',(s.id!=null?(''+s.id):''),addr);
-  window._shopPin=s.pin||'';
-  var pv=document.getElementById('pinPillVal');if(pv)pv.textContent=s.pin||'\u2014';
-  var pill=document.getElementById('pinPill');if(pill)pill.style.color=s.pin?'#1C1C1E':'#8E8E93';
+  window._shopPin=s.pin||'';var pv=document.getElementById('pinPillVal');if(pv)pv.textContent=s.pin||'—';var pill=document.getElementById('pinPill');if(pill)pill.style.color=s.pin?'#1C1C1E':'#8E8E93';
   if(typeof closeOv==='function')closeOv('shPlaces');
   if(typeof _toast==='function')_toast('Sklep: '+(s.chain||'')+(s.id?' '+s.id:'')+(s.pin?' | PIN '+s.pin:''));
 }
@@ -10047,14 +10002,14 @@ function shopDelIdx(i){var s=(window.__shopsView||[])[i]; if(!s||!s.custom)retur
   shopsSearch(_shVal('shopsSearchBox')); if(typeof _toast==='function')_toast('Usuni\u0119to');
 }
 function addShopManual(){
-  var id=_shVal('addShId'), chain=_shVal('addShChain')||'Biedronka', city=_shVal('addShCity'), addr=_shVal('addShAddr'), zip=_shVal('addShZip').replace(/\s+/g,''), pin=_shVal('addShPin').trim();
+  var id=_shVal('addShId'), chain=_shVal('addShChain')||'Biedronka', city=_shVal('addShCity'), addr=_shVal('addShAddr'), zip=_shVal('addShZip').replace(/\s+/g,'');
   if(!city&&!addr){if(typeof _toast==='function')_toast('Wpisz miasto i adres');return;}
   if(typeof shopLoadCustom==='function'&&!window._customShops)shopLoadCustom();
   if(!window._customShops)window._customShops=[];
-  window._customShops.unshift({id:id,chain:chain,city:city,addr:addr,zip:zip,pin:pin||undefined,custom:true});
+  var pin=_shVal('addShPin').trim();window._customShops.unshift({id:id,chain:chain,city:city,addr:addr,zip:zip,pin:pin||undefined,custom:true});
   if(typeof shopSaveCustom==='function')shopSaveCustom();
-  ['addShId','addShCity','addShAddr','addShZip','addShPin'].forEach(function(x){var e=document.getElementById(x);if(e)e.value='';});
-  if(typeof _toast==='function')_toast('Dodano do bazy: '+chain+(id?' '+id:'')+(city?' '+city:'')+(pin?' | PIN '+pin:''));
+  ['addShId','addShCity','addShAddr','addShZip'].forEach(function(x){var e=document.getElementById(x);if(e)e.value='';});
+  if(typeof _toast==='function')_toast('Dodano do bazy: '+chain+(id?' '+id:'')+(city?' '+city:''));
   shopsSearch(_shVal('shopsSearchBox'));
 }
 function _nearestSavedShop(la,lo,acc){var radius=Math.max(500,Math.round((acc||100)*3));var best=null,bd=radius;try{(typeof _allShops==='function'?_allShops():[]).forEach(function(s){if(typeof s.lat==='number'&&typeof s.lon==='number'){var d=_dist(la,lo,s.lat,s.lon);if(d<bd){bd=d;best=s;}}});}catch(e){}return best;}
@@ -10073,15 +10028,6 @@ function shopSaveToBase(){
   }
   var rec={id:id,chain:n||'',city:city,addr:addr,zip:zip,custom:true};
   if(la!=null){rec.lat=la;rec.lon=lo;}
-  var pin=window._shopPin||'';
-  if(!pin){
-    // Попробовать найти PIN в базе по ID
-    if(id&&typeof SHOPS_DB!=='undefined'){
-      var found=SHOPS_DB.find(function(s){return (''+s.id)===(''+id);});
-      if(found&&found.pin)pin=found.pin;
-    }
-  }
-  if(pin)rec.pin=pin;
   if(rep>=0)arr[rep]=rec; else arr.unshift(rec);
   if(typeof shopSaveCustom==='function')shopSaveCustom();
   if(typeof _toast==='function')_toast((rep>=0?'Zaktualizowano w bazie: ':'Zapisano do bazy: ')+(n||'')+(id?' '+id:''));
