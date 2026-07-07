@@ -381,7 +381,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.61</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.62</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -2754,7 +2754,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.61",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.62",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -8796,24 +8796,24 @@ function gpsShop(){
       _setShopFields(nm2||'',id0,ad0);
       _toast(nm2?('Sklep: '+nm2+(id0?(' '+id0+(pin0?' | PIN '+pin0:'')):' - wpisz nr (ID)')):('Adres: '+addr));
     }).catch(function(){
-      // photon.komoot.io — работает в iOS PWA, даёт улицу+дом+город
-      var photonUrl='https://photon.komoot.io/reverse?lat='+la+'&lon='+lo+'&lang=pl';
-      var xp=new XMLHttpRequest();
-      xp.open('GET',photonUrl,true);xp.timeout=8000;
-      xp.onload=function(){
-        var addr=la.toFixed(5)+', '+lo.toFixed(5);
+      // Попробовать photon.komoot.io или nominatim для адреса
+      function tryGeocode(url,parseAddr,cb){
+        var x=new XMLHttpRequest();x.open('GET',url,true);x.timeout=7000;
+        x.onload=function(){try{cb(parseAddr(JSON.parse(x.responseText)));}catch(e){cb('');}};
+        x.onerror=x.ontimeout=function(){cb('');};x.send();
+      }
+      function parseNom(d){var a=d.address||{};var street=a.road||a.pedestrian||a.footway||'';var hnum=a.house_number||'';var city=a.city||a.town||a.village||'';var zip=a.postcode||'';return [(street+(hnum?' '+hnum:'')).trim(),(zip?zip+' ':'')+city].filter(function(x){return x;}).join(', ');}
+      function parsePhoton(d){var p=d.features&&d.features[0]&&d.features[0].properties||{};var street=p.street||'';var hnum=p.housenumber||'';var city=p.city||p.town||p.village||'';var zip=p.postcode||'';return [(street+(hnum?' '+hnum:'')).trim(),(zip?zip+' ':'')+city].filter(function(x){return x;}).join(', ');}
+      var nomU='https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&accept-language=pl&lat='+la+'&lon='+lo;
+      var phU='https://photon.komoot.io/reverse?lat='+la+'&lon='+lo+'&lang=pl';
+      tryGeocode(nomU,parseNom,function(addr){
+        if(!addr)tryGeocode(phU,parsePhoton,function(addr2){showAddr(addr2||la.toFixed(5)+', '+lo.toFixed(5));});
+        else showAddr(addr);
+      });
+      function showAddr(addr){
+        var xp_addr=la.toFixed(5)+', '+lo.toFixed(5);
+        if(addr)xp_addr=addr;
         try{
-          var d=JSON.parse(xp.responseText);
-          var p=d.features&&d.features[0]&&d.features[0].properties;
-          if(p){
-            var street=p.street||p.name||'';
-            var hnum=p.housenumber||'';
-            var city=p.city||p.town||p.village||p.county||'';
-            var postcode=p.postcode||'';
-            var streetFull=(street+(hnum?' '+hnum:'')).trim();
-            addr=[streetFull,(postcode?postcode+' ':'')+city].filter(function(x){return x;}).join(', ')||addr;
-          }
-        }catch(e){}
         // Поиск в SHOPS_DB по координатам
         if(typeof SHOPS_DB!=='undefined'){
           var nearby=[];
