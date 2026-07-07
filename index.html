@@ -381,7 +381,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.29</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.30</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -2750,7 +2750,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.29",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.30",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -9648,6 +9648,26 @@ function schedNotify(key){
   if(typeof magCfgApplyUI==='function')magCfgApplyUI();
   if(window._schedOn&&typeof schedStart==='function')schedStart();
 }catch(e){}})();
+function runDiagFix(){
+  var fixed=[];
+  try{
+    ['rv_e','rv_cp','rv_spG','rv_spS','rv_pqG','rv_pqS','rv_c','rv_rt'].forEach(function(k){
+      var v=localStorage.getItem(k);
+      if(v){try{JSON.parse(v);}catch(e){localStorage.removeItem(k);fixed.push('Usunięto uszkodzony klucz: '+k);}}
+    });
+  }catch(e){}
+  ['S',1,2,3].forEach(function(x){
+    var b=document.getElementById(x==='S'?'bodyS':'body'+x);
+    var a=document.getElementById(x==='S'?'arrS':'arr'+x);
+    if(b&&b.classList.contains('open')){b.classList.remove('open');if(a)a.classList.remove('open');fixed.push('Zamknięto modul: '+x);}
+  });
+  var pb=document.getElementById('partsBody');
+  if(pb&&pb.classList.contains('open')){pb.classList.remove('open');fixed.push('Zamknięto części zamienne');}
+  var uw=document.getElementById('uwagiField');
+  if(uw&&uw.value){uw.value='';fixed.push('Wyczyszczono uwagi');}
+  alert(fixed.length?'Naprawiono '+fixed.length+':\n'+fixed.join('\n'):'Brak problemów do naprawy.');
+  runDiag();
+}
 function runDiag(){
   var L=[],issues=0;
   function ok(s){L.push('[OK] '+s);}
@@ -9706,7 +9726,10 @@ function copyDiag(){
       <button onclick="closeOv('shDiag')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button>
     </div>
     <pre id="rvDiagOut" style="white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11px;line-height:1.5;background:#F8F8F8;border:.5px solid #E5E5EA;border-radius:10px;padding:12px;color:#323130;margin-bottom:10px"></pre>
-    <button onclick="copyDiag()" style="width:100%;padding:12px;background:#0078D4;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Kopiuj raport</button>
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <button onclick="copyDiag()" style="flex:1;padding:12px;background:#0078D4;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Kopiuj raport</button>
+      <button onclick="runDiagFix()" style="flex:1;padding:12px;background:#34C759;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">⚙ Napraw</button>
+    </div>
     <button class="sh-btn lt" onclick="closeOv('shDiag')" style="margin-top:8px">Zamknij</button>
   </div>
 </div>
