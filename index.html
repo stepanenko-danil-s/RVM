@@ -381,7 +381,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.40</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.41</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -2754,7 +2754,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.40",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.41",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -9941,15 +9941,34 @@ function _refreshPin(){
 }
 function _editPin(){
   var cur=window._shopPin||'';
-  var v=prompt('Wpisz PIN (4 cyfry):',cur);
-  if(v===null)return;
-  v=v.trim();
+  var ov=document.getElementById('pinEditOv');
+  if(!ov){
+    ov=document.createElement('div');
+    ov.id='pinEditOv';
+    ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center';
+    ov.innerHTML='<div style="background:#fff;border-radius:16px;padding:20px;width:260px;box-shadow:0 8px 32px rgba(0,0,0,.2)">'
+      +'<div style="font-size:16px;font-weight:700;color:#1C1C1E;margin-bottom:12px;text-align:center">Wpisz PIN</div>'
+      +'<input id="pinEditInp" type="number" maxlength="4" placeholder="1234" style="width:100%;border:2px solid #1C1C1E;border-radius:10px;padding:10px 12px;font-size:20px;font-weight:700;text-align:center;outline:none;box-sizing:border-box;margin-bottom:12px;font-family:inherit">'
+      +'<div style="display:flex;gap:8px">'
+      +'<button onclick="document.getElementById('pinEditOv').remove()" style="flex:1;padding:10px;background:#F2F2F7;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Anuluj</button>'
+      +'<button onclick="_savePinEdit()" style="flex:1;padding:10px;background:#1C1C1E;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">OK</button>'
+      +'</div></div>';
+    document.body.appendChild(ov);
+  }
+  var inp=document.getElementById('pinEditInp');
+  if(inp){inp.value=cur;ov.style.display='flex';setTimeout(function(){inp.focus();},200);}
+}
+function _savePinEdit(){
+  var inp=document.getElementById('pinEditInp');
+  var v=(inp?inp.value:'').toString().trim();
   window._shopPin=v;
   var pv=document.getElementById('pinPillVal');
   if(pv)pv.textContent=v||'—';
   var pill=document.getElementById('pinPill');
   if(pill)pill.style.color=v?'#1C1C1E':'#8E8E93';
-  if(v)_toast('PIN: '+v+' — zapisz sklep przyciskiem Zapisz');
+  var ov=document.getElementById('pinEditOv');
+  if(ov)ov.remove();
+  if(v&&typeof _toast==='function')_toast('PIN: '+v);
 }
 function _copyPin(){var p=(window._shopPin||'');if(!p)return;try{navigator.clipboard&&navigator.clipboard.writeText(p);}catch(e){}if(typeof _toast==='function')_toast('PIN skopiowany: '+p);}
 function selfTestGPS(){
