@@ -1453,7 +1453,7 @@ var SHOPS_DB = [
 {id:3574,chain:"Biedronka",city:"Dąbrowa Górnicza",addr:"ul. Majakowskiego 48",pin:"3545"},
 {id:3576,chain:"Biedronka",city:"Dąbrowa Górnicza",addr:"Ul. Ludowa 19A",pin:"4152"},
 {id:3577,chain:"Biedronka",city:"Gliwice",addr:"ul. Dworcowa 44",pin:"7783"},
-{id:3578,chain:"Biedronka",city:"Gliwice",addr:"ul. Marzanki 21",pin:"4204"},
+{id:3578,chain:"Biedronka",city:"Gliwice",addr:"ul. Marzanki 21",pin:"4204",lat:50.28763,lon:18.66334},
 {id:3579,chain:"Biedronka",city:"Gliwice",addr:"ul. Beskidzka 22",pin:"9425"},
 {id:3580,chain:"Biedronka",city:"Gliwice",addr:"ul. Bojkowska 19",pin:"3352"},
 {id:3581,chain:"Biedronka",city:"Gliwice",addr:"DUBOIS 16",zip:"44-100"},
