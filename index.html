@@ -381,7 +381,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.37</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.38</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -2754,7 +2754,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.37",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.38",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -3010,23 +3010,6 @@ function restoreData(input){
 <div class="pg" id="pgWiedza">
   <div style="padding:12px 12px 0">
     <div style="font-size:20px;font-weight:800;color:#1C1C1E;margin:4px 4px 12px">Wiedza</div>
-    <div style="display:flex;align-items:center;gap:10px;margin:2px 4px 10px">
-      <span style="width:30px;height:30px;border-radius:9px;background:#5856D6;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;flex:0 0 auto;box-shadow:0 3px 8px rgba(88,86,214,.35)">&#128172;</span>
-      <span style="font-size:17px;font-weight:800;color:#1C1C1E;letter-spacing:-.01em">Asystent czatu</span>
-    </div>
-    <div style="background:#fff;border-radius:14px;padding:14px;margin:0 4px 22px;box-shadow:0 1px 3px rgba(0,0,0,.06)">
-      <div style="font-size:12px;color:#A19F9D;margin-bottom:10px">Wklej cudzą wiadomość lub swoją odpowiedź — Claude przetłumaczy lub sprawdzi (otwiera czat).</div>
-      <textarea id="chatInput" placeholder="Wklej tekst (PL lub RU)..." style="width:100%;min-height:90px;background:#F8F8F8;border:1px solid #E5E5EA;border-radius:10px;padding:11px;font-size:14px;font-family:inherit;outline:none;resize:vertical;margin-bottom:10px;box-sizing:border-box"></textarea>
-      <button onclick="chatAsk('gram')" style="width:100%;padding:13px;background:#5856D6;color:#fff;border:none;border-radius:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px">Popraw gramatykę (Claude) →</button>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <button onclick="chatAsk('phrases')" style="padding:11px;background:#fff;border:1px solid #D9D7F1;border-radius:10px;font-size:13px;font-weight:600;color:#5856D6;cursor:pointer;font-family:inherit">Ułóż poprawne frazy</button>
-        <button onclick="chatAsk('tr')" style="padding:11px;background:#fff;border:1px solid #D9D7F1;border-radius:10px;font-size:13px;font-weight:600;color:#5856D6;cursor:pointer;font-family:inherit">Przetłumacz PL↔RU</button>
-        <button onclick="chatAsk('reply')" style="padding:11px;background:#fff;border:1px solid #D9D7F1;border-radius:10px;font-size:13px;font-weight:600;color:#5856D6;cursor:pointer;font-family:inherit">Czy dobrze odpowiadam?</button>
-        <button onclick="chatAsk('write')" style="padding:11px;background:#fff;border:1px solid #D9D7F1;border-radius:10px;font-size:13px;font-weight:600;color:#5856D6;cursor:pointer;font-family:inherit">Napisz odpowiedź</button>
-      </div>
-      <button onclick="chatLocal()" style="width:100%;margin-top:8px;padding:9px;background:#F8F8F8;border:1px solid #E5E5EA;border-radius:10px;font-size:12px;font-weight:600;color:#8E8E93;cursor:pointer;font-family:inherit">Tylko polskie znaki (offline, częste słowa)</button>
-      <div id="chatLocalRes" style="display:none;font-size:13px;line-height:1.5;background:#F4FBF6;border:1px solid #CDEBD6;border-radius:10px;padding:11px;white-space:pre-wrap;margin-top:8px"></div>
-    </div>
     <div style="display:flex;align-items:center;gap:10px;margin:2px 4px 10px">
       <span style="width:30px;height:30px;border-radius:9px;background:#34C759;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;flex:0 0 auto;box-shadow:0 3px 8px rgba(52,199,89,.35)">&#127760;</span>
       <span style="font-size:17px;font-weight:800;color:#1C1C1E;letter-spacing:-.01em">S&#322;ownik techniczny <span style="color:#34C759">RU&#8644;PL</span></span>
