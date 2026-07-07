@@ -381,7 +381,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.53</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.54</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -2754,7 +2754,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.53",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.54",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -8744,7 +8744,7 @@ function gpsShop(){
     var _rp=_findPlace(la,lo);
     if(_rp){_diag('GPS '+la.toFixed(5)+', '+lo.toFixed(5)+'\n=> ZAPAMIETANE MIEJSCE: '+((_rp.name||'')+' #'+(_rp.id||'?')));_setShopFields(_rp.name||'',_rp.id||'',_rp.addr||'');_toast('Zapamietane: '+((_rp.name||'')+(_rp.id?' '+_rp.id:'')||'miejsce'));return;}
     _toast('GPS: rozpoznaje adres...');
-    var nomUrl='https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&accept-language=pl&lat='+la+'&lon='+lo;
+    var nomUrl='https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+la+'&longitude='+lo+'&localityLanguage=pl';
     var R=120;
     var ovQ='[out:json][timeout:10];(node(around:'+R+','+la+','+lo+')[shop];way(around:'+R+','+la+','+lo+')[shop];node(around:'+R+','+la+','+lo+')[amenity=fuel];);out center tags 60;';
     // Использовать XMLHttpRequest вместо fetch для обхода iOS PWA ограничений
@@ -8762,7 +8762,16 @@ function gpsShop(){
     var pOv=_overpass(ovQ);
     Promise.all([pNom,pOv]).then(function(res){
       var d=res[0]||{}, ov=res[1];
-      var a=(d&&d.address)||{};
+      // bigdatacloud формат
+      var a={};
+      if(d.address){a=d.address;}  // Nominatim формат
+      else if(d.localityInfo){     // bigdatacloud формат
+        a.road=d.principalSubdivision||'';
+        a.city=d.city||d.locality||d.principalSubdivision||'';
+        a.postcode=d.postcode||'';
+        // Попробовать извлечь улицу из locality
+        if(d.locality)a.city=d.locality;
+      }
       var road=a.road||a.pedestrian||a.footway||a.residential||a.neighbourhood||'';
       var num=a.house_number||'', city=a.city||a.town||a.village||a.municipality||a.county||'', zip=a.postcode||'';
       var street=(road+(num?' '+num:'')).trim();
