@@ -381,7 +381,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.85</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.86</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -2776,7 +2776,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.85",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.86",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -10090,42 +10090,12 @@ function aiCheckAll(){
   var txt=inp?inp.value.trim():'';
   if(!txt){alert('Wpisz tekst!');return;}
   var res=document.getElementById('aiCheckResults');
-  if(res){res.style.display='flex';res.innerHTML='<div style="color:#8E8E93;font-size:13px;text-align:center;padding:16px">Sprawdzam...</div>';}
-  fetch('https://api.anthropic.com/v1/messages',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-      model:'claude-sonnet-4-20250514',
-      max_tokens:1500,
-      messages:[{role:'user',content:'Sprawdz tekst i zwroc TYLKO JSON bez markdown: {"grammar":"...","tech":"...","biz":"...","casual":"...","short":"..."} Jezyk wyjscia=jezyk wejscia. Tekst: '+txt}]
-    })
-  })
-  .then(function(r){return r.json();})
-  .then(function(d){
-    if(!res)return;
-    var raw=(d.content&&d.content[0]&&d.content[0].text)||'';
-    if(d.error||!raw){res.innerHTML='<div style="color:#FF3B30;padding:12px">Blad API: '+(d.error&&d.error.message||'brak odpowiedzi')+'</div>';return;}
-    var clean=raw.replace(/```json|```/g,'').trim();
-    var obj;
-    try{obj=JSON.parse(clean);}
-    catch(e){res.innerHTML='<div style="padding:12px;white-space:pre-wrap;font-size:13px">'+raw+'</div>';return;}
-    var labels={grammar:'✓ Poprawna gramatyka',tech:'⚙ Styl techniczny',biz:'💼 Styl biznesowy',casual:'💬 Styl rozmowny',short:'📱 Krotki SMS'};
-    var colors={grammar:'#34C759',tech:'#007AFF',biz:'#5856D6',casual:'#FF9500',short:'#FF3B30'};
-    var html='';
-    ['grammar','tech','biz','casual','short'].forEach(function(k){
-      if(!obj[k])return;
-      var v=obj[k];
-      html+='<div style="background:#fff;border-radius:10px;border:1px solid #E5E5EA;overflow:hidden;margin-bottom:2px">';
-      html+='<div style="background:'+colors[k]+';color:#fff;padding:8px 12px;font-size:12px;font-weight:700">'+labels[k]+'</div>';
-      html+='<div style="padding:12px;font-size:13.5px;line-height:1.5;color:#1C1C1E">'+v.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</div>';
-      html+='<button data-txt="'+v.replace(/"/g,'&quot;').replace(/'/g,'&#39;')+'" onclick="navigator.clipboard.writeText(this.dataset.txt).then(function(){alert(\'Skopiowano!\');})" style="width:100%;padding:9px;background:#F2F2F7;border:none;border-top:1px solid #E5E5EA;font-size:12px;font-weight:600;color:#007AFF;cursor:pointer;font-family:inherit">Kopiuj</button>';
-      html+='</div>';
-    });
-    res.innerHTML=html||'<div style="color:#FF3B30;padding:12px">Brak wynikow</div>';
-  })
-  .catch(function(e){
-    if(res)res.innerHTML='<div style="color:#FF3B30;padding:12px">Blad: '+(e.message||'polaczenia')+'</div>';
-  });
+  if(res){res.style.display='flex';res.innerHTML='<div style="color:#8E8E93;font-size:13px;text-align:center;padding:16px">Otwieram czat AI\u2026</div>';}
+  var prompt='Sprawdz ponizszy tekst (polski lub rosyjski) i podaj 5 wariantow: 1) poprawiona gramatyka, 2) styl techniczny, 3) styl biznesowy, 4) styl rozmowny, 5) krotki wariant do SMS. Jezyk odpowiedzi = jezyk tekstu wejsciowego.\n\nTekst: '+txt;
+  _openAIWin('https://claude.ai/new?q='+encodeURIComponent(prompt));
+  try{navigator.clipboard&&navigator.clipboard.writeText(txt);}catch(e){}
+  if(res)res.innerHTML='<div style="color:#8E8E93;font-size:13px;text-align:center;padding:16px">Otworzono okno AI \u2014 jesli czat pusty, wklej tekst (skopiowany do schowka).</div>';
+  if(typeof showToast==='function')showToast('Otwieram AI\u2026');
 }
 </script>
 </body>
