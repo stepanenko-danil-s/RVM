@@ -381,7 +381,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.72</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.73</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -2761,7 +2761,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.72",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.73",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -8706,23 +8706,15 @@ function setWorkType(t){
 }
 function _overpass(q){
   var enc=encodeURIComponent(q);
-  var urls=[
-    'https://overpass-api.de/api/interpreter?data='+enc,
-    'https://overpass.kumi.systems/api/interpreter?data='+enc,
-    'https://overpass.openstreetmap.ru/api/interpreter?data='+enc
-  ];
-  function tryXhr(u){
+  var urls=['https://overpass-api.de/api/interpreter?data='+enc,'https://overpass.kumi.systems/api/interpreter?data='+enc,'https://overpass.private.coffee/api/interpreter?data='+enc];
+  function tryFetch(u){
     return new Promise(function(resolve){
-      var x=new XMLHttpRequest();
-      x.open('GET',u,true);
-      x.timeout=7000;
-      x.onload=function(){try{resolve(JSON.parse(x.responseText));}catch(e){resolve(null);}};
-      x.onerror=function(){resolve(null);};
-      x.ontimeout=function(){resolve(null);};
-      x.send();
+      var ctrl=(typeof AbortController!=='undefined')?new AbortController():null;
+      var to=setTimeout(function(){try{if(ctrl)ctrl.abort();}catch(e){}resolve(null);},6000);
+      fetch(u,ctrl?{signal:ctrl.signal}:{}).then(function(r){clearTimeout(to);if(!r||!r.ok){resolve(null);return;}r.json().then(resolve).catch(function(){resolve(null);});}).catch(function(){clearTimeout(to);resolve(null);});
     });
   }
-  return tryXhr(urls[0]).then(function(r){return r||tryXhr(urls[1]);}).then(function(r){return r||tryXhr(urls[2]);}).catch(function(){return null;});
+  return tryFetch(urls[0]).then(function(r){return r||tryFetch(urls[1]);}).then(function(r){return r||tryFetch(urls[2]);}).catch(function(){return null;});
 }
 function _acquirePos(ok,err){
   if(!navigator.geolocation){if(err)err({code:2,message:'brak geolokalizacji'});return;}
@@ -8769,8 +8761,7 @@ function gpsShop(){
     }
     var pNom=new Promise(function(res){xhrGet(nomUrl,function(e,d){res(e?null:d);});});
     var pOv=_overpass(ovQ);
-    var pTimeout=new Promise(function(res){setTimeout(function(){res([null,null]);},7000);});
-    Promise.race([Promise.all([pNom,pOv]),pTimeout]).then(function(res){
+    Promise.all([pNom,pOv]).then(function(res){
       var d=res[0]||{}, ov=res[1];
       var a=(d&&d.address)||{};
       var road=a.road||a.pedestrian||a.footway||a.residential||a.neighbourhood||'';
