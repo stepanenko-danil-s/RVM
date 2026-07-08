@@ -381,7 +381,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.83</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.84</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -658,6 +658,26 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 </div>
 
 <script>
+
+// ===== AI: одно переиспользуемое окно вместо новой вкладки каждый раз =====
+function _openAIWin(url){
+  try{
+    if(window._aiWinRef && !window._aiWinRef.closed){
+      window._aiWinRef.location.href=url;
+      try{window._aiWinRef.focus();}catch(e){}
+      return window._aiWinRef;
+    }
+  }catch(e){}
+  window._aiWinRef=window.open(url,'rvmAIChat');
+  return window._aiWinRef;
+}
+function closeAIWin(){
+  try{
+    if(window._aiWinRef&&!window._aiWinRef.closed){window._aiWinRef.close();}
+  }catch(e){}
+  window._aiWinRef=null;
+  if(typeof showToast==='function')showToast('Czat AI zamkni\u0119ty');
+}
 
 // ===== DATABASES =====
 var D={el:[
@@ -2378,7 +2398,7 @@ function openInClaude(){
   else msg+="\n\nPomoz mi z tym raportem.";
   function go(){
     var url="https://claude.ai/new?q="+encodeURIComponent(msg);
-    window.open(url,"_blank");
+    _openAIWin(url);
     showToast("Raport skopiowany \u2014 jesli czat pusty, wklej (przytrzymaj \u2192 Wklej)");
     closeOv("shAI");
   }
@@ -2399,7 +2419,7 @@ function askClaude(kind){
   var raport=(typeof _aiFullReport==='function'&&_aiFullReport())||(typeof buildReport==='function'?buildReport():'');
   if(!raport){showToast('Brak danych w raporcie');return;}
   var msg='Jestem technikiem serwisowym RVM. Oto mój raport serwisowy:\n\n'+raport+'\n\nZADANIE: '+instr;
-  function go(){window.open('https://claude.ai/new?q='+encodeURIComponent(msg),'_blank');showToast('Raport skopiowany \u2014 jesli czat pusty, wklej');closeOv('shAI');}
+  function go(){_openAIWin('https://claude.ai/new?q='+encodeURIComponent(msg));showToast('Raport skopiowany \u2014 jesli czat pusty, wklej');closeOv('shAI');}
   if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(msg).then(go).catch(function(){if(typeof _fb==='function')_fb(msg);go();});}
   else{if(typeof _fb==='function')_fb(msg);go();}
 }
@@ -2440,7 +2460,7 @@ function chatAsk(kind){
     phrases:'Ułóż z poniższego tekstu poprawne, uprzejme polskie zdania/frazy gotowe do wysłania (popraw gramatykę i styl). Po polsku.'
   };
   var msg=(P[kind]||'')+'\n\n---\n'+t;
-  function go(){window.open('https://claude.ai/new?q='+encodeURIComponent(msg),'_blank');if(typeof showToast==='function')showToast('Tekst skopiowany \u2014 jesli czat pusty, wklej');}
+  function go(){_openAIWin('https://claude.ai/new?q='+encodeURIComponent(msg));if(typeof showToast==='function')showToast('Tekst skopiowany \u2014 jesli czat pusty, wklej');}
   if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(msg).then(go).catch(go);}else go();
 }
 function _offlineAI(msg){
@@ -2762,7 +2782,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.83",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.84",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -2779,12 +2799,12 @@ function copyExp(){document.getElementById("expCode").select();document.execComm
 function aiSuggestDef(){
   var el=SEL.el[0]||"brak elementu";
   var p="Jestes ekspertem serwisu RVM. Element: '"+el+"'. Podaj 5 typowych niesprawności. Tylko lista po polsku.";
-  window.open("https://claude.ai/new?q="+encodeURIComponent(p),"_blank");
+  _openAIWin("https://claude.ai/new?q="+encodeURIComponent(p));
 }
 function aiSuggestSol(){
   var el=SEL.el[0]||"";var df=SEL.def.concat(SEL.kon);
   var p="Jestes ekspertem serwisu RVM. Element: '"+el+"'. Usterki: "+(df.length?df.join(", "):"brak")+". Podaj 5 dzialan serwisowych. Tylko lista po polsku.";
-  window.open("https://claude.ai/new?q="+encodeURIComponent(p),"_blank");
+  _openAIWin("https://claude.ai/new?q="+encodeURIComponent(p));
 }
 /* duplicate init block removed (see restore layer) */
 
@@ -4568,7 +4588,7 @@ function aiSendAction(action){
   if(!txt){showToast('Brak raportu');return;}
   var prompt=action+'\n\nRaport:\n'+txt;
   closeOv('shAIPanel');
-  window.open('https://claude.ai/new?q='+encodeURIComponent(prompt),'_blank');
+  _openAIWin('https://claude.ai/new?q='+encodeURIComponent(prompt));
 }
 function aiSendCustom(){
   var inp=document.getElementById('aiCustomInput');
@@ -4611,7 +4631,7 @@ function openInClaude(){
   if(q.trim())msg+="\n\n"+q.trim();
   else msg+="\n\nMozesz mi pomoc z tym raportem?";
   var url="https://claude.ai/new?q="+encodeURIComponent(msg);
-  window.open(url,"_blank");
+  _openAIWin(url);
   closeOv("shAI");
 }
 function _offlineAI(msg){
@@ -4932,12 +4952,12 @@ document.getElementById("repEdit").addEventListener("input",function(){this.setA
 function aiSuggestDef(){
   var el=SEL.el[0]||"brak elementu";
   var p="Jestes ekspertem serwisu RVM. Element: '"+el+"'. Podaj 5 typowych niesprawnosci. Tylko lista po polsku.";
-  window.open("https://claude.ai/new?q="+encodeURIComponent(p),"_blank");
+  _openAIWin("https://claude.ai/new?q="+encodeURIComponent(p));
 }
 function aiSuggestSol(){
   var el=SEL.el[0]||"";var df=SEL.def.concat(SEL.kon);
   var p="Jestes ekspertem serwisu RVM. Element: '"+el+"'. Usterki: "+(df.length?df.join(", "):"brak")+". Podaj 5 dzialan serwisowych. Tylko lista po polsku.";
-  window.open("https://claude.ai/new?q="+encodeURIComponent(p),"_blank");
+  _openAIWin("https://claude.ai/new?q="+encodeURIComponent(p));
 }
 var _ids=["serwisBlock","mod1block","defFlowWrap","hdr1","hdr2","hdr3","body2","body3"];
 _ids.forEach(function(id){var el=document.getElementById(id);if(el){el.style.opacity="";el.style.pointerEvents="";}});
@@ -5201,6 +5221,7 @@ function restoreData(input){
       <button onclick="aiSendAction('Skróć raport do najważniejszych informacji w 3-4 zdaniach.')" class="ai-act-btn">✂️ Skróć raport</button>
       <button onclick="aiSendAction('Na podstawie raportu napisz profesjonalny e-mail do klienta po polsku.')" class="ai-act-btn">📧 Napisz e-mail do klienta</button>
       <button onclick="aiSendAction('Przeanalizuj raport i zaproponuj dodatkowe czynności serwisowe które warto wykonać.')" class="ai-act-btn">🔧 Zaproponuj dodatkowe czynności</button>
+      <button onclick="closeAIWin()" style="background:none;border:1px solid #E5E5EA;border-radius:10px;padding:8px;font-size:12px;color:#8E8E93;cursor:pointer;font-family:inherit">&#10005; Zamknij okno czatu AI</button>
     </div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
       <div style="font-size:12px;color:#8E8E93">Lub wpisz własne polecenie:</div>
