@@ -381,7 +381,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.82</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.83</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -459,7 +459,10 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
       </div>
       <div class="mod-body" id="bodyS">
         <div class="srch-row">
-          <input placeholder="Szukaj aktywności..." oninput="filterList('kon',this.value)" autocomplete="off" autocorrect="off" spellcheck="false"><button class="srch-add" onclick="addCustomItem('kon')">+ Dodaj</button>
+          <div style="position:relative;flex:1;min-width:0">
+            <input id="srchKon" placeholder="Szukaj aktywności..." oninput="filterList('kon',this.value)" autocomplete="off" autocorrect="off" spellcheck="false" style="width:100%;padding-right:30px;box-sizing:border-box">
+            <span onclick="_srchClear(document.getElementById('srchKon'),'kon')" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);width:20px;height:20px;border-radius:50%;background:#E5E5EA;color:#8E8E93;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1">&times;</span>
+          </div><button class="srch-add" onclick="addCustomItem('kon')">+ Dodaj</button>
         </div>
         <div class="ilist" id="lstKon"></div>
       </div>
@@ -477,7 +480,10 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
       </div>
       <div class="mod-body" id="body1">
         <div class="srch-row">
-          <input placeholder="Szukaj elementu..." oninput="filterList('el',this.value)" autocomplete="off" autocorrect="off" spellcheck="false"><button class="srch-add" onclick="addCustomItem('el')">+ Dodaj</button>
+          <div style="position:relative;flex:1;min-width:0">
+            <input id="srchEl" placeholder="Szukaj elementu..." oninput="filterList('el',this.value)" autocomplete="off" autocorrect="off" spellcheck="false" style="width:100%;padding-right:30px;box-sizing:border-box">
+            <span onclick="_srchClear(document.getElementById('srchEl'),'el')" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);width:20px;height:20px;border-radius:50%;background:#E5E5EA;color:#8E8E93;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1">&times;</span>
+          </div><button class="srch-add" onclick="addCustomItem('el')">+ Dodaj</button>
         </div>
         <div class="ilist" id="lstEl"></div>
       </div>
@@ -495,7 +501,10 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
       </div>
       <div class="mod-body" id="body2">
         <div class="srch-row">
-          <input placeholder="Szukaj usterki..." oninput="filterList('def',this.value)" autocomplete="off" autocorrect="off" spellcheck="false"><button class="srch-add" onclick="addCustomItem('def')">+ Dodaj</button>
+          <div style="position:relative;flex:1;min-width:0">
+            <input id="srchDef" placeholder="Szukaj usterki..." oninput="filterList('def',this.value)" autocomplete="off" autocorrect="off" spellcheck="false" style="width:100%;padding-right:30px;box-sizing:border-box">
+            <span onclick="_srchClear(document.getElementById('srchDef'),'def')" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);width:20px;height:20px;border-radius:50%;background:#E5E5EA;color:#8E8E93;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1">&times;</span>
+          </div><button class="srch-add" onclick="addCustomItem('def')">+ Dodaj</button>
         </div>
         <div class="ilist" id="lstDef"></div>
       </div>
@@ -513,7 +522,10 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
       </div>
       <div class="mod-body" id="body3">
         <div class="srch-row">
-          <input placeholder="Szukaj dzialania..." oninput="filterList('sol',this.value)" autocomplete="off" autocorrect="off" spellcheck="false"><button class="srch-add" onclick="addCustomItem('sol')">+ Dodaj</button>
+          <div style="position:relative;flex:1;min-width:0">
+            <input id="srchSol" placeholder="Szukaj dzialania..." oninput="filterList('sol',this.value)" autocomplete="off" autocorrect="off" spellcheck="false" style="width:100%;padding-right:30px;box-sizing:border-box">
+            <span onclick="_srchClear(document.getElementById('srchSol'),'sol')" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);width:20px;height:20px;border-radius:50%;background:#E5E5EA;color:#8E8E93;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1">&times;</span>
+          </div><button class="srch-add" onclick="addCustomItem('sol')">+ Dodaj</button>
         </div>
         <div class="ilist" id="lstSol"></div>
       </div>
@@ -2750,7 +2762,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.82",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.83",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -7431,6 +7443,7 @@ function filterList(col,q){
   renderList(col);
 }
 function clearFilters(){_filters={el:'',def:'',sol:'',kon:''};}
+function _srchClear(inp,col){if(!inp)return;inp.value='';filterList(col,'');inp.focus();}
 
 /* ===== Suggestion chain: element -> defect -> solution (v6.3) ===== */
 var EL2DEF={
@@ -8108,8 +8121,12 @@ function doReset(){
   // Очистить Uwagi
   var _uw=document.getElementById('uwagiField');
   if(_uw){_uw.value='';_uw.innerHTML='';}
+  // Очистить поля поиска в модулях (Serwis/Element/Niesnosnosc/Co zrobiono) + сброс фильтров
+  document.querySelectorAll('.srch-row input, [oninput^="filterList"]').forEach(function(i){i.value='';});
+  if(typeof clearFilters==='function')clearFilters();
   syncTimeInputs();if(typeof _applyTimeUI==='function'){_applyTimeUI('G');_applyTimeUI('S');}
   updateBadges();
+  renderList('el');renderList('def');renderList('kon');renderList('sol');
   renderSummary();
   renderParts();
   showToast('Zresetowano');
@@ -10024,6 +10041,9 @@ function shopsExport(){
             });
             var pb=document.getElementById('partsBody');if(pb)pb.className='parts-body';
             var uw=document.getElementById('uwagiField');if(uw){uw.value='';uw.innerHTML='';}
+            document.querySelectorAll('.srch-row input, [oninput^="filterList"]').forEach(function(i){i.value='';});
+            if(typeof clearFilters==='function')clearFilters();
+            if(typeof renderList==='function'){renderList('el');renderList('def');renderList('kon');renderList('sol');}
             if(typeof renderSummary==='function')renderSummary();
             if(typeof renderParts==='function')renderParts();
           }catch(e){}
