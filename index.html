@@ -286,7 +286,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
     <div class="sh-sec">Aplikacja</div>
     <button class="set-btn set-btn-primary" onclick="appUpdate()">Aktualizuj wersję</button>
     <div style="font-size:11px;color:#A19F9D;margin:4px 0 8px;line-height:1.4">Czyści pamięć podręczną i pobiera najnowszą wersje bez dodawania na ekran poczatkowy.</div>
-
+    <button class="set-btn" onclick="selfTestGPS()">Autotest GPS <span class="set-arr">›</span></button>
   </div>
 </div>
 
@@ -381,7 +381,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.75</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.76</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -395,19 +395,12 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 <!-- PAGE: RAPORT -->
 <div class="pg on" id="pgRaport">
   <!-- Shop bar -->
-  <div style="padding:8px 10px 4px;display:flex;flex-direction:column;gap:6px">
-    <div style="display:flex;align-items:center;gap:6px">
-      <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#C7C7CC" stroke-width="1.8" style="flex:0 0 auto"><circle cx="10" cy="8" r="4"/><path d="M4 18c0-4 12-4 12 0"/></svg>
-      <input id="shopName" placeholder="Sklep" oninput="shopSync()" autocomplete="off" style="flex:1 1 auto;min-width:0;background:#F2F2F7;border-radius:14px;padding:6px 10px;font-size:13px;color:#1C1C1E;border:none;outline:none">
-      <input id="shopId" placeholder="ID" oninput="shopSync();if(typeof _refreshPin==='function')_refreshPin()" autocomplete="off" inputmode="numeric" style="flex:0 0 55px;width:55px;background:#F2F2F7;border-radius:14px;padding:6px 6px;font-size:13px;color:#1C1C1E;text-align:center;border:none;outline:none">
-      <div id="pinPill" onclick="_editPin()" style="flex:0 0 auto;background:#F2F2F7;border:1px solid #E5E5EA;border-radius:14px;padding:6px 10px;font-size:13px;font-weight:700;color:#8E8E93;cursor:pointer;display:flex;align-items:center;white-space:nowrap">PIN <span id="pinPillVal" style="margin-left:4px">&mdash;</span><span id="pinPillHint" style="display:none"></span></div>
-    </div>
-    <div style="display:flex;gap:6px">
-      <button onclick="gpsShop()" style="flex:1;background:#007AFF;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;text-align:center;border:none;border-radius:14px;color:#fff">GPS</button>
-      <button onclick="shopSaveToBase()" style="flex:1;background:#34C759;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;text-align:center;border:none;border-radius:14px;color:#fff">Zapisz</button>
-      <button onclick="openPlaces()" style="flex:1;background:#8E8E93;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;text-align:center;border:none;border-radius:14px;color:#fff">Baza</button>
-    </div>
-    <div id="gpsDiag" onclick="if(this.textContent){try{navigator.clipboard&&navigator.clipboard.writeText(this.textContent);}catch(e){} if(typeof _toast==='function')_toast('Skopiowano');}" style="font-size:10px;line-height:1.35;color:#8E8E93;white-space:pre-wrap;word-break:break-word;cursor:pointer"></div>
+  <div class="shop-bar" style="flex-wrap:wrap;gap:6px">
+    <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#C7C7CC" stroke-width="1.8" style="flex:0 0 auto"><circle cx="10" cy="8" r="4"/><path d="M4 18c0-4 12-4 12 0"/></svg>
+    <input id="shopName" placeholder="Sklep" oninput="shopSync()" autocomplete="off" style="flex:1 1 auto;min-width:0;background:#F2F2F7;border-radius:14px;padding:6px 11px;font-size:13px;color:#1C1C1E">
+    <input id="shopId" placeholder="ID" oninput="shopSync();if(typeof _refreshPin==='function')_refreshPin()" autocomplete="off" inputmode="numeric" style="flex:0 0 70px;width:70px;background:#F2F2F7;border-radius:14px;padding:6px 8px;font-size:13px;color:#1C1C1E;text-align:center">
+    <div style="flex:1 1 100%;height:0"></div><input id="shopAddr" placeholder="Adres" oninput="shopSync()" autocomplete="off" style="flex:1 1 auto;min-width:0;background:#F2F2F7;border-radius:14px;padding:6px 11px;font-size:13px;color:#1C1C1E"><div id="pinPill" onclick="_copyPin()" style="flex:0 0 auto;margin:0;background:#F2F2F7;border:1px solid #E5E5EA;border-radius:14px;padding:6px 12px;font-size:13px;font-weight:700;color:#8E8E93;cursor:pointer;display:flex;align-items:center">PIN <span id="pinPillVal" style="margin-left:4px">&mdash;</span><span id="pinPillHint" style="display:none"></span></div><div style="flex:1 1 100%;height:0"></div><button onclick="gpsShop()" style="background:#007AFF;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">GPS</button><button onclick="shopSaveToBase()" style="background:#34C759;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">Zapisz</button><button onclick="openPlaces()" style="background:#8E8E93;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">Baza</button><div style="flex:1 1 100%;height:0"></div><div id="gpsDiag" onclick="if(this.textContent){try{navigator.clipboard&&navigator.clipboard.writeText(this.textContent);}catch(e){} if(typeof _toast==='function')_toast('Skopiowano');}" style="flex:1 1 100%;font-size:10px;line-height:1.35;color:#8E8E93;white-space:pre-wrap;word-break:break-word;margin-top:2px;cursor:pointer"></div>
+    
   </div>
 
   <div class="page">
@@ -587,10 +580,6 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
       <div style="margin:0 12px 12px;border:2px solid #1C1C1E;border-radius:10px;overflow:hidden">
         <textarea id="uwagiField" placeholder="Dodatkowe uwagi..." rows="2" style="width:100%;padding:10px 12px;font-size:13px;font-family:inherit;border:none;outline:none;resize:none;background:transparent;color:#1C1C1E;box-sizing:border-box"></textarea>
       </div>
-      <button onclick="aiOpenStyles()" style="display:flex;align-items:center;justify-content:center;gap:6px;width:calc(100% - 24px);margin:0 12px 8px;padding:11px;background:#F2F2F7;border:1.5px solid #D1D1D6;border-radius:10px;font-size:13px;font-weight:600;color:#1C1C1E;cursor:pointer;font-family:inherit">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
-        Sprawdź styl raportu (AI)
-      </button>
       <div style="display:flex;flex-wrap:wrap;gap:5px;padding:0 12px 10px">
         <button onclick="openTmpl()" class="rep-sm-btn">Szablony <span id="tmplCount" style="background:#3A3A3C;color:#fff;border-radius:5px;padding:1px 5px;font-size:10px">0</span></button>
         <button onclick="saveTmpl()" class="rep-sm-btn" style="border-style:dashed">+ Zapisz</button>
@@ -2761,7 +2750,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.75",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.76",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -4554,14 +4543,6 @@ function resetAI(){
   var cl=document.getElementById("aiChatList");if(cl)cl.innerHTML="";
   var ql=document.getElementById("onlineResult");if(ql){ql.style.display="none";ql.innerHTML="";}
 }
-function aiOpenStyles(){
-  var txt=buildReport?buildReport():'';
-  var prompt='Mam raport serwisowy. Sprawdz gramatykę i pokaz mi 4 wersje tego samego tekstu: 1) Poprawiona gramatyka 2) Styl techniczny 3) Styl biznesowy 4) Styl rozmowny. Kazda wersja w osobnym bloku z nagłówkiem.
-
-Raport:
-'+(txt||'(brak raportu - sprawdz gramatykę przykładowego zdania)');
-  window.open('https://claude.ai/new?q='+encodeURIComponent(prompt),'_blank');
-}
 function openAIPanel(){
   if(SEL.el||SEL.def.length||SEL.sol.length||SEL.kon.length)commitEntry();
   _commitEntry();
@@ -5228,11 +5209,21 @@ function restoreData(input){
   </div>
 </div>
 
+<div class="pg" id="pgAI">
+  <div style="padding:14px;display:flex;flex-direction:column;gap:10px;overflow-y:auto;padding-bottom:80px">
+    <div style="font-size:11px;font-weight:700;color:#8E8E93;letter-spacing:.05em">ASYSTENT JĘZYKOWY</div>
+    <textarea id="aiCheckInp" rows="4" placeholder="Wklej lub wpisz tekst po polsku lub rosyjsku..." style="width:100%;border:2px solid #1C1C1E;border-radius:10px;padding:12px;font-size:14px;font-family:inherit;outline:none;resize:none;line-height:1.5;box-sizing:border-box"></textarea>
+    <button onclick="aiCheckAll()" style="width:100%;padding:13px;background:#1C1C1E;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Sprawdź i pokaż wszystkie style</button>
+    <div id="aiCheckResults" style="display:none;flex-direction:column;gap:8px"></div>
+    <button onclick="document.getElementById('aiCheckInp').value='';document.getElementById('aiCheckResults').style.display='none';" style="background:none;border:none;color:#8E8E93;font-size:12px;cursor:pointer;font-family:inherit;padding:4px;text-align:center">Wyczyść</button>
+  </div>
+</div>
 
 <!-- BOTTOM NAV -->
 <div class="bnav">
   <button class="bnav-btn on" id="navRaport" onclick="goTab('raport')" title="Raport" aria-label="Raport"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:27px;height:27px"><path d="M13 3H7a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V8z"/><path d="M13 3v5h5"/><path d="M9 13h6M9 17h6"/></svg></button>
   <button class="bnav-btn" id="navMag" onclick="goTab('mag')" title="Magazyn" aria-label="Magazyn" style="position:relative"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:27px;height:27px"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg><span id="magBadge" style="display:none;position:absolute;top:1px;left:calc(50% + 5px);min-width:16px;height:16px;padding:0 4px;background:#FF3B30;color:#fff;font-size:10px;font-weight:800;border-radius:9px;align-items:center;justify-content:center;line-height:1;box-sizing:border-box">0</span></button>
+  <button class="bnav-btn" id="navAI" onclick="goTab('ai')" title="AI Chat" aria-label="AI Chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>AI</span></button>
   <button class="bnav-btn" id="navWiedza" onclick="goTab('wiedza')" title="Wiedza" aria-label="Wiedza"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:27px;height:27px"><path d="M5 4a1 1 0 0 1 1-1h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M19 19H6a2 2 0 0 0-2 2"/><path d="M9 7h7"/></svg></button>
 </div>
 <div class="ov" id="shPick" style="display:none" onclick="if(event.target===this)closeOv('shPick')"><div class="sh" style="max-height:80vh;overflow-y:auto;-webkit-overflow-scrolling:touch"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div style="font-size:16px;font-weight:800;color:#323130">Wybierz sklep (do 60 m)</div><button onclick="closeOv('shPick')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button></div><div id="pickList"></div></div></div>
@@ -7305,18 +7296,8 @@ function updateDuration(sfx){
 function goTab(t){
   document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on');});
   document.querySelectorAll('.bnav-btn').forEach(function(b){b.classList.remove('on');});
-  // Скрыть/показать pgAI отдельно
-  var pgAI=document.getElementById('pgAI');
-  if(pgAI)pgAI.style.display='none';
-  if(t==='ai'){
-    if(pgAI)pgAI.style.display='flex';
-    var bn=document.getElementById('navAI');
-    if(bn)bn.classList.add('on');
-    window.scrollTo(0,0);
-    return;
-  }
-  var pgId='pg'+t.charAt(0).toUpperCase()+t.slice(1);
-  var bnId='nav'+t.charAt(0).toUpperCase()+t.slice(1);
+  var pgId=t==='ai'?'pgAI':('pg'+t.charAt(0).toUpperCase()+t.slice(1));
+  var bnId=t==='ai'?'navAI':('nav'+t.charAt(0).toUpperCase()+t.slice(1));
   var pg=document.getElementById(pgId);
   var bn=document.getElementById(bnId);
   if(pg)pg.classList.add('on');
@@ -8706,7 +8687,7 @@ function setWorkType(t){
 }
 function _overpass(q){
   var enc=encodeURIComponent(q);
-  var urls=['https://overpass-api.de/api/interpreter?data='+enc,'https://overpass.kumi.systems/api/interpreter?data='+enc,'https://overpass.private.coffee/api/interpreter?data='+enc];
+  var urls=['https://overpass-api.de/api/interpreter?data='+enc,'https://overpass.kumi.systems/api/interpreter?data='+enc];
   function tryFetch(u){
     return new Promise(function(resolve){
       var ctrl=(typeof AbortController!=='undefined')?new AbortController():null;
@@ -8714,7 +8695,7 @@ function _overpass(q){
       fetch(u,ctrl?{signal:ctrl.signal}:{}).then(function(r){clearTimeout(to);if(!r||!r.ok){resolve(null);return;}r.json().then(resolve).catch(function(){resolve(null);});}).catch(function(){clearTimeout(to);resolve(null);});
     });
   }
-  return tryFetch(urls[0]).then(function(r){return r||tryFetch(urls[1]);}).then(function(r){return r||tryFetch(urls[2]);}).catch(function(){return null;});
+  return tryFetch(urls[0]).then(function(r){return r||tryFetch(urls[1]);}).catch(function(){return null;});
 }
 function _acquirePos(ok,err){
   if(!navigator.geolocation){if(err)err({code:2,message:'brak geolokalizacji'});return;}
@@ -8744,26 +8725,13 @@ function gpsShop(){
     if(_bs){var _bd=Math.round(_dist(la,lo,_bs.lat,_bs.lon));_diag('GPS '+la.toFixed(5)+', '+lo.toFixed(5)+'\n=> z ZAPISANYCH (~'+_bd+'m): '+((_bs.chain||_bs.name||'')+' #'+(_bs.id!=null?_bs.id:'?')));_setShopFields(_bs.chain||_bs.name||'',(_bs.id!=null?(''+_bs.id):''),(_bs.addr||'')+(_bs.city?', '+_bs.city:''));_toast('Z bazy: '+((_bs.chain||_bs.name||'')+(_bs.id?' '+_bs.id:'')));return;}
     var _rp=_findPlace(la,lo);
     if(_rp){_diag('GPS '+la.toFixed(5)+', '+lo.toFixed(5)+'\n=> ZAPAMIETANE MIEJSCE: '+((_rp.name||'')+' #'+(_rp.id||'?')));_setShopFields(_rp.name||'',_rp.id||'',_rp.addr||'');_toast('Zapamietane: '+((_rp.name||'')+(_rp.id?' '+_rp.id:'')||'miejsce'));return;}
-    _toast('GPS: rozpoznaje adres...');
+    _toast('GPS: rozpoznaje sklep...');
     var nomUrl='https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&accept-language=pl&lat='+la+'&lon='+lo;
     var R=120;
     var ovQ='[out:json][timeout:10];(node(around:'+R+','+la+','+lo+')[shop];way(around:'+R+','+la+','+lo+')[shop];node(around:'+R+','+la+','+lo+')[amenity=fuel];);out center tags 60;';
-    // Использовать XMLHttpRequest вместо fetch для обхода iOS PWA ограничений
-    function xhrGet(url,cb){
-      var x=new XMLHttpRequest();
-      x.open('GET',url,true);
-      x.setRequestHeader('Accept','application/json');
-      x.timeout=8000;
-      x.onload=function(){try{cb(null,JSON.parse(x.responseText));}catch(e){cb(e,null);}};
-      x.onerror=function(){cb(new Error('network'),null);};
-      x.ontimeout=function(){cb(new Error('timeout'),null);};
-      x.send();
-    }
-    var pNom=new Promise(function(res){xhrGet(nomUrl,function(e,d){res(e?null:d);});});
+    var pNom=fetch(nomUrl,{headers:{'Accept':'application/json'}}).then(function(r){return r.json();}).catch(function(){return null;});
     var pOv=_overpass(ovQ);
-    _toast('GPS: czekam na dane...');
     Promise.all([pNom,pOv]).then(function(res){
-      try{
       var d=res[0]||{}, ov=res[1];
       var a=(d&&d.address)||{};
       var road=a.road||a.pedestrian||a.footway||a.residential||a.neighbourhood||'';
@@ -8784,7 +8752,6 @@ function gpsShop(){
       var seen={},uniq=[]; cand.sort(function(x,y){return x.dist-y.dist;});
       cand.forEach(function(c){var k=c.name.toLowerCase();if(seen[k])return;seen[k]=1;uniq.push(c);});
       window._gpsCand=uniq; _diagAdd(' | POI: '+uniq.length);
-      _toast('GPS: Nom='+(d?'OK':'brak')+' Ov='+(ov&&ov.elements?ov.elements.length+'poi':'brak'));
       if(uniq.length>1){_diagAdd('\n=> lista POI ('+uniq.length+')');_renderPick();if(typeof openSh==='function')openSh('shPick');_toast('Wybierz sklep ('+uniq.length+')');return;}
       if(uniq.length===1){_useCand(uniq[0]);return;}
       var osmName=(d&&d.name)?(''+d.name).trim():'';
@@ -8797,38 +8764,8 @@ function gpsShop(){
       _diagAdd('\n=> '+(nm2?('nazwa: '+nm2):'tylko adres')+(id0?(' #'+id0+(pin0?(' PIN '+pin0):'')+' (z bazy)'):''));
       _setShopFields(nm2||'',id0,ad0);
       _toast(nm2?('Sklep: '+nm2+(id0?(' '+id0+(pin0?' | PIN '+pin0:'')):' - wpisz nr (ID)')):('Adres: '+addr));
-      }catch(ex){_toast('GPS err: '+ex.message);}
-    }).catch(function(ex){
-      _toast('GPS catch: '+(ex?ex.message:'?'));
-      // Overpass не ответил — ищем в SHOPS_DB по координатам
-      if(typeof SHOPS_DB!=='undefined'){
-        var nearby=[];
-        SHOPS_DB.forEach(function(s){
-          if(!s.lat||!s.lon)return;
-          var d=_dist(la,lo,s.lat,s.lon);
-          if(d<500)nearby.push({s:s,d:d});
-        });
-        nearby.sort(function(a,b){return a.d-b.d;});
-        if(nearby.length===1){
-          var s=nearby[0].s;
-          _setShopFields(s.chain||'Biedronka',''+s.id,'');
-          window._shopPin=s.pin||'';
-          var _pv=document.getElementById('pinPillVal');if(_pv)_pv.textContent=s.pin||'—';
-          var _pp=document.getElementById('pinPill');if(_pp)_pp.style.color=s.pin?'#1C1C1E':'#8E8E93';
-          _toast((s.chain||'Biedronka')+' '+s.id+(s.pin?' | PIN '+s.pin:''));
-          return;
-        }
-        if(nearby.length>1){
-          window._gpsCand=nearby.map(function(x){
-            return {name:(x.s.chain||'Biedronka')+' '+x.s.id,chain:x.s.chain||'Biedronka',id:x.s.id,dist:Math.round(x.d),addr:'',pin:x.s.pin||''};
-          });
-          if(typeof _renderPick==='function')_renderPick();
-          if(typeof openSh==='function')openSh('shPick');
-          _toast('Wybierz sklep ('+nearby.length+')');
-          return;
-        }
-      }
-      _toast('GPS: ±'+Math.round(window._gpsAcc||0)+'m');
+    }).catch(function(){
+      var fb=la.toFixed(5)+', '+lo.toFixed(5);_setShopFields('','',fb);_toast('Błąd sieci — współrzędne GPS');
     });
   },function(err){var c=err&&err.code,msg=(err&&err.message)?err.message:'blad';if(c===1)msg='brak zgody na lokalizację \u2014 włącz w Ustawieniach iPhone';else if(c===2)msg='lokalizacja niedostepna';else if(c===3)msg='przekroczono czas (sprobuj jeszcze raz)';_toast('GPS: '+msg);var ae=document.getElementById('shopAddr');if(ae)ae.value='GPS: '+msg;},{enableHighAccuracy:true,timeout:8000,maximumAge:30000});
 }
@@ -9711,26 +9648,6 @@ function schedNotify(key){
   if(typeof magCfgApplyUI==='function')magCfgApplyUI();
   if(window._schedOn&&typeof schedStart==='function')schedStart();
 }catch(e){}})();
-function runDiagFix(){
-  var fixed=[];
-  try{
-    ['rv_e','rv_cp','rv_spG','rv_spS','rv_pqG','rv_pqS','rv_c','rv_rt'].forEach(function(k){
-      var v=localStorage.getItem(k);
-      if(v){try{JSON.parse(v);}catch(e){localStorage.removeItem(k);fixed.push('Usunięto uszkodzony klucz: '+k);}}
-    });
-  }catch(e){}
-  ['S',1,2,3].forEach(function(x){
-    var b=document.getElementById(x==='S'?'bodyS':'body'+x);
-    var a=document.getElementById(x==='S'?'arrS':'arr'+x);
-    if(b&&b.classList.contains('open')){b.classList.remove('open');if(a)a.classList.remove('open');fixed.push('Zamknięto modul: '+x);}
-  });
-  var pb=document.getElementById('partsBody');
-  if(pb&&pb.classList.contains('open')){pb.classList.remove('open');fixed.push('Zamknięto części zamienne');}
-  var uw=document.getElementById('uwagiField');
-  if(uw&&uw.value){uw.value='';fixed.push('Wyczyszczono uwagi');}
-  alert(fixed.length?'Naprawiono '+fixed.length+':\n'+fixed.join('\n'):'Brak problemów do naprawy.');
-  runDiag();
-}
 function runDiag(){
   var L=[],issues=0;
   function ok(s){L.push('[OK] '+s);}
@@ -9789,10 +9706,7 @@ function copyDiag(){
       <button onclick="closeOv('shDiag')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button>
     </div>
     <pre id="rvDiagOut" style="white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11px;line-height:1.5;background:#F8F8F8;border:.5px solid #E5E5EA;border-radius:10px;padding:12px;color:#323130;margin-bottom:10px"></pre>
-    <div style="display:flex;gap:8px;margin-bottom:8px">
-      <button onclick="copyDiag()" style="flex:1;padding:12px;background:#0078D4;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Kopiuj raport</button>
-      <button onclick="runDiagFix()" style="flex:1;padding:12px;background:#34C759;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">⚙ Napraw</button>
-    </div>
+    <button onclick="copyDiag()" style="width:100%;padding:12px;background:#0078D4;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Kopiuj raport</button>
     <button class="sh-btn lt" onclick="closeOv('shDiag')" style="margin-top:8px">Zamknij</button>
   </div>
 </div>
@@ -10037,7 +9951,7 @@ function addShopManual(){
   if(typeof _toast==='function')_toast('Dodano do bazy: '+chain+(id?' '+id:'')+(city?' '+city:''));
   shopsSearch(_shVal('shopsSearchBox'));
 }
-function _nearestSavedShop(la,lo){var best=null,bd=500;try{(typeof _allShops==='function'?_allShops():[]).forEach(function(s){if(typeof s.lat==='number'&&typeof s.lon==='number'){var d=_dist(la,lo,s.lat,s.lon);if(d<bd){bd=d;best=s;}}});}catch(e){}return best;}
+function _nearestSavedShop(la,lo){var best=null,bd=90;try{(typeof _allShops==='function'?_allShops():[]).forEach(function(s){if(typeof s.lat==='number'&&typeof s.lon==='number'){var d=_dist(la,lo,s.lat,s.lon);if(d<bd){bd=d;best=s;}}});}catch(e){}return best;}
 function shopSaveToBase(){
   var n=_shVal('shopName'), id=_shVal('shopId'), a=_shVal('shopAddr');
   if(!n&&!id&&!a){if(typeof _toast==='function')_toast('Wpisz dane sklepu');return;}
