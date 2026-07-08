@@ -381,7 +381,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.68</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.69</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -2761,7 +2761,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.68",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.69",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -8709,20 +8709,33 @@ function _overpass(q){
   var urls=[
     'https://overpass-api.de/api/interpreter?data='+enc,
     'https://overpass.kumi.systems/api/interpreter?data='+enc,
-    'https://overpass.openstreetmap.ru/api/interpreter?data='+enc
+    'https://overpass.openstreetmap.ru/api/interpreter?data='+enc,
+    'https://overpass.private.coffee/api/interpreter?data='+enc
   ];
   function tryXhr(u){
     return new Promise(function(resolve){
       var x=new XMLHttpRequest();
       x.open('GET',u,true);
-      x.timeout=7000;
-      x.onload=function(){try{resolve(JSON.parse(x.responseText));}catch(e){resolve(null);}};
+      x.timeout=5000;
+      x.onload=function(){try{var d=JSON.parse(x.responseText);resolve(d&&d.elements?d:null);}catch(e){resolve(null);}};
       x.onerror=function(){resolve(null);};
       x.ontimeout=function(){resolve(null);};
       x.send();
     });
   }
-  return tryXhr(urls[0]).then(function(r){return r||tryXhr(urls[1]);}).then(function(r){return r||tryXhr(urls[2]);}).catch(function(){return null;});
+  // Пробуем все параллельно — берём первый ответ
+  return new Promise(function(resolve){
+    var done=false;
+    var pending=urls.length;
+    urls.forEach(function(u){
+      tryXhr(u).then(function(r){
+        pending--;
+        if(r&&!done){done=true;resolve(r);}
+        else if(pending===0&&!done){resolve(null);}
+      });
+    });
+    setTimeout(function(){if(!done){done=true;resolve(null);}},6000);
+  });
 }
 function _acquirePos(ok,err){
   if(!navigator.geolocation){if(err)err({code:2,message:'brak geolokalizacji'});return;}
