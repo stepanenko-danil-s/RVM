@@ -54,12 +54,6 @@ button:active{opacity:.7;transform:scale(.97)}
 .srch-row input:focus{border-color:#007AFF}
 .srch-add{flex:0 0 auto;padding:0 14px;height:37px;border:none;border-radius:10px;background:#007AFF;color:#fff;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit}
 
-/* PHOTOS */
-.photo-thumb{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:#F2F2F7}
-.photo-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.photo-del{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;border:none;font-size:12px;line-height:1;cursor:pointer;padding:0}
-.photo-add{aspect-ratio:1;border-radius:10px;border:1.5px dashed #C7C7CC;background:#FAFAFA;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:#A19F9D;font-size:10.5px;font-weight:600}
-
 /* LIST */
 .ilist{padding:0 8px 8px;max-height:300px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 #partsSrchRes{max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
@@ -387,7 +381,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.90</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.91</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -595,25 +589,8 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
       <div style="padding:4px 12px 4px;display:flex;align-items:center;gap:6px">
         <span style="font-size:11px;font-weight:700;color:#8E8E93;letter-spacing:.04em;text-transform:uppercase">Uwagi</span>
       </div>
-      <div style="margin:0 12px 8px;border:2px solid #1C1C1E;border-radius:10px;overflow:hidden;position:relative">
-        <textarea id="uwagiField" placeholder="Dodatkowe uwagi..." rows="2" style="width:100%;padding:10px 40px 10px 12px;font-size:13px;font-family:inherit;border:none;outline:none;resize:none;background:transparent;color:#1C1C1E;box-sizing:border-box"></textarea>
-        <button id="uwagiMicBtn" onclick="uwagiMic()" style="position:absolute;right:6px;bottom:6px;width:28px;height:28px;border-radius:50%;background:#F2F2F7;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="#3A3A3C" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="1" width="6" height="9" rx="3"/><path d="M3 9a6 6 0 0 0 12 0"/><line x1="9" y1="15" x2="9" y2="17"/></svg></button>
-      </div>
-      <div style="display:flex;gap:6px;overflow-x:auto;padding:0 12px 10px;-webkit-overflow-scrolling:touch">
-        <button onclick="uwagiQuick('Wykonano przegląd okresowy maszyny, bez uwag.')" class="rep-sm-btn" style="flex:0 0 auto;white-space:nowrap">✓ Bez uwag</button>
-        <button onclick="uwagiQuick('Wymieniono uszkodzony element, maszyna działa poprawnie.')" class="rep-sm-btn" style="flex:0 0 auto;white-space:nowrap">🔧 Wymiana OK</button>
-        <button onclick="uwagiQuick('Wyczyszczono czujniki i sprawdzono połączenia.')" class="rep-sm-btn" style="flex:0 0 auto;white-space:nowrap">🧹 Czujniki wyczyszczone</button>
-        <button onclick="uwagiQuick('Usunięto zator w module wykonawczym.')" class="rep-sm-btn" style="flex:0 0 auto;white-space:nowrap">⚙ Zator usunięty</button>
-        <button onclick="uwagiQuick('Wymagana dalsza diagnostyka, zgłoszono do producenta.')" class="rep-sm-btn" style="flex:0 0 auto;white-space:nowrap">⚠ Dalsza diagnostyka</button>
-        <button onclick="uwagiQuick('Poinformowano pracownika sklepu o stanie maszyny.')" class="rep-sm-btn" style="flex:0 0 auto;white-space:nowrap">💬 Poinformowano sklep</button>
-      </div>
-      <div style="padding:0 12px 4px;display:flex;align-items:center;justify-content:space-between">
-        <span style="font-size:11px;font-weight:700;color:#8E8E93;letter-spacing:.04em;text-transform:uppercase">Zdjęcia obiektu</span>
-        <span id="photoBadge" style="display:none;background:#3A3A3C;color:#fff;border-radius:8px;padding:1px 7px;font-size:11px;font-weight:700"></span>
-      </div>
-      <div style="margin:0 12px 12px">
-        <div id="photoGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px"></div>
-        <input type="file" id="photoCamInp" accept="image/*" capture="environment" multiple onchange="photoHandle(this)" style="display:none">
+      <div style="margin:0 12px 12px;border:2px solid #1C1C1E;border-radius:10px;overflow:hidden">
+        <textarea id="uwagiField" placeholder="Dodatkowe uwagi..." rows="2" style="width:100%;padding:10px 12px;font-size:13px;font-family:inherit;border:none;outline:none;resize:none;background:transparent;color:#1C1C1E;box-sizing:border-box"></textarea>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:5px;padding:0 12px 10px">
         <button onclick="openTmpl()" class="rep-sm-btn">Szablony <span id="tmplCount" style="background:#3A3A3C;color:#fff;border-radius:5px;padding:1px 5px;font-size:10px">0</span></button>
@@ -2799,7 +2776,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.90",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.91",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -7774,18 +7751,6 @@ function adjPart(id,mode,d){
   custParts[mode][id]=(custParts[mode][id]||0)+d;
   if(custParts[mode][id]<=0)delete custParts[mode][id];
   ss('rv_cp',custParts);
-  try{
-    if(typeof magGet==='function'&&typeof magSave==='function'){
-      var dd=magGet(id);
-      dd.qty=(dd.qty||0)-d;
-      if(dd.qty<0)dd.qty=0;
-      magSave();
-      if(typeof magHistoryAdd==='function'&&d>0){
-        var _pp=(typeof magGetAll==='function'?magGetAll():[]).find(function(x){return x.id===id;});
-        magHistoryAdd(_pp||{id:id},d);
-      }
-    }
-  }catch(e){}
   renderParts();
   renderSummary();
 }
@@ -8170,8 +8135,6 @@ function doReset(){
   // Очистить Uwagi
   var _uw=document.getElementById('uwagiField');
   if(_uw){_uw.value='';_uw.innerHTML='';}
-  // Очистить фото объекта
-  if(typeof photoClear==='function'){_photos=[];photoRender();photoBadgeUpdate();_saveTaskPhotos();}
   // Очистить поля поиска в модулях (Serwis/Element/Niesnosnosc/Co zrobiono) + сброс фильтров
   document.querySelectorAll('.srch-row input, [oninput^="filterList"]').forEach(function(i){i.value='';});
   if(typeof clearFilters==='function')clearFilters();
@@ -8954,29 +8917,6 @@ function _renderCityPick(){
 function _pickCityShop(i){var s=(window._cityCand||[])[i];if(!s)return;if(typeof closeOv==='function')closeOv('shPick');_applyDbShop(s);}
 
 // ===== TIME MIC =====
-// ===== Uwagi: dyktowanie + szybkie frazy =====
-function uwagiMic(){
-  var SR=window.webkitSpeechRecognition||window.SpeechRecognition;
-  var ta=document.getElementById('uwagiField');
-  if(!SR){var v=prompt('Wpisz uwagi:');if(v&&ta){ta.value=(ta.value?ta.value.trim()+' ':'')+v;}return;}
-  var rec=new SR();rec.lang='pl-PL';rec.interimResults=false;
-  var btn=document.getElementById('uwagiMicBtn');
-  if(btn)btn.style.background='#FFE0E0';
-  if(typeof showToast==='function')showToast('Mów...');
-  rec.onresult=function(e){
-    var t=e.results[0][0].transcript;
-    if(ta)ta.value=(ta.value?ta.value.trim()+' ':'')+t;
-  };
-  rec.onerror=function(){if(typeof showToast==='function')showToast('Błąd mikrofonu');};
-  rec.onend=function(){if(btn)btn.style.background='#F2F2F7';};
-  try{rec.start();}catch(e){var v=prompt('Wpisz uwagi:');if(v&&ta){ta.value=(ta.value?ta.value.trim()+' ':'')+v;}}
-}
-function uwagiQuick(txt){
-  var ta=document.getElementById('uwagiField');
-  if(!ta)return;
-  ta.value=(ta.value&&ta.value.trim())?ta.value.trim()+' '+txt:txt;
-  if(typeof showToast==='function')showToast('Dodano do uwag');
-}
 function timeMic(sfx){
   var SR=window.webkitSpeechRecognition||window.SpeechRecognition;
   if(!SR){
@@ -10115,7 +10055,6 @@ function shopsExport(){
             });
             var pb=document.getElementById('partsBody');if(pb)pb.className='parts-body';
             var uw=document.getElementById('uwagiField');if(uw){uw.value='';uw.innerHTML='';}
-            if(typeof photoClear==='function'){_photos=[];photoRender();photoBadgeUpdate();_saveTaskPhotos();}
             document.querySelectorAll('.srch-row input, [oninput^="filterList"]').forEach(function(i){i.value='';});
             if(typeof clearFilters==='function')clearFilters();
             if(typeof renderList==='function'){renderList('el');renderList('def');renderList('kon');renderList('sol');}
