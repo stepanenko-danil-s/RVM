@@ -362,6 +362,10 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 </div>
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
+<div id="undoResetBar" style="display:none;position:fixed;left:12px;right:12px;bottom:18px;z-index:9999;background:#1C1C1E;color:#fff;border-radius:14px;padding:12px 14px;box-shadow:0 6px 20px rgba(0,0,0,.3);align-items:center;gap:10px;justify-content:space-between">
+  <span style="font-size:13px;font-weight:600" id="undoResetTxt">Raport wysłany. Reset za 5s…</span>
+  <button onclick="cancelAutoReset()" style="flex:0 0 auto;background:#0078D4;color:#fff;border:none;border-radius:9px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Anuluj</button>
+</div>
 <div class="ov" id="shPhrases" style="display:none" onclick="if(event.target===this)closeOv('shPhrases')">
   <div class="sh" style="max-width:400px;max-height:80vh;padding:0;display:flex;flex-direction:column;overflow:hidden">
     <div style="padding:18px 18px 0;flex:0 0 auto">
@@ -383,7 +387,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.94</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.95</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -2777,7 +2781,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.94",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.95",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -7927,7 +7931,10 @@ function doCopy(){
   }
   var uw=(document.getElementById('uwagiField')||{}).value||'';
   if(uw.trim())txt+='\n\nUwagi: '+uw.trim();
-  function ok(){showToast(warns.length?'Skopiowano (z uwagami)':(edited!=null?'\u2713 Skopiowano (poprawiony)':'\u2713 Sprawdzono \u2014 skopiowano'));}
+  function ok(){
+    showToast(warns.length?'Skopiowano (z uwagami)':(edited!=null?'\u2713 Skopiowano (poprawiony)':'\u2713 Sprawdzono \u2014 skopiowano'));
+    if(typeof scheduleAutoReset==='function')scheduleAutoReset();
+  }
   navigator.clipboard?navigator.clipboard.writeText(txt).then(ok):ok();
 }
 
@@ -8112,8 +8119,7 @@ async function aiDistribute(){
 }
 
 // ===== RESET =====
-function doReset(){
-  if(!confirm('Zresetowac wszystkie dane?'))return;
+function _doResetCore(){
   entries=[];selKonG=[];selKonS=[];
   timeG={od:'',do:''};timeS={od:'',do:''};
   SEL={el:'',def:[],sol:[],kon:[]};
@@ -8122,21 +8128,17 @@ function doReset(){
   shopVal='';window._currentShop=null;
   ['rv_shop','rv_shop_n','rv_shop_i','rv_shop_a'].forEach(function(k){localStorage.removeItem(k);});
   ['shopName','shopId','shopAddr'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
-  // Закрыть все модули
   ['S',1,2,3].forEach(function(x){
     var b=document.getElementById(x==='S'?'bodyS':'body'+x);
     var a=document.getElementById(x==='S'?'arrS':'arr'+x);
     if(b)b.classList.remove('open');
     if(a)a.classList.remove('open');
   });
-  // Закрыть запчасти
   partsOpen=false;
   var _pb=document.getElementById('partsBody');if(_pb)_pb.className='parts-body';
   var _pa=document.getElementById('partsArr');if(_pa)_pa.style.transform='none';
-  // Очистить Uwagi
   var _uw=document.getElementById('uwagiField');
   if(_uw){_uw.value='';_uw.innerHTML='';}
-  // Очистить поля поиска в модулях (Serwis/Element/Niesnosnosc/Co zrobiono) + сброс фильтров
   document.querySelectorAll('.srch-row input, [oninput^="filterList"]').forEach(function(i){i.value='';});
   if(typeof clearFilters==='function')clearFilters();
   syncTimeInputs();if(typeof _applyTimeUI==='function'){_applyTimeUI('G');_applyTimeUI('S');}
@@ -8144,7 +8146,43 @@ function doReset(){
   renderList('el');renderList('def');renderList('kon');renderList('sol');
   renderSummary();
   renderParts();
+}
+function doReset(){
+  if(!confirm('Zresetowac wszystkie dane?'))return;
+  _doResetCore();
   showToast('Zresetowano');
+}
+window._autoResetTimer=null;
+window._autoResetSecLeft=0;
+function scheduleAutoReset(){
+  try{
+    if(window._autoResetTimer)clearInterval(window._autoResetTimer);
+    window._autoResetSecLeft=5;
+    var bar=document.getElementById('undoResetBar');
+    var txt=document.getElementById('undoResetTxt');
+    if(bar)bar.style.display='flex';
+    if(txt)txt.textContent='Raport wysłany. Reset za '+window._autoResetSecLeft+'s…';
+    window._autoResetTimer=setInterval(function(){
+      window._autoResetSecLeft--;
+      if(txt)txt.textContent='Raport wysłany. Reset za '+window._autoResetSecLeft+'s…';
+      if(window._autoResetSecLeft<=0){
+        clearInterval(window._autoResetTimer);
+        window._autoResetTimer=null;
+        if(bar)bar.style.display='none';
+        _doResetCore();
+        showToast('Zresetowano');
+      }
+    },1000);
+  }catch(e){}
+}
+function cancelAutoReset(){
+  try{
+    if(window._autoResetTimer)clearInterval(window._autoResetTimer);
+    window._autoResetTimer=null;
+    var bar=document.getElementById('undoResetBar');
+    if(bar)bar.style.display='none';
+    if(typeof showToast==='function')showToast('Reset odwołany');
+  }catch(e){}
 }
 
 // ===== SHOP =====
