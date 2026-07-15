@@ -366,6 +366,14 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
   <span style="font-size:13px;font-weight:600" id="undoResetTxt">Raport wysłany. Reset za 5s…</span>
   <button onclick="cancelAutoReset()" style="flex:0 0 auto;background:#0078D4;color:#fff;border:none;border-radius:9px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Anuluj</button>
 </div>
+<div id="whPickBar" style="display:none;position:fixed;left:12px;right:12px;bottom:18px;z-index:9999;background:#1C1C1E;color:#fff;border-radius:14px;padding:12px 14px;box-shadow:0 6px 20px rgba(0,0,0,.3);flex-direction:column;gap:8px">
+  <span style="font-size:12.5px;font-weight:600;color:#C7C7CC">Oznacz: <span id="whPickTxt" style="color:#fff"></span></span>
+  <div style="display:flex;gap:6px">
+    <button onclick="_whPickSet('G')" style="flex:1;background:#34C759;color:#fff;border:none;border-radius:9px;padding:9px 4px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit">🟢 Gwarancja</button>
+    <button onclick="_whPickSet('N')" style="flex:1;background:#FF3B30;color:#fff;border:none;border-radius:9px;padding:9px 4px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit">🔴 Nie gwar.</button>
+    <button onclick="_whPickSet('Q')" style="flex:1;background:#48484A;color:#fff;border:none;border-radius:9px;padding:9px 4px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit">⚪ Zależy</button>
+  </div>
+</div>
 <div class="ov" id="shPhrases" style="display:none" onclick="if(event.target===this)closeOv('shPhrases')">
   <div class="sh" style="max-width:400px;max-height:80vh;padding:0;display:flex;flex-direction:column;overflow:hidden">
     <div style="padding:18px 18px 0;flex:0 0 auto">
@@ -387,7 +395,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.97</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.98</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -2787,7 +2795,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.97",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.98",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -7461,6 +7469,26 @@ function addCustomItem(col){
   try{ss('rv_custom',custom);ss('rv_c',custom);}catch(e){}
   if(col==='def'||col==='sol')_showAll[col]=false;
   togItem(col,val);
+  if(typeof _whPickShow==='function')_whPickShow(val);
+}
+window._whPickPl=null;
+function _whPickShow(pl){
+  window._whPickPl=pl;
+  var bar=document.getElementById('whPickBar');
+  var txt=document.getElementById('whPickTxt');
+  if(txt)txt.textContent='"'+pl+'"';
+  if(bar)bar.style.display='flex';
+}
+function _whPickSet(v){
+  if(window._whPickPl&&typeof _whSave==='function'){
+    var ov=_whOverrides();
+    ov[window._whPickPl]=v;
+    _whSave(ov);
+    if(typeof renderList==='function'){renderList('el');renderList('def');renderList('kon');renderList('sol');}
+  }
+  var bar=document.getElementById('whPickBar');
+  if(bar)bar.style.display='none';
+  window._whPickPl=null;
 }
 
 function filterList(col,q){
