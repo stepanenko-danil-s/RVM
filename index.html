@@ -387,7 +387,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.95</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v12.96</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -510,6 +510,12 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
             <input id="srchDef" placeholder="Szukaj usterki..." oninput="filterList('def',this.value)" autocomplete="off" autocorrect="off" spellcheck="false" style="width:100%;padding-right:30px;box-sizing:border-box">
             <span onclick="_srchClear(document.getElementById('srchDef'),'def')" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);width:20px;height:20px;border-radius:50%;background:#E5E5EA;color:#8E8E93;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1">&times;</span>
           </div><button class="srch-add" onclick="addCustomItem('def')">+ Dodaj</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:2px 12px 8px;font-size:10.5px;color:#8E8E93">
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:50%;background:#34C759;display:inline-block"></span>Gwarancja</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:50%;background:#FF3B30;display:inline-block"></span>Nie gwar.</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:50%;background:#C7C7CC;display:inline-block"></span>Zależy</span>
+          <span style="margin-left:auto;font-style:italic">tap na kółko = zmień</span>
         </div>
         <div class="ilist" id="lstDef"></div>
       </div>
@@ -2781,7 +2787,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v12.95",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v12.96",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -7462,6 +7468,28 @@ function filterList(col,q){
   renderList(col);
 }
 function clearFilters(){_filters={el:'',def:'',sol:'',kon:''};}
+// ===== Podpowiedzi gwarancyjne dla Usterka (edytowalne przez usera) =====
+var _WARRANTY_HINTS={'Element zablokowany — nie obraca się / nie przesuwa się':'Q','Pas napędowy zerwany / rozerwany':'N','Pas napędowy śliznie się / zsunął się':'N','Ciało obce w mechanizmie — zatkąć / zacięcie':'N','Mechanizm uszkodzony — nie działa mechanicznie':'Q','Element poluzowany / odkręcony':'N','Łożysko uszkodzone — nadmierny hałas / wibracje':'N','Pęknięcie mechaniczne / uszkodzenie fizyczne':'N','Element zsuwa się z miejsca podczas pracy':'N','Nadmierny hałas podczas pracy urządzenia':'Q','Brak zasilania — urządzenie nie uruchamia się':'Q','Bezpiecznik przepalony':'Q','Przegrzanie — temperatura elementu za wysoka':'Q','LED / oświetlenie nie świeci':'G','Zasilacz nie dostarcza właściwego napięcia':'G','Kabel uszkodzony — przerwa w obwodzie':'Q','Oprogramowanie zawiesza się — częste restarty':'G','Błąd oprogramowania — kod błędu na ekranie':'G','Komputer RVM nie uruchamia się':'G','Aplikacja nie reaguje — ekran dotykowy bez odpowiedzi':'G','Błąd kalibracji — nieprawidłowe odczyty':'Q','Brak połączenia sieciowego (LAN / WiFi)':'N','Problem z komunikacją ProLine — błąd synchronizacji':'G','Błąd DNS — brak dostępu do serwera':'N','Sygnał sieci słaby / niestabilny':'N','Czujnik zabrudzony / zanieczyszczony pyłem':'N','Kamera zaparowana / zasępiona':'N','Obiektyw kamery zabrudzony — obraz niewyraźny':'N','Skaner EAN nie czyta — brud na szybie skanera':'N','Szczelina włotowa zatkana przez odpady':'N','Fotokomurka zanieczyszczona / nie reaguje':'N','Zalanie / wilgoć w urządzeniu':'N','Pojemnik PET pełny — wymaga opróżnienia':'N','Pojemnik aluminium pełny — wymaga opróżnienia':'N','Czujnik przepełnienia błędnie wskazuje pełny':'G','Brak papieru w drukarce paragonów':'N','Drukarka nie drukuje — zacięcie papieru':'N','Jakość wydruku zła — głowica brudna / zużyta':'N','Defekt producenta — objęty gwarancją':'G','Uszkodzony przez personel sklepu':'N','Wandalizm — celowe uszkodzenie':'N','Usterka sporadyczna — trudna do powtórzenia':'Q','Wymaga dokładnej diagnozy serwisowej':'Q','Rolki wlotowe zużyte — tara obraca się nierowno':'N','Silnik krokowy traci kroki — posąlizg pozycji':'Q','Zaslonka bezpieczenstwa zablokowana — nie otwiera się':'Q','Serwozaslonka sortujaca — brak ruchu / zablokowana':'G','Walce kompaktora — zakleszczenie / zablokowanie':'N','Igly perforujace zużyte / złamane':'N','Skrobaki zużyte — plastik nawinął się na walce':'N','Dysza pneumatyczna — zatkana / brak ciśnienia':'N','Sterownik VFD zgłasza błąd przeciążenia / OC':'Q','Sterownik silnika krokowego przegrzany':'G','Plyta IO — brak sygnału z czujnika':'G','Kamera AI — błąd rozpoznawania — false reject':'G','Tensometry wskazują błędną masę — dryft zera':'G','Okienko skanera NIR / barcode zaparowane / brudne':'N','Bariera IR — błędne wyzwalanie (false trigger)':'Q','Modem GSM / WiFi — brak połączenia z chmurą':'Q','Nawinięcie folii / taśmy na wał napędowy':'N','Sprężyna powrotna — złamana / rozciągnięta':'N','Śruba regulacyjna — poluzowana / wyrwana':'N','Uszczelka / O-ring — zużyta / pęknięta':'N','Szczelina wlotowa zatkana przez odpady':'N','Igły perforujące zużyte / złamane':'N','Rolki wlotowe zużyte — tara obraca się nierówno':'N','Serwozaslonka sortująca — brak ruchu / zablokowana':'G','Silnik krokowy traci kroki — poślizg pozycji':'Q','Konektor obluzowany — przerywany kontakt':'Q','Płyta IO — brak sygnału z czujnika':'G','Napięcie zasilania poza zakresem — wahania sieci':'N','Uszkodzenie przez przepięcie / wyładowanie ESD':'N','Silnik nie startuje — brak fazy zasilania':'Q','Przekaźnik / styk — nie załącza obwodu':'G','Lustro / reflektor przesunięty — oś optyczna zakłócona':'Q','Czujnik indukcyjny — nie wykrywa metalu':'G','NIR — błędna identyfikacja materiału (PET / nie-PET)':'G','Czujnik pozycji zera — nie trafia w punkt startowy':'G','Kondensacja wewnątrz obudowy — wilgoć na podzespołach':'N','Błąd bazy danych produktów — kod nie znaleziony':'N','Log błędów przepełniony — brak miejsca na dysku':'Q','Firmware sterownika nieaktualny — błędy komunikacji':'Q','Timeout komunikacji — brak odpowiedzi serwera':'Q'};
+function _whOverrides(){try{return JSON.parse(localStorage.getItem('rv_wh_override')||'{}');}catch(e){return {};}}
+function _whSave(o){try{localStorage.setItem('rv_wh_override',JSON.stringify(o));}catch(e){}}
+function getWarrantyHint(pl){var ov=_whOverrides();return ov[pl]||_WARRANTY_HINTS[pl]||'Q';}
+function cycleWarrantyHint(pl,ev){
+  if(ev){ev.stopPropagation();}
+  var order=['G','N','Q'];
+  var cur=getWarrantyHint(pl);
+  var next=order[(order.indexOf(cur)+1)%order.length];
+  var ov=_whOverrides();
+  ov[pl]=next;
+  _whSave(ov);
+  if(typeof renderList==='function')renderList('def');
+}
+function _whBadge(pl){
+  var h=getWarrantyHint(pl);
+  var color=h==='G'?'#34C759':h==='N'?'#FF3B30':'#C7C7CC';
+  var title=h==='G'?'Zwykle: Gwarancja (tap = zmień)':h==='N'?'Zwykle: Nie gwarancja (tap = zmień)':'Zależy (tap = zmień)';
+  return '<span onclick="cycleWarrantyHint(\''+pl.replace(/'/g,"\\'")+'\',event)" title="'+title+'" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+color+';margin-right:6px;flex:0 0 auto;cursor:pointer;vertical-align:middle"></span>';
+}
+
 function _srchClear(inp,col){if(!inp)return;inp.value='';filterList(col,'');inp.focus();}
 
 /* ===== Suggestion chain: element -> defect -> solution (v6.3) ===== */
@@ -7542,7 +7570,7 @@ function renderList(col){
     var on=onState(it);
     var pl2=(''+it.pl).replace(/'/g,"\\'").replace(/"/g,'&quot;');
     var s='<div class="li'+(on?' on':'')+'" onclick="togItem(\''+col+'\',\''+(''+it.pl).replace(/'/g,"\\'")+'\''+')" style="display:flex;align-items:center">';
-    s+='<div style="flex:1;min-width:0"><div class="li-pl">'+(rel?'<span style="color:#34C759">&#9656; </span>':'')+esc(it.pl)+'</div>';
+    s+='<div style="flex:1;min-width:0"><div class="li-pl" style="display:flex;align-items:center">'+(col==='def'&&typeof _whBadge==='function'?_whBadge(it.pl):'')+(rel?'<span style="color:#34C759">&#9656; </span>':'')+esc(it.pl)+'</div>';
     if(it.ru)s+='<div class="li-ru">'+esc(it.ru)+'</div>';
     s+='</div>';
     s+='<button onclick="event.stopPropagation();startInlineEdit(this)" data-col="'+col+'" data-pl="'+pl2+'" class="li-edit-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg></button>';
