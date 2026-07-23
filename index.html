@@ -374,6 +374,26 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
     <button onclick="_whPickSet('Q')" style="flex:1;background:#48484A;color:#fff;border:none;border-radius:9px;padding:9px 4px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit">⚪ Zależy</button>
   </div>
 </div>
+<div class="ov" id="shParagon" style="display:none" onclick="if(event.target===this)closeParSheet()">
+  <div class="sh" style="max-width:420px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="font-size:17px;font-weight:800;color:#1C1C1E">🧾 Paragon / Faktura</div>
+      <button onclick="closeParSheet()" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button>
+    </div>
+    <input type="file" id="parCamInp" accept="image/*" capture="environment" onchange="parPhotoHandle(this)" style="display:none">
+    <div id="parPhotoWrap" onclick="parPhoto()" style="width:100%;height:150px;background:#F8F8F8;border:1.5px dashed #C7C7CC;border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-bottom:12px;overflow:hidden">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;color:#A19F9D">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#A19F9D" stroke-width="1.4" stroke-linecap="round"><rect x="2" y="5" width="24" height="18" rx="3"/><circle cx="14" cy="14" r="5"/><path d="M8.5 5l2-3h7l2 3"/></svg>
+        <span style="font-size:13px;font-weight:600">Zrob zdjecie paragonu</span>
+      </div>
+    </div>
+    <input id="par_co" placeholder="Co kupiono" style="width:100%;padding:11px;border:1px solid #E5E5EA;border-radius:10px;font-size:14px;font-family:inherit;outline:none;margin-bottom:8px;box-sizing:border-box">
+    <input id="par_kwota" placeholder="Kwota (np. 123.45)" inputmode="decimal" style="width:100%;padding:11px;border:1px solid #E5E5EA;border-radius:10px;font-size:14px;font-family:inherit;outline:none;margin-bottom:8px;box-sizing:border-box">
+    <input id="par_nr" placeholder="Nr faktury / paragonu" style="width:100%;padding:11px;border:1px solid #E5E5EA;border-radius:10px;font-size:14px;font-family:inherit;outline:none;margin-bottom:8px;box-sizing:border-box">
+    <input id="par_data" type="date" style="width:100%;padding:11px;border:1px solid #E5E5EA;border-radius:10px;font-size:14px;font-family:inherit;outline:none;margin-bottom:14px;box-sizing:border-box">
+    <button onclick="parSend()" style="width:100%;padding:13px;background:#0A84FF;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Wyślij na e-mail</button>
+  </div>
+</div>
 <div class="ov" id="shPhrases" style="display:none" onclick="if(event.target===this)closeOv('shPhrases')">
   <div class="sh" style="max-width:400px;max-height:80vh;padding:0;display:flex;flex-direction:column;overflow:hidden">
     <div style="padding:18px 18px 0;flex:0 0 auto">
@@ -395,7 +415,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.07</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.08</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -617,6 +637,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
         <button onclick="openPhrases()" class="rep-sm-btn">Gotowe frazy</button>
         <button onclick="visitSave()" class="rep-sm-btn">Zapisz wizytę</button>
         <button onclick="visitsOpen()" class="rep-sm-btn">Wizyty (<span id="visitsCount">0</span>)</button>
+        <button onclick="toggleParSheet()" class="rep-sm-btn">🧾 Paragon</button>
       </div>
       <div id="repEditWrap" style="display:none;padding:0 14px 6px">
           <textarea id="repEdit" placeholder="Tekst raportu do edycji..." style="width:100%;min-height:170px;background:#F9F9F9;border:1px solid #E0E0E0;border-radius:10px;padding:11px;font-size:13px;font-family:inherit;line-height:1.5;outline:none;resize:vertical;box-sizing:border-box"></textarea>
@@ -2988,7 +3009,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v13.07",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v13.08",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
