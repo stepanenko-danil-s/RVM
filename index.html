@@ -395,7 +395,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.04</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.05</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -2474,20 +2474,37 @@ function rvmkbAdd(_retry){
     var x=((document.getElementById('rvmText')||{}).value||'').trim();
     if(!t&&!x&&!window._rvmPendingImg){if(typeof showToast==='function')showToast('Pusto / Пусто');else alert('Pusto / Пусто');return;}
     var a=rvmkbLoad();
-    a.unshift({id:Date.now(),title:t,text:x,img:window._rvmPendingImg||'',ts:Date.now()});
+    var noteId=Date.now();
+    var hasImg=!!window._rvmPendingImg;
+    a.unshift({id:noteId,title:t,text:x,hasImg:hasImg,ts:noteId});
     if(!rvmkbSave(a))return;
-    window._rvmPendingImg='';
-    ['rvmTitle','rvmText'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
-    var pi=document.getElementById('rvmImg');if(pi)pi.value='';
-    var pp=document.getElementById('rvmImgPrev');if(pp)pp.innerHTML='';
-    rvmkbRender();
-    if(typeof showToast==='function')showToast('Zapisano / Сохранено');else alert('Zapisano / Сохранено');
+    function finish(){
+      window._rvmPendingImg='';
+      ['rvmTitle','rvmText'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+      var pi=document.getElementById('rvmImg');if(pi)pi.value='';
+      var pp=document.getElementById('rvmImgPrev');if(pp)pp.innerHTML='';
+      rvmkbRender();
+      if(typeof showToast==='function')showToast('Zapisano / Сохранено');else alert('Zapisano / Сохранено');
+    }
+    if(hasImg&&typeof idbSet==='function'){
+      idbSet('rvmimg_'+noteId,window._rvmPendingImg).then(finish).catch(function(){
+        if(typeof showToast==='function')showToast('Blad zapisu zdjecia, notatka zapisana bez zdjecia');
+        finish();
+      });
+    }else{
+      finish();
+    }
   }catch(e){
     if(typeof showToast==='function')showToast('Blad: '+(e&&e.message||e));
     else alert('Blad: '+(e&&e.message||e));
   }
 }
-function rvmkbDel(id){if(!confirm('Usunąć notatkę? / Удалить?'))return;rvmkbSave(rvmkbLoad().filter(function(n){return n.id!==id;}));rvmkbRender();}
+function rvmkbDel(id){
+  if(!confirm('Usunąć notatkę? / Удалить?'))return;
+  rvmkbSave(rvmkbLoad().filter(function(n){return n.id!==id;}));
+  if(typeof idbDel==='function')idbDel('rvmimg_'+id).catch(function(){});
+  rvmkbRender();
+}
 
 // ===== Notatki tekstowe: Elektryka / Mechanika (bez zdjec) =====
 var _NOTE_CFG={
@@ -2526,7 +2543,44 @@ function noteRender(kind){
   }).join('');
 }
 try{noteRender('el');noteRender('mech');}catch(e){}
-function rvmkbRender(){var box=document.getElementById('rvmList');if(!box)return;var q=((document.getElementById('rvmSearch')||{}).value||'').toLowerCase().trim();var a=rvmkbLoad();if(q)a=a.filter(function(n){return ((n.title||'')+' '+(n.text||'')).toLowerCase().indexOf(q)>=0;});if(!a.length){box.innerHTML='<div style="font-size:12px;color:#A19F9D;padding:8px 0">Brak notatek / Нет заметок</div>';return;}box.innerHTML=a.map(function(n){return '<div style="background:#F8F8F8;border-radius:10px;padding:10px;margin-bottom:8px">'+(n.title?'<div style="font-weight:700;font-size:13.5px;margin-bottom:3px">'+esc(n.title)+'</div>':'')+(n.text?'<div style="font-size:12.5px;color:#323130;white-space:pre-wrap;line-height:1.45">'+esc(n.text)+'</div>':'')+(n.img?'<img src="'+n.img+'" style="max-width:100%;border-radius:8px;margin-top:6px">':'')+'<button onclick="rvmkbDel('+n.id+')" style="margin-top:7px;background:none;border:none;color:#C0392B;font-size:12px;cursor:pointer;padding:0;font-family:inherit">&#128465; Удалить</button></div>';}).join('');}
+function rvmkbRender(){
+  var box=document.getElementById('rvmList');if(!box)return;
+  var q=((document.getElementById('rvmSearch')||{}).value||'').toLowerCase().trim();
+  var all=rvmkbLoad();
+  // Migracja starych notatek: base64 w localStorage -> IndexedDB (jednorazowo)
+  var migrated=false;
+  all.forEach(function(n){
+    if(n.img&&typeof idbSet==='function'){
+      idbSet('rvmimg_'+n.id,n.img).catch(function(){});
+      delete n.img;
+      n.hasImg=true;
+      migrated=true;
+    }
+  });
+  if(migrated)rvmkbSave(all);
+  var a=all;
+  if(q)a=a.filter(function(n){return ((n.title||'')+' '+(n.text||'')).toLowerCase().indexOf(q)>=0;});
+  if(!a.length){box.innerHTML='<div style="font-size:12px;color:#A19F9D;padding:8px 0">Brak notatek / Нет заметок</div>';return;}
+  box.innerHTML=a.map(function(n){
+    return '<div style="background:#F8F8F8;border-radius:10px;padding:10px;margin-bottom:8px">'
+      +(n.title?'<div style="font-weight:700;font-size:13.5px;margin-bottom:3px">'+esc(n.title)+'</div>':'')
+      +(n.text?'<div style="font-size:12.5px;color:#323130;white-space:pre-wrap;line-height:1.45">'+esc(n.text)+'</div>':'')
+      +(n.hasImg?'<div id="rvmimgph_'+n.id+'" style="margin-top:6px;min-height:20px"><span style="font-size:11px;color:#A19F9D">Wczytuję zdjęcie…</span></div>':'')
+      +'<button onclick="rvmkbDel('+n.id+')" style="margin-top:7px;background:none;border:none;color:#C0392B;font-size:12px;cursor:pointer;padding:0;font-family:inherit">&#128465; Удалить</button></div>';
+  }).join('');
+  if(typeof idbGet==='function'){
+    a.forEach(function(n){
+      if(!n.hasImg)return;
+      idbGet('rvmimg_'+n.id).then(function(data){
+        var ph=document.getElementById('rvmimgph_'+n.id);
+        if(ph)ph.innerHTML=data?'<img src="'+data+'" style="max-width:100%;border-radius:8px">':'<span style="font-size:11px;color:#C0392B">Zdjęcie niedostępne</span>';
+      }).catch(function(){
+        var ph=document.getElementById('rvmimgph_'+n.id);
+        if(ph)ph.innerHTML='<span style="font-size:11px;color:#C0392B">Zdjęcie niedostępne</span>';
+      });
+    });
+  }
+}
 function chatLocal(){
   var ta=document.getElementById('chatInput');var box=document.getElementById('chatLocalRes');
   var t=((ta||{}).value||'').trim();
@@ -2878,7 +2932,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v13.04",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v13.05",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -5723,6 +5777,7 @@ var _idb=null;
 function _idbOpen(){return new Promise(function(res,rej){if(typeof indexedDB==='undefined'){rej(0);return;}if(_idb){res(_idb);return;}var rq=indexedDB.open('rvm_photos',1);rq.onupgradeneeded=function(){var db=rq.result;if(!db.objectStoreNames.contains('kv'))db.createObjectStore('kv');};rq.onsuccess=function(){_idb=rq.result;res(_idb);};rq.onerror=function(){rej(rq.error);};});}
 function idbSet(k,v){return _idbOpen().then(function(db){return new Promise(function(res,rej){var tx=db.transaction('kv','readwrite');tx.objectStore('kv').put(v,k);tx.oncomplete=function(){res(true);};tx.onerror=function(){rej(tx.error);};});});}
 function idbGet(k){return _idbOpen().then(function(db){return new Promise(function(res,rej){var tx=db.transaction('kv','readonly');var rq=tx.objectStore('kv').get(k);rq.onsuccess=function(){res(rq.result);};rq.onerror=function(){rej(rq.error);};});});}
+function idbDel(k){return _idbOpen().then(function(db){return new Promise(function(res,rej){var tx=db.transaction('kv','readwrite');tx.objectStore('kv').delete(k);tx.oncomplete=function(){res(true);};tx.onerror=function(){rej(tx.error);};});});}
 function _magPhotoMap(){var m={};try{for(var k in _magData){if(_magData[k]&&_magData[k].photo)m[k]=_magData[k].photo;}}catch(e){}return m;}
 function _saveTaskPhotos(){try{if(typeof idbSet==='function')idbSet('task_photos',_photos).catch(function(){});}catch(e){}}
 function _photoBoot(){
