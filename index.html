@@ -388,10 +388,11 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
       </div>
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+      <button onclick="parQuick('Usługa serwisowa')" class="rep-sm-btn" style="font-size:12px">Usługa</button>
+      <button onclick="parQuick('Hotel / Nocleg')" class="rep-sm-btn" style="font-size:12px">Hotel</button>
+      <button onclick="parQuick('Części zamienne')" class="rep-sm-btn" style="font-size:12px">Części</button>
       <button onclick="parQuick('Narzędzia')" class="rep-sm-btn" style="font-size:12px">Narzędzia</button>
       <button onclick="parQuick('Paliwo')" class="rep-sm-btn" style="font-size:12px">Paliwo</button>
-      <button onclick="parQuick('Części zamienne')" class="rep-sm-btn" style="font-size:12px">Części</button>
-      <button onclick="parQuick('Delegacja / nocleg')" class="rep-sm-btn" style="font-size:12px">Delegacja</button>
     </div>
     <div onclick="parToggleDetails()" style="display:flex;align-items:center;gap:6px;padding:8px 2px;cursor:pointer;color:#0A84FF;font-size:13px;font-weight:600"><span id="parDetailsArr" style="display:inline-block;transition:transform .15s;font-size:11px">&#9656;</span> Dodaj szczegóły (kwota, nr, data)</div>
     <div id="parDetails" style="display:none">
@@ -426,7 +427,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.13</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.14</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -3020,7 +3021,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v13.13",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v13.14",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -5801,7 +5802,8 @@ var _PAR_TEMPLATES={
   'Narzędzia':{subj:'Faktura - narzędzia',greet:'Dzień dobry,\n\nW załączniku przesyłam fakturę za zakupione narzędzia.'},
   'Paliwo':{subj:'Faktura - paliwo',greet:'Dzień dobry,\n\nW załączniku przesyłam fakturę za paliwo.'},
   'Części zamienne':{subj:'Faktura - części zamienne',greet:'Dzień dobry,\n\nW załączniku przesyłam fakturę za części zamienne.'},
-  'Delegacja / nocleg':{subj:'Faktura - delegacja / nocleg',greet:'Dzień dobry,\n\nW załączniku przesyłam fakturę za nocleg / delegację.'}
+  'Hotel / Nocleg':{subj:'Faktura - nocleg',greet:'Dzień dobry,\n\nW załączniku przesyłam fakturę za nocleg w hotelu.'},
+  'Usługa serwisowa':{subj:'Faktura - usługa serwisowa',greet:'Dzień dobry,\n\nW załączniku przesyłam fakturę za usługę serwisową.'}
 };
 var _parCategory=null;
 function parToggleDetails(){
