@@ -421,7 +421,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.10</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.11</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -3015,7 +3015,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v13.10",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v13.11",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -5792,7 +5792,17 @@ function openPAFlow() {
 function toggleParSheet(){var sh=document.getElementById('shParagon');if(!sh)return;sh.style.display='flex';setTimeout(function(){sh.classList.add('open');},10);var d=document.getElementById('par_data');if(d&&!d.value)d.value=new Date().toISOString().slice(0,10);}
 function closeParSheet(){var sh=document.getElementById('shParagon');if(!sh)return;sh.classList.remove('open');setTimeout(function(){sh.style.display='none';},300);}
 function parPhoto(){var i=document.getElementById('parCamInp');if(i)i.click();}
-function parQuick(txt){var e=document.getElementById('par_co');if(e){e.value=txt;e.focus();}}
+var _PAR_TEMPLATES={
+  'Narzędzia':{subj:'Faktura - narzędzia',greet:'Dzień dobry,\n\nW załączniku przesyłam fakturę za zakupione narzędzia.'},
+  'Paliwo':{subj:'Faktura - paliwo',greet:'Dzień dobry,\n\nW załączniku przesyłam fakturę za paliwo.'},
+  'Części zamienne':{subj:'Faktura - części zamienne',greet:'Dzień dobry,\n\nW załączniku przesyłam fakturę za części zamienne.'},
+  'Delegacja / nocleg':{subj:'Faktura - delegacja / nocleg',greet:'Dzień dobry,\n\nW załączniku przesyłam fakturę za nocleg / delegację.'}
+};
+var _parCategory=null;
+function parQuick(txt){
+  var e=document.getElementById('par_co');if(e){e.value=txt;e.focus();}
+  _parCategory=txt;
+}
 function parPhotoHandle(input){
   var file=input.files[0];if(!file)return;
   var r=new FileReader();
@@ -5863,6 +5873,7 @@ function _parDataURLtoFile(dataurl,filename){
 function _parResetForm(){
   ['par_co','par_kwota','par_nr','par_data'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
   _parPhoto=null;
+  _parCategory=null;
   var w=document.getElementById('parPhotoWrap');
   if(w)w.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:6px;color:#A19F9D"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#A19F9D" stroke-width="1.4" stroke-linecap="round"><rect x="2" y="5" width="24" height="18" rx="3"/><circle cx="14" cy="14" r="5"/><path d="M8.5 5l2-3h7l2 3"/></svg><span style="font-size:13px;font-weight:600">Zrob zdjecie paragonu</span></div>';
 }
@@ -5872,13 +5883,14 @@ function parSend(){
   var nr=(document.getElementById('par_nr')||{}).value||'';
   var dt=(document.getElementById('par_data')||{}).value||'';
   if(!co&&!kw&&!nr){showToast('Wypełnij pola');return;}
-  var subj='Faktura/Paragon '+(nr||dt||new Date().toLocaleDateString('pl-PL'));
-  var lines=['Faktura/Paragon',''];
+  var tmpl=(_parCategory&&_PAR_TEMPLATES[_parCategory])||{subj:'Faktura / Paragon',greet:'Dzień dobry,\n\nW załączniku przesyłam fakturę / paragon.'};
+  var subj=tmpl.subj;
+  var lines=[tmpl.greet,''];
   if(co)lines.push('Co kupiono: '+co);
   if(kw)lines.push('Kwota: '+kw+' zl');
   if(nr)lines.push('Nr faktury: '+nr);
   if(dt)lines.push('Data: '+new Date(dt).toLocaleDateString('pl-PL'));
-  lines.push('','Wyslano z RVM Raport');
+  lines.push('','Pozdrawiam');
   var body=lines.join(String.fromCharCode(10));
   if(_parPhoto&&navigator.share&&navigator.canShare){
     try{
