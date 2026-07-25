@@ -394,15 +394,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
       <button onclick="parQuick('Narzędzia')" class="rep-sm-btn" style="font-size:12px">Narzędzia</button>
       <button onclick="parQuick('Paliwo')" class="rep-sm-btn" style="font-size:12px">Paliwo</button>
     </div>
-    <div onclick="parToggleDetails()" style="display:flex;align-items:center;gap:6px;padding:8px 2px;cursor:pointer;color:#0A84FF;font-size:13px;font-weight:600"><span id="parDetailsArr" style="display:inline-block;transition:transform .15s;font-size:11px">&#9656;</span> Dodaj szczegóły (kwota, nr, data)</div>
-    <div id="parDetails" style="display:none">
-      <input id="par_co" oninput="parUpdatePreview()" placeholder="Co kupiono" style="width:100%;padding:11px;border:1px solid #E5E5EA;border-radius:10px;font-size:14px;font-family:inherit;outline:none;margin-bottom:8px;box-sizing:border-box">
-      <input id="par_kwota" oninput="parUpdatePreview()" placeholder="Kwota (np. 123.45)" inputmode="decimal" style="width:100%;padding:11px;border:1px solid #E5E5EA;border-radius:10px;font-size:14px;font-family:inherit;outline:none;margin-bottom:8px;box-sizing:border-box">
-      <input id="par_nr" oninput="parUpdatePreview()" placeholder="Nr faktury / paragonu" style="width:100%;padding:11px;border:1px solid #E5E5EA;border-radius:10px;font-size:14px;font-family:inherit;outline:none;margin-bottom:8px;box-sizing:border-box">
-      <div style="font-size:11px;color:#8E8E93;margin-bottom:3px">Data zakupu</div>
-      <input id="par_data" oninput="parUpdatePreview()" type="date" style="width:100%;padding:11px;border:1px solid #E5E5EA;border-radius:10px;font-size:14px;font-family:inherit;outline:none;margin-bottom:8px;box-sizing:border-box">
-    </div>
-    <div style="font-size:11px;font-weight:700;color:#8E8E93;letter-spacing:.04em;text-transform:uppercase;margin:10px 0 6px">Podgląd wiadomości</div>
+    <div style="font-size:11px;font-weight:700;color:#8E8E93;letter-spacing:.04em;text-transform:uppercase;margin:6px 0 6px">Podgląd wiadomości</div>
     <div id="parPreview" style="background:#fff;border:1px solid #E8E8ED;border-radius:12px;padding:14px 15px;margin-bottom:14px;font-size:13px;color:#2C2C2E;white-space:pre-wrap;line-height:1.45;font-family:-apple-system,'SF Pro Text',sans-serif;letter-spacing:.1px"></div>
     <button onclick="parSend()" style="width:100%;padding:13px;background:#0A84FF;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Wyślij na e-mail</button>
   </div>
@@ -428,7 +420,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.16</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.17</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -3022,7 +3014,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v13.16",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v13.17",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -5800,39 +5792,21 @@ function toggleParSheet(){var sh=document.getElementById('shParagon');if(!sh)ret
 function closeParSheet(){var sh=document.getElementById('shParagon');if(!sh)return;sh.classList.remove('open');setTimeout(function(){sh.style.display='none';},300);}
 function parPhoto(){var i=document.getElementById('parCamInp');if(i)i.click();}
 var _PAR_TEMPLATES={
-  'Narzędzia':{subj:'Faktura - narzędzia',greet:'Dzień dobry, w załączniku przesyłam fakturę za zakupione narzędzia.'},
-  'Paliwo':{subj:'Faktura - paliwo',greet:'Dzień dobry, w załączniku przesyłam fakturę za paliwo.'},
-  'Części zamienne':{subj:'Faktura - części zamienne',greet:'Dzień dobry, w załączniku przesyłam fakturę za części zamienne.'},
-  'Hotel / Nocleg':{subj:'Faktura - nocleg',greet:'Dzień dobry, w załączniku przesyłam fakturę za nocleg w hotelu.'},
-  'Usługa serwisowa':{subj:'Faktura - usługa serwisowa',greet:'Dzień dobry, w załączniku przesyłam fakturę za usługę serwisową.'}
+  'Narzędzia':{subj:'Faktura - narzędzia',greet:'Faktura - narzędzia. Dzień dobry, w załączniku przesyłam fakturę za zakupione narzędzia.'},
+  'Paliwo':{subj:'Faktura - paliwo',greet:'Faktura - paliwo. Dzień dobry, w załączniku przesyłam fakturę za paliwo.'},
+  'Części zamienne':{subj:'Faktura - części zamienne',greet:'Faktura - części zamienne. Dzień dobry, w załączniku przesyłam fakturę za części zamienne.'},
+  'Hotel / Nocleg':{subj:'Faktura - nocleg',greet:'Faktura - nocleg. Dzień dobry, w załączniku przesyłam fakturę za nocleg w hotelu.'},
+  'Usługa serwisowa':{subj:'Faktura - usługa serwisowa',greet:'Faktura - usługa serwisowa. Dzień dobry, w załączniku przesyłam fakturę za usługę serwisową.'}
 };
 var _parCategory=null;
-function parToggleDetails(){
-  var box=document.getElementById('parDetails');
-  var arr=document.getElementById('parDetailsArr');
-  if(!box)return;
-  var open=box.style.display!=='none';
-  box.style.display=open?'none':'block';
-  if(arr)arr.style.transform=open?'rotate(0deg)':'rotate(90deg)';
-}
 function parQuick(txt){
   var e=document.getElementById('par_co');if(e){e.value=txt;e.focus();}
   _parCategory=txt;
   parUpdatePreview();
 }
 function _parBuildEmail(){
-  var co=(document.getElementById('par_co')||{}).value||'';
-  var kw=(document.getElementById('par_kwota')||{}).value||'';
-  var nr=(document.getElementById('par_nr')||{}).value||'';
-  var dt=(document.getElementById('par_data')||{}).value||'';
-  var tmpl=(_parCategory&&_PAR_TEMPLATES[_parCategory])||{subj:'Faktura / Paragon',greet:'Dzień dobry, w załączniku przesyłam fakturę / paragon.'};
-  var subj=tmpl.subj;
-  var lines=[tmpl.greet];
-  if(co)lines.push('Co kupiono: '+co);
-  if(kw)lines.push('Kwota: '+kw+' zl');
-  if(nr)lines.push('Nr faktury: '+nr);
-  if(dt)lines.push('Data: '+new Date(dt).toLocaleDateString('pl-PL'));
-  return {subj:subj,body:lines.join(String.fromCharCode(10)),filled:!!(co||kw||nr)};
+  var tmpl=(_parCategory&&_PAR_TEMPLATES[_parCategory])||{subj:'Faktura / Paragon',greet:'Faktura / Paragon. Dzień dobry, w załączniku przesyłam fakturę / paragon.'};
+  return {subj:tmpl.subj,body:tmpl.greet,filled:!!(_parCategory||_parPhoto)};
 }
 function parUpdatePreview(){
   var box=document.getElementById('parPreview');if(!box)return;
@@ -5846,7 +5820,7 @@ function parPhotoHandle(input){
   r.onload=function(e){
     _parPhoto=e.target.result;
     var w=document.getElementById('parPhotoWrap');
-    if(w)w.innerHTML='<img src="'+_parPhoto+'" style="width:100%;height:100%;object-fit:cover;border-radius:10px">';
+    if(w)w.innerHTML='<img src="'+_parPhoto+'" style="width:100%;height:100%;object-fit:contain;background:#000;border-radius:10px">';
     showToast('Zdjęcie gotowe');
     parUpdatePreview();
   };
@@ -5909,13 +5883,10 @@ function _parDataURLtoFile(dataurl,filename){
   return new File([u8],filename,{type:mime});
 }
 function _parResetForm(){
-  ['par_co','par_kwota','par_nr','par_data'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
   _parPhoto=null;
   _parCategory=null;
   var w=document.getElementById('parPhotoWrap');
   if(w)w.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:6px;color:#A19F9D"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#A19F9D" stroke-width="1.4" stroke-linecap="round"><rect x="2" y="5" width="24" height="18" rx="3"/><circle cx="14" cy="14" r="5"/><path d="M8.5 5l2-3h7l2 3"/></svg><span style="font-size:13px;font-weight:600">Zrob zdjecie paragonu</span></div>';
-  var db=document.getElementById('parDetails');if(db)db.style.display='none';
-  var da=document.getElementById('parDetailsArr');if(da)da.style.transform='rotate(0deg)';
   parUpdatePreview();
 }
 function parSend(){
