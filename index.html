@@ -403,7 +403,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
       <input id="par_data" oninput="parUpdatePreview()" type="date" style="width:100%;padding:11px;border:1px solid #E5E5EA;border-radius:10px;font-size:14px;font-family:inherit;outline:none;margin-bottom:8px;box-sizing:border-box">
     </div>
     <div style="font-size:11px;font-weight:700;color:#8E8E93;letter-spacing:.04em;text-transform:uppercase;margin:10px 0 6px">Podgląd wiadomości</div>
-    <div id="parPreview" style="background:#F8F8F8;border-radius:12px;padding:12px;margin-bottom:14px;font-size:12.5px;color:#3A3A3C;white-space:pre-wrap;line-height:1.5"></div>
+    <div id="parPreview" style="background:#fff;border:1px solid #E8E8ED;border-radius:12px;padding:14px 15px;margin-bottom:14px;font-size:13px;color:#2C2C2E;white-space:pre-wrap;line-height:1.45;font-family:-apple-system,'SF Pro Text',sans-serif;letter-spacing:.1px"></div>
     <button onclick="parSend()" style="width:100%;padding:13px;background:#0A84FF;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Wyślij na e-mail</button>
   </div>
 </div>
@@ -428,7 +428,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.15</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.16</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -3022,7 +3022,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v13.15",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v13.16",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -5800,11 +5800,11 @@ function toggleParSheet(){var sh=document.getElementById('shParagon');if(!sh)ret
 function closeParSheet(){var sh=document.getElementById('shParagon');if(!sh)return;sh.classList.remove('open');setTimeout(function(){sh.style.display='none';},300);}
 function parPhoto(){var i=document.getElementById('parCamInp');if(i)i.click();}
 var _PAR_TEMPLATES={
-  'Narzędzia':{subj:'Faktura - narzędzia',greet:'Dzień dobry,\n\nW załączniku przesyłam fakturę za zakupione narzędzia.'},
-  'Paliwo':{subj:'Faktura - paliwo',greet:'Dzień dobry,\n\nW załączniku przesyłam fakturę za paliwo.'},
-  'Części zamienne':{subj:'Faktura - części zamienne',greet:'Dzień dobry,\n\nW załączniku przesyłam fakturę za części zamienne.'},
-  'Hotel / Nocleg':{subj:'Faktura - nocleg',greet:'Dzień dobry,\n\nW załączniku przesyłam fakturę za nocleg w hotelu.'},
-  'Usługa serwisowa':{subj:'Faktura - usługa serwisowa',greet:'Dzień dobry,\n\nW załączniku przesyłam fakturę za usługę serwisową.'}
+  'Narzędzia':{subj:'Faktura - narzędzia',greet:'Dzień dobry, w załączniku przesyłam fakturę za zakupione narzędzia.'},
+  'Paliwo':{subj:'Faktura - paliwo',greet:'Dzień dobry, w załączniku przesyłam fakturę za paliwo.'},
+  'Części zamienne':{subj:'Faktura - części zamienne',greet:'Dzień dobry, w załączniku przesyłam fakturę za części zamienne.'},
+  'Hotel / Nocleg':{subj:'Faktura - nocleg',greet:'Dzień dobry, w załączniku przesyłam fakturę za nocleg w hotelu.'},
+  'Usługa serwisowa':{subj:'Faktura - usługa serwisowa',greet:'Dzień dobry, w załączniku przesyłam fakturę za usługę serwisową.'}
 };
 var _parCategory=null;
 function parToggleDetails(){
@@ -5825,21 +5825,20 @@ function _parBuildEmail(){
   var kw=(document.getElementById('par_kwota')||{}).value||'';
   var nr=(document.getElementById('par_nr')||{}).value||'';
   var dt=(document.getElementById('par_data')||{}).value||'';
-  var tmpl=(_parCategory&&_PAR_TEMPLATES[_parCategory])||{subj:'Faktura / Paragon',greet:'Dzień dobry,\n\nW załączniku przesyłam fakturę / paragon.'};
+  var tmpl=(_parCategory&&_PAR_TEMPLATES[_parCategory])||{subj:'Faktura / Paragon',greet:'Dzień dobry, w załączniku przesyłam fakturę / paragon.'};
   var subj=tmpl.subj;
-  var lines=[tmpl.greet,''];
+  var lines=[tmpl.greet];
   if(co)lines.push('Co kupiono: '+co);
   if(kw)lines.push('Kwota: '+kw+' zl');
   if(nr)lines.push('Nr faktury: '+nr);
   if(dt)lines.push('Data: '+new Date(dt).toLocaleDateString('pl-PL'));
-  lines.push('','Pozdrawiam');
   return {subj:subj,body:lines.join(String.fromCharCode(10)),filled:!!(co||kw||nr)};
 }
 function parUpdatePreview(){
   var box=document.getElementById('parPreview');if(!box)return;
   var e=_parBuildEmail();
   if(!e.filled){box.innerHTML='<span style="color:#A19F9D">Wypełnij pola, aby zobaczyć podgląd…</span>';return;}
-  box.innerHTML='<div style="font-weight:700;margin-bottom:6px">Temat: '+esc(e.subj)+'</div>'+esc(e.body)+(_parPhoto?'\n\n📎 zdjęcie zostanie dołączone':'');
+  box.innerHTML='<div style="font-weight:700;font-size:13.5px;color:#1C1C1E;padding-bottom:9px;margin-bottom:9px;border-bottom:1px solid #EEEEF0">'+esc(e.subj)+'</div>'+esc(e.body)+(_parPhoto?'\n\n📎 zdjęcie zostanie dołączone':'');
 }
 function parPhotoHandle(input){
   var file=input.files[0];if(!file)return;
