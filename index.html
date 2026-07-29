@@ -395,7 +395,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.20</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.21</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -3007,7 +3007,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v13.20",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v13.21",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -10028,8 +10028,10 @@ function copyDiag(){
 <script>function appUpdate(){if(typeof showToast==='function')showToast('Aktualizuje...');var done=function(){setTimeout(function(){try{location.reload();}catch(e){location.href=location.pathname+'?t='+Date.now();}},500);};try{var tasks=[];if('serviceWorker' in navigator){tasks.push(navigator.serviceWorker.getRegistrations().then(function(rs){return Promise.all(rs.map(function(r){return r.unregister();}));}).catch(function(){}));}if(window.caches&&caches.keys){tasks.push(caches.keys().then(function(ks){return Promise.all(ks.map(function(k){return caches.delete(k);}));}).catch(function(){}));}Promise.all(tasks).then(done,done);}catch(e){done();}}</script>
 <script>
 function _visits(){try{return JSON.parse(localStorage.getItem('rv_visits')||'[]');}catch(e){return[];}}
+function _isToday(ts){var d=new Date(ts),n=new Date();return d.getFullYear()===n.getFullYear()&&d.getMonth()===n.getMonth()&&d.getDate()===n.getDate();}
+function _visitsToday(){return _visits().filter(function(v){return _isToday(v.t);});}
 function _visitsSave(a){try{localStorage.setItem('rv_visits',JSON.stringify(a));}catch(e){}}
-function _visitsBadge(){var b=document.getElementById('visitsCount');if(b)b.textContent=_visits().length;}
+function _visitsBadge(){var b=document.getElementById('visitsCount');if(b)b.textContent=_visitsToday().length;}
 function _resetWork(){
   try{entries=[];selKonG=[];selKonS=[];timeG={od:'',do:''};timeS={od:'',do:''};SEL={el:'',def:[],sol:[],kon:[]};custParts={};var uw=document.getElementById('uwagiField');if(uw)uw.value='';}catch(e){}
   ['rv_e','rv_skg','rv_sks','rv_tG','rv_tS','rv_cp','rv_shop','rv_shop_n','rv_shop_i','rv_shop_a'].forEach(function(k){try{localStorage.removeItem(k);}catch(e){}});
@@ -10052,7 +10054,7 @@ function visitSave(){
 }
 function visitsOpen(){visitsRender();if(typeof openSh==='function')openSh('shVisits');}
 function visitsRender(){
-  var box=document.getElementById('visitsList');if(!box)return;var arr=_visits();
+  var box=document.getElementById('visitsList');if(!box)return;var arr=_visitsToday();
   if(!arr.length){box.innerHTML='<div style="color:#A19F9D;font-size:13px;padding:8px 0">Brak wizyt. Na obiekcie wypełnij raport i naciśnij Zapisz wizytę.</div>';return;}
   box.innerHTML=arr.map(function(v,i){
     var d=new Date(v.t);var ts=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);
@@ -10069,11 +10071,11 @@ function visitsRender(){
       +'<pre id="vrep'+i+'" style="display:none;white-space:pre-wrap;background:#1C1C1E;color:#E5E5EA;border-radius:8px;padding:9px;font-size:11px;margin-top:8px;max-height:240px;overflow:auto"></pre></div>';
   }).join('');
 }
-function visitCopy(i){var v=_visits()[i];if(!v)return;var t=v.report||'';var ok=function(){if(typeof showToast==='function')showToast('Skopiowano raport');};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,function(){if(typeof _fb==='function')_fb(t);ok();});}else{if(typeof _fb==='function')_fb(t);ok();}}
-function visitShow(i){var p=document.getElementById('vrep'+i);var v=_visits()[i];if(!p||!v)return;if(p.style.display==='none'){p.textContent=v.report||'';p.style.display='block';}else{p.style.display='none';}}
-function visitDel(i){var a=_visits();if(i<0||i>=a.length)return;if(!confirm('Usunąć tę wizytę?'))return;a.splice(i,1);_visitsSave(a);visitsRender();_visitsBadge();}
+function visitCopy(i){var v=_visitsToday()[i];if(!v)return;var t=v.report||'';var ok=function(){if(typeof showToast==='function')showToast('Skopiowano raport');};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,function(){if(typeof _fb==='function')_fb(t);ok();});}else{if(typeof _fb==='function')_fb(t);ok();}}
+function visitShow(i){var p=document.getElementById('vrep'+i);var v=_visitsToday()[i];if(!p||!v)return;if(p.style.display==='none'){p.textContent=v.report||'';p.style.display='block';}else{p.style.display='none';}}
+function visitDel(i){var today=_visitsToday();var v=today[i];if(!v)return;if(!confirm('Usunąć tę wizytę?'))return;var a=_visits();var idx=a.findIndex(function(x){return x.t===v.t;});if(idx>=0)a.splice(idx,1);_visitsSave(a);visitsRender();_visitsBadge();}
 function visitsClear(){if(!confirm('Usunac wszystkie wizyty?'))return;try{localStorage.removeItem('rv_visits');}catch(e){}visitsRender();_visitsBadge();}
-function visitsCopyAll(){var a=_visits();if(!a.length){if(typeof showToast==='function')showToast('Brak wizyt');return;}var t=a.map(function(v){return (v.name||'')+(v.idv?' '+v.idv:'')+'\n'+(v.report||'');}).join('\n\n========================\n\n');var ok=function(){if(typeof showToast==='function')showToast('Skopiowano '+a.length+' raportow');};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,function(){if(typeof _fb==='function')_fb(t);ok();});}else{if(typeof _fb==='function')_fb(t);ok();}}
+function visitsCopyAll(){var a=_visitsToday();if(!a.length){if(typeof showToast==='function')showToast('Brak wizyt');return;}var t=a.map(function(v){return (v.name||'')+(v.idv?' '+v.idv:'')+'\n'+(v.report||'');}).join('\n\n========================\n\n');var ok=function(){if(typeof showToast==='function')showToast('Skopiowano '+a.length+' raportow');};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,function(){if(typeof _fb==='function')_fb(t);ok();});}else{if(typeof _fb==='function')_fb(t);ok();}}
 </script>
 <script>
 function _kb(){try{return JSON.parse(localStorage.getItem('rv_kb')||'[]');}catch(e){return[];}}
