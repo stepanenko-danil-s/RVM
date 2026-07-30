@@ -395,7 +395,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.23</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.24</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -3007,7 +3007,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v13.23",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v13.24",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -7975,20 +7975,27 @@ function _reportData(){
 function _secParts(isG,ents,kon,sp,style){
   var label=isG?'GWARANCYJNY':_sLabel();
   var head=[],body=[];
+  function _clean(e){
+    var elT=(e.el||'').trim();
+    var defT=_arr(e.def).map(function(x){return (x||'').trim();}).filter(Boolean);
+    var solT=_arr(e.sol).map(function(x){return (x||'').trim();}).filter(Boolean);
+    return {el:elT,def:defT,sol:solT,empty:!elT&&!defT.length&&!solT.length};
+  }
   if(style==='biz'){
     head.push("──────────────────────────");head.push('RAPORT SERWISOWY \u2014 '+label);head.push("──────────────────────────");
-    ents.forEach(function(e){if(!e.el&&!_arr(e.def).length&&!_arr(e.sol).length)return;body.push('Element: '+(e.el||'(bez elementu)'));_arr(e.def).forEach(function(d){body.push('   Usterka:  '+d);});_arr(e.sol).forEach(function(s){body.push('   Wykonano: '+s);});body.push('');});
+    ents.forEach(function(e){var c=_clean(e);if(c.empty)return;body.push('Element: '+(c.el||'(bez elementu)'));c.def.forEach(function(d){body.push('   Usterka:  '+d);});c.sol.forEach(function(s){body.push('   Wykonano: '+s);});body.push('');});
     if(kon.length){body.push('Czynno\u015bci serwisowe:');kon.forEach(function(k){body.push('   \u2022 '+k);});}
     if(sp.length){body.push('U\u017cyte cz\u0119\u015bci:');sp.forEach(function(p){body.push('   \u2022 '+p);});}
   } else if(style==='czyt'){
     head.push('**'+label+'**');
     var _n=0;
-    ents.forEach(function(e){if(!e.el&&!_arr(e.def).length&&!_arr(e.sol).length)return;_n++;body.push('**'+_n+'. '+(e.el||'(bez elementu)')+'**');_arr(e.def).forEach(function(d){body.push('   **Usterka:** '+d);});_arr(e.sol).forEach(function(s){body.push('   **Wykonano:** '+s);});body.push('');});
+    ents.forEach(function(e){var c=_clean(e);if(c.empty)return;_n++;body.push('**'+_n+'. '+(c.el||'(bez elementu)')+'**');c.def.forEach(function(d){body.push('   **Usterka:** '+d);});c.sol.forEach(function(s){body.push('   **Wykonano:** '+s);});body.push('');});
     if(kon.length){body.push('**Serwis:**');kon.forEach(function(k){body.push('   \u2013 '+k);});}
     if(sp.length){body.push('**Cz\u0119\u015bci:**');sp.forEach(function(p){body.push('   \u2013 '+p);});}
   } else {
     head.push("══════════════════════════");head.push(' '+label);head.push("══════════════════════════");
-    ents.forEach(function(e,i){if(!e.el&&!_arr(e.def).length&&!_arr(e.sol).length)return;body.push('['+(i+1)+'] '+(e.el||'(bez elementu)'));_arr(e.def).forEach(function(d){body.push('    \u2022 Usterka : '+d);});_arr(e.sol).forEach(function(s){body.push('    \u2022 Naprawa : '+s);});body.push('');});
+    var _n2=0;
+    ents.forEach(function(e){var c=_clean(e);if(c.empty)return;_n2++;body.push('['+_n2+'] '+(c.el||'(bez elementu)'));c.def.forEach(function(d){body.push('    \u2022 Usterka : '+d);});c.sol.forEach(function(s){body.push('    \u2022 Naprawa : '+s);});body.push('');});
     if(kon.length){body.push('Serwis:');kon.forEach(function(k){body.push('  \u2013 '+k);});}
     if(sp.length){body.push('Cz\u0119\u015bci:');sp.forEach(function(p){body.push('  \u2013 '+p);});}
     body.push("══════════════════════════");
