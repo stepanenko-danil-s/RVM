@@ -1,4 +1,4 @@
-const C='rvm-cache-v1329';
+const C='rvm-cache-v1330';
 self.addEventListener('install',function(e){self.skipWaiting();});
 self.addEventListener('activate',function(e){
   e.waitUntil(
