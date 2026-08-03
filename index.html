@@ -395,7 +395,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.26</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.27</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -616,6 +616,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
       <div style="margin:0 12px 12px;border:2px solid #1C1C1E;border-radius:10px;overflow:hidden">
         <textarea id="uwagiField" placeholder="Dodatkowe uwagi..." rows="2" style="width:100%;padding:10px 12px;font-size:13px;font-family:inherit;border:none;outline:none;resize:none;background:transparent;color:#1C1C1E;box-sizing:border-box"></textarea>
       </div>
+      <div id="uwagiPhrasesRow" style="display:flex;gap:6px;overflow-x:auto;padding:0 12px 12px;-webkit-overflow-scrolling:touch"></div>
       <div id="repEditWrap" style="display:none;padding:0 14px 6px">
           <textarea id="repEdit" placeholder="Tekst raportu do edycji..." style="width:100%;min-height:170px;background:#F9F9F9;border:1px solid #E0E0E0;border-radius:10px;padding:11px;font-size:13px;font-family:inherit;line-height:1.5;outline:none;resize:vertical;box-sizing:border-box"></textarea>
           <button onclick="repEditReload()" style="width:100%;margin-top:5px;padding:9px;background:#F5F5F7;color:#605E5C;border:none;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">↺ Wczytaj z formularza</button>
@@ -3007,7 +3008,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v13.26",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v13.27",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -7353,6 +7354,45 @@ function ls(k,d){try{var v=localStorage.getItem(k);return v!==null?JSON.parse(v)
 function ss(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
 function saveSetting(k,v){localStorage.setItem(k,v);}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// ===== Gotowe frazy dla Uwagi =====
+var _UWAGI_DEFAULT=["Maszyna sprawna, bez dodatkowych uwag.","Wymagana ponowna wizyta.","Poinformowano kierownika sklepu.","Brak dostępu do maszyny w trakcie wizyty.","Zalecana wymiana w najbliższym czasie."];
+function _uwagiCustom(){try{return JSON.parse(localStorage.getItem('rv_uwagi_phrases')||'[]');}catch(e){return [];}}
+function _uwagiCustomSave(a){try{localStorage.setItem('rv_uwagi_phrases',JSON.stringify(a));}catch(e){}}
+function uwagiPhraseUse(txt){
+  var ta=document.getElementById('uwagiField');if(!ta)return;
+  ta.value=(ta.value&&ta.value.trim())?ta.value.trim()+' '+txt:txt;
+  if(typeof showToast==='function')showToast('Dodano do uwag');
+}
+function uwagiPhraseAdd(){
+  var v=prompt('Nowa fraza:');
+  if(!v||!v.trim())return;
+  v=v.trim();
+  var c=_uwagiCustom();
+  if(c.indexOf(v)<0){c.push(v);_uwagiCustomSave(c);}
+  _uwagiPhrasesRender();
+}
+function uwagiPhraseDel(txt,ev){
+  if(ev)ev.stopPropagation();
+  if(!confirm('Usunąć frazę?'))return;
+  var c=_uwagiCustom().filter(function(x){return x!==txt;});
+  _uwagiCustomSave(c);
+  _uwagiPhrasesRender();
+}
+function _uwagiPhrasesRender(){
+  var row=document.getElementById('uwagiPhrasesRow');if(!row)return;
+  var html=_UWAGI_DEFAULT.map(function(p){
+    return '<button onclick="uwagiPhraseUse(\''+p.replace(/'/g,"\\'")+'\')" class="rep-sm-btn" style="flex:0 0 auto;white-space:nowrap;font-size:12px">'+esc(p.length>28?p.slice(0,26)+'…':p)+'</button>';
+  }).join('');
+  html+=_uwagiCustom().map(function(p){
+    return '<span style="flex:0 0 auto;display:inline-flex;align-items:center;background:#EAF4FF;border:1px solid #BFE0FF;border-radius:9px;padding:0 4px 0 11px;white-space:nowrap">'+
+      '<span onclick="uwagiPhraseUse(\''+p.replace(/'/g,"\\'")+'\')" style="font-size:12px;color:#0A84FF;font-weight:600;cursor:pointer;padding:8px 0">'+esc(p.length>28?p.slice(0,26)+'…':p)+'</span>'+
+      '<span onclick="uwagiPhraseDel(\''+p.replace(/'/g,"\\'")+'\',event)" style="color:#0A84FF;opacity:.6;padding:6px 6px 6px 6px;cursor:pointer;font-size:13px">&times;</span></span>';
+  }).join('');
+  html+='<button onclick="uwagiPhraseAdd()" class="rep-sm-btn" style="flex:0 0 auto;border-style:dashed;font-size:12px">+ Dodaj</button>';
+  row.innerHTML=html;
+}
+if(document.readyState==='complete')_uwagiPhrasesRender();else window.addEventListener('load',function(){try{_uwagiPhrasesRender();}catch(e){}});
 function _arr(x){return Array.isArray(x)?x:(x?[x]:[]);}
 
 function showToast(msg){
