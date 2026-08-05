@@ -413,7 +413,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.36</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.37</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -3028,7 +3028,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v13.36",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v13.37",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -8189,7 +8189,11 @@ function renderSummary(){
   }
   [['G',true],['S',false]].forEach(function(a){
     var sfx=a[0],isG=a[1];
-    var sec=document.getElementById('repSec'+sfx); if(sec)sec.style.display=(isG&&_nonSrw)?'none':'block';
+    var sec=document.getElementById('repSec'+sfx);
+    var _tm=(isG?timeG:timeS);
+    var _timeOn=!!(((window._workType||'serwis')==='serwis')&&_tm&&_tm._on);
+    var hide=isG?(_nonSrw||(!d.hasG&&!_timeOn)):(!d.hasS&&!_timeOn);
+    if(sec)sec.style.display=hide?'none':'block';
     var p=_secParts(isG, isG?d.eG:d.eS, isG?d.konG:d.konS, isG?d.spG:d.spS, style);
     var _t=(isG?timeG:timeS); var _ct=(((window._workType||'serwis')==='serwis')&&_t&&_t._on)?_tFmt(_liveTime(sfx)):'';
     var _bl=(_ct?[_czasPrefix(style)+_ct]:[]).concat(p.body);
@@ -8215,8 +8219,10 @@ function buildReport(){
     lines.push('');
   }
   var _gnoff=_gnOffActive();
-  if(_gnoff){var m=_gnMerge(d);if(m.e.length||m.kon.length||m.sp.length)add(true,m.e,m.kon,m.sp,'G');}
-  else{if(d.hasG)add(true,d.eG,d.konG,d.spG,'G');if(d.hasS)add(false,d.eS,d.konS,d.spS,'S');}
+  var _timeGOn=!!(((window._workType||'serwis')==='serwis')&&timeG&&timeG._on);
+  var _timeSOn=!!(((window._workType||'serwis')==='serwis')&&timeS&&timeS._on);
+  if(_gnoff){var m=_gnMerge(d);if(m.e.length||m.kon.length||m.sp.length||_timeGOn)add(true,m.e,m.kon,m.sp,'G');}
+  else{if(d.hasG||_timeGOn)add(true,d.eG,d.konG,d.spG,'G');if(d.hasS||_timeSOn)add(false,d.eS,d.konS,d.spS,'S');}
   return lines.join('\n').replace(/\*\*/g,'').trim();
 }
 
