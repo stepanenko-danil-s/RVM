@@ -413,7 +413,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.38</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.39</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -3032,7 +3032,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v13.38",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v13.39",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -8016,14 +8016,13 @@ function _dictScore(qTokens,text){
   });
   return score;
 }
-function _dictBest(qTokens,list){
-  var best=null,bestScore=0.99;
-  (list||[]).forEach(function(it){
+function _dictTop(qTokens,list,n){
+  var scored=(list||[]).map(function(it){
     var text=(it.pl||'')+' '+(it.ru||'');
-    var s=_dictScore(qTokens,text);
-    if(s>bestScore){bestScore=s;best=it;}
-  });
-  return best;
+    return {it:it,score:_dictScore(qTokens,text)};
+  }).filter(function(x){return x.score>0.4;});
+  scored.sort(function(a,b){return b.score-a.score;});
+  return scored.slice(0,n||3).map(function(x){return x.it;});
 }
 function dictateReport(){
   var SR=window.webkitSpeechRecognition||window.SpeechRecognition;
@@ -8044,24 +8043,46 @@ function dictateReport(){
     if(v&&v.trim())_processDictation(v.trim());
   }
 }
+var _dictCands={el:[],def:[],sol:[]};
 function _processDictation(txt){
+  var hint=document.getElementById('dictHint');
   if(!txt||!txt.trim()){if(typeof showToast==='function')showToast('Nie rozpoznano tekstu');return;}
   var q=_dictTokens(txt);
   if(!q.length){if(typeof showToast==='function')showToast('Nie rozpoznano tekstu');return;}
-  var elBest=_dictBest(q,(typeof custom!=='undefined'&&custom.el?D.el.concat(custom.el):D.el));
-  var defBest=_dictBest(q,(typeof custom!=='undefined'&&custom.def?D.def.concat(custom.def):D.def));
-  var solBest=_dictBest(q,(typeof custom!=='undefined'&&custom.sol?D.sol.concat(custom.sol):D.sol));
-  var found=[];
-  if(elBest){SEL.el=elBest.pl;found.push('Element: '+elBest.pl);}
-  if(defBest){if(SEL.def.indexOf(defBest.pl)<0)SEL.def.push(defBest.pl);found.push('Usterka: '+defBest.pl);}
-  if(solBest){if(SEL.sol.indexOf(solBest.pl)<0)SEL.sol.push(solBest.pl);found.push('Działanie: '+solBest.pl);}
+  var elList=(typeof custom!=='undefined'&&custom.el?D.el.concat(custom.el):D.el);
+  var defList=(typeof custom!=='undefined'&&custom.def?D.def.concat(custom.def):D.def);
+  var solList=(typeof custom!=='undefined'&&custom.sol?D.sol.concat(custom.sol):D.sol);
+  _dictCands.el=_dictTop(q,elList,3);
+  _dictCands.def=_dictTop(q,defList,3);
+  _dictCands.sol=_dictTop(q,solList,3);
+  if(!_dictCands.el.length&&!_dictCands.def.length&&!_dictCands.sol.length){
+    if(hint)hint.innerHTML='<span style="color:#FF3B30">Nie znaleziono dopasowań — wpisz ręcznie.</span>';
+    if(typeof showToast==='function')showToast('Nie znaleziono dopasowań');
+    return;
+  }
+  function _group(label,col,cands){
+    if(!cands.length)return '';
+    var h='<div style="font-size:10.5px;font-weight:700;color:#8E8E93;text-transform:uppercase;margin:8px 0 4px">'+label+'</div>';
+    h+=cands.map(function(it,i){
+      return '<button onclick="_dictPick(\''+col+'\','+i+')" style="display:block;width:100%;text-align:left;padding:8px 10px;margin-bottom:4px;background:#F2F2F7;border:none;border-radius:8px;font-size:12px;color:#1C1C1E;cursor:pointer;font-family:inherit">'+esc(it.pl)+'</button>';
+    }).join('');
+    return h;
+  }
+  if(hint){
+    hint.innerHTML='<div style="font-size:11px;color:#8E8E93;margin-bottom:2px">Wybierz właściwe (tap):</div>'+
+      _group('Element',"el",_dictCands.el)+_group('Usterka',"def",_dictCands.def)+_group('Działanie',"sol",_dictCands.sol);
+  }
+  if(typeof showToast==='function')showToast('Wybierz z listy poniżej');
+}
+function _dictPick(col,i){
+  var it=_dictCands[col]&&_dictCands[col][i];if(!it)return;
+  if(col==='el'){SEL.el=it.pl;}
+  else if(col==='def'){if(SEL.def.indexOf(it.pl)<0)SEL.def.push(it.pl);}
+  else if(col==='sol'){if(SEL.sol.indexOf(it.pl)<0)SEL.sol.push(it.pl);}
   if(typeof renderList==='function'){renderList('el');renderList('def');renderList('sol');}
   if(typeof updateBadges==='function')updateBadges();
   if(typeof renderSummary==='function')renderSummary();
-  if(!found.length){if(typeof showToast==='function')showToast('Nie znaleziono dopasowań — wpisz ręcznie');return;}
-  var hint=document.getElementById('dictHint');
-  if(hint)hint.innerHTML='<b style="color:#1C1C1E">Rozpoznano:</b><br>'+found.map(function(f){return '\u2713 '+esc(f);}).join('<br>')+'<br><span style="color:#8E8E93">Sprawdź i popraw, jeśli trzeba.</span>';
-  if(typeof showToast==='function')showToast('Rozpoznano '+found.length+' pozycji');
+  if(typeof showToast==='function')showToast('Dodano: '+it.pl);
 }
 var _PSYN={
   'infeed':['infeed','wejsciow','wlot','podajnik','rozruch','fotokomork'],
