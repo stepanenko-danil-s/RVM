@@ -413,7 +413,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.37</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.38</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -469,6 +469,10 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
         <button class="tgl s" id="tglNG" onclick="setMode('S')">NG</button>
         <label style="display:flex;align-items:center;gap:4px;flex:0 0 auto;font-size:10.5px;line-height:1;color:#6E6E73;padding:0 9px 0 5px;cursor:pointer;white-space:nowrap"><input type="checkbox" id="gnDisChk" onchange="setGnOff(this.checked)" style="width:19px;height:19px;-webkit-appearance:auto;appearance:auto;accent-color:#0078D4;margin:0">bez<br>G/NG</label>
       </div>
+    </div>
+    <div style="margin:0 12px 8px">
+      <button id="dictBtn" onclick="dictateReport()" style="width:100%;padding:11px;background:#1C1C1E;color:#fff;border:none;border-radius:12px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/></svg>Nadyktuj raport</button>
+      <div id="dictHint" style="font-size:10.5px;color:#9C9AA0;margin-top:5px;padding:0 2px">Powiedz co się stało — spróbuję znaleźć Element/Usterkę/Działanie automatycznie</div>
     </div>
 
     <!-- Gotowe frazy card (Montaz/Szkolenie) -->
@@ -3028,7 +3032,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v13.37",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v13.38",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -7992,6 +7996,72 @@ function _normP(s){
   s=s.replace(/[\u0105\u0107\u0119\u0142\u0144\u00f3\u015b\u017a\u017c]/g,function(c){return d[c]||c;});
   s=s.replace(/[-_/]/g,' ').replace(/(\d)\s*pin\w*/g,'$1pin').replace(/\s+/g,' ').trim();
   return s;
+}
+
+// ===== Nadyktuj raport: dopasowanie tekstu do baz Element/Usterka/Dzialanie =====
+var _DICT_STOP=['i','w','na','do','z','ze','za','po','od','o','to','jest','sie','się','tam','tu','ale','a','the','of','and','to','is','и','в','на','с','со','за','по','о','это','есть','там','тут','но','а','что','что-то','как','как-то'];
+function _dictTokens(s){
+  s=(s||'').replace(/[,.!?;:()\u2014\u2013"']/g,' ');
+  return _normP(s).split(' ').filter(function(w){return w.length>2&&_DICT_STOP.indexOf(w)<0;});
+}
+function _dictScore(qTokens,text){
+  var tTokens=_dictTokens(text);
+  var score=0;
+  qTokens.forEach(function(q){
+    if(tTokens.indexOf(q)>=0){score+=1;return;}
+    for(var i=0;i<tTokens.length;i++){
+      var t=tTokens[i];
+      if(t.length>=4&&q.length>=4&&(t.indexOf(q)===0||q.indexOf(t)===0)){score+=0.6;return;}
+    }
+  });
+  return score;
+}
+function _dictBest(qTokens,list){
+  var best=null,bestScore=0.99;
+  (list||[]).forEach(function(it){
+    var text=(it.pl||'')+' '+(it.ru||'');
+    var s=_dictScore(qTokens,text);
+    if(s>bestScore){bestScore=s;best=it;}
+  });
+  return best;
+}
+function dictateReport(){
+  var SR=window.webkitSpeechRecognition||window.SpeechRecognition;
+  if(!SR){
+    var v=prompt('Opisz co się stało (np. "wlot zablokowany, usunięto ciało obce, zresetowano czujnik"):');
+    if(v&&v.trim())_processDictation(v.trim());
+    return;
+  }
+  var rec=new SR();rec.lang='pl-PL';rec.interimResults=false;
+  var btn=document.getElementById('dictBtn');
+  if(btn){btn.style.background='#FF3B30';btn.querySelector('svg').style.opacity='1';}
+  if(typeof showToast==='function')showToast('Mów teraz...');
+  rec.onresult=function(e){_processDictation(e.results[0][0].transcript);};
+  rec.onerror=function(){if(typeof showToast==='function')showToast('Błąd mikrofonu');};
+  rec.onend=function(){if(btn)btn.style.background='#1C1C1E';};
+  try{rec.start();}catch(e){
+    var v=prompt('Opisz co się stało:');
+    if(v&&v.trim())_processDictation(v.trim());
+  }
+}
+function _processDictation(txt){
+  if(!txt||!txt.trim()){if(typeof showToast==='function')showToast('Nie rozpoznano tekstu');return;}
+  var q=_dictTokens(txt);
+  if(!q.length){if(typeof showToast==='function')showToast('Nie rozpoznano tekstu');return;}
+  var elBest=_dictBest(q,(typeof custom!=='undefined'&&custom.el?D.el.concat(custom.el):D.el));
+  var defBest=_dictBest(q,(typeof custom!=='undefined'&&custom.def?D.def.concat(custom.def):D.def));
+  var solBest=_dictBest(q,(typeof custom!=='undefined'&&custom.sol?D.sol.concat(custom.sol):D.sol));
+  var found=[];
+  if(elBest){SEL.el=elBest.pl;found.push('Element: '+elBest.pl);}
+  if(defBest){if(SEL.def.indexOf(defBest.pl)<0)SEL.def.push(defBest.pl);found.push('Usterka: '+defBest.pl);}
+  if(solBest){if(SEL.sol.indexOf(solBest.pl)<0)SEL.sol.push(solBest.pl);found.push('Działanie: '+solBest.pl);}
+  if(typeof renderList==='function'){renderList('el');renderList('def');renderList('sol');}
+  if(typeof updateBadges==='function')updateBadges();
+  if(typeof renderSummary==='function')renderSummary();
+  if(!found.length){if(typeof showToast==='function')showToast('Nie znaleziono dopasowań — wpisz ręcznie');return;}
+  var hint=document.getElementById('dictHint');
+  if(hint)hint.innerHTML='<b style="color:#1C1C1E">Rozpoznano:</b><br>'+found.map(function(f){return '\u2713 '+esc(f);}).join('<br>')+'<br><span style="color:#8E8E93">Sprawdź i popraw, jeśli trzeba.</span>';
+  if(typeof showToast==='function')showToast('Rozpoznano '+found.length+' pozycji');
 }
 var _PSYN={
   'infeed':['infeed','wejsciow','wlot','podajnik','rozruch','fotokomork'],
