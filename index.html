@@ -374,6 +374,16 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
     <button onclick="_whPickSet('Q')" style="flex:1;background:#48484A;color:#fff;border:none;border-radius:9px;padding:9px 4px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit">⚪ Zależy</button>
   </div>
 </div>
+<div class="ov" id="shCustomItem" style="display:none" onclick="if(event.target===this)closeOv('shCustomItem')">
+  <div class="sh" style="max-width:400px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div id="customItemTitle" style="font-size:17px;font-weight:800;color:#323130">Nowy wariant</div>
+      <button onclick="closeOv('shCustomItem')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button>
+    </div>
+    <textarea id="customItemInput" placeholder="Wpisz lub wklej tekst..." rows="3" autocomplete="off" style="width:100%;padding:11px;border:1px solid #E5E5EA;border-radius:10px;font-size:14px;font-family:inherit;outline:none;resize:vertical;box-sizing:border-box;margin-bottom:12px"></textarea>
+    <button onclick="_confirmCustomItem()" style="width:100%;padding:13px;background:#34C759;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Dodaj</button>
+  </div>
+</div>
 <div class="ov" id="shChainPicker" style="display:none" onclick="if(event.target===this)closeOv('shChainPicker')">
   <div class="sh" style="max-width:400px;max-height:80vh;padding:0;display:flex;flex-direction:column;overflow:hidden">
     <div style="padding:18px 18px 0;flex:0 0 auto">
@@ -428,7 +438,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.42</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.43</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -3050,7 +3060,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v13.42",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v13.43",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -7729,17 +7739,27 @@ function toggleMod(id){
 var _filters={el:'',def:'',sol:'',kon:''};
 var _showAll={def:false,sol:false};
 function toggleShowAll(col){_showAll[col]=!_showAll[col];renderList(col);}
+var _customItemCol=null;
 function addCustomItem(col){
-  var labels={kon:'Nowa czynnosc serwisowa:',el:'Nowy element:',def:'Nowa usterka:',sol:'Nowe dzialanie:'};
-  var val=(typeof prompt==='function')?prompt(labels[col]||'Wpisz wlasny wariant:'):'';
-  if(!val||!val.trim())return;
-  val=val.trim();
+  var labels={kon:'Nowa czynnosc serwisowa',el:'Nowy element',def:'Nowa usterka',sol:'Nowe dzialanie'};
+  _customItemCol=col;
+  var t=document.getElementById('customItemTitle');if(t)t.textContent=labels[col]||'Nowy wariant';
+  var inp=document.getElementById('customItemInput');if(inp)inp.value='';
+  if(typeof openSh==='function')openSh('shCustomItem');else{var o=document.getElementById('shCustomItem');if(o)o.style.display='flex';}
+  setTimeout(function(){if(inp)inp.focus();},200);
+}
+function _confirmCustomItem(){
+  var col=_customItemCol;if(!col)return;
+  var inp=document.getElementById('customItemInput');
+  var val=inp?inp.value.trim():'';
+  if(!val)return;
   if(!window.custom||typeof custom!=='object')window.custom={el:[],def:[],sol:[],kon:[]};
   if(!custom[col])custom[col]=[];
   var all=(D[col]||[]).concat(custom[col]);
   if(!all.some(function(x){return x.pl===val;}))custom[col].push({cat:'Wlasne',pl:val,ru:''});
   try{ss('rv_custom',custom);ss('rv_c',custom);}catch(e){}
   if(col==='def'||col==='sol')_showAll[col]=false;
+  closeOv('shCustomItem');
   togItem(col,val);
   if(typeof _whPickShow==='function')_whPickShow(val);
 }
