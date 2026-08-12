@@ -374,6 +374,21 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
     <button onclick="_whPickSet('Q')" style="flex:1;background:#48484A;color:#fff;border:none;border-radius:9px;padding:9px 4px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit">⚪ Zależy</button>
   </div>
 </div>
+<div class="ov" id="shChainPicker" style="display:none" onclick="if(event.target===this)closeOv('shChainPicker')">
+  <div class="sh" style="max-width:400px;max-height:80vh;padding:0;display:flex;flex-direction:column;overflow:hidden">
+    <div style="padding:18px 18px 0;flex:0 0 auto">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div style="font-size:17px;font-weight:800;color:#323130">Wybierz sklep</div>
+        <button onclick="closeOv('shChainPicker')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">&#215;</button>
+      </div>
+    </div>
+    <div id="chainList" style="flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 18px"></div>
+    <div style="display:flex;gap:8px;padding:10px 18px 20px;flex:0 0 auto;border-top:1px solid #EFEFF4;background:#fff">
+      <input id="chainInput" placeholder="Inna sieć..." autocomplete="off" style="flex:1;min-width:0;padding:11px;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-family:inherit;outline:none">
+      <button onclick="_addChain()" style="flex:0 0 auto;padding:11px 14px;background:#34C759;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit">Dodaj</button>
+    </div>
+  </div>
+</div>
 <div class="ov" id="shUwagiPhrases" style="display:none" onclick="if(event.target===this)closeOv('shUwagiPhrases')">
   <div class="sh" style="max-width:400px;max-height:80vh;padding:0;display:flex;flex-direction:column;overflow:hidden">
     <div style="padding:18px 18px 0;flex:0 0 auto">
@@ -413,7 +428,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.40</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.41</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -429,9 +444,13 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
   <!-- Shop bar -->
   <div class="shop-bar" style="flex-wrap:wrap;gap:6px">
     <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#C7C7CC" stroke-width="1.8" style="flex:0 0 auto"><circle cx="10" cy="8" r="4"/><path d="M4 18c0-4 12-4 12 0"/></svg>
-    <input id="shopName" placeholder="Sklep" oninput="shopSync()" autocomplete="off" style="flex:1 1 auto;min-width:0;background:#F2F2F7;border-radius:14px;padding:6px 11px;font-size:13px;color:#1C1C1E">
-    <input id="shopId" placeholder="ID" oninput="shopSync();if(typeof _refreshPin==='function')_refreshPin()" autocomplete="off" inputmode="numeric" style="flex:0 0 70px;width:70px;background:#F2F2F7;border-radius:14px;padding:6px 8px;font-size:13px;color:#1C1C1E;text-align:center">
-    <div style="flex:1 1 100%;height:0"></div><input id="shopAddr" placeholder="Adres" oninput="shopSync()" autocomplete="off" style="flex:1 1 auto;min-width:0;background:#F2F2F7;border-radius:14px;padding:6px 11px;font-size:13px;color:#1C1C1E"><div id="pinPill" onclick="_copyPin()" style="flex:0 0 auto;margin:0;background:#F2F2F7;border:1px solid #E5E5EA;border-radius:14px;padding:6px 12px;font-size:13px;font-weight:700;color:#8E8E93;cursor:pointer;display:flex;align-items:center">PIN <span id="pinPillVal" style="margin-left:4px">&mdash;</span><span id="pinPillHint" style="display:none"></span></div><div style="flex:1 1 100%;height:0"></div><button onclick="gpsShop()" style="background:#007AFF;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">GPS</button><button onclick="shopSaveToBase()" style="background:#34C759;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">Zapisz</button><button onclick="openPlaces()" style="background:#8E8E93;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">Baza</button><div style="flex:1 1 100%;height:0"></div><div id="gpsDiag" onclick="if(this.textContent){try{navigator.clipboard&&navigator.clipboard.writeText(this.textContent);}catch(e){} if(typeof _toast==='function')_toast('Skopiowano');}" style="flex:1 1 100%;font-size:10px;line-height:1.35;color:#8E8E93;white-space:pre-wrap;word-break:break-word;margin-top:2px;cursor:pointer"></div>
+    <input id="shopName" placeholder="Sklep (tap)" readonly onclick="openChainPicker()" autocomplete="off" style="flex:1 1 auto;min-width:0;background:#F2F2F7;border-radius:14px;padding:6px 11px;font-size:13px;color:#1C1C1E;cursor:pointer">
+    <div style="position:relative;flex:0 0 90px">
+      <input id="shopId" placeholder="Nr" oninput="shopSync();shopIdSuggest(this.value);if(typeof _refreshPin==='function')_refreshPin()" onfocus="shopIdSuggest(this.value)" onblur="setTimeout(function(){var b=document.getElementById('shopIdSugg');if(b)b.style.display='none';},150)" autocomplete="off" inputmode="numeric" style="width:100%;background:#F2F2F7;border-radius:14px;padding:6px 8px;font-size:13px;color:#1C1C1E;text-align:center;box-sizing:border-box">
+      <div id="shopIdSugg" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #E5E5EA;border-radius:10px;margin-top:3px;box-shadow:0 4px 14px rgba(0,0,0,.12);z-index:50;max-height:180px;overflow-y:auto"></div>
+    </div>
+    <div id="pinPill" onclick="_copyPin()" style="flex:0 0 auto;margin:0;background:#F2F2F7;border:1px solid #E5E5EA;border-radius:14px;padding:6px 12px;font-size:13px;font-weight:700;color:#8E8E93;cursor:pointer;display:flex;align-items:center">PIN <span id="pinPillVal" style="margin-left:4px">&mdash;</span><span id="pinPillHint" style="display:none"></span></div>
+    <div style="flex:1 1 100%;height:0"></div><button onclick="shopSaveToBase()" style="background:#34C759;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">Zapisz</button><button onclick="openPlaces()" style="background:#8E8E93;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">Baza</button>
     
   </div>
 
@@ -3032,7 +3051,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v13.40",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v13.41",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -8926,6 +8945,65 @@ function _setShopFields(n,i,a){
   if(typeof shopSync==='function')shopSync();
   if(typeof _refreshPin==='function')_refreshPin();
 }
+var _CHAINS_DEFAULT=['Biedronka','Lidl','Kaufland','Aldi','Netto','Carrefour','Auchan','Żabka','Dino','Stokrotka','Intermarché','E.Leclerc','POLOmarket'];
+function _customChains(){try{return JSON.parse(localStorage.getItem('rv_custom_chains')||'[]');}catch(e){return [];}}
+function _customChainsSave(a){try{localStorage.setItem('rv_custom_chains',JSON.stringify(a));}catch(e){}}
+function openChainPicker(){
+  renderChainList();
+  if(typeof openSh==='function')openSh('shChainPicker');else{var o=document.getElementById('shChainPicker');if(o)o.style.display='flex';}
+}
+function renderChainList(){
+  var box=document.getElementById('chainList');if(!box)return;
+  var all=_CHAINS_DEFAULT.concat(_customChains());
+  box.innerHTML=all.map(function(c){
+    return '<button onclick="pickChain(\''+c.replace(/'/g,"\\'")+'\')" style="display:block;width:100%;text-align:left;padding:12px 13px;margin-bottom:6px;background:#F7F7F8;border:none;border-radius:10px;font-size:14px;font-weight:600;color:#1C1C1E;cursor:pointer;font-family:inherit">'+esc(c)+'</button>';
+  }).join('');
+}
+function pickChain(name){
+  var inp=document.getElementById('shopName');if(inp)inp.value=name;
+  shopSync();
+  closeOv('shChainPicker');
+  var idInp=document.getElementById('shopId');if(idInp)idInp.focus();
+}
+function _addChain(){
+  var inp=document.getElementById('chainInput');if(!inp)return;
+  var v=(inp.value||'').trim();if(!v)return;
+  var c=_customChains();
+  if(c.indexOf(v)<0&&_CHAINS_DEFAULT.indexOf(v)<0){c.unshift(v);_customChainsSave(c);}
+  inp.value='';
+  renderChainList();
+  pickChain(v);
+}
+function _shopHistory(){try{return JSON.parse(localStorage.getItem('rv_shop_history')||'[]');}catch(e){return [];}}
+function _shopHistorySave(a){try{localStorage.setItem('rv_shop_history',JSON.stringify(a));}catch(e){}}
+function _shopHistoryAdd(name,id){
+  id=(id||'').trim();if(!id)return;
+  var h=_shopHistory();
+  h=h.filter(function(x){return x.id!==id;});
+  h.unshift({name:name||'',id:id});
+  if(h.length>200)h=h.slice(0,200);
+  _shopHistorySave(h);
+}
+function shopIdSuggest(val){
+  var box=document.getElementById('shopIdSugg');if(!box)return;
+  val=(val||'').trim();
+  if(!val){box.style.display='none';return;}
+  var h=_shopHistory().filter(function(x){return x.id.indexOf(val)===0;}).slice(0,6);
+  if(!h.length){box.style.display='none';return;}
+  box.innerHTML=h.map(function(x){
+    return '<div onmousedown="pickShopHistory(\''+x.id.replace(/'/g,"\\'")+'\')" style="padding:9px 12px;font-size:13px;color:#1C1C1E;cursor:pointer;border-bottom:1px solid #F0F0F0"><b>'+esc(x.id)+'</b>'+(x.name?' <span style="color:#8E8E93">'+esc(x.name)+'</span>':'')+'</div>';
+  }).join('');
+  box.style.display='block';
+}
+function pickShopHistory(id){
+  var h=_shopHistory().find(function(x){return x.id===id;});
+  if(!h)return;
+  var idInp=document.getElementById('shopId');if(idInp)idInp.value=id;
+  var nmInp=document.getElementById('shopName');if(nmInp&&h.name)nmInp.value=h.name;
+  shopSync();
+  var box=document.getElementById('shopIdSugg');if(box)box.style.display='none';
+  if(typeof _refreshPin==='function')_refreshPin();
+}
 function shopSync(){
   var n=((document.getElementById('shopName')||{}).value||'').trim();
   var i=((document.getElementById('shopId')||{}).value||'').trim();
@@ -10312,6 +10390,7 @@ function visitSave(){
   var gv=function(id){var e=document.getElementById(id);return e?(e.value||'').trim():'';};
   var parts=[];try{parts=getSelPartsArrFor('G').concat(getSelPartsArrFor('S'));}catch(e){}
   var v={t:Date.now(),name:gv('shopName'),idv:gv('shopId'),addr:gv('shopAddr'),lat:(typeof window._myLat==='number'?window._myLat:null),lon:(typeof window._myLon==='number'?window._myLon:null),report:report,parts:parts};
+  if(typeof _shopHistoryAdd==='function')_shopHistoryAdd(v.name,v.idv);
   var arr=_visits();arr.unshift(v);if(arr.length>50)arr=arr.slice(0,50);_visitsSave(arr);_visitsBadge();
   if(confirm('Wizyta zapisana ('+(v.name||'bez nazwy')+'). Wyczyscic do nastepnej lokalizacji?')){_resetWork();}
   if(typeof showToast==='function')showToast('Zapisano wizytę');
@@ -10491,6 +10570,7 @@ function _nearestSavedShop(la,lo,acc){var R=Math.max(300,(acc||0)*3);var best=nu
 function shopSaveToBase(){
   var n=_shVal('shopName'), id=_shVal('shopId'), a=_shVal('shopAddr');
   if(!n&&!id&&!a){if(typeof _toast==='function')_toast('Wpisz dane sklepu');return;}
+  if(typeof _shopHistoryAdd==='function')_shopHistoryAdd(n,id);
   var zip='',city='',addr=a, zm=a.match(/(\d{2}-\d{3})/);
   if(zm){var idx=a.indexOf(zm[1]);zip=zm[1];city=a.slice(idx+zm[1].length).replace(/^[ ,]+/,'').trim();addr=a.slice(0,idx).replace(/[ ,]+$/,'').trim();}
   if(typeof shopLoadCustom==='function'&&!window._customShops)shopLoadCustom();
@@ -10568,8 +10648,8 @@ function shopsExport(){
       }
     }catch(e){}
   }
-  if(document.readyState==='complete'||document.readyState==='interactive'){setTimeout(_autoDanste,800);setTimeout(_initRepBodyEdit,500);setTimeout(_autoResetOnStart,600);setTimeout(_gpsWarmup,1200);}
-  else{window.addEventListener('load',function(){setTimeout(_autoDanste,800);setTimeout(_initRepBodyEdit,500);setTimeout(_autoResetOnStart,600);setTimeout(_gpsWarmup,1200);});}
+  if(document.readyState==='complete'||document.readyState==='interactive'){setTimeout(_autoDanste,800);setTimeout(_initRepBodyEdit,500);setTimeout(_autoResetOnStart,600);}
+  else{window.addEventListener('load',function(){setTimeout(_autoDanste,800);setTimeout(_initRepBodyEdit,500);setTimeout(_autoResetOnStart,600);});}
 })();
 // Сброс при уходе в фон
 (function(){
