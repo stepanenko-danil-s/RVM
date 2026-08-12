@@ -428,7 +428,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.41</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.42</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -449,7 +449,6 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
       <input id="shopId" placeholder="Nr" oninput="shopSync();shopIdSuggest(this.value);if(typeof _refreshPin==='function')_refreshPin()" onfocus="shopIdSuggest(this.value)" onblur="setTimeout(function(){var b=document.getElementById('shopIdSugg');if(b)b.style.display='none';},150)" autocomplete="off" inputmode="numeric" style="width:100%;background:#F2F2F7;border-radius:14px;padding:6px 8px;font-size:13px;color:#1C1C1E;text-align:center;box-sizing:border-box">
       <div id="shopIdSugg" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #E5E5EA;border-radius:10px;margin-top:3px;box-shadow:0 4px 14px rgba(0,0,0,.12);z-index:50;max-height:180px;overflow-y:auto"></div>
     </div>
-    <div id="pinPill" onclick="_copyPin()" style="flex:0 0 auto;margin:0;background:#F2F2F7;border:1px solid #E5E5EA;border-radius:14px;padding:6px 12px;font-size:13px;font-weight:700;color:#8E8E93;cursor:pointer;display:flex;align-items:center">PIN <span id="pinPillVal" style="margin-left:4px">&mdash;</span><span id="pinPillHint" style="display:none"></span></div>
     <div style="flex:1 1 100%;height:0"></div><button onclick="shopSaveToBase()" style="background:#34C759;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">Zapisz</button><button onclick="openPlaces()" style="background:#8E8E93;padding:8px 6px;font-size:12px;font-weight:700;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;border:none;border-radius:14px;color:#fff">Baza</button>
     
   </div>
@@ -3051,7 +3050,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v13.41",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v13.42",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -8988,18 +8987,37 @@ function shopIdSuggest(val){
   var box=document.getElementById('shopIdSugg');if(!box)return;
   val=(val||'').trim();
   if(!val){box.style.display='none';return;}
-  var h=_shopHistory().filter(function(x){return x.id.indexOf(val)===0;}).slice(0,6);
-  if(!h.length){box.style.display='none';return;}
-  box.innerHTML=h.map(function(x){
-    return '<div onmousedown="pickShopHistory(\''+x.id.replace(/'/g,"\\'")+'\')" style="padding:9px 12px;font-size:13px;color:#1C1C1E;cursor:pointer;border-bottom:1px solid #F0F0F0"><b>'+esc(x.id)+'</b>'+(x.name?' <span style="color:#8E8E93">'+esc(x.name)+'</span>':'')+'</div>';
+  var seen={};
+  var out=[];
+  _shopHistory().forEach(function(x){
+    if(x.id.indexOf(val)===0&&!seen[x.id]){seen[x.id]=1;out.push({id:x.id,name:x.name||'',sub:'',mine:true});}
+  });
+  try{
+    var all=(typeof _allShops==='function')?_allShops():[];
+    all.forEach(function(s){
+      var sid=''+s.id;
+      if(sid.indexOf(val)===0&&!seen[sid]){
+        seen[sid]=1;
+        out.push({id:sid,name:s.chain||'',sub:(s.city||''),mine:false});
+      }
+    });
+  }catch(e){}
+  out=out.slice(0,8);
+  if(!out.length){box.style.display='none';return;}
+  box.innerHTML=out.map(function(x){
+    return '<div onmousedown="pickShopHistory(\''+x.id.replace(/'/g,"\\'")+'\')" style="padding:9px 12px;font-size:13px;color:#1C1C1E;cursor:pointer;border-bottom:1px solid #F0F0F0"><b>'+esc(x.id)+'</b>'+(x.name?' <span style="color:#8E8E93">'+esc(x.name)+(x.sub?(' · '+esc(x.sub)):'')+'</span>':'')+(x.mine?' <span style="color:#34C759;font-size:10px">&#9679;</span>':'')+'</div>';
   }).join('');
   box.style.display='block';
 }
 function pickShopHistory(id){
   var h=_shopHistory().find(function(x){return x.id===id;});
-  if(!h)return;
+  var name='',pin='';
+  if(h){name=h.name||'';}
+  else{
+    try{var s=(typeof _allShops==='function')?_allShops().find(function(x){return (''+x.id)===id;}):null;if(s){name=s.chain||'';}}catch(e){}
+  }
   var idInp=document.getElementById('shopId');if(idInp)idInp.value=id;
-  var nmInp=document.getElementById('shopName');if(nmInp&&h.name)nmInp.value=h.name;
+  var nmInp=document.getElementById('shopName');if(nmInp&&name)nmInp.value=name;
   shopSync();
   var box=document.getElementById('shopIdSugg');if(box)box.style.display='none';
   if(typeof _refreshPin==='function')_refreshPin();
