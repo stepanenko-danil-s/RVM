@@ -438,7 +438,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.44</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.45</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -3060,7 +3060,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v13.44",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v13.45",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -9228,7 +9228,7 @@ function _renderPhrases(){
 function _togPhrase(kind,i){var p=(kind==='b'?_baseLib():_custList())[i];if(p==null||typeof SEL==='undefined')return;var k=SEL.sol.indexOf(p);if(k>=0)SEL.sol.splice(k,1);else SEL.sol.push(p);if(typeof _updV==='function')_updV('sol');if(typeof renderList==='function')renderList('sol');if(typeof renderSummary==='function')renderSummary();_renderPhrases();if(typeof _toast==='function')_toast(k>=0?'Usunięto z raportu':'Dodano do raportu');}
 function _addPhrase(){var inp=document.getElementById('phrInput');if(!inp)return;var v=(inp.value||'').trim();if(!v)return;var raw=_getCustomPhrases();if(raw.indexOf(v)<0&&_baseLib().indexOf(v)<0){raw.unshift(v);_saveCustomPhrases(raw);}inp.value='';_renderPhrases();if(typeof _toast==='function')_toast('Dodano frazę');}
 function _delPhrase(i){var p=_custList()[i];if(p==null)return;if(typeof confirm==='function'&&!confirm('Usunac te fraze z listy?'))return;var raw=_getCustomPhrases();var k=raw.indexOf(p);if(k>=0){raw.splice(k,1);_saveCustomPhrases(raw);}_renderPhrases();}
-function _sLabel(){var t=(window._workType||'serwis');if(t==='montdemont')return ((window._mdSub||'mont')==='demont')?'DEMONTA\u017b':'MONTA\u017b';return t==='szkol'?'SZKOLENIE':'NIE GWARANCYJNY';}
+function _sLabel(){var t=(window._workType||'serwis');if(t==='montdemont')return ((window._mdSub||'mont')==='demont')?'DEMONTA\u017b':'MONTA\u017b';return t==='szkol'?'SZKOLENIE':'! P\u0142atna';}
 function setMdSub(s){
   s=(s==='demont')?'demont':'mont';
   window._mdSub=s;
