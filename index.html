@@ -438,7 +438,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.49</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.50</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -3062,7 +3062,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v13.49",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v13.50",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -7105,7 +7105,7 @@ openSh = function(id) {
     <button onclick="document.getElementById('magBulkFile').click()" style="width:100%;padding:13px;background:#F0F7FF;border:1.5px dashed #0A84FF;border-radius:10px;font-size:13px;font-weight:700;color:#0A84FF;cursor:pointer;font-family:inherit;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Wybierz plik PDF lub Excel</button>
     <div id="magBulkFileStatus" style="font-size:12px;color:#8E8E93;margin-bottom:10px;min-height:16px"></div>
     <div style="font-size:11px;color:#A19F9D;margin:0 0 6px;text-align:center">— lub wklej listę ręcznie —</div>
-    <div style="font-size:12px;color:#8E8E93;margin-bottom:8px;line-height:1.4">Jedna pozycja w jednej linii. Kod i nazwa oddzielone tabulatorem, " - ", "," albo kilkoma spacjami (kolejność dowolna).</div>
+    <div style="font-size:12px;color:#8E8E93;margin-bottom:8px;line-height:1.4">Jedna pozycja w jednej linii. Kod i nazwa oddzielone tabulatorem, " - ", "," albo kilkoma spacjami (kolejność dowolna). Opcjonalnie trzecia wartość = ilość w magazynie — jeśli kod już istnieje, ilość zostanie zaktualizowana zamiast pominięta.</div>
     <textarea id="magBulkInput" placeholder="Wklej lub wpisz listę..." rows="6" autocomplete="off" oninput="magBulkPreview()" style="width:100%;padding:11px;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-family:inherit;outline:none;resize:vertical;box-sizing:border-box;margin-bottom:10px"></textarea>
     <div id="magBulkPreview" style="font-size:12px;color:#8E8E93;margin-bottom:10px;max-height:160px;overflow-y:auto"></div>
     <button onclick="magBulkSave()" style="width:100%;padding:13px;background:#34C759;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px">Dodaj wszystkie</button>
@@ -7323,18 +7323,26 @@ function magBulkParseLines(text){
   (text||'').split('\n').forEach(function(line){
     line=line.trim();
     if(!line)return;
-    var parts=line.split(/\t| - |;|,(?!\d)/).map(function(x){return x.trim();}).filter(Boolean);
+    var parts=line.split(/\t/).map(function(x){return x.trim();}).filter(Boolean);
+    if(parts.length<2){
+      parts=line.split(/ - |;|,(?!\d)/).map(function(x){return x.trim();}).filter(Boolean);
+    }
     if(parts.length<2){
       parts=line.split(/\s{2,}/).map(function(x){return x.trim();}).filter(Boolean);
     }
     if(parts.length<2)return;
+    var qty=null;
+    if(parts.length>=3&&/^\d+([.,]\d+)?$/.test(parts[parts.length-1])){
+      qty=Math.round(parseFloat(parts[parts.length-1].replace(',','.')));
+      parts=parts.slice(0,-1);
+    }
     var a=parts[0],b=parts.slice(1).join(' ').trim();
     var code,name;
     if(_magCodeLike(a)&&!_magCodeLike(b)){code=a;name=b;}
     else if(_magCodeLike(b)&&!_magCodeLike(a)){code=b;name=a;}
     else if(a.length<b.length){code=a;name=b;}
     else{code=b;name=a;}
-    if(code&&name)out.push({n:name,k:code});
+    if(code&&name){var it={n:name,k:code};if(qty!==null)it.qty=qty;out.push(it);}
   });
   return out;
 }
@@ -7345,7 +7353,7 @@ function magBulkPreview(){
   var items=magBulkParseLines(inp.value);
   if(!items.length){pv.innerHTML='';return;}
   pv.innerHTML='<b style="color:#1C1C1E">Rozpoznano '+items.length+' pozycji:</b><br>'+
-    items.slice(0,8).map(function(it){return esc(it.k)+' — '+esc(it.n);}).join('<br>')+
+    items.slice(0,8).map(function(it){return esc(it.k)+' — '+esc(it.n)+(typeof it.qty==='number'?' <b style="color:#34C759">×'+it.qty+'</b>':'');}).join('<br>')+
     (items.length>8?'<br>… i '+(items.length-8)+' więcej':'');
 }
 function magBulkSave(){
@@ -7355,17 +7363,27 @@ function magBulkSave(){
   if(!_magCustParts)magLoadCust();
   if(!_magData)_magData=magLoad();
   var allParts=MAG_PARTS.concat(_magCustParts);
-  var existingCodes={};
-  allParts.forEach(function(p){existingCodes[(p.k||'').toLowerCase()]=true;});
-  var added=0,skipped=0;
+  var byCode={};
+  allParts.forEach(function(p){byCode[(p.k||'').toLowerCase()]=p;});
+  var added=0,updated=0;
   var batchIds=[];
   items.forEach(function(it){
     var kLow=it.k.toLowerCase();
-    if(existingCodes[kLow]){skipped++;return;}
-    existingCodes[kLow]=true;
+    var existing=byCode[kLow];
+    if(existing){
+      if(typeof it.qty==='number'){
+        if(!_magData[existing.id])_magData[existing.id]={qty:0,min:1,photo:null,active:true};
+        _magData[existing.id].qty=it.qty;
+        _magData[existing.id].active=true;
+        updated++;
+      }
+      return;
+    }
     var newId=1000+_magCustParts.length+1+added;
-    _magCustParts.push({id:newId,n:it.n,k:it.k,cat:'Inne'});
-    _magData[newId]={qty:0,min:1,photo:null,active:true};
+    var newPart={id:newId,n:it.n,k:it.k,cat:'Inne'};
+    _magCustParts.push(newPart);
+    _magData[newId]={qty:(typeof it.qty==='number'?it.qty:0),min:1,photo:null,active:true};
+    byCode[kLow]=newPart;
     batchIds.push(newId);
     added++;
   });
@@ -7375,7 +7393,7 @@ function magBulkSave(){
   closeOv('shMagBulk');
   magRender();
   if(typeof _updMagUndoBtn==='function')_updMagUndoBtn();
-  if(typeof showToast==='function')showToast('Dodano: '+added+(skipped?(', pominieto (duplikaty): '+skipped):''));
+  if(typeof showToast==='function')showToast('Dodano: '+added+', zaktualizowano ilosc: '+updated);
 }
 function _magLastBatch(){try{return JSON.parse(localStorage.getItem('rv_mag_last_batch')||'[]');}catch(e){return [];}}
 function _updMagUndoBtn(){
@@ -7416,13 +7434,40 @@ function magBulkFileHandle(input){
           var sheet=wb.Sheets[wb.SheetNames[0]];
           var rows=XLSX.utils.sheet_to_json(sheet,{header:1,defval:''});
           var lines=[];
-          rows.forEach(function(row){
-            var cells=row.map(function(c){return (''+c).trim();}).filter(Boolean);
-            if(cells.length>=2)lines.push(cells.slice(0,2).join('\t'));
-          });
+          var headerIdx=-1,nameCol=-1,codeCol=-1,qtyCol=-1;
+          for(var i=0;i<Math.min(rows.length,15);i++){
+            var row=rows[i];
+            var nIdx=-1,kIdx=-1,qIdx=-1;
+            row.forEach(function(c,ci){
+              var s=(''+c).toLowerCase();
+              if(nIdx<0&&/nazwa|^name/.test(s))nIdx=ci;
+              if(kIdx<0&&/^kod|^code/.test(s))kIdx=ci;
+              if(qIdx<0&&/stan magazynow|ilo.c|^qty|^quantity/.test(s))qIdx=ci;
+            });
+            if(nIdx>=0&&kIdx>=0){headerIdx=i;nameCol=nIdx;codeCol=kIdx;qtyCol=qIdx;break;}
+          }
+          if(headerIdx>=0){
+            for(var r2=headerIdx+1;r2<rows.length;r2++){
+              var row2=rows[r2];
+              var nm=(''+(row2[nameCol]!==undefined?row2[nameCol]:'')).trim();
+              var cd=(''+(row2[codeCol]!==undefined?row2[codeCol]:'')).trim();
+              if(!nm||!cd)continue;
+              var ln=nm+'\t'+cd;
+              if(qtyCol>=0){
+                var q=(''+(row2[qtyCol]!==undefined?row2[qtyCol]:'')).trim();
+                if(q&&/^\d+([.,]\d+)?$/.test(q))ln+='\t'+q;
+              }
+              lines.push(ln);
+            }
+          } else {
+            rows.forEach(function(row){
+              var cells=row.map(function(c){return (''+c).trim();}).filter(Boolean);
+              if(cells.length>=2)lines.push(cells.slice(0,2).join('\t'));
+            });
+          }
           var inp=document.getElementById('magBulkInput');
           if(inp)inp.value=lines.join('\n');
-          if(st)st.textContent='Wczytano '+f.name+' ('+lines.length+' wierszy)';
+          if(st)st.textContent='Wczytano '+f.name+' ('+lines.length+' wierszy)'+(headerIdx>=0?' — wykryto nagłówki (Nazwa/Kod'+(qtyCol>=0?'/Stan':'')+')':'');
           magBulkPreview();
         }catch(err){
           if(st)st.textContent='Blad odczytu pliku: '+(err&&err.message||err);
