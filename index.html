@@ -438,7 +438,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.47</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.48</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -709,6 +709,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
     <input placeholder="Szukaj..." oninput="magSearch(this.value)" style="width:100%;background:#fff;border:1px solid #E5E5EA;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:8px">
     <button onclick="aiDistOpen()" style="display:none;width:100%;padding:11px;background:linear-gradient(135deg,#007AFF,#5856D6);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:10px;align-items:center;justify-content:center;gap:6px">&#10024; AI rozdziel cz&#281;&#347;ci po modu&#322;ach</button>
     <button onclick="magAddNew()" style="width:100%;padding:11px;background:#fff;border:1px solid #34C759;border-radius:10px;font-size:13px;font-weight:700;color:#34C759;cursor:pointer;font-family:inherit;margin-bottom:8px">+ Dodaj część ręcznie</button>
+    <button onclick="magBulkOpen()" style="width:100%;padding:11px;background:#fff;border:1px solid #0A84FF;border-radius:10px;font-size:13px;font-weight:700;color:#0A84FF;cursor:pointer;font-family:inherit;margin-bottom:8px">+ Dodaj z listy / PDF / Excel</button>
     <button onclick="openMagCat()" style="width:100%;padding:11px;background:#fff;border:1px solid #0078D4;border-radius:10px;font-size:13px;font-weight:700;color:#0078D4;cursor:pointer;font-family:inherit;margin-bottom:8px">Katalog części (aktywuj z bazy)</button>
   </div>
   <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 12px 80px">
@@ -3060,7 +3061,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v13.47",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v13.48",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -7092,6 +7093,24 @@ openSh = function(id) {
     <button onclick="closeOv('shMagAdd')" class="sh-btn lt">Anuluj</button>
   </div>
 </div>
+<div class="ov" id="shMagBulk" style="display:none" onclick="if(event.target===this)closeOv('shMagBulk')">
+  <div class="sh" style="max-height:88vh;overflow-y:auto">
+    <div class="sh-bar"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="font-size:17px;font-weight:800;color:#34C759">Dodaj wiele naraz</div>
+      <button onclick="closeOv('shMagBulk')" style="background:#F5F5F7;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;color:#605E5C">×</button>
+    </div>
+    <input type="file" id="magBulkFile" accept=".xlsx,.xls,.pdf,application/pdf" onchange="magBulkFileHandle(this)" style="display:none">
+    <button onclick="document.getElementById('magBulkFile').click()" style="width:100%;padding:13px;background:#F0F7FF;border:1.5px dashed #0A84FF;border-radius:10px;font-size:13px;font-weight:700;color:#0A84FF;cursor:pointer;font-family:inherit;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Wybierz plik PDF lub Excel</button>
+    <div id="magBulkFileStatus" style="font-size:12px;color:#8E8E93;margin-bottom:10px;min-height:16px"></div>
+    <div style="font-size:11px;color:#A19F9D;margin:0 0 6px;text-align:center">— lub wklej listę ręcznie —</div>
+    <div style="font-size:12px;color:#8E8E93;margin-bottom:8px;line-height:1.4">Jedna pozycja w jednej linii. Kod i nazwa oddzielone tabulatorem, " - ", "," albo kilkoma spacjami (kolejność dowolna).</div>
+    <textarea id="magBulkInput" placeholder="Wklej lub wpisz listę..." rows="6" autocomplete="off" oninput="magBulkPreview()" style="width:100%;padding:11px;border:1px solid #E5E5EA;border-radius:10px;font-size:13px;font-family:inherit;outline:none;resize:vertical;box-sizing:border-box;margin-bottom:10px"></textarea>
+    <div id="magBulkPreview" style="font-size:12px;color:#8E8E93;margin-bottom:10px;max-height:160px;overflow-y:auto"></div>
+    <button onclick="magBulkSave()" style="width:100%;padding:13px;background:#34C759;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px">Dodaj wszystkie</button>
+    <button onclick="closeOv('shMagBulk')" class="sh-btn lt">Anuluj</button>
+  </div>
+</div>
 
 <script>
 // ============================================================
@@ -7274,6 +7293,149 @@ function magAddSave() {
   closeOv('shMagAdd');
   magRender();
   showToast('Dodano: ' + n);
+}
+
+// ===== Dodaj wiele naraz: lista / PDF / Excel =====
+function magBulkOpen(){
+  var inp=document.getElementById('magBulkInput');if(inp)inp.value='';
+  var st=document.getElementById('magBulkFileStatus');if(st)st.textContent='';
+  var pv=document.getElementById('magBulkPreview');if(pv)pv.innerHTML='';
+  var fi=document.getElementById('magBulkFile');if(fi)fi.value='';
+  openSh('shMagBulk');
+}
+function _loadScriptOnce(url,cb){
+  var mark='_loaded_'+url.replace(/[^a-zA-Z0-9]/g,'');
+  if(window[mark]){cb();return;}
+  var s=document.createElement('script');
+  s.src=url;
+  s.onload=function(){window[mark]=true;cb();};
+  s.onerror=function(){if(typeof showToast==='function')showToast('Nie udalo sie wczytac biblioteki (brak internetu?)');};
+  document.head.appendChild(s);
+}
+function _magCodeLike(tok){
+  if(!tok)return false;
+  var digits=(tok.match(/\d/g)||[]).length;
+  return tok.indexOf(' ')<0 && digits>=3 && digits>=tok.length*0.4;
+}
+function magBulkParseLines(text){
+  var out=[];
+  (text||'').split('\n').forEach(function(line){
+    line=line.trim();
+    if(!line)return;
+    var parts=line.split(/\t| - |;|,(?!\d)/).map(function(x){return x.trim();}).filter(Boolean);
+    if(parts.length<2){
+      parts=line.split(/\s{2,}/).map(function(x){return x.trim();}).filter(Boolean);
+    }
+    if(parts.length<2)return;
+    var a=parts[0],b=parts.slice(1).join(' ').trim();
+    var code,name;
+    if(_magCodeLike(a)&&!_magCodeLike(b)){code=a;name=b;}
+    else if(_magCodeLike(b)&&!_magCodeLike(a)){code=b;name=a;}
+    else if(a.length<b.length){code=a;name=b;}
+    else{code=b;name=a;}
+    if(code&&name)out.push({n:name,k:code});
+  });
+  return out;
+}
+function magBulkPreview(){
+  var inp=document.getElementById('magBulkInput');
+  var pv=document.getElementById('magBulkPreview');
+  if(!inp||!pv)return;
+  var items=magBulkParseLines(inp.value);
+  if(!items.length){pv.innerHTML='';return;}
+  pv.innerHTML='<b style="color:#1C1C1E">Rozpoznano '+items.length+' pozycji:</b><br>'+
+    items.slice(0,8).map(function(it){return esc(it.k)+' — '+esc(it.n);}).join('<br>')+
+    (items.length>8?'<br>… i '+(items.length-8)+' więcej':'');
+}
+function magBulkSave(){
+  var inp=document.getElementById('magBulkInput');
+  var items=inp?magBulkParseLines(inp.value):[];
+  if(!items.length){if(typeof showToast==='function')showToast('Brak rozpoznanych pozycji');return;}
+  if(!_magCustParts)magLoadCust();
+  if(!_magData)_magData=magLoad();
+  var allParts=MAG_PARTS.concat(_magCustParts);
+  var existingCodes={};
+  allParts.forEach(function(p){existingCodes[(p.k||'').toLowerCase()]=true;});
+  var added=0,skipped=0;
+  items.forEach(function(it){
+    var kLow=it.k.toLowerCase();
+    if(existingCodes[kLow]){skipped++;return;}
+    existingCodes[kLow]=true;
+    var newId=1000+_magCustParts.length+1+added;
+    _magCustParts.push({id:newId,n:it.n,k:it.k,cat:'Inne'});
+    _magData[newId]={qty:0,min:1,photo:null,active:true};
+    added++;
+  });
+  magSaveCust();
+  magSave();
+  closeOv('shMagBulk');
+  magRender();
+  if(typeof showToast==='function')showToast('Dodano: '+added+(skipped?(', pominieto (duplikaty): '+skipped):''));
+}
+function magBulkFileHandle(input){
+  var f=input.files&&input.files[0];if(!f)return;
+  var st=document.getElementById('magBulkFileStatus');
+  var ext=(f.name.split('.').pop()||'').toLowerCase();
+  if(st)st.textContent='Wczytuję '+f.name+'…';
+  if(ext==='xlsx'||ext==='xls'){
+    _loadScriptOnce('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',function(){
+      var r=new FileReader();
+      r.onload=function(e){
+        try{
+          var wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});
+          var sheet=wb.Sheets[wb.SheetNames[0]];
+          var rows=XLSX.utils.sheet_to_json(sheet,{header:1,defval:''});
+          var lines=[];
+          rows.forEach(function(row){
+            var cells=row.map(function(c){return (''+c).trim();}).filter(Boolean);
+            if(cells.length>=2)lines.push(cells.slice(0,2).join('\t'));
+          });
+          var inp=document.getElementById('magBulkInput');
+          if(inp)inp.value=lines.join('\n');
+          if(st)st.textContent='Wczytano '+f.name+' ('+lines.length+' wierszy)';
+          magBulkPreview();
+        }catch(err){
+          if(st)st.textContent='Blad odczytu pliku: '+(err&&err.message||err);
+        }
+      };
+      r.readAsArrayBuffer(f);
+    });
+  } else if(ext==='pdf'){
+    _loadScriptOnce('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',function(){
+      try{pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';}catch(e){}
+      var r=new FileReader();
+      r.onload=function(e){
+        pdfjsLib.getDocument({data:new Uint8Array(e.target.result)}).promise.then(function(doc){
+          var pagePromises=[];
+          for(var i=1;i<=doc.numPages;i++){
+            pagePromises.push(doc.getPage(i).then(function(page){
+              return page.getTextContent().then(function(tc){
+                var lineMap={};
+                tc.items.forEach(function(it){
+                  var y=Math.round(it.transform[5]);
+                  if(!lineMap[y])lineMap[y]=[];
+                  lineMap[y].push(it.str);
+                });
+                return Object.keys(lineMap).sort(function(a,b){return b-a;}).map(function(y){return lineMap[y].join(' ');}).join('\n');
+              });
+            }));
+          }
+          Promise.all(pagePromises).then(function(pagesText){
+            var fullText=pagesText.join('\n');
+            var inp=document.getElementById('magBulkInput');
+            if(inp)inp.value=fullText;
+            if(st)st.textContent='Wczytano '+f.name+' ('+doc.numPages+' str.)';
+            magBulkPreview();
+          });
+        }).catch(function(err){
+          if(st)st.textContent='Blad odczytu PDF: '+(err&&err.message||err);
+        });
+      };
+      r.readAsArrayBuffer(f);
+    });
+  } else {
+    if(st)st.textContent='Nieobslugiwany format pliku';
+  }
 }
 
 // Обновим MAG_PARTS чтобы включал кастомные
