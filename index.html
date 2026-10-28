@@ -438,7 +438,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.48</span></div>
+  <div class="nav-title">RVM Raport <span style="font-size:10px;font-weight:700;letter-spacing:.2px;color:#fff;background:rgba(255,255,255,.25);padding:2px 7px;border-radius:8px;vertical-align:middle">v13.49</span></div>
   <div style="display:flex;gap:8px;align-items:center">
     <button onclick="doReset()" title="Reset" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.18);border:none;border-radius:12px;cursor:pointer;backdrop-filter:blur(4px)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -710,6 +710,7 @@ body:not(.fluent) .nav{box-shadow:0 1px 0 rgba(0,0,0,.04)}
     <button onclick="aiDistOpen()" style="display:none;width:100%;padding:11px;background:linear-gradient(135deg,#007AFF,#5856D6);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:10px;align-items:center;justify-content:center;gap:6px">&#10024; AI rozdziel cz&#281;&#347;ci po modu&#322;ach</button>
     <button onclick="magAddNew()" style="width:100%;padding:11px;background:#fff;border:1px solid #34C759;border-radius:10px;font-size:13px;font-weight:700;color:#34C759;cursor:pointer;font-family:inherit;margin-bottom:8px">+ Dodaj część ręcznie</button>
     <button onclick="magBulkOpen()" style="width:100%;padding:11px;background:#fff;border:1px solid #0A84FF;border-radius:10px;font-size:13px;font-weight:700;color:#0A84FF;cursor:pointer;font-family:inherit;margin-bottom:8px">+ Dodaj z listy / PDF / Excel</button>
+    <button id="magUndoBtn" onclick="magBulkUndo()" style="display:none;width:100%;padding:11px;background:#fff;border:1px solid #FF3B30;border-radius:10px;font-size:13px;font-weight:700;color:#FF3B30;cursor:pointer;font-family:inherit;margin-bottom:8px"><span id="magUndoLabel">Cofnij ostatni import</span></button>
     <button onclick="openMagCat()" style="width:100%;padding:11px;background:#fff;border:1px solid #0078D4;border-radius:10px;font-size:13px;font-weight:700;color:#0078D4;cursor:pointer;font-family:inherit;margin-bottom:8px">Katalog części (aktywuj z bazy)</button>
   </div>
   <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 12px 80px">
@@ -3061,7 +3062,7 @@ function genAIExp(){
 }
 function genExp(){
   var _ec=document.getElementById("aiExpCode")||document.getElementById("expCode");if(_ec)_ec.value=JSON.stringify({
-    _meta:{app:"RVM Raport v13.48",date:new Date().toISOString().slice(0,16)},
+    _meta:{app:"RVM Raport v13.49",date:new Date().toISOString().slice(0,16)},
     rstStyle:rstStyle,
     entries:entries,
     repTmpls:repTmpls,
@@ -7357,6 +7358,7 @@ function magBulkSave(){
   var existingCodes={};
   allParts.forEach(function(p){existingCodes[(p.k||'').toLowerCase()]=true;});
   var added=0,skipped=0;
+  var batchIds=[];
   items.forEach(function(it){
     var kLow=it.k.toLowerCase();
     if(existingCodes[kLow]){skipped++;return;}
@@ -7364,13 +7366,41 @@ function magBulkSave(){
     var newId=1000+_magCustParts.length+1+added;
     _magCustParts.push({id:newId,n:it.n,k:it.k,cat:'Inne'});
     _magData[newId]={qty:0,min:1,photo:null,active:true};
+    batchIds.push(newId);
     added++;
   });
   magSaveCust();
   magSave();
+  try{localStorage.setItem('rv_mag_last_batch',JSON.stringify(batchIds));}catch(e){}
   closeOv('shMagBulk');
   magRender();
+  if(typeof _updMagUndoBtn==='function')_updMagUndoBtn();
   if(typeof showToast==='function')showToast('Dodano: '+added+(skipped?(', pominieto (duplikaty): '+skipped):''));
+}
+function _magLastBatch(){try{return JSON.parse(localStorage.getItem('rv_mag_last_batch')||'[]');}catch(e){return [];}}
+function _updMagUndoBtn(){
+  var btn=document.getElementById('magUndoBtn');
+  if(!btn)return;
+  var b=_magLastBatch();
+  btn.style.display=b.length?'block':'none';
+  var lbl=document.getElementById('magUndoLabel');
+  if(lbl)lbl.textContent='Cofnij ostatni import ('+b.length+' poz.)';
+}
+function magBulkUndo(){
+  var batch=_magLastBatch();
+  if(!batch.length){if(typeof showToast==='function')showToast('Brak importu do cofniecia');return;}
+  if(!confirm('Usunac '+batch.length+' pozycji z ostatniego importu?'))return;
+  if(!_magCustParts)magLoadCust();
+  if(!_magData)_magData=magLoad();
+  var idSet={};batch.forEach(function(id){idSet[id]=true;});
+  _magCustParts=_magCustParts.filter(function(p){return !idSet[p.id];});
+  batch.forEach(function(id){delete _magData[id];});
+  magSaveCust();
+  magSave();
+  try{localStorage.removeItem('rv_mag_last_batch');}catch(e){}
+  magRender();
+  _updMagUndoBtn();
+  if(typeof showToast==='function')showToast('Cofnieto '+batch.length+' pozycji');
 }
 function magBulkFileHandle(input){
   var f=input.files&&input.files[0];if(!f)return;
@@ -9755,6 +9785,7 @@ function importDanste(){
 
 function magRender(){
   if(!_magData)_magData=magLoad();
+  if(typeof _updMagUndoBtn==='function')_updMagUndoBtn();
   var grid=document.getElementById('magGrid');
   if(!grid)return;
   var _all=(typeof magGetAll==='function'?magGetAll():MAG_PARTS);
